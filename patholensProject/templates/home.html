@@ -5,13 +5,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>PathoLens</title>
-    <link rel="stylesheet" href="{% static 'css/home.css' %}" /> <!-- Verweis auf die CSS-Datei -->
+    <link rel="stylesheet" href="{% static 'css/home.css' %}" />
     <!-- Font Awesome Integration -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
   </head>
   <body>
-    <!-- Top Bar -->
-    <div class="top-bar">
+    <!-- Top Bar (Nav) -->
+    <nav class="top-bar">
       <div class="logo">
         <!-- Gehirn-Icon ersetzt das Bild -->
         <i class="fas fa-brain" style="font-size: 48px; color: #4CAF50;"></i>
@@ -21,7 +21,7 @@
         <button><i class="fas fa-question-circle"></i> Help</button>
         <button><i class="fas fa-door-open"></i> Logout</button>
       </div>
-    </div>
+    </nav>
 
     <!-- Main Content -->
     <div class="main-content">
@@ -30,24 +30,26 @@
         <div class="profile">
           <img src="https://via.placeholder.com/150" alt="Profile Picture" />
           <div class="profile-info">
-            <!-- Name und E-Mail weiter unten platziert -->
             <p style="margin-top: 20px;">Dr. Snehpreet Dhinsa</p>
             <p>sdhinsa@ukbonn.de</p>
           </div>
         </div>
         <div class="buttons">
           <button>Continue Diagnosis</button>
-          <button>New Diagnosis</button>
+          <label for="newDiagnosisCheckbox" style="cursor: pointer;"><button>New Diagnosis</button></label>
           <button>Finished Diagnoses</button>
         </div>
       </div>
 
       <!-- Right Panel -->
       <div class="right-panel">
-        <div class="welcome">
-          Welcome Back<br /><strong>Doctor</strong>
+        <div class="screen-container">
+          <!-- Welcome Image -->
+          <div class="welcome">
+            Welcome Back<br /><strong>Doctor</strong>
+          </div>
+          <img src="{% static 'images/welcome.png' %}" alt="Brain Image" class="welcome-image" />
         </div>
-        <img src="{% static 'images/welcome.png' %}" alt="Brain Image" />
       </div>
     </div>
   </body>
