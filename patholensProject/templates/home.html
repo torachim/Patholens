@@ -1,9 +1,68 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>PathoLens</title>
+    <link rel="stylesheet" href="{% static 'css/home.css' %}" /> <!-- Verweis auf die CSS-Datei -->
+    <!-- Font Awesome Integration -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
   </head>
-  <body></body>
+  <body>
+    <!-- Top Bar -->
+    <div class="top-bar">
+      <div class="logo">
+        <!-- Gehirn-Icon ersetzt das Bild -->
+        <i class="fas fa-brain" style="font-size: 48px; color: #4CAF50;"></i>
+        <span style="font-size: 24px; font-weight: bold; margin-left: 10px;">PathoLens</span>
+      </div>
+      <div class="buttons">
+        <button><i class="fas fa-question-circle"></i> Help</button>
+        <button><i class="fas fa-door-open"></i> Logout</button>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- Left Panel -->
+      <div class="left-panel">
+        <div class="profile">
+          <img src="https://via.placeholder.com/150" alt="Profile Picture" />
+          <div class="profile-info">
+            <!-- Name und E-Mail weiter unten platziert -->
+            <p style="margin-top: 20px;">Dr. Snehpreet Dhinsa</p>
+            <p>sdhinsa@ukbonn.de</p>
+          </div>
+        </div>
+        <div class="buttons">
+          <button>Continue Diagnosis</button>
+          <label for="newDiagnosisCheckbox" style="cursor: pointer;"><button>New Diagnosis</button></label>
+          <button>Finished Diagnoses</button>
+        </div>
+      </div>
+
+      <!-- Right Panel -->
+      <div class="right-panel">
+        <div class="welcome">
+          Welcome Back<br /><strong>Doctor</strong>
+        </div>
+        <img src="https://via.placeholder.com/300" alt="Brain Image" />
+      </div>
+    </div>
+
+    <!-- Checkbox for Modal -->
+    <input type="checkbox" id="newDiagnosisCheckbox" />
+
+    <!-- Modal -->
+    <div class="modal">
+      <div class="modal-content">
+        <h2>Select dataset</h2>
+        <button>Dataset 1</button>
+        <button>Dataset 2</button>
+        <button>Dataset 3</button>
+        <label for="newDiagnosisCheckbox" style="cursor: pointer; color: white; display: block; margin-top: 10px;">Close</label>
+      </div>
+    </div>
+  </body>
 </html>
