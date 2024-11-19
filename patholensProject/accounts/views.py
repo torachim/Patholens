@@ -32,7 +32,7 @@ def login_view(request):
             error = True
 
 
-    return render(request, 'accounts/login.html', error = error)
+    return render(request, 'accounts/login.html')
 
     
     
