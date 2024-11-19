@@ -11,7 +11,7 @@ def login_view(request):
         'error' : False
         }
     
-    # when user is already loged in 
+    #when user is already loged in 
     if request.user.is_authenticated:
         
         # TODO: rediretc to starting page
