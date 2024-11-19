@@ -7,7 +7,9 @@ from django.shortcuts import redirect
 
 # Create your views here.
 def login_view(request):
-    error = False
+    information = {
+        'error' : False
+        }
     
     # when user is already loged in 
     if request.user.is_authenticated:
@@ -29,10 +31,10 @@ def login_view(request):
             # TODO:  redirect to start page
             return redirect("/")
         else:
-            error = True
+            information["error"] = True
 
 
-    return render(request, 'accounts/login.html', error = error)
+    return render(request, 'accounts/login.html', information)
 
     
     
