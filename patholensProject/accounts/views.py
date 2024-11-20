@@ -5,44 +5,35 @@ from django.contrib import messages
 from django.shortcuts import redirect
 
 
-# Create your views here.
 def loginView(request):
-    
-    print("hallo")
-    information = {
-        'error' : False
-        }
-    
-    #when user is already loged in 
+
+    information = {"error": False}
+
+    # when user is already loged in
     if request.user.is_authenticated:
+
+        print("already logged in")
         
-        print("Schon eingeloogt")        
         # TODO: rediretc to starting page
-        return redirect('/')  
-    
-    
+        return redirect("/")
+
     if request.method == "POST":
-        
-        print("post ")
-        
-        
+
         email = request.POST.get("email")
         password = request.POST.get("password")
-        
+
+        # remove @ and . so that the usernmae is email without the special characters
+        email = email.replace("@", "")
+        email = email.replace(".", "")
+
 
         user = authenticate(username=email, password=password)
-        
-        if (user is not None):
+
+        if user is not None:
             login(request, user)
-            print("geschafft")
-            messages.success(request, "Login was successfully")
-            
-            # TODO:  redirect to start page
             return redirect("/")
+        
         else:
             information["error"] = True
 
-    return render(request, 'accounts/login.html', information)
-
-    
-    
+    return render(request, "accounts/login.html", information)
