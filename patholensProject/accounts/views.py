@@ -7,6 +7,7 @@ from django.shortcuts import redirect
 
 # Create your views here.
 def login_view(request):
+    
     information = {
         'error' : False
         }
@@ -14,11 +15,16 @@ def login_view(request):
     #when user is already loged in 
     if request.user.is_authenticated:
         
+        print("Schon eingeloogt")        
         # TODO: rediretc to starting page
         return redirect('/')  
     
     
     if request.method == "POST":
+        
+        print("post ")
+        
+        
         email = request.POST.get("email")
         password = request.POST.get("password")
         
@@ -27,6 +33,7 @@ def login_view(request):
         
         if (user is not None):
             login(request, user)
+            print("geschafft")
             messages.success(request, "Login was successfully")
             
             # TODO:  redirect to start page
