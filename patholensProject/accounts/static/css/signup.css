@@ -13,13 +13,13 @@
     align-items: center;
     text-align: center;
     flex-direction: column;
-    
+    border-radius: 7px;
 }
 .box h2 {
     font-family: 'Cabin', sans-serif; 
     font-weight: 600; 
     font-size: 34px; 
-    margin-top: 40px; 
+    margin-top: 45px; 
     margin-bottom: 3px;
     color: white;
     align-items: center;
@@ -46,14 +46,14 @@
     display: flex; /* Aktiviert Flexbox */
     flex-direction: column; /* Elemente untereinander ausrichten */
     align-items: center; /* Zentriert Inhalte horizontal */
-    margin-top: 30px; /* Abstand nach oben */
+    margin-top: 0px; /* Abstand nach oben */
 }
 
 .input-container2 {
     display: flex; /* Aktiviert Flexbox */
     justify-content: space-between; /* Verteilt die Boxen nebeneinander */
     align-items: center; /* Vertikale Ausrichtung der Inhalte */
-    margin-top: 30px; /* Abstand nach oben */
+    margin-top: 25px; /* Abstand nach oben */
     padding: 0 50px; /* Abstand links und rechts */
 }
 
@@ -116,9 +116,17 @@
 }
 
 
-.input-box input::placeholder {
+.input-first-name input::placeholder {
     color: white;
-    opacity: 1; 
+    opacity: 0.6; 
+}
+.input-boxes input::placeholder {
+    color: white;
+    opacity: 0.6; 
+}
+.input-box-name input::placeholder{
+    color: white;
+    opacity: 0.6; 
 }
 
 
@@ -130,4 +138,47 @@ body {
     height: 100vh; 
     margin: 0; 
     
+}
+.signupBoxLinks {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 25px;
+}
+.signupButton{
+    display: flex;
+    flex-direction: row;
+    margin-top: 15px;
+}
+
+.signupButton Button {
+    background-color: #00afb9;
+    border: none;
+    width: 230px;
+    height: 40px;
+    border-radius: 8px;
+    color: #f7f7f7;
+    font-size: 16px;
+    font-family: Calibri;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 5px 5px rgba(0, 0, 0, 0.2);
+}
+
+.signupButton Button:hover{
+    background-color: #028f97;
+}
+
+.signupBoxLinks p {
+    color: #f7f7f7;
+    font-family: 'Cabin', sans-serif; 
+    font-weight: normal; 
+    font-size: 16px; 
+    margin-top: 15px;
+}
+
+.signupBoxLinks a {
+    color: #00afb9
+
 }
