@@ -31,7 +31,7 @@ def loginView(request):
         # user is not existent 
         if (userExistent == False):
             information["username"] = False
-            return render(request, "accounts/login.html", information)
+            return render(request, "accounts/login.html", {"information" : information})
         
         
         user = authenticate(username=email, password=password)
