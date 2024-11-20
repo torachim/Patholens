@@ -15,7 +15,7 @@ nav.top-bar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #005E7A;
+    background-color: #24617B;
     padding: 10px 20px;
     height: 60px;
     box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.5); /* Deutlicherer Schatten */
@@ -80,7 +80,7 @@ nav.top-bar {
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
-    background-color: #005E7A;
+    background-color: #24617B;
     overflow-y: auto; /* Scrollbar falls nötig */
 }
 
@@ -127,24 +127,40 @@ nav.top-bar {
 
 /* Right Panel */
 .right-panel {
-    flex: 3; /* Belegt größeren Platzanteil */
+    flex: 3; 
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    background-color: #005E7A;
-    height: 100%; /* Füllt die Höhe vollständig aus */
-    padding: 20px;
-    box-sizing: border-box;
-    position: relative; /* Wichtig für die richtige Bildausrichtung */
+    background-color: #00242F; 
+    height: calc(100% - 40px); /* distance for above and underneath */
+    margin: 20px; /* distance to all sites */
+    padding: 20px; /* inner distances */
+    border-radius: 20px; /* round corners */
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.5); 
+    box-sizing: border-box; 
+    position: relative; 
+    overflow: hidden; /* no getting out */
 }
 
+/* Welcome Text */
+.welcome-text {
+    text-align: center;
+    margin-bottom: 20px; /* Abstand zum Bild */
+}
 
+.welcome-text h1 {
+    font-size: 2.5rem; /* Größe des Willkommens-Texts */
+    color: #FFFFFF; /* Weiße Schriftfarbe */
+    margin: 50px;
+}
+
+/* Welcome Image */
 .welcome-image {
-    width: 100%;
-    height: 100%; /* Stellt sicher, dass das Bild die gesamte Höhe einnimmt */
-    object-fit: cover; /* Bild wird so gedehnt, dass es den Container füllt */
-    border-radius: 10px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
-    background-color: #00242F;
+    max-width: 100%; /* Maximale Breite des Bildes auf Container-Breite beschränken */
+    max-height: calc(100% - 80px); /* Maximale Höhe begrenzen, sodass es nicht herausragt */
+    object-fit: contain; /* Bild wird skaliert, ohne es zu verzerren */
+    border-radius: 15px; /* Leicht abgerundete Ecken am Bild */
 }
+
+
