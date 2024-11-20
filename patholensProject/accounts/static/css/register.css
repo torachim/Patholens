@@ -1,0 +1,31 @@
+.box {
+    width: 500px; /* Breite der Box */
+    height: 600px; /* Höhe der Box */
+    background-color: #005E7A; 
+    border: none; 
+    padding: 20px; 
+    margin: 20px auto; 
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3); 
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    
+}
+.box h2 {
+    font-family: 'Cabin', sans-serif; 
+    font-weight: 600; 
+    font-size: 32px; 
+    margin: 0; 
+    color: white;
+}
+body {
+    background-color: #00242F; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    height: 100vh; 
+    margin: 0; 
+    
+}
+
+
