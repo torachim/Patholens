@@ -17,6 +17,7 @@ body {
     align-items: center;
     width: 478px;
     height: 587px;
+    margin-top: 100px;
 }
 
 
@@ -64,6 +65,13 @@ body {
     color: #aaa;
 }
 
+.Information {
+    color: #740101;
+    margin-top: 25px;
+    margin-bottom: -20px;
+    font-size: 20px;
+}
+
 .loginWindowLinks {
     display: flex;
     flex-direction: column;
@@ -75,7 +83,7 @@ body {
 .loginButton{
     display: flex;
     flex-direction: row;
-    margin-top: 45px;
+    margin-top: 30px;
 }
 
 .loginButton Button {

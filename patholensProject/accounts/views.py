@@ -48,5 +48,4 @@ def loginView(request):
     else:
         print("Error as POST was not used")
         
-        
-    return render(request, "accounts/login.html", information)
+    return render(request, "accounts/login.html", {"information": information})

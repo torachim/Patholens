@@ -19,7 +19,10 @@
             {% csrf_token %}
             <div class="loginWindowInput">
                 <input id = "email" name = "email" type="email" placeholder="E-Mail"/>
-                <input if "password" name = "password"type="password" placeholder="Password"/>
+                <input id = "password" name = "password"type="password" placeholder="Password"/>
+                {% if not information.username or not information.password %}
+                    <p class= "Information">! Username or Password wrong !</p>
+                {% endif %}
             </div>
             <div class="loginWindowLinks">
                 <div class="loginButton">
