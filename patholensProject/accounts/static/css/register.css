@@ -17,9 +17,10 @@
     font-family: 'Cabin', sans-serif; 
     font-weight: 600; 
     font-size: 32px; 
-    margin-top: 25px; 
-    margin-bottom: 5px;
+    margin-top: 30px; 
+    margin-bottom: 3px;
     color: white;
+    align-items: center;
 }
 
 .box h4 {
@@ -28,7 +29,42 @@
     font-size: 16px; 
     margin: 0; 
     color: white;
+    align-items: center;
 }
+
+.input-box {
+    /* Die gesamte Breite der Box einnehmen */
+    display: flex; /* Flexbox aktivieren */
+    justify-content: flex-start; /* Input-Feld linksbündig ausrichten */
+    margin-top: 30px;
+    margin-left: 50px;
+    
+}
+
+.input-box input {
+    width: 125px;
+    height: 25px;
+    
+    padding: 10px 15px 10px 20px; /* oben rechts unten links */
+    
+    
+    margin-top: 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    font-family: Calibri, Arial, sans-serif; 
+    align-items: flex-start;
+    background-color: #00485E;
+    color: white;
+    box-shadow: inset 0px 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.input-box input::placeholder {
+    color: white;
+    opacity: 1; 
+}
+
+
 body {
     background-color: #00242F; 
     display: flex; 
@@ -38,5 +74,6 @@ body {
     margin: 0; 
     
 }
+
 
 
