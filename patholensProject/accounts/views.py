@@ -6,8 +6,9 @@ from django.shortcuts import redirect
 
 
 # Create your views here.
-def login_view(request):
+def loginView(request):
     
+    print("hallo")
     information = {
         'error' : False
         }
