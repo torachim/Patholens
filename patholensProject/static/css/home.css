@@ -88,21 +88,45 @@ nav.top-bar {
     display: flex; /* Flex layout for profile section */
     align-items: center; /* Center items vertically */
     margin-bottom: 20px; /* Space below profile */
-    height: 50px; /* Etwas kleinere Höhe für den Profilbereich */
+    height: 100px; /* Vergrößerte Höhe für das Profil */
+    margin-top: 30px; /* Nach unten verschieben */
+    margin-left: 20px; /* Nach links verschieben (von 40px auf 20px reduziert) */
 }
 
 .left-panel .profile img {
-    width: 48px; /* Kleinere Breite für das Profilbild */
-    height: 48px; /* Kleinere Höhe für das Profilbild */
-    border-radius: 50%; /* Runde Form für das Bild */
-    margin-right: 10px; /* Weniger Abstand zwischen Bild und Info */
+    width: 60px; /* Profilbild Breite */
+    height: 60px; /* Profilbild Höhe (gleich wie Breite) */
+    border-radius: 50%; /* Macht das Bild rund */
+    margin-right: 20px; /* Abstand zwischen Bild und Info */
     background-color: #f3f3f3; /* Platzhalter Hintergrundfarbe */
 }
 
 .left-panel .profile-info {
-    font-size: 14px; /* Kleinere Schriftgröße für die Profilinfo */
-    line-height: 1.4; /* Geringerer Zeilenabstand */
+    font-size: 16px; /* Schriftgröße für den Text */
+    line-height: 1.2; /* Zeilenabstand */
+    max-width: 200px; /* Maximale Breite, damit der Text nicht überläuft */
+    overflow: hidden; /* Verhindert Textüberlauf */
+    white-space: nowrap; /* Verhindert Umbruch */
+    text-overflow: ellipsis; /* Fügt "..." hinzu, wenn der Text zu lang ist */
 }
+
+.left-panel .profile-info .name {
+    font-size: 18px; /* Für den Namen eine kleinere Schriftgröße */
+    font-weight: bold; /* Fett für den Namen */
+    white-space: nowrap; /* Verhindert Zeilenumbruch */
+    overflow: hidden; /* Verhindert Überlauf */
+    text-overflow: ellipsis; /* Truncates text if it's too long */
+}
+
+.left-panel .profile-info .email {
+    font-size: 14px; /* Kleinere Schriftgröße für die E-Mail */
+    color: #666; /* Graue Farbe für die E-Mail */
+    margin-top: 5px; /* Abstand vor der E-Mail */
+}
+
+
+
+
 
 
 /* Buttons Section */
