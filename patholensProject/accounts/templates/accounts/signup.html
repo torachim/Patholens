@@ -16,28 +16,33 @@
     <div class="box">
         <h2>SIGN UP</h2>
         <h4>Enter your data</h4>
-        <div class="input-container">
-            <div class="input-container2">
-                <div class="input-box-name">
-                    <input type="text" placeholder="Name">
-                </div>
-                <div class="input-first-name">
-                    <input type="text" placeholder="First Name">
-                </div>
-            </div>
 
-            <div class="input-boxes">
-                <input type="email" placeholder="example@ulkbonn.com">
-                <input type="password" placeholder="Password">
-                <input type="password" placeholder="Confirm Password">
-            </div>
-            <div class="signupBoxLinks">
-                <div class="signupButton">
-                    <button type="button">Sign up</button>
+        <form method="POST" action="{% url 'patholensSignUp' %}">
+            {% csrf_token %}
+            <div class="input-container">
+                <div class="input-container2">
+                    <div class="input-box-name">
+                        <input type="text" placeholder="Name">
+                    </div>
+                    <div class="input-first-name">
+                        <input type="text" placeholder="First Name">
+                    </div>
                 </div>
-                <p>Have an account? <a href="#">Log in</a></p>
-            </div>
-        </div>
 
+                <div class="input-boxes">
+                    <input type="email" placeholder="example@ulkbonn.com">
+                    <input type="password" placeholder="Password">
+                    <input type="password" placeholder="Confirm Password">
+                </div>
+                <div class="signupBoxLinks">
+                    <div class="signupButton">
+                        <button type="submit">Sign up</button>
+                    </div>
+                    <p>Have an account? <a href="/login">Log in</a></p>
+                </div>
+            </div>
+        </form>
+
+    </div>
 </body>
 </html>

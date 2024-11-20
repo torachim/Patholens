@@ -11,7 +11,7 @@
     align-items: center;
     text-align: center;
     flex-direction: column;
-    border-radius: 7px; /* Rounded corners */
+    border-radius: 10px; /* Rounded corners */
 }
 .box h2 {
     font-family: 'Cabin', sans-serif; 
