@@ -15,7 +15,7 @@ nav.top-bar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #1E4E61;
+    background-color: #005E7A;
     padding: 10px 20px;
     height: 60px;
     box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.5); /* Deutlicherer Schatten */
@@ -66,10 +66,11 @@ nav.top-bar {
 .main-content {
     display: flex;
     flex: 1;
-    height: calc(100vh - 60px); /* Höhe abzüglich der Top-Leiste */
+    margin-top: 100px; /* Vergrößert den Abstand zur Top Bar */
+    height: calc(100vh - 100px); /* Höhe des Inhaltsbereichs nach der Top Bar */
     overflow: hidden;
-    margin-top: 60px; /* Stellt sicher, dass der Inhalt nicht unter der Top Bar beginnt */
 }
+
 
 /* Left Panel */
 .left-panel {
@@ -79,7 +80,7 @@ nav.top-bar {
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
-    background-color: #1E4E61;
+    background-color: #005E7A;
     overflow-y: auto; /* Scrollbar falls nötig */
 }
 
@@ -131,9 +132,8 @@ nav.top-bar {
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    background-color: #24617B;
+    background-color: #005E7A;
     height: 100%; /* Füllt die Höhe vollständig aus */
-    border-left: 2px solid #59D3E4; /* Visuelle Trennung */
     padding: 20px;
     box-sizing: border-box;
     position: relative; /* Wichtig für die richtige Bildausrichtung */
@@ -151,4 +151,5 @@ nav.top-bar {
     object-fit: cover; /* Bild wird so gedehnt, dass es den Container füllt */
     border-radius: 10px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+    background-color: #00242F;
 }
