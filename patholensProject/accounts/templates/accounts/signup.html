@@ -1,48 +1,48 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'css/signup.css' %}">
-    <link href="https://fonts.googleapis.com/css2?family=Cabin:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="{% static 'css/signup.css' %}" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Cabin:wght@400;500;600;700&display=swap"
+            rel="stylesheet"
+        />
 
-    <title>Document</title>
-</head>
-<body>
-    <div class="head">
-        
-    </div>  
-    <div class="box">
-        <h2>SIGN UP</h2>
-        <h4>Enter your data</h4>
+        <title>Document</title>
+    </head>
+    <body>
+        <div class="head"></div>
+        <div class="box">
+            <h2>SIGN UP</h2>
+            <h4>Enter your data</h4>
 
-        <form method="POST" action="{% url 'patholensSignUp' %}">
-            {% csrf_token %}
-            <div class="input-container">
-                <div class="input-container2">
-                    <div class="input-box-name">
-                        <input type="text" placeholder="Name">
+            <form method="POST" action="{% url 'patholensSignUp' %}">
+                {% csrf_token %}
+                <div class="input-container">
+                    <div class="input-container2">
+                        <div class="input-box-name">
+                            <input id ="name" name="name" type="text" placeholder="Name" />
+                        </div>
+                        <div class="input-first-name">
+                            <input name="firstName" id="firstName" type="text" placeholder="First Name" />
+                        </div>
                     </div>
-                    <div class="input-first-name">
-                        <input type="text" placeholder="First Name">
+
+                    <div class="input-boxes">
+                        <input name="email" id="email" type="email" placeholder="example@ulkbonn.com"/>
+                        <input name="password" id="password" type="password" placeholder="Password"/>
+                        <input name="confirmPassword" id="confirmPassword" type="password" placeholder="Confirm Password"/>
+                    </div>
+                    <div class="signupBoxLinks">
+                        <div class="signupButton">
+                            <button type="submit">Sign up</button>
+                        </div>
+                        <p>Have an account? <a href="/login">Log in</a></p>
                     </div>
                 </div>
-
-                <div class="input-boxes">
-                    <input type="email" placeholder="example@ulkbonn.com">
-                    <input type="password" placeholder="Password">
-                    <input type="password" placeholder="Confirm Password">
-                </div>
-                <div class="signupBoxLinks">
-                    <div class="signupButton">
-                        <button type="submit">Sign up</button>
-                    </div>
-                    <p>Have an account? <a href="/login">Log in</a></p>
-                </div>
-            </div>
-        </form>
-
-    </div>
-</body>
+            </form>
+        </div>
+    </body>
 </html>
