@@ -32,21 +32,30 @@
     align-items: center;
 }
 
-.input-box {
-    /* Die gesamte Breite der Box einnehmen */
-    display: flex; /* Flexbox aktivieren */
-    justify-content: flex-start; /* Input-Feld linksbündig ausrichten */
-    margin-top: 30px;
-    margin-left: 50px;
-    
+.input-container {
+    display: flex; /* Aktiviert Flexbox */
+    justify-content: space-between; /* Verteilt die Boxen nebeneinander */
+    align-items: center; /* Vertikale Ausrichtung der Inhalte */
+    margin-top: 30px; /* Abstand nach oben */
+    padding: 0 50px; /* Abstand links und rechts */
 }
 
-.input-box input {
+.input-container .input-box-name,
+.input-container .input-first-name {
+    flex: 1; /* Beide Boxen nehmen gleich viel Platz ein */
+    margin-right: 10px; /* Abstand zwischen den Boxen */
+}
+
+.input-container .input-first-name {
+    margin-right: 0; /* Entfernt den rechten Rand bei der letzten Box */
+}
+
+
+.input-box-name input {
     width: 125px;
     height: 25px;
     
     padding: 10px 15px 10px 20px; /* oben rechts unten links */
-    
     
     margin-top: 20px;
     border: none;
@@ -58,6 +67,24 @@
     color: white;
     box-shadow: inset 0px 4px 6px rgba(0, 0, 0, 0.2);
 }
+
+.input-first-name input {
+    width: 125px;
+    height: 25px;
+    
+    padding: 10px 15px 10px 20px; /* oben rechts unten links */
+    
+    margin-top: 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    font-family: Calibri, Arial, sans-serif; 
+    align-items: flex-start;
+    background-color: #00485E;
+    color: white;
+    box-shadow: inset 0px 4px 6px rgba(0, 0, 0, 0.2);
+}
+
 
 .input-box input::placeholder {
     color: white;
@@ -74,6 +101,3 @@ body {
     margin: 0; 
     
 }
-
-
-
