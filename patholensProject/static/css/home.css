@@ -89,9 +89,13 @@ nav.top-bar {
     align-items: center; /* Center items vertically */
     margin-bottom: 20px; /* Space below profile */
     height: 100px; /* Vergrößerte Höhe für das Profil */
-    margin-top: 30px; /* Nach unten verschieben */
-    margin-left: 20px; /* Nach links verschieben (von 40px auf 20px reduziert) */
+    margin-top: 0; /* Entfernt den vertikalen Abstand oben */
+    margin-left: 0; /* Setzt den Abstand nach links auf 0, um den Profilbereich links auszurichten */
+    position: relative;
+    left: 55px;
+    top: 33px;
 }
+
 
 .left-panel .profile img {
     width: 60px; /* Profilbild Breite */
@@ -126,8 +130,11 @@ nav.top-bar {
     display: flex; /* Flexbox layout for buttons */
     flex-direction: column; /* Arrange buttons vertically */
     gap: 28px; /* Space between buttons */
-    width: 100%; /* Stretch buttons to fill the width of the panel */
-    margin-bottom: 190px; 
+    width: 80%; /* Stretch buttons to fill the width of the panel */
+    margin-bottom: 190px;
+    position: relative;
+    left: 55px;
+    top: 33px; 
 }
 
 /* Button styling remains unchanged */
@@ -151,7 +158,7 @@ nav.top-bar {
 
 /* Right Panel */
 .right-panel {
-    flex: 2; /* Larger proportion for right panel */
+    flex: 1.65; /* Larger proportion for right panel */
     display: flex; /* Flexbox layout */
     flex-direction: column; /* Arrange items vertically */
     justify-content: flex-start; /* Align items at the top */
