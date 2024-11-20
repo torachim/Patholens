@@ -13,7 +13,7 @@ def signupView(request):
     if request.user.is_authenticated:
         # TODO: rediretc to starting page
         print("nutzer ist schon eingeloggt")
-
+    
     if request.method == "POST":
         firstName = request.POST.get("firstName")
         lastName = request.POST.get("name")
@@ -26,8 +26,22 @@ def signupView(request):
         username = username.replace(".", "")
 
         
-      
-        if confirmPassword != password:
+        # check if a user exists with one of these variables
+        usernameExists = User.objects.filter(username=username).exists()
+        nameExists = User.objects.filter(first_name=firstName, last_name=lastName).exists()
+        emailExists = User.objects.filter(email=email).exists()
+
+        alreadyExistent = [
+            usernameExists,
+            nameExists,
+            emailExists,
+        ]
+
+        if any(alreadyExistent):
+            information["userFree"] = False                
+            return render(request, "accounts/signup.html", {"information": information})
+
+        elif confirmPassword != password:
             information["equalPasswords"] = False
             return render(request, "accounts/signup.html", {"information": information})
 
