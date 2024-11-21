@@ -2,40 +2,50 @@
 
 body {
     background-color: #00242f;
-    font-family: 'Cabin';
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
     height: 100%;
+    
 }
 
 .loginWindow {
     background-color: #005e7a;
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
     width: 478px;
     height: 587px;
     margin-top: 115px;
+    margin-bottom: 115px;
+    padding: 20px;
+    border-radius: 10px;
 }
 
 .loginWindowText{
     color: #f7f7f7;
     display: flex;
-    justify-content: center;
     align-items: center;
     flex-direction: column;
-    margin-top: 50px;
+    
 }
 
-.loginWindowText h1{
-    font-size: 36px;
-    margin-bottom: -15px;
+.loginWindowText h2{
+    font-family: 'Cabin', sans-serif;
+    font-size: 34px;
+    font-weight: 600;
+    margin-top: 35px;
+    margin-bottom: 1px;
+
 }
 
-.loginWindowText p {
+.loginWindowText h4 {
     font-size: 16px;
+    font-family: 'Cabin', sans-serif;
+    font-weight: normal;
+    margin-top: 5px;
 }
 
 .loginWindowInput {
@@ -43,20 +53,23 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-top: 20px;
+    margin-top: 25px;
+    gap: 10px;
 }
 
 .loginWindowInput input{
     background-color: #00485e;
     margin-top: 25px;
-    height: 50px;
-    width: 370px;
-    font-size: 22px;
+    height: 28px;
+    width: 324px;
+    font-size: 14px;
+    font-family:  Calibri, Arial, sans-serif;
     color: #f7f7f7;
+    align-items: flex-start;
     border: none;
-    padding: 5px 10px;
-    border-radius: 10px;
-    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
+    padding: 10px 15px 10px 20px;
+    border-radius: 5px;
+    box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 
 .loginWindowInput input::placeholder {
@@ -80,11 +93,11 @@ body {
 .loginButton Button {
     background-color: #00afb9;
     border: none;
-    width: 262px;
-    height: 54px;
+    width: 230px;
+    height: 40px;
     border-radius: 8px;
     color: #f7f7f7;
-    font-size: 20px;
+    font-size: 18px;
     font-family: Calibri;
     font-weight: bold;
     cursor: pointer;
@@ -97,8 +110,10 @@ body {
 
 .loginWindowLinks p {
     color: #f7f7f7;
-    font-size: 18px;
-    margin-top: 25px;
+    font-size: 16px;
+    margin-top: 15px;
+    font-weight: normal;
+    font-family: 'Cabin', sans-serif;
 }
 
 .loginWindowLinks a {
