@@ -55,13 +55,13 @@
     padding: 0 50px; /* Horizontal padding (left and right) */
 }
 
-.input-container .input-box-name,
-.input-container .input-first-name {
+.input-container .input-box-firstname,
+.input-container .input-name {
     flex: 1; /* Both boxes take equal space */
     margin-right: 10px; /* Space between the boxes */
 }
 
-.input-container .input-first-name {
+.input-container .input-name {
     margin-right: 0; /* Removes right margin for the last box */
 }
 
@@ -79,7 +79,7 @@
     box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.2); /* Inner shadow */
 }
 
-.input-box-name input {
+.input-box-firstname input {
     width: 140px; /* Width of the "Name" input field */
     height: 28px; /* Height of the input field */
     padding: 10px 15px 10px 20px; /* Padding (top right bottom left) */
@@ -94,7 +94,7 @@
     box-shadow: inset 0px 4px 6px rgba(0, 0, 0, 0.2); /* Inner shadow */
 }
 
-.input-first-name input {
+.input-name input {
     width: 140px; /* Width of the "First Name" input field */
     height: 28px; /* Height of the input field */
     padding: 10px 15px 10px 20px; /* Padding (top right bottom left) */
@@ -109,7 +109,7 @@
     box-shadow: inset 0px 4px 6px rgba(0, 0, 0, 0.2); /* Inner shadow */
 }
 
-.input-first-name input::placeholder {
+.input-name input::placeholder {
     color: white; /* Placeholder text color */
     opacity: 0.6; /* Placeholder text transparency */
 }
@@ -119,7 +119,7 @@
     opacity: 0.6; /* Placeholder text transparency */
 }
 
-.input-box-name input::placeholder {
+.input-box-firstname input::placeholder {
     color: white; /* Placeholder text color */
     opacity: 0.6; /* Placeholder text transparency */
 }

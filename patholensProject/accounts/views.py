@@ -16,7 +16,7 @@ def signupView(request):
     
     if request.method == "POST":
         firstName = request.POST.get("firstName")
-        lastName = request.POST.get("name")
+        lastName = request.POST.get("lastName")
         email = request.POST.get("email")
         password = request.POST.get("password")
         confirmPassword = request.POST.get("confirmPassword")
