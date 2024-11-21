@@ -122,3 +122,12 @@ body {
     justify-content: center;
     align-items: center;
 }
+
+
+
+.password-container {
+    position: relative; /* For positioning the icon */
+    display: flex;
+    align-items: center;
+    margin-top: 0px; /* Space between password fields */
+}
