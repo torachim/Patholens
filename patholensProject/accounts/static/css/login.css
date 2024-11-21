@@ -131,3 +131,35 @@ body {
     align-items: center;
     margin-top: 0px; /* Space between password fields */
 }
+
+
+.password-container {
+    position: relative; /* For positioning the icon */
+    display: flex;
+    align-items: center;
+    margin-top: 0px; /* Space between password fields */
+}
+
+.toggle-password {
+    position: absolute; 
+    right: 15px;
+    margin-top: 25px;
+    cursor: pointer; 
+}
+
+
+.toggle-password .eye-icon {
+    display: block;
+    width: 20px;
+    height: 20px;
+    background-size: contain; /
+    background-repeat: no-repeat; 
+    background-image: url('icons/closedEye.png'); 
+    opacity: 0.6;
+}
+
+
+.toggle-password .eye-icon.open {
+    background-image: url('icons/openEye.png');
+    opacity: 0.6; 
+}
