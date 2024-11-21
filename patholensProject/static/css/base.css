@@ -52,6 +52,7 @@ body{
 .Buttons i {
     font-size: 40px;
     margin-right: 25px;
+    cursor: pointer;
 }
 
 .Buttons{
@@ -79,6 +80,17 @@ body{
 
 .closeHelp{
     display: flex;
+}
+
+.closeHelp button {
+    background-color: inherit;
+    border: none;
+    cursor: pointer;
+}
+
+.closeHelp i {
+    font-size: 20px;
+    color: #f7f7f7;
 }
 
 .helpContent{
