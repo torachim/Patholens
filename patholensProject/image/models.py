@@ -9,11 +9,11 @@ class diagnosis(models.Model):
     diagID = models.AutoField(primary_key = True)
     # PROTECT: if the referenced user is deleted, the diagnosis won't be deleted
     userID = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete = models.PROTECT)
-    confidence = models.PositiveSmallIntegerField()
-    subID = models.PositiveIntegerField
+    confidence = models.PositiveSmallIntegerField(null = True, blank = True)
+    subID = models.PositiveIntegerField(null = True, blank = True)
 
     def __str__(self):
-        return self.diagID
+        return str(self.diagID)
 
 # useTime class for storing the timestamps of executed actions during diagnosis
 class useTime(models.Model):
@@ -24,4 +24,4 @@ class useTime(models.Model):
     timestamp = models.DurationField(null = False)
 
     def __str__(self):
-        return self.timeID
+        return str(self.timeID)
