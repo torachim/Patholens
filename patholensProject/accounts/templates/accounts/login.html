@@ -1,4 +1,5 @@
 {% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,6 +11,7 @@
     <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
     <meta http-equiv="pragma" content="no-cache" />
     <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    <script src="https://kit.fontawesome.com/179535dd9d.js" crossorigin="anonymous"></script>
     <title>Patholens Login</title>
 </head>
 <body>
@@ -18,16 +20,49 @@
             <h2>LOGIN</h2>
             <h4>Welcome to Patholens</h4>
         </div>
-        <div class="loginWindowInput">
-            <input type="email" placeholder="E-Mail"/>
-            <input type="password" placeholder="Password"/>
-        </div>
-        <div class="loginWindowLinks">
-            <div class="loginButton">
-                <button type="button">Log In</button>
+        <form class="InputForm" method="post" action="{% url 'patholensLogin' %}">
+            {% csrf_token %}
+            <div class="loginWindowInput">
+                <input id = "email" name = "email" type="email" placeholder="E-Mail"/>
+                <div class="password-container">
+                    <input name="password" id="password" type="password" placeholder="Password"/>
+                    <span class= "toggle-password" id="togglePassword1">
+                        <i class ="eye-icon" id="eyeIcon1"></i>
+                    </span>
+                </div>
+
+                <script>
+                            
+                    function togglePasswordVisibility(inputId, iconId) {
+                        const passwordField = document.getElementById(inputId);
+                        const eyeIcon = document.getElementById(iconId);
+                
+                        if (passwordField.type == 'password') {
+                            passwordField.type = 'text';
+                            eyeIcon.classList.add('open'); 
+                        } else {
+                            passwordField.type = 'password';
+                            eyeIcon.classList.remove('open'); 
+                        }
+                    }
+                
+                    // Event listeners for both password fields
+                    document.getElementById('togglePassword1').addEventListener('click', function () {
+                        togglePasswordVisibility('password', 'eyeIcon1');
+                    });
+                </script>
+
+                {% if not information.username or not information.password %}
+                    <p class= "Information">! Username or Password wrong !</p>
+                {% endif %}
             </div>
-            <p>Don't have an account? <a href="#">Sign up</a></p>
-        </div>
+            <div class="loginWindowLinks">
+                <div class="loginButton">
+                    <button type="submit">Log In</button>
+                </div>
+                <p>Don't have an account? <a href="#">Sign up</a></p>
+            </div>
+        </form>
     </div>   
 </body>
 </html>

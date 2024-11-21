@@ -24,6 +24,8 @@ body {
     border-radius: 10px;
 }
 
+
+
 .loginWindowText{
     color: #f7f7f7;
     display: flex;
@@ -76,6 +78,13 @@ body {
     color: #aaa;
 }
 
+.Information {
+    color: #e50036;
+    margin-top: 25px;
+    margin-bottom: -20px;
+    font-size: 20px;
+}
+
 .loginWindowLinks {
     display: flex;
     flex-direction: column;
@@ -87,7 +96,7 @@ body {
 .loginButton{
     display: flex;
     flex-direction: row;
-    margin-top: 45px;
+    margin-top: 30px;
 }
 
 .loginButton Button {
@@ -127,4 +136,43 @@ body {
     display:flex;
     justify-content: center;
     align-items: center;
+}
+
+
+
+.password-container {
+    position: relative; /* For positioning the icon */
+    display: flex;
+    align-items: center;
+    margin-top: 0px; /* Space between password fields */
+}
+
+
+.password-container {
+    position: relative; /* For positioning the icon */
+    display: flex;
+    align-items: center;
+    margin-top: 0px; /* Space between password fields */
+}
+
+.toggle-password {
+    position: absolute;     /* Positions the element absolutely within its container */
+    right: 15px;            /* Moves it 15px from the right */
+    margin-top: 25px;       /* Adds space at the top */
+    cursor: pointer;        /* Changes the cursor to a pointer on hover */
+}
+
+.toggle-password .eye-icon {
+    display: block;             /* Ensures the element is a block */
+    width: 20px;                /* Sets the width */
+    height: 20px;               /* Sets the height */
+    background-size: contain;   /* Scales the background image to fit */
+    background-repeat: no-repeat; /* Prevents background image repetition */
+    background-image: url('icons/closedEye.png');   /* Default image for the closed eye */
+    opacity: 0.6;       /* Sets the transparency */
+}
+
+.toggle-password .eye-icon.open {
+    background-image: url('icons/openEye.png');     /* Changes to open eye image */
+    opacity: 0.6;   /* Maintains the transparency */
 }
