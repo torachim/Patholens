@@ -30,7 +30,7 @@
             <p>PathoLens</p>
         </div>
         <div class="Buttons">
-            <i class="fa-solid fa-circle-question" style="color: #ffffff;"></i> 
+            <i class="fa-solid fa-circle-question" style="color: #ffffff;" id="openHelp"></i> 
             <i class="fa-solid fa-right-from-bracket" style="color: #ffffff;"></i>
         </div>
     </div>
@@ -63,5 +63,22 @@
             </p>
         </div>
     </div>
+
+    <script>
+        const helpWindow = document.getElementById("helpWindow");
+        const openHelpWindow = document.getElementById("openHelp");
+        const closeHelpWindow = document.getElementById("helpClose");
+
+        openHelpWindow.addEventListener("click", () => {
+            helpWindow.style.right = 0;
+        });
+
+        closeHelpWindow.addEventListener("click", () => {
+            helpWindow.style.right = "-300px";
+        })
+
+
+    </script>
+
 </body>
 </html>
