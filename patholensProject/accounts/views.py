@@ -7,7 +7,7 @@ from django.core.exceptions import ValidationError
 
 def signupView(request):
 
-    information = {"userFree": True, "equalPasswords": True, "passwordStrength": True}
+    information = {"availableUser": True, "equalPasswords": True, "passwordStrength": True}
 
     # user is already loged in
     if request.user.is_authenticated:
@@ -38,7 +38,7 @@ def signupView(request):
         ]
 
         if any(alreadyExistent):
-            information["userFree"] = False                
+            information["availableUser"] = False                
             return render(request, "accounts/signup.html", {"information": information})
 
         elif confirmPassword != password:
