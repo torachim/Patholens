@@ -124,6 +124,14 @@
     opacity: 0.6; /* Placeholder text transparency */
 }
 
+.information {
+    color: #e50036;
+    margin-top: 25px;
+    margin-bottom: -20px;
+    font-size: 20px;
+    font-family: Cabin, sans-serif;
+}
+
 body {
     background-color: #00242F; /* Background color of the page */
     display: flex; /* Enables Flexbox for the body */

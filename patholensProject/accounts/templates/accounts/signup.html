@@ -34,7 +34,16 @@
                         <input name="email" id="email" type="email" placeholder="example@ulkbonn.com"/>
                         <input name="password" id="password" type="password" placeholder="Password"/>
                         <input name="confirmPassword" id="confirmPassword" type="password" placeholder="Confirm Password"/>
+
+                        {% if not information.availableUser %}
+                            <p class="information"> An account with this email already exists.</p>
+                        {% elif not information.equalPasswords %}
+                            <p class="information"> The passwords you entered do not match. </p>
+                        {% elif not information.passwordStrength %}
+                            <p class="information"> "Your password is too weak." </p>
+                        {% endif %}
                     </div>
+
                     <div class="signupBoxLinks">
                         <div class="signupButton">
                             <button type="submit">Sign up</button>
