@@ -19,13 +19,33 @@
             {% csrf_token %}
             <div class="loginWindowInput">
                 <input id = "email" name = "email" type="email" placeholder="E-Mail"/>
-                
                 <div class="password-container">
                     <input name="password" id="password" type="password" placeholder="Password"/>
                     <span class= "toggle-password" id="togglePassword1">
                         <i class ="eye-icon" id="eyeIcon1"></i>
                     </span>
                 </div>
+
+                <script>
+                            
+                    function togglePasswordVisibility(inputId, iconId) {
+                        const passwordField = document.getElementById(inputId);
+                        const eyeIcon = document.getElementById(iconId);
+                
+                        if (passwordField.type == 'password') {
+                            passwordField.type = 'text';
+                            eyeIcon.classList.add('open'); 
+                        } else {
+                            passwordField.type = 'password';
+                            eyeIcon.classList.remove('open'); 
+                        }
+                    }
+                
+                    // Event listeners for both password fields
+                    document.getElementById('togglePassword1').addEventListener('click', function () {
+                        togglePasswordVisibility('password', 'eyeIcon1');
+                    });
+                </script>
 
                 {% if not information.username or not information.password %}
                     <p class= "Information">! Username or Password wrong !</p>
