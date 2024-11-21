@@ -35,7 +35,7 @@
                         <div class="password-container">
                             <input name="password" id="password" type="password" placeholder="Password"/>
                             <span class= "toggle-password" id="togglePassword1">
-                                <i class ="eye-icon" id="eye-icon1"></i>
+                                <i class ="eye-icon" id="eyeIcon1"></i>
                             </span>
                         </div>
 
@@ -45,14 +45,14 @@
                                 <i class="eye-icon" id="eyeIcon2"></i>
                             </span>
                         </div>
-
+                        
                         <script>
                             
                             function togglePasswordVisibility(inputId, iconId) {
                                 const passwordField = document.getElementById(inputId);
                                 const eyeIcon = document.getElementById(iconId);
                         
-                                if (passwordField.type === 'password') {
+                                if (passwordField.type == 'password') {
                                     passwordField.type = 'text';
                                     eyeIcon.classList.add('open'); 
                                 } else {

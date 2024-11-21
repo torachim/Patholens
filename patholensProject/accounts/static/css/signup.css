@@ -64,7 +64,12 @@
 .input-container .input-name {
     margin-right: 0; /* Removes right margin for the last box */
 }
-
+.password-container {
+    position: relative; /* For positioning the icon */
+    display: flex;
+    align-items: center;
+    margin-top: 0px; /* Space between password fields */
+}
 .input-boxes input {
     background-color: #00485e; /* Input field background color */
     margin-top: 20px; /* Top margin between inputs */
@@ -78,6 +83,9 @@
     border-radius: 5px; /* Rounded corners */
     box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.2); /* Inner shadow */
 }
+
+
+
 
 .input-box-firstname input {
     width: 140px; /* Width of the "Name" input field */
@@ -107,6 +115,28 @@
     background-color: #00485E; /* Background color */
     color: white; /* Text color */
     box-shadow: inset 0px 4px 6px rgba(0, 0, 0, 0.2); /* Inner shadow */
+}
+
+.toggle-password {
+    position: absolute; 
+    right: 15px;
+    margin-top: 20px;
+    cursor: pointer; 
+}
+
+.toggle-password .eye-icon {
+    display: block;
+    width: 20px;
+    height: 20px;
+    background-size: contain; /
+    background-repeat: no-repeat; 
+    background-image: url('icons/closedEye.png'); 
+    opacity: 0.6;
+}
+
+.toggle-password .eye-icon.open {
+    background-image: url('icons/openEye.png');
+    opacity: 0.6; 
 }
 
 .input-name input::placeholder {
