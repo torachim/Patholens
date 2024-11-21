@@ -79,10 +79,45 @@ body {
 }
 
 .Information {
-    color: #e50036;
+    color: #ff0505;
+    font-family:  Calibri, Arial, sans-serif;
+    font-weight: bold;
     margin-top: 25px;
     margin-bottom: -20px;
-    font-size: 20px;
+    font-size: 18px;
+    text-shadow: 0 0 1px #ff0505; /*glow effect*/
+    animation: glowing 0.10s ease-out 1, shake 0.10s ease-in-out 1 forwards ; /*shake ang glow effect */
+}
+
+@keyframes glowing { 
+    0% {
+        text-shadow: 
+            0 0 1px #ff0505, 
+            0 0 2px #ff0505;
+    }
+    75% {
+        text-shadow: 
+            0 0 3px #ff0505, 
+            0 0 5px #ff0505;
+    }
+}
+
+@keyframes shake {
+    0% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-7px);
+    }
+    50% {
+        transform: translateX(7px);
+    }
+    75% {
+        transform: translateX(-7px);
+    }
+    100% {
+        transform: translateX(0);
+    }
 }
 
 .loginWindowLinks {
@@ -135,13 +170,11 @@ body {
 } 
 
 
-
 .head{
     display:flex;
     justify-content: center;
     align-items: center;
 }
-
 
 
 .password-container {
