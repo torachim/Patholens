@@ -1,18 +1,18 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 
 
 def signupView(request):
 
-    information = {"availableUser": True, "equalPasswords": True, "passwordStrength": True}
+    information = {"availableUser": True, "equalPasswords": True, "passwordStrength": True, "entryComplete": True}
 
     # user is already loged in
     if request.user.is_authenticated:
         # TODO: rediretc to starting page
-        print("nutzer ist schon eingeloggt")
+        print("user ist already logged in")
     
     if request.method == "POST":
         firstName = request.POST.get("firstName")
@@ -20,7 +20,21 @@ def signupView(request):
         email = request.POST.get("email")
         password = request.POST.get("password")
         confirmPassword = request.POST.get("confirmPassword")
+        
+        webParameters = [firstName.strip(), lastName.strip(), email.strip(), password.strip(), confirmPassword.strip()]
+        
+        # one parameter is missing 
+        if not all(webParameters):
+            information["entryComplete"] = False
+            print("in no all parm are filled")
+            return termination(request, information)
 
+        
+        elif confirmPassword != password:
+            information["equalPasswords"] = False
+            return termination(request, information)
+        
+        
         # our username it the email but without the special characters
         username = email.replace("@", "")
         username = username.replace(".", "")
@@ -39,13 +53,10 @@ def signupView(request):
 
         if any(alreadyExistent):
             information["availableUser"] = False                
-            return render(request, "accounts/signup.html", {"information": information})
+            return termination(request, information)
 
-        elif confirmPassword != password:
-            information["equalPasswords"] = False
-            return render(request, "accounts/signup.html", {"information": information})
 
-        
+        # check if password is strong enough        
         try:
             validate_password(password)
 
@@ -54,7 +65,7 @@ def signupView(request):
             print(e.messages)
 
             information["passwordStrength"] = False
-            return render(request, "accounts/signup.html", {"information": information})
+            return termination(request, information)
 
         user = User.objects.create_user(
             username=username,
@@ -65,9 +76,15 @@ def signupView(request):
         )
         login(request, user)
 
-        print("Nutzer ist erfolgreich registriert worden")
+        print("user was successfully signed up")
 
     else:
         print("Error: POST was not used")
 
+    return render(request, "accounts/signup.html", {"information": information})
+
+
+
+def termination(request, information):
+    logout(request)
     return render(request, "accounts/signup.html", {"information": information})
