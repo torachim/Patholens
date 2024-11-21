@@ -1,0 +1,33 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    {% block extraCSS %}
+    <!-- Extra CSS will go here -->
+    {% endblock %}
+    <script src="https://kit.fontawesome.com/179535dd9d.js" crossorigin="anonymous"></script>
+    <title>{% block title %}Website{% endblock %}</title>
+</head>
+<body>
+    <div class="topBar">
+        <div class="NameIcon">
+            <img alt="icon" src="../static/images/icons8-experiment-versuch-ios-17-glyph-96.png">
+            <p>Patholens</p>
+        </div>
+        <div class="Buttons">
+
+        </div>
+        <div class="content">
+            {% block content %}
+             <!-- Content from the child page will go here -->
+            {% endblock %}
+        </div>
+
+    </div>
+    
+</body>
+</html>
