@@ -38,8 +38,8 @@ def signupView(request):
         
         
         # our username it the email but without the special characters
-        username = email.replace("@", "")
-        username = username.replace(".", "")
+        username = email.replace("@", "AT")
+        username = username.replace(".", "POINT")
 
         
         # check if a user exists with one of these variables
