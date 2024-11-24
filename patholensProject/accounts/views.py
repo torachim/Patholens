@@ -22,8 +22,8 @@ def loginView(request):
         password = request.POST.get("password")
 
         # remove '@' and '.' so that the usernmae is the email but without the special characters
-        email = email.replace("@", "")
-        email = email.replace(".", "")
+        email = email.replace("@", "AT")
+        email = email.replace(".", "POINT")
 
         userExistent = User.objects.filter(username=email).exists()
 
