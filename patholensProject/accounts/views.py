@@ -21,6 +21,8 @@ def signupView(request):
         password = request.POST.get("password")
         confirmPassword = request.POST.get("confirmPassword")
         
+        
+        # stirp checks if one element is empyt or None
         webParameters = [firstName.strip(), lastName.strip(), email.strip(), password.strip(), confirmPassword.strip()]
         
         # one parameter is missing 
