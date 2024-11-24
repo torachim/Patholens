@@ -1,3 +1,4 @@
+/* Grundlegende Stile für den Body */
 body {
     margin: 0;
     font-family: Arial, sans-serif;
@@ -6,9 +7,9 @@ body {
     display: flex;
     flex-direction: column;
     height: 100vh;
-    overflow: hidden;
 }
 
+/* Top-Bar Navigation */
 nav.top-bar {
     display: flex;
     justify-content: space-between;
@@ -22,9 +23,9 @@ nav.top-bar {
     left: 0;
     right: 0;
     z-index: 10;
-    flex-shrink: 0;
 }
 
+/* Logo ganz links */
 .top-bar .logo {
     font-size: 24px;
     font-weight: bold;
@@ -32,31 +33,31 @@ nav.top-bar {
     align-items: center;
 }
 
-.top-bar .logo img {
+.top-bar .logo i {
+    font-size: 48px;
+    color: #4CAF50;
+}
+
+.top-bar .logo span {
+    margin-left: 10px;
+}
+
+/* Container für Hilfe- und Logout-Symbole */
+.top-bar .icon-container {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Abstand zwischen den Symbolen */
+}
+
+/* Allgemeine Stile für Icons */
+.top-bar .icon-container img {
     width: 40px;
     height: 40px;
-    margin-right: 10px;
-}
-
-.top-bar .buttons {
-    display: flex;
-    gap: 15px;
-}
-
-.top-bar .buttons button {
-    background-color: #59D3E4;
-    color: #000;
-    border: none;
-    padding: 5px 10px;
-    font-size: 14px;
-    border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s;
 }
 
-.top-bar .buttons button:hover {
-    background-color: #44B2C2;
-}
+
+
 
 .main-content {
     display: flex;

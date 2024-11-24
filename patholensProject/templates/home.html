@@ -13,13 +13,14 @@
     <!-- Top Bar (Nav) -->
     <nav class="top-bar">
       <div class="logo">
-        <!-- Gehirn-Icon ersetzt das Bild -->
         <i class="fas fa-brain" style="font-size: 48px; color: #4CAF50;"></i>
         <span style="font-size: 24px; font-weight: bold; margin-left: 10px;">PathoLens</span>
       </div>
-      <div class="buttons">
-        <button><i class="fas fa-question-circle"></i> Help</button>
-        <button><i class="fas fa-door-open"></i> Logout</button>
+
+      <!-- Container für Hilfe- und Auslog-Symbole -->
+      <div class="icon-container">
+        <img src="{% static 'images/help.png' %}" alt="Help Icon" class="help" />
+        <img src="{% static 'images/logOut.png' %}" alt="Log Out Icon" class="logOut" />
       </div>
     </nav>
 
