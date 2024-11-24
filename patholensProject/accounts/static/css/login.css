@@ -16,8 +16,8 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 478px;
-    height: 587px;
+    width: 458px;
+    height: 567px;
     margin-top: 115px;
     margin-bottom: 115px;
     padding: 20px;
@@ -36,18 +36,18 @@ body {
 
 .loginWindowText h2{
     font-family: 'Cabin', sans-serif;
-    font-size: 34px;
+    font-size: 38px;
     font-weight: 600;
-    margin-top: 35px;
+    margin-top: 30px;
     margin-bottom: 1px;
 
 }
 
 .loginWindowText h4 {
-    font-size: 16px;
+    font-size: 20px;
     font-family: 'Cabin', sans-serif;
     font-weight: normal;
-    margin-top: 5px;
+    margin-top: 3px;
 }
 
 .loginWindowInput {
@@ -56,7 +56,7 @@ body {
     justify-content: center;
     align-items: center;
     margin-top: 25px;
-    gap: 10px;
+    gap: 12px;
 }
 
 .loginWindowInput input{
@@ -138,7 +138,7 @@ body {
     background-color: #00afb9;
     border: none;
     width: 230px;
-    height: 40px;
+    height: 45px;
     border-radius: 8px;
     color: #f7f7f7;
     font-size: 18px;
