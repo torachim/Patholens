@@ -69,6 +69,7 @@ def signupView(request):
             information["passwordStrength"] = False
             return termination(request, information)
 
+        # user creation
         user = User.objects.create_user(
             username=username,
             email=email,
@@ -76,8 +77,10 @@ def signupView(request):
             last_name=lastName,
             password=password,
         )
+        
+        # login of user 
         login(request, user)
-
+        
         print("user was successfully signed up")
 
     else:
