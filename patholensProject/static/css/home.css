@@ -35,7 +35,7 @@ nav.top-bar {
 
 .top-bar .logo i {
     font-size: 48px;
-    color: #4CAF50;
+    color: #ffffff;
 }
 
 .top-bar .logo span {
@@ -107,8 +107,6 @@ nav.top-bar {
     font-size: 25px;
     font-weight: bold;
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 .left-panel .profile-info .email {
