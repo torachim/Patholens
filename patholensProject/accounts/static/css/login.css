@@ -55,15 +55,15 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-top: 25px;
-    gap: 14px;
+    margin-top: 14px;
+    gap: 16px;
 }
 
 .loginWindowInput input{
     background-color: #00485e;
     margin-top: 25px;
-    height: 28px;
-    width: 324px;
+    height: 34px;
+    width: 330px;
     font-size: 14px;
     font-family:  Calibri, Arial, sans-serif;
     color: #f7f7f7;
@@ -131,7 +131,7 @@ body {
 .loginButton{
     display: flex;
     flex-direction: row;
-    margin-top: 30px;
+    margin-top: 36px;
 }
 
 .loginButton Button {
