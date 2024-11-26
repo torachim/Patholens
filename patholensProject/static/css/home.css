@@ -1,0 +1,180 @@
+/* Grundlegende Stile für den Body */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #24617B;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+/* Top-Bar Navigation */
+nav.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #24617B;
+    padding: 10px 20px;
+    height: 60px;
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+}
+
+/* Logo ganz links */
+.top-bar .logo {
+    font-size: 24px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+}
+
+.top-bar .logo i {
+    font-size: 48px;
+    color: #ffffff;
+}
+
+.top-bar .logo span {
+    margin-left: 10px;
+}
+
+/* Container für Hilfe- und Logout-Symbole */
+.top-bar .icon-container {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Abstand zwischen den Symbolen */
+}
+
+/* Allgemeine Stile für Icons */
+.top-bar .icon-container img {
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+}
+
+
+
+
+.main-content {
+    display: flex;
+    flex: 1;
+    margin-top: 100px;
+    height: calc(100vh - 100px);
+    overflow: hidden;
+}
+
+.left-panel {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    background-color: #24617B;
+    overflow-y: auto;
+}
+
+.left-panel .profile {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    height: 100px;
+    margin-left: 0;
+    position: relative;
+    left: 55px;
+    top: 33px;
+}
+
+.left-panel .profile img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin-right: 20px;
+    background-color: #e0e8ea;
+}
+
+.left-panel .profile-info {
+    font-size: 16px;
+    line-height: 1.2;
+    max-width: 200px;
+}
+
+.left-panel .profile-info .name {
+    font-size: 25px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.left-panel .profile-info .email {
+    font-size: 18px;
+    color: #ffffff;
+    margin-top: 5px;
+}
+
+.left-panel .buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    width: 80%;
+    margin-bottom: 190px;
+    position: relative;
+    left: 55px;
+    top: 33px;
+}
+
+.left-panel .buttons button {
+    background-color: #00AFB9;
+    color: #FFFFFF;
+    border: none;
+    padding: 15px 30px;
+    font-size: 18px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    width: 100%;
+    text-align: center;
+}
+
+.left-panel .buttons button:hover {
+    background-color: #44B2C2;
+    transform: scale(1.02);
+}
+
+.right-panel {
+    flex: 1.65;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    background-color: #00242F;
+    height: calc(100% - 40px);
+    margin: 20px;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.5);
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+}
+
+.welcome-text {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.welcome-text h1 {
+    font-size: 2.5rem;
+    color: #FFFFFF;
+    margin: 50px;
+}
+
+.welcome-image {
+    max-width: 100%;
+    max-height: calc(100% - 80px);
+    object-fit: contain;
+    border-radius: 15px;
+}
