@@ -1,0 +1,216 @@
+.box {
+    width: 478px; /* Width of the box */
+    height: 587px; /* Height of the box */
+    background-color: #005E7A; 
+    border: none; 
+    padding: 20px;
+    margin-top: 115px; /* Top margin of the box */
+    margin-bottom: 115px; /* Bottom margin of the box */
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3); 
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    flex-direction: column;
+    border-radius: 10px; /* Rounded corners */
+}
+.box h2 {
+    font-family: 'Cabin', sans-serif; 
+    font-weight: 600; 
+    font-size: 34px; 
+    margin-top: 45px; /* Top margin for the heading */
+    margin-bottom: 3px; /* Bottom margin for the heading */
+    color: white;
+    align-items: center;
+}
+
+.box h4 {
+    font-family: 'Cabin', sans-serif; 
+    font-weight: normal; 
+    font-size: 16px; 
+    margin: 0; /* Remove default margin */
+    color: white;
+    align-items: center;
+}
+
+.input-boxes {
+    display: flex;
+    flex-direction: column; /* Align elements vertically */
+    justify-content: center;
+    align-items: center;
+    margin-top: 0px; /* No additional top margin */
+}
+
+.input-container {
+    display: flex; /* Enables Flexbox */
+    flex-direction: column; /* Arrange elements vertically */
+    align-items: center; /* Center-align the contents horizontally */
+    margin-top: 0px; /* Top margin */
+}
+
+.input-container2 {
+    display: flex; /* Enables Flexbox */
+    justify-content: space-between; /* Distributes elements horizontally with space between */
+    align-items: center; /* Aligns elements vertically */
+    margin-top: 25px; /* Top margin */
+    padding: 0 50px; /* Horizontal padding (left and right) */
+}
+
+.input-container .input-box-firstname,
+.input-container .input-name {
+    flex: 1; /* Both boxes take equal space */
+    margin-right: 10px; /* Space between the boxes */
+}
+
+.input-container .input-name {
+    margin-right: 0; /* Removes right margin for the last box */
+}
+.password-container {
+    position: relative; /* For positioning the icon */
+    display: flex;
+    align-items: center;
+    margin-top: 0px; /* Space between password fields */
+}
+.input-boxes input {
+    background-color: #00485e; /* Input field background color */
+    margin-top: 20px; /* Top margin between inputs */
+    height: 28px; /* Height of the input fields */
+    padding: 10px 15px 10px 20px; /* Padding (top right bottom left) */
+    width: 324px; /* Width of the input fields */
+    font-family: Calibri, Arial, sans-serif;
+    font-size: 14px; /* Font size for input text */
+    color: #f7f7f7; /* Text color */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.2); /* Inner shadow */
+}
+
+
+
+
+.input-box-firstname input {
+    width: 140px; /* Width of the "Name" input field */
+    height: 28px; /* Height of the input field */
+    padding: 10px 15px 10px 20px; /* Padding (top right bottom left) */
+    margin-top: 20px; /* Top margin */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    font-size: 14px; /* Font size */
+    font-family: Calibri, Arial, sans-serif; 
+    align-items: flex-start;
+    background-color: #00485E; /* Background color */
+    color: white; /* Text color */
+    box-shadow: inset 0px 4px 6px rgba(0, 0, 0, 0.2); /* Inner shadow */
+}
+
+.input-name input {
+    width: 140px; /* Width of the "First Name" input field */
+    height: 28px; /* Height of the input field */
+    padding: 10px 15px 10px 20px; /* Padding (top right bottom left) */
+    margin-top: 20px; /* Top margin */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    font-size: 14px; /* Font size */
+    font-family: Calibri, Arial, sans-serif; 
+    align-items: flex-start;
+    background-color: #00485E; /* Background color */
+    color: white; /* Text color */
+    box-shadow: inset 0px 4px 6px rgba(0, 0, 0, 0.2); /* Inner shadow */
+}
+
+.toggle-password {
+    position: absolute; 
+    right: 15px;
+    margin-top: 20px;
+    cursor: pointer; 
+}
+
+.toggle-password .eye-icon {
+    display: block;
+    width: 20px;
+    height: 20px;
+    background-size: contain; 
+    background-repeat: no-repeat; 
+    background-image: url('icons/closedEye.png'); 
+    opacity: 0.6;
+}
+
+.toggle-password .eye-icon.open {
+    background-image: url('icons/openEye.png');
+    opacity: 0.6; 
+}
+
+.input-name input::placeholder {
+    color: white; /* Placeholder text color */
+    opacity: 0.6; /* Placeholder text transparency */
+}
+
+.input-boxes input::placeholder {
+    color: white; /* Placeholder text color */
+    opacity: 0.6; /* Placeholder text transparency */
+}
+
+.input-box-firstname input::placeholder {
+    color: white; /* Placeholder text color */
+    opacity: 0.6; /* Placeholder text transparency */
+}
+
+.information {
+    color: rgb(255, 103, 103);
+    margin-top: 25px;
+    margin-bottom: -20px;
+    font-size: 20px;
+    font-family: Cabin, sans-serif;
+}
+
+body {
+    background-color: #00242F; /* Background color of the page */
+    display: flex; /* Enables Flexbox for the body */
+    justify-content: center; /* Centers content horizontally */
+    align-items: center; /* Centers content vertically */
+    height: 100vh; /* Full height of the viewport */
+    margin: 0px; /* Removes default margin */
+}
+
+.signupBoxLinks {
+    display: flex; /* Enables Flexbox */
+    flex-direction: column; /* Arrange elements vertically */
+    justify-content: center; /* Centers content vertically */
+    align-items: center; /* Centers content horizontally */
+    margin-top: 25px; /* Top margin */
+}
+
+.signupButton {
+    display: flex; /* Enables Flexbox */
+    flex-direction: row; /* Arrange elements horizontally */
+    margin-top: 15px; /* Top margin */
+}
+
+.signupButton Button {
+    background-color: #00afb9; /* Button background color */
+    border: none; /* No border */
+    width: 230px; /* Button width */
+    height: 40px; /* Button height */
+    border-radius: 8px; /* Rounded corners */
+    color: #f7f7f7; /* Text color */
+    font-size: 18px; /* Font size */
+    font-family: Calibri; /* Font family */
+    font-weight: bold; /* Font weight */
+    cursor: pointer; /* Pointer cursor on hover */
+    box-shadow: 5px 5px rgba(0, 0, 0, 0.2); /* Shadow for the button */
+}
+
+.signupButton Button:hover {
+    background-color: #028f97; /* Button background color on hover */
+}
+
+.signupBoxLinks p {
+    color: #f7f7f7; /* Text color */
+    font-family: 'Cabin', sans-serif; 
+    font-weight: normal; /* Normal font weight */
+    font-size: 16px; /* Font size */
+    margin-top: 15px; /* Top margin */
+}
+
+.signupBoxLinks a {
+    color: #00afb9; /* Link color */
+}
