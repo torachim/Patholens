@@ -75,7 +75,8 @@ html, body {
 }
 
 .loginWindowInput input::placeholder {
-    color: #aaa;
+    color: #ffffff;
+    opacity: 0.6;
 }
 
 .Information {
