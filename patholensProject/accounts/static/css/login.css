@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Cabin');
 
-body {
+html, body {
     background-color: #00242f;
     display: flex;
     justify-content: center;
@@ -16,8 +16,8 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 478px;
-    height: 587px;
+    width: 458px;
+    height: 567px;
     margin-top: 115px;
     margin-bottom: 115px;
     padding: 20px;
@@ -36,18 +36,18 @@ body {
 
 .loginWindowText h2{
     font-family: 'Cabin', sans-serif;
-    font-size: 34px;
+    font-size: 38px;
     font-weight: 600;
-    margin-top: 35px;
+    margin-top: 30px;
     margin-bottom: 1px;
 
 }
 
 .loginWindowText h4 {
-    font-size: 16px;
+    font-size: 22px;
     font-family: 'Cabin', sans-serif;
     font-weight: normal;
-    margin-top: 5px;
+    margin-top: 3px;
 }
 
 .loginWindowInput {
@@ -55,15 +55,15 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-top: 25px;
-    gap: 10px;
+    margin-top: 14px;
+    gap: 16px;
 }
 
 .loginWindowInput input{
     background-color: #00485e;
     margin-top: 25px;
-    height: 28px;
-    width: 324px;
+    height: 34px;
+    width: 330px;
     font-size: 14px;
     font-family:  Calibri, Arial, sans-serif;
     color: #f7f7f7;
@@ -79,26 +79,26 @@ body {
 }
 
 .Information {
-    color: #ff0505;
+    color: rgb(255, 103, 103);
     font-family:  Calibri, Arial, sans-serif;
     font-weight: bold;
     margin-top: 25px;
     margin-bottom: -20px;
     font-size: 18px;
-    text-shadow: 0 0 1px #ff0505; /*glow effect*/
+    text-shadow: 0 0 1px rgb(255, 103, 103); /*glow effect*/
     animation: glowing 0.10s ease-out 1, shake 0.07s ease-in-out 1 forwards ; /*shake ang glow effect */
 }
 
 @keyframes glowing { 
     0% {
         text-shadow: 
-            0 0 1px #ff0505, 
-            0 0 2px #ff0505;
+            0 0 1px rgb(255, 103, 103), 
+            0 0 2px rgb(255, 103, 103);
     }
     75% {
         text-shadow: 
-            0 0 3px #ff0505, 
-            0 0 5px #ff0505;
+            0 0 3px rgb(255, 103, 103), 
+            0 0 5px rgb(255, 103, 103);
     }
 }
 
@@ -131,14 +131,14 @@ body {
 .loginButton{
     display: flex;
     flex-direction: row;
-    margin-top: 30px;
+    margin-top: 36px;
 }
 
 .loginButton Button {
     background-color: #00afb9;
     border: none;
     width: 230px;
-    height: 40px;
+    height: 45px;
     border-radius: 8px;
     color: #f7f7f7;
     font-size: 18px;
