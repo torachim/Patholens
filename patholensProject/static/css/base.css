@@ -1,0 +1,109 @@
+@import url('https://fonts.googleapis.com/css?family=Cabin');
+
+body{
+    background-color: #005E7A;
+
+    margin: 0;
+    padding: 0;
+}
+
+.topBar {
+    background-color: #005E7A;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 75px; /* Breite (vertikal)*/
+    margin: 0;
+    box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.5);
+    padding: 0;
+    margin: 0;
+}
+
+.NameIcon {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+}
+
+.NameIcon img{
+    width: 55px;
+    height: 55px;
+    margin-top: 35px;
+    margin-left: 15px;
+}
+
+.NameIcon p {
+    font-size: 35px;
+    margin-left: 15px;
+    margin-top: 45px;
+    color: #f7f7f7;
+    font-family: 'Cabin';
+    font-weight: bold;
+}
+
+.Buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.Buttons i {
+    font-size: 35px;
+    margin-right: 25px;
+    cursor: pointer;
+}
+
+
+.Buttons{
+    padding: 0;
+    margin: 0;
+}
+
+.helpSlide {
+    position: fixed;
+    top: 0;
+    right: -350px;
+    width: 300px;
+    height: 100%;
+    color: #f7f7f7;
+    background-color: #333;
+    opacity: 0.9;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    transition: right 0.5s ease-in-out;
+}
+
+
+.closeHelp{
+    display: flex;
+}
+
+.closeHelp button {
+    background-color: inherit;
+    border: none;
+    cursor: pointer;
+}
+
+.closeHelp i {
+    font-size: 24px;
+    color: #f7f7f7;
+}
+
+.helpContent{
+    overflow-y: scroll;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    font-family: Calibri;
+}
+
+.helpContent p {
+    line-height: 20px;
+    font-size: 16px;
+}
+
+.helpContent h2 {
+    font-size: 24px;
+}
