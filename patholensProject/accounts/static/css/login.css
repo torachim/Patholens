@@ -185,13 +185,6 @@ body {
 }
 
 
-.password-container {
-    position: relative; /* For positioning the icon */
-    display: flex;
-    align-items: center;
-    margin-top: 0px; /* Space between password fields */
-}
-
 .toggle-password {
     position: absolute;     /* Positions the element absolutely within its container */
     right: 15px;            /* Moves it 15px from the right */
