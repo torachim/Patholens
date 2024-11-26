@@ -61,8 +61,8 @@ html, body {
 
 .loginWindowInput input{
     background-color: #00485e;
-    margin-top: 25px;
-    height: 34px;
+    margin-top: 20px;
+    height: 36px;
     width: 330px;
     font-size: 14px;
     font-family:  Calibri, Arial, sans-serif;
