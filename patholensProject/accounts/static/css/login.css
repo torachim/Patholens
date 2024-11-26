@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Cabin');
 
-body {
+html, body {
     background-color: #00242f;
     display: flex;
     justify-content: center;

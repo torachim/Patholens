@@ -107,7 +107,7 @@ def loginView(request):
                    "password": True,
                    }
 
-    # user is already loged in
+    # user is already logged in
     if request.user.is_authenticated:
         # TODO: rediretc to starting page
         return redirect("/")
