@@ -13,8 +13,13 @@ body{
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+<<<<<<< HEAD
     width: 100%;
     height: 75px; /* Breite (vertikal)*/
+=======
+    width: 90%;
+    height: 80px; /* Breite (vertikal)*/
+>>>>>>> login
     margin: 0;
     box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.5);
     padding: 0;
@@ -28,9 +33,15 @@ body{
 }
 
 .NameIcon img{
+<<<<<<< HEAD
     width: 55px;
     height: 55px;
     margin-top: 35px;
+=======
+    width: 85px;
+    height: 85px;
+    margin-top: 25px;
+>>>>>>> login
     margin-left: 15px;
 }
 
@@ -47,6 +58,11 @@ body{
     display: flex;
     flex-direction: row;
     justify-content: space-around;
+<<<<<<< HEAD
+=======
+    padding: 0;
+    margin: 0;
+>>>>>>> login
 }
 
 .Buttons i {
@@ -56,11 +72,14 @@ body{
 }
 
 
+<<<<<<< HEAD
 .Buttons{
     padding: 0;
     margin: 0;
 }
 
+=======
+>>>>>>> login
 .helpSlide {
     position: fixed;
     top: 0;
