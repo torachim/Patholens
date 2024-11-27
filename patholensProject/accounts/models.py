@@ -5,7 +5,7 @@ from django.conf import settings
 
 class doctors(models.Model):
     # 1 to 1 relation between diagnosis and doctors 
-    # when user is delted the doctor is deleted as well
+    # when user is deleted the doctor is deleted as well
     doctorId = models.OneToOneField(settings.AUTH_USER_MODEL, primary_key=True, on_delete = models.CASCADE)
     activePatient = models.CharField(null=True, max_length=50)
 
