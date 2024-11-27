@@ -32,7 +32,7 @@
     align-items: center;
 }
 
-.input-boxes {
+.inputBoxes {
     display: flex;
     flex-direction: column; /* Align elements vertically */
     justify-content: center;
@@ -40,14 +40,14 @@
     margin-top: 0px; /* No additional top margin */
 }
 
-.input-container {
+.inputContainer {
     display: flex; /* Enables Flexbox */
     flex-direction: column; /* Arrange elements vertically */
     align-items: center; /* Center-align the contents horizontally */
     margin-top: 0px; /* Top margin */
 }
 
-.input-container2 {
+.inputContainer2 {
     display: flex; /* Enables Flexbox */
     justify-content: space-between; /* Distributes elements horizontally with space between */
     align-items: center; /* Aligns elements vertically */
@@ -55,22 +55,22 @@
     padding: 0 50px; /* Horizontal padding (left and right) */
 }
 
-.input-container .input-box-firstname,
-.input-container .input-name {
+.inputContainer .inputBoxFirstname,
+.inputContainer .inputName {
     flex: 1; /* Both boxes take equal space */
     margin-right: 10px; /* Space between the boxes */
 }
 
-.input-container .input-name {
+.inputContainer .inputName {
     margin-right: 0; /* Removes right margin for the last box */
 }
-.password-container {
+.passwordContainer {
     position: relative; /* For positioning the icon */
     display: flex;
     align-items: center;
     margin-top: 0px; /* Space between password fields */
 }
-.input-boxes input {
+.inputBoxes input {
     background-color: #00485e; /* Input field background color */
     margin-top: 20px; /* Top margin between inputs */
     height: 28px; /* Height of the input fields */
@@ -87,7 +87,7 @@
 
 
 
-.input-box-firstname input {
+.inputBoxFirstname input {
     width: 140px; /* Width of the "Name" input field */
     height: 28px; /* Height of the input field */
     padding: 10px 15px 10px 20px; /* Padding (top right bottom left) */
@@ -102,7 +102,7 @@
     box-shadow: inset 0px 4px 6px rgba(0, 0, 0, 0.2); /* Inner shadow */
 }
 
-.input-name input {
+.inputName input {
     width: 140px; /* Width of the "First Name" input field */
     height: 28px; /* Height of the input field */
     padding: 10px 15px 10px 20px; /* Padding (top right bottom left) */
@@ -117,14 +117,14 @@
     box-shadow: inset 0px 4px 6px rgba(0, 0, 0, 0.2); /* Inner shadow */
 }
 
-.toggle-password {
+.togglePassword {
     position: absolute; 
     right: 15px;
     margin-top: 20px;
     cursor: pointer; 
 }
 
-.toggle-password .eye-icon {
+.togglePassword .eye-icon {
     display: block;
     width: 20px;
     height: 20px;
@@ -134,22 +134,22 @@
     opacity: 0.6;
 }
 
-.toggle-password .eye-icon.open {
+.togglePassword .eye-icon.open {
     background-image: url('icons/openEye.png');
     opacity: 0.6; 
 }
 
-.input-name input::placeholder {
+.inputName input::placeholder {
     color: white; /* Placeholder text color */
     opacity: 0.6; /* Placeholder text transparency */
 }
 
-.input-boxes input::placeholder {
+.inputBoxes input::placeholder {
     color: white; /* Placeholder text color */
     opacity: 0.6; /* Placeholder text transparency */
 }
 
-.input-box-firstname input::placeholder {
+.inputBoxFirstname input::placeholder {
     color: white; /* Placeholder text color */
     opacity: 0.6; /* Placeholder text transparency */
 }

@@ -1,6 +1,3 @@
-{% extends "base.html" %}
-
-{% block title%}Test Site{% endblock %}
 {% load static %}
 
 <!DOCTYPE html>
@@ -27,9 +24,9 @@
             {% csrf_token %}
             <div class="loginWindowInput">
                 <input id = "email" name = "email" type="email" placeholder="E-Mail"/>
-                <div class="password-container">
+                <div class="passwordContainer">
                     <input name="password" id="password" type="password" placeholder="Password"/>
-                    <span class= "toggle-password" id="togglePassword1">
+                    <span class= "togglePassword" id="togglePassword1">
                         <i class ="eye-icon" id="eyeIcon1"></i>
                     </span>
                 </div>
@@ -63,7 +60,7 @@
                 <div class="loginButton">
                     <button type="submit">Log In</button>
                 </div>
-                <p>Don't have an account? <a href="/login/signup">Sign up</a></p>
+                <p>Don't have an account? <a href="/signup">Sign up</a></p>
             </div>
         </form>
     </div>   

@@ -17,7 +17,7 @@ def signupView(request):
     # user is already logged in
     if request.user.is_authenticated:
         # TODO: rediretc to starting page
-        return redirect("")
+        return redirect("StartingPage")
     
     if request.method == "POST":
         firstName = request.POST.get("firstName")
@@ -82,6 +82,7 @@ def signupView(request):
         
         # login of user 
         login(request, user)
+        return redirect("StartingPage")
         
 
     else:
@@ -106,7 +107,7 @@ def loginView(request):
     # user is already logged in
     if request.user.is_authenticated:
         # TODO: rediretc to starting page
-        return redirect("/")
+        return redirect("StartingPage")
 
     if request.method == "POST":
         email = request.POST.get("email")
@@ -130,7 +131,7 @@ def loginView(request):
         # login was successful
         if user is not None:
             login(request, user)
-            return redirect("/")
+            return redirect("StartingPage")
         
         # password is incorrect
         else:
