@@ -20,26 +20,26 @@
 
             <form method="POST" action="{% url 'patholensSignUp' %}">
                 {% csrf_token %}
-                <div class="input-container">
-                    <div class="input-container2">
-                        <div class="input-box-firstname">
+                <div class="inputContainer">
+                    <div class="inputContainer2">
+                        <div class="inputBoxFirstname">
                             <input id ="firstName" name="firstName" type="text" placeholder="First Name" />
                         </div>
-                        <div class="input-name">
+                        <div class="inputName">
                             <input name="lastName" id="lastName" type="text" placeholder="Last Name" />
                         </div>
                     </div>
 
-                    <div class="input-boxes">
+                    <div class="inputBoxes">
                         <input name="email" id="email" type="email" placeholder="example@ulkbonn.com"/>
-                        <div class="password-container">
+                        <div class="passwordContainer">
                             <input name="password" id="password" type="password" placeholder="Password"/>
-                            <span class= "toggle-password" id="togglePassword1">
+                            <span class= "togglePassword" id="togglePassword1">
                                 <i class ="eye-icon" id="eyeIcon1"></i>
                             </span>
                         </div>
 
-                        <div class="password-container">
+                        <div class="passwordContainer">
                             <input name="confirmPassword" id="confirmPassword" type="password" placeholder="Confirm Password"/>
                             <span class="toggle-password" id="togglePassword2">
                                 <i class="eye-icon" id="eyeIcon2"></i>

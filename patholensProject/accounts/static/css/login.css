@@ -178,7 +178,7 @@ html, body {
 }
 
 
-.password-container {
+.passwordContainer {
     position: relative; /* For positioning the icon */
     display: flex;
     align-items: center;
@@ -186,14 +186,14 @@ html, body {
 }
 
 
-.toggle-password {
+.togglePassword {
     position: absolute;     /* Positions the element absolutely within its container */
     right: 15px;            /* Moves it 15px from the right */
     margin-top: 25px;       /* Adds space at the top */
     cursor: pointer;        /* Changes the cursor to a pointer on hover */
 }
 
-.toggle-password .eye-icon {
+.togglePassword .eye-icon {
     display: block;             /* Ensures the element is a block */
     width: 20px;                /* Sets the width */
     height: 20px;               /* Sets the height */
@@ -203,7 +203,7 @@ html, body {
     opacity: 0.6;       /* Sets the transparency */
 }
 
-.toggle-password .eye-icon.open {
+.togglePassword .eye-icon.open {
     background-image: url('icons/openEye.png');     /* Changes to open eye image */
     opacity: 0.6;   /* Maintains the transparency */
 }
