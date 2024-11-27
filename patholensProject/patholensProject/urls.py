@@ -20,6 +20,6 @@ from .import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('login/', include('accounts.urls')),
-    path('', views.homepage)
+    path('', include('accounts.urls')),
+    path('startingPage/', views.homepage, name = "StartingPage"),
 ]
