@@ -16,8 +16,8 @@
       <div class="profile">
         <img src="{% static 'images/profilePicture.png' %}" alt="Picture" class="profilePicture" />
         <div class="profile-info">
-          <div class="name">Dr. Snephreet Dhinsa</div>
-          <div class="email">sdhinsa@ulkbonn.de</div>
+          <div class="name">{{ user.first_name }} {{ user.last_name }}</div>
+          <div class="email">{{ user.email }}</div>
         </div>
       </div>
 
