@@ -59,7 +59,7 @@ nav.top-bar {
 
 
 
-.main-content {
+.mainContent {
     display: flex;
     flex: 1;
     margin-top: 100px;
@@ -67,7 +67,7 @@ nav.top-bar {
     overflow: hidden;
 }
 
-.left-panel {
+.leftPanel {
     flex: 1;
     padding: 20px;
     display: flex;
@@ -78,7 +78,7 @@ nav.top-bar {
     overflow-y: auto;
 }
 
-.left-panel .profile {
+.leftPanel .profile {
     display: flex;
     align-items: center;
     margin-bottom: 20px;
@@ -89,7 +89,7 @@ nav.top-bar {
     top: 33px;
 }
 
-.left-panel .profile img {
+.leftPanel .profile img {
     width: 60px;
     height: 60px;
     border-radius: 50%;
@@ -97,25 +97,25 @@ nav.top-bar {
     background-color: #e0e8ea;
 }
 
-.left-panel .profile-info {
+.leftPanel .profileInfo {
     font-size: 16px;
     line-height: 1.2;
     max-width: 200px;
 }
 
-.left-panel .profile-info .name {
+.leftPanel .profileInfo .name {
     font-size: 25px;
     font-weight: bold;
     white-space: nowrap;
 }
 
-.left-panel .profile-info .email {
+.leftPanel .profileInfo .email {
     font-size: 18px;
     color: #ffffff;
     margin-top: 5px;
 }
 
-.left-panel .buttons {
+.leftPanel .buttons {
     display: flex;
     flex-direction: column;
     gap: 28px;
@@ -126,7 +126,7 @@ nav.top-bar {
     top: 33px;
 }
 
-.left-panel .buttons button {
+.leftPanel .buttons button {
     background-color: #00AFB9;
     color: #FFFFFF;
     border: none;
@@ -139,12 +139,12 @@ nav.top-bar {
     text-align: center;
 }
 
-.left-panel .buttons button:hover {
+.leftPanel .buttons button:hover {
     background-color: #44B2C2;
     transform: scale(1.02);
 }
 
-.right-panel {
+.rightPanel {
     flex: 1.65;
     display: flex;
     flex-direction: column;
