@@ -1,18 +1,21 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" href="{% static 'css/diagnosisPage.css' %}" />
-        <link
-            href="https://fonts.googleapis.com/css2?family=Cabin:wght@400;500;600;700&display=swap"
-            rel="stylesheet"
-        />
-    <title>Document</title>
+{% extends 'base.html' %} 
+{% load static %} 
+{% block extraCSS %}
 
-</head>
-<body>
-    
-</body>
-</html>
+<link rel="stylesheet" href="{% static 'css/diagnosisPage.css' %}?v=1" />
+{% endblock %} 
+
+{% block title %} 
+  Diagnosis Page 
+{% endblock %} 
+
+
+{% block topbar %}
+<a href="/startingPage" class="homeButton">
+    <i class="fa-solid fa-house" style="color: #ffffff;"></i>
+</a>
+<i class="fa-solid fa-circle-question" style="color: #ffffff;" id="openHelp" data-tooltip="Get Help"></i>
+<i class="fa-solid fa-right-from-bracket" style="color: #ffffff;"></i>
+{% endblock %}
+
+

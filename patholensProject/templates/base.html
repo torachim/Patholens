@@ -24,16 +24,21 @@
     <title>{% block title %}Website{% endblock %}</title>
 </head>
 <body>
+    
     <div class="topBar">
         <div class="NameIcon">
             <img alt="icon" src="../static/images/icons8-experiment-versuch-ios-17-glyph-96 copy.png">
             <p>PathoLens</p>
         </div>
         <div class="Buttons">
+            {%block topbar %}
             <i class="fa-solid fa-circle-question" style="color: #ffffff;" id="openHelp" data-tooltip="Get Help"></i> 
             <i class="fa-solid fa-right-from-bracket" style="color: #ffffff;"></i>
+            {%endblock%}
         </div>
     </div>
+    
+
         {% block content %}
          <!-- Content from the child page will go here -->
         {% endblock %}
@@ -91,6 +96,6 @@
 
 
     </script>
-
+    
 </body>
 </html>

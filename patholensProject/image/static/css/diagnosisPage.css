@@ -1,0 +1,13 @@
+body{
+ background-color: #00242F !important;
+}
+
+.homeButton {
+    margin-left: 25px;
+    text-decoration: none;
+    font-size: 30px;
+}
+
+.homeButton i {
+    cursor: pointer;
+}
