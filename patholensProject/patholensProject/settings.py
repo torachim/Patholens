@@ -42,7 +42,22 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    
+    
 ]
+#'drf_spectatcular',
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Brainscan API',
+    'DESCRIPTION' : 'API to access the brainscan data in .nii.gz format',
+    'VERSION' : '1.0.0' ,
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
