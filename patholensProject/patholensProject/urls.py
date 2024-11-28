@@ -22,4 +22,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('accounts.urls')),
     path('startingPage/', views.homepage, name = "StartingPage"),
+    path('helpTest', views.basePageTest)
 ]
