@@ -161,18 +161,18 @@ nav.top-bar {
     overflow: hidden;
 }
 
-.welcome-text {
+.welcomeText {
     text-align: center;
     margin-bottom: 20px;
 }
 
-.welcome-text h1 {
+.welcomeText h1 {
     font-size: 2.5rem;
     color: #FFFFFF;
     margin: 50px;
 }
 
-.welcome-image {
+.welcomeImage {
     max-width: 100%;
     max-height: calc(100% - 80px);
     object-fit: contain;
