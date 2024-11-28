@@ -53,3 +53,4 @@ __pycache__/
 
 *.db
 
+db.sqlite3

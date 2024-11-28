@@ -60,13 +60,14 @@ body{
 .helpSlide {
     position: fixed;
     top: 0;
-    right: -350px;
-    width: 300px;
+    right: -600px;
+    width: 550px;
     height: 100%;
     color: #f7f7f7;
     background-color: #333;
     opacity: 0.9;
     padding: 20px;
+    padding-right: 5px;
     display: flex;
     flex-direction: column;
     transition: right 0.5s ease-in-out;
@@ -98,6 +99,9 @@ body{
 .helpContent p {
     line-height: 20px;
     font-size: 16px;
+    margin-right: 20px;
+    text-align: justify;
+    text-align-last: left;
 }
 
 .helpContent h2 {
