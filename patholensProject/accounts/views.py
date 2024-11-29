@@ -141,3 +141,10 @@ def loginView(request):
         print("Error as POST was not used")
         
     return render(request, "accounts/login.html", {"information": information})
+
+
+def logoutView(request):
+    #TO-DO: check if user is in a diagnosis, if yes call save
+
+    logout(request)
+    return redirect("/") # redirects to the login screen
