@@ -143,8 +143,10 @@ def loginView(request):
     return render(request, "accounts/login.html", {"information": information})
 
 
-def logoutView(request):
-    #TO-DO: check if user is in a diagnosis, if yes call save
+def logoutView(request, calledFrom):
+    if calledFrom == "DiagnosisPage" or calledFrom == "EditPage":
+        # TO-DO: save progress
+        pass 
 
     logout(request)
     return redirect("/") # redirects to the login screen
