@@ -144,7 +144,8 @@ def loginView(request):
 
 
 def logoutView(request, calledFrom):
-    if calledFrom == "DiagnosisPage" or calledFrom == "EditPage":
+    #if called from one of these pages, the process needs to be saved before logging out
+    if calledFrom == "diagnosisPage" or calledFrom == "editPage":
         # TO-DO: save progress
         pass 
 
