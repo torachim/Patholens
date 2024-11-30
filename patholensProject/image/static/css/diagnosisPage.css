@@ -109,32 +109,62 @@ input[type="radio"] {
 }
 
 input[type="radio"]:checked::before {
-    content: ''; /* Erzeugt den inneren Kreis */
+    content: ''; 
     display: block;
-    width: 10px; /* Größe des inneren Kreises */
-    height: 10px; /* Größe des inneren Kreises */
-    background-color: white; /* Farbe des inneren Kreises */
-    border-radius: 50%; /* Runde Form */
+    width: 10px; 
+    height: 10px; 
+    background-color: white; 
+    border-radius: 50%;
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%); /* Zentriert den inneren Kreis */
+    transform: translate(-50%, -50%); 
 }
 
 
 
-/* Zentrierung von Text und Button */
+
 .radio-form label {
     display: flex;
-    align-items: center; /* Zentriert den Text vertikal mit dem Button */
-    gap: 12px; /* Abstand zwischen Button und Text */
+    align-items: center; 
+    gap: 12px; 
 }
 
-/* Textstil */
+
 .radio-form label p {
-    margin: 0; /* Entfernt unnötige Abstände */
-    font-size: 18px; /* Größere Schriftgröße */
-    color: white; /* Weißer Text */
+    margin: 0; 
+    font-size: 18px; 
+    color: white; 
     font-family: Calibri, Arial, sans-serif;
     font-weight: bold;
 }
+
+
+
+.finishDiagnosisButton {
+    position: fixed; 
+    bottom: 30px; 
+    right: 30px; 
+}
+
+.finishDiagnosisButton button {
+    background-color: #00afb9;
+    border: none;
+    width: 200px;
+    height: 35px;
+    border-radius: 8px;
+    color: white;
+    font-size: 18px;
+    font-family: Calibri, Arial, sans-serif;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 5px 5px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease; 
+}
+
+
+.finishDiagnosisButton button:hover {
+    background-color: #008a91; 
+    box-shadow: 7px 7px rgba(0, 0, 0, 0.3); 
+}
+
