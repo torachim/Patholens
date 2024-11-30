@@ -3,6 +3,8 @@
 {% block extraCSS %}
 
 <link rel="stylesheet" href="{% static 'css/diagnosisPage.css' %}?v=1" />
+
+
 {% endblock %} 
 
 {% block title %} 
@@ -32,6 +34,21 @@
         <i class="fa-solid fa-eraser"></i>
     </button>
 </div>
+
+<div class="container">
+    <form class="radio-form">
+        <label>
+            <input type="radio" name="option" value="A" checked>
+            <p>T1</p>
+        </label>
+        <label>
+            <input type="radio" name="option" value="B">
+            <p>FLAIRE</p>
+        </label>
+    </form>
+</div>
+
+
 
 
 
