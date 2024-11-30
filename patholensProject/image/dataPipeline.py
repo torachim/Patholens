@@ -19,3 +19,18 @@ def getDataSets():
             allDataSets.append(dir)
 
     return allDataSets
+
+
+def addAllPatientsToDoctorsDB(docID):
+    global DATASETPATH
+    
+    remainingPatients = {}
+
+    allDataSets = getDataSets()
+    
+    for dataSet in allDataSets:
+        print(dataSet)
+        
+
+if "__main__" == __name__:
+    addAllPatientsToDoctorsDB(2)
