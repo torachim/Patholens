@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 
 
-class doctors(models.Model):
+class Doctors(models.Model):
     # 1 to 1 relation between diagnosis and doctors 
     # when user is delted the doctor is deleted as well
     doctorId = models.OneToOneField(settings.AUTH_USER_MODEL, primary_key=True, on_delete = models.CASCADE)
