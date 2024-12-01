@@ -43,8 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    
-    
+    'drf_spectacular'
 ]
 #'drf_spectatcular',
 
@@ -54,9 +53,10 @@ REST_FRAMEWORK = {
 }
 
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'Brainscan API',
+    'TITLE': 'Patholens API',
     'DESCRIPTION' : 'API to access the brainscan data in .nii.gz format',
-    'VERSION' : '1.0.0' ,
+    'VERSION' : '1.0.0',
+    'SERVE_INCLUDE_SCHEMA' : False,
 }
 
 MIDDLEWARE = [
