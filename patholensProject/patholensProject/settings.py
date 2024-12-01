@@ -42,23 +42,24 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',
+    #'rest_framework',
     
     
 ]
 #'drf_spectatcular',
 
 
-REST_FRAMEWORK = {
+'''REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
+
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Brainscan API',
     'DESCRIPTION' : 'API to access the brainscan data in .nii.gz format',
     'VERSION' : '1.0.0' ,
 }
-
+'''
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -75,7 +76,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         # BASE_DIR was added for home.html
-        'DIRS': [BASE_DIR / "templates"],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],  # Pfad zum zentralen Template-Verzeichnis
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
