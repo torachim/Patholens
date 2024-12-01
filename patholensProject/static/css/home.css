@@ -1,15 +1,15 @@
 /* Grundlegende Stile für den Body */
 body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: #24617B;
+    margin: 0; /* Entfernt den Standardabstand */
+    font-family: Arial, sans-serif; /*Schriftart*/
+    background-color:  #24617B;
     color: #ffffff;
-    display: flex;
-    flex-direction: column;
+    display: flex; 
+    flex-direction: column; /* Anordnung der Elemente vertikal */
     height: 100vh;
 }
 
-/* Top-Bar Navigation */
+ /*Top-Bar Navigation 
 nav.top-bar {
     display: flex;
     justify-content: space-between;
@@ -25,7 +25,7 @@ nav.top-bar {
     z-index: 10;
 }
 
-/* Logo ganz links */
+ Logo ganz links 
 .top-bar .logo {
     font-size: 24px;
     font-weight: bold;
@@ -42,46 +42,46 @@ nav.top-bar {
     margin-left: 10px;
 }
 
-/* Container für Hilfe- und Logout-Symbole */
+Container für Hilfe- und Logout-Symbole 
 .top-bar .icon-container {
     display: flex;
     align-items: center;
-    gap: 15px; /* Abstand zwischen den Symbolen */
+    gap: 15px;  Abstand zwischen den Symbolen 
 }
 
-/* Allgemeine Stile für Icons */
+ Allgemeine Stile für Icons 
 .top-bar .icon-container img {
     width: 40px;
     height: 40px;
     cursor: pointer;
-}
+}*/
 
 
 
 
 .mainContent {
     display: flex;
-    flex: 1;
-    margin-top: 100px;
-    height: calc(100vh - 100px);
-    overflow: hidden;
+    flex: 1; /* Nimmt verfügbaren Platz ein */
+    margin-top: 30px; /*Abstand von Leiste*/
+    height: calc(100vh - 100px);/* Setzt die Höhe auf die volle Viewport-Höhe minus 100px */
+    overflow: hidden; /* Verhindert das Überlaufen von Inhalt */
 }
 
 .leftPanel {
-    flex: 1;
-    padding: 20px;
+    flex: 1; /* Nimmt verfügbaren Platz ein */
+    padding: 20px; /*Innenabstand zu allen Seiten*/
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: flex-start;
+    flex-direction: column; /* Anordnung der Elemente in einer Spalte */
+    justify-content: space-between; /* Verteilt Elemente mit Abstand */
+    align-items: flex-start; /* Elemente am Anfang horizontal ausrichten */
     background-color: #24617B;
-    overflow-y: auto;
+    overflow-y: auto; /* Ermöglicht vertikales Scrollen */
 }
 
 .leftPanel .profile {
     display: flex;
     align-items: center;
-    margin-bottom: 20px;
+    margin-top: -60px;
     height: 100px;
     margin-left: 0;
     position: relative;
@@ -120,7 +120,7 @@ nav.top-bar {
     flex-direction: column;
     gap: 28px;
     width: 80%;
-    margin-bottom: 190px;
+    margin-bottom: 240px;
     position: relative;
     left: 55px;
     top: 33px;
@@ -144,12 +144,12 @@ nav.top-bar {
     transform: scale(1.02);
 }
 
-.rightPanel {
+/*.rightPanel {
+    align-items: center;
     flex: 1.65;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    align-items: center;
     background-color: #00242F;
     height: calc(100% - 40px);
     margin: 20px;
@@ -159,6 +159,20 @@ nav.top-bar {
     box-sizing: border-box;
     position: relative;
     overflow: hidden;
+} */
+
+.right-frame {
+    
+    position: relative;         /* Fixiert das Element beim Scrollen */               /* Abstand vom oberen Rand der Seite (anpassbar) */
+    right: 30px;             /* Abstand vom rechten Rand des Bildschirms */
+    width: 1050px;            /* Breite des Frames (anpassbar) */
+    height: 81vh;            /* Höhe des Frames (70% der Höhe des Bildschirms, anpassbar) */
+    border-radius: 10px;     /* Abgerundete Ecken */
+    box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.3); 
+
+/* Optional: Wenn das iframe geladen wird und die Seite eine Scrollbar benötigt */
+.right-frame {
+    overflow: auto;          /* Aktiviert das Scrollen innerhalb des Frames, wenn der Inhalt zu groß ist */
 }
 
 .welcomeText {
