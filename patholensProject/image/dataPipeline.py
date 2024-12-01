@@ -39,6 +39,10 @@ def getDataSets():
 def addAllPatientsToDoctorsDB(docID):
     global DATASETPATH
 
+    
+    if Doctors.objects.filter(doctorId=docID).exists() == False:
+        return False
+    
     remainingPatients = {}
 
     allDataSets = getDataSets()
@@ -56,8 +60,12 @@ def addAllPatientsToDoctorsDB(docID):
 
         remainingPatients[dataSet] = {"url": allSubIDs}
 
-    return remainingPatients
+    doc = Doctors.objects.get(doctorId=docID)    
+    doc.remainingPatients = remainingPatients
+    doc.save()
+    
+    return True
 
 
 if "__main__" == __name__:
-    addAllPatientsToDoctorsDB(2)
+    addAllPatientsToDoctorsDB("chris")
