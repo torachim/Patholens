@@ -69,7 +69,7 @@ Container für Hilfe- und Logout-Symbole
 
 .leftPanel {
     flex: 1; /* Nimmt verfügbaren Platz ein */
-    padding: 20px; /*Innenabstand zu allen Seiten*/
+    padding: 10px; /*Innenabstand zu allen Seiten*/
     display: flex;
     flex-direction: column; /* Anordnung der Elemente in einer Spalte */
     justify-content: space-between; /* Verteilt Elemente mit Abstand */
@@ -79,26 +79,27 @@ Container für Hilfe- und Logout-Symbole
 }
 
 .leftPanel .profile {
+    font-family: Calibri;
     display: flex;
     align-items: center;
-    margin-top: -60px;
+    margin-top: 40px;
     height: 100px;
-    margin-left: 0;
+    margin-left: -50;
     position: relative;
     left: 55px;
     top: 33px;
 }
 
 .leftPanel .profile img {
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     margin-right: 20px;
     background-color: #e0e8ea;
 }
 
 .leftPanel .profileInfo {
-    font-size: 16px;
+    font-size: 14px;
     line-height: 1.2;
     max-width: 200px;
 }
@@ -109,8 +110,8 @@ Container für Hilfe- und Logout-Symbole
     white-space: nowrap;
 }
 
-.leftPanel .profileInfo .email {
-    font-size: 18px;
+.leftPanel .profileInfo .email {  
+    font-size: 16px;
     color: #ffffff;
     margin-top: 5px;
 }
@@ -118,21 +119,25 @@ Container für Hilfe- und Logout-Symbole
 .leftPanel .buttons {
     display: flex;
     flex-direction: column;
-    gap: 28px;
-    width: 80%;
+    gap: 35px;
+    width: 65%;
     margin-bottom: 240px;
     position: relative;
     left: 55px;
-    top: 33px;
+    top: 55px;
 }
+
 
 .leftPanel .buttons button {
     background-color: #00AFB9;
+    font-family: Calibri;
+    font-weight: bold;
     color: #FFFFFF;
     border: none;
-    padding: 15px 30px;
+    padding: 14px 30px;
     font-size: 18px;
     border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     cursor: pointer;
     transition: background-color 0.3s, transform 0.2s;
     width: 100%;
