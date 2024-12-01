@@ -66,10 +66,11 @@
         <div class="confidence-meter-container">
             
             <input type="range" class="confidence-meter" min="0" max="100" value="50" id="confidenceMeter">
-            
-            
-            
+  
+
+            <div class="tooltip" id="tooltip">50</div>
         </div>
+
     
 
 
@@ -88,7 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
     popupOverlay.style.display = "none";
 
 
-    
+
     finishButton.addEventListener("click", () => {
         popupOverlay.style.display = "flex";
     });
@@ -105,6 +106,40 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 });
+
+</script>
+
+
+<script>
+    const slider = document.getElementById('confidenceMeter');
+    const tooltip = document.getElementById('tooltip');
+    const confirmButton = document.getElementById('confirmButton');
+    const displayValue = document.getElementById('displayValue');
+
+    slider.addEventListener('input', function () {
+    const value = slider.value;
+    tooltip.textContent = value; 
+    tooltip.style.visibility = 'visible'; 
+
+    
+    const sliderRect = slider.getBoundingClientRect(); 
+    const thumbPosition = ((value - slider.min) / (slider.max - slider.min)) * sliderRect.width;
+
+    
+    tooltip.style.left = `${thumbPosition}px`;
+    tooltip.style.transform = `translateX(-50%)`;
+    });
+
+    
+    slider.addEventListener('mouseover', function () {
+        tooltip.style.visibility = 'visible';
+    });
+
+    
+    slider.addEventListener('mouseout', function () {
+        tooltip.style.visibility = 'hidden';
+    });
+
 
 </script>
 
