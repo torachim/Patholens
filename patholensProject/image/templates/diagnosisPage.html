@@ -38,25 +38,75 @@
 <div class="container">
     <form class="radio-form">
         <label>
-            <input type="radio" name="option" value="A" checked>
-            <p>FLAIRE</p>
+            <input type="radio" name="option" value="Flaire" checked>
+            <p>Flaire</p>
         </label>
         <label>
-            <input type="radio" name="option" value="B">
+            <input type="radio" name="option" value="T1">
             <p>T1</p>
         </label>
     </form>
 </div>
-
 <div class="finishDiagnosisButton">
-
-    <button type="submit">Finish Diagnosis</button>
-
+    <button type="button" id="finishButton">Finish Diagnosis</button>
 </div>
 
 
+<div class="patientID">
+    <p>ID: 50044456</p>
+</div>
+
+<div class="popup-overlay" id="popupOverlay">
+    <div class="popup-frame">
+        
+        <button class="popup-close" id="closePopup">&times;</button>
+        
+        <p>Please state your confidence</p>
+
+        <div class="confidence-meter-container">
+            
+            <input type="range" class="confidence-meter" min="0" max="100" value="50" id="confidenceMeter">
+            
+            
+            
+        </div>
+    
 
 
+
+        <button class="popup-confirm">Confirm</button>
+    </div>
+</div>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", () => {
+    const finishButton = document.getElementById("finishButton");
+    const popupOverlay = document.getElementById("popupOverlay");
+    const closePopup = document.getElementById("closePopup");
+
+    popupOverlay.style.display = "none";
+
+
+    
+    finishButton.addEventListener("click", () => {
+        popupOverlay.style.display = "flex";
+    });
+
+    
+    closePopup.addEventListener("click", () => {
+        popupOverlay.style.display = "none";
+    });
+
+    
+    popupOverlay.addEventListener("click", (e) => {
+        if (e.target === popupOverlay) {
+            popupOverlay.style.display = "none";
+        }
+    });
+});
+
+</script>
 
 
 
