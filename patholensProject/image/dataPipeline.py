@@ -1,5 +1,20 @@
 import os
 from pathlib import Path
+import django
+import sys
+
+
+# Add project path (root directory where manage.py is located)
+sys.path.append(str(Path(__file__).resolve().parent.parent))
+
+# Define Django settings
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "patholensProject.settings")
+
+# Initialize Django
+django.setup()
+
+from accounts.models import Doctors
+
 
 BASEDIR = Path(__file__).resolve().parent.parent
 DATASETPATH = os.path.join(BASEDIR, "dataSets")
