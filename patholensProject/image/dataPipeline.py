@@ -41,7 +41,7 @@ def addAllPatientsToDoctorsDB(docID):
 
         remainingPatients[dataSet] = {"url": allSubIDs}
 
-    return True
+    return remainingPatients
 
 
 if "__main__" == __name__:
