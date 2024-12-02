@@ -1,0 +1,5 @@
+#niivue-canvas {
+    width: 800px; /* Vollbreite innerhalb des Container-Elements */
+    height: 500px; /* Festgelegte Höhe oder entsprechend anpassen */
+    background-color: #000; /* Hintergrundfarbe für den Canvas */
+  }
