@@ -21,7 +21,7 @@ DATASETPATH = os.path.join(BASEDIR, "dataSets")
 
 
 # go through all data Sets in the directory and return the names of the data Sets
-def getDataSets():
+def getAllDataSets():
     global BASEDIR, DATASETPATH
 
     allDataSets = []
@@ -41,7 +41,7 @@ def getAllPatientsUrls():
 
     allPatients = {}
 
-    allDataSets = getDataSets()
+    allDataSets = getAllDataSets()
 
     for dataSet in allDataSets:
         # has all the paths to the availabe data sets
