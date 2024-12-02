@@ -8,10 +8,10 @@ class Doctors(models.Model):
     # when user is delted the doctor is deleted as well
     doctorID = models.OneToOneField(settings.AUTH_USER_MODEL, primary_key=True, on_delete = models.CASCADE)
     activePatient = models.CharField(null=True, max_length=50)
-
+    
     # ids from the patients
+    allPatients = models.JSONField(null=True)
     finishedPatients = models.JSONField(null=True)
-    remainingPatients = models.JSONField(null=True)
     
     def __str__(self):
         return str(self.doctorID)

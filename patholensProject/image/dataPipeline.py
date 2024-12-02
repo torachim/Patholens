@@ -20,7 +20,7 @@ BASEDIR = Path(__file__).resolve().parent.parent
 DATASETPATH = os.path.join(BASEDIR, "dataSets")
 
 
-# go through all data Sets in the directory and return the names of the data Sets
+# Go through all data Sets in the directory and return the names of the data Sets
 def getAllDataSets():
     global BASEDIR, DATASETPATH
 
@@ -44,13 +44,13 @@ def getAllPatientsUrls():
     allDataSets = getAllDataSets()
 
     for dataSet in allDataSets:
-        # has all the paths to the availabe data sets
+        # Has all the paths to the availabe data sets
         allSubPaths = os.listdir(os.path.join(DATASETPATH, dataSet))
 
         allSubIDs = []
         for sub in allSubPaths:
             if "sub-" in sub:
-                # splits the string at '-' and takes only the number of the string (our ID)
+                # Splits the string at '-' and takes only the number of the string (our ID)
                 subID = sub.split("-")[1]
                 allSubIDs.append(dataSet + "-" + subID)
 
