@@ -8,10 +8,6 @@
 <body>
     <h1>Bildanzeige</h1>
     <p> Hier kommt die: {{ image_url }}</p>
-    {% if image_url %}
-        <img src="{{ image_url }}" alt="Bild vom Gehirnscan">
-    {% else %}
-        <p>Kein Bild gefunden.</p>
-    {% endif %}
+    <div id="gl"></div>
 </body>
 </html>
