@@ -6,12 +6,12 @@ from accounts.models import Doctors
 
 # diagnosis class for linkage between the different db entries that "participate" in a certain diagnosis
 class Diagnosis(models.Model):
-    diagID = models.AutoField(primary_key = True)
+    diagID = models.CharField(primary_key = True, max_length=100)
     # PROTECT: if the referenced docots is deleted, the diagnosis won't be deleted
-    userID = models.ForeignKey(Doctors, on_delete = models.PROTECT)
+    doctorID = models.ForeignKey(Doctors, on_delete = models.PROTECT)
     confidence = models.PositiveSmallIntegerField(null = True, blank = True)
-    # contains the sub number & the name of the data Set
-    urlToPicture = models.CharField(null = False, max_length=20,default = "Unknown")
+    # contains the number of the patient & the name of the data Set 
+    imageUrl = models.CharField(null = False, max_length=20,default = "Unknown")
     
     def __str__(self):
         return str(self.diagID)
