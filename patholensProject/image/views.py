@@ -4,5 +4,5 @@ from django.http import FileResponse, Http404
 from django.conf import settings
 import os
 
-def display(request):
+def loadImage(request):
     return render(request, 'image/index.html')
