@@ -1,5 +1,13 @@
 #niivue-canvas {
-    width: 800px; /* Vollbreite innerhalb des Container-Elements */
-    height: 500px; /* Festgelegte Höhe oder entsprechend anpassen */
-    background-color: #000; /* Hintergrundfarbe für den Canvas */
-  }
+    width: 100% !important;
+    height: 600px !important;
+    background-color: #000000;
+    margin-bottom: 10 !important;
+}
+
+#content {
+    display: flex !important;
+    justify-content: center !important; /* Zentriert den Inhalt horizontal */
+    align-items: center !important;    /* Zentriert den Inhalt vertikal */
+    min-height: 100vh;      /* Mindesthöhe, damit das Flexbox-Container vollständig sichtbar ist */
+}
