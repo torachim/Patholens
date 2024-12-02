@@ -12,7 +12,9 @@
 <canvas id="niivue-canvas" style="width: 800px; height: 700px;"></canvas>
 {% endblock %}
 
-
+{% block extraJS %}
+<script type="module" src="{% static 'js/main.js' %}"></script>
+<script type="module" src="{% static 'js/index.js' %}"></script>
 {% endblock %}
 </body>
 </html>
