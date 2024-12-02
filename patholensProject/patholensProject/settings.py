@@ -154,3 +154,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = "/"
 
+EXTERNAL_DATASET_PATH = os.path.join(BASE_DIR, "website_data/")
+

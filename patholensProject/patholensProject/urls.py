@@ -22,6 +22,7 @@ from .import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('accounts.urls')),
+    path('image/', include('image.urls')),
     path('startingPage/', views.homepage, name = "StartingPage"),
     # YOUR PATTERNS
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
