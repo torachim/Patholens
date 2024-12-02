@@ -36,14 +36,10 @@ def getDataSets():
     return allDataSets
 
 
-def addAllPatientsToDoctorsDB(docID):
+def getAllPatientsUrls():
     global DATASETPATH
 
-    
-    if Doctors.objects.filter(doctorId=docID).exists() == False:
-        return False
-    
-    remainingPatients = {}
+    allPatients = {}
 
     allDataSets = getDataSets()
 
@@ -56,16 +52,8 @@ def addAllPatientsToDoctorsDB(docID):
             if "sub-" in sub:
                 # splits the string at '-' and takes only the number of the string (our ID)
                 subID = sub.split("-")[1]
-                allSubIDs.append(subID)
+                allSubIDs.append(dataSet + "-" + subID)
 
-        remainingPatients[dataSet] = {"url": allSubIDs}
+        allPatients[dataSet] = {"url": allSubIDs}
 
-    doc = Doctors.objects.get(doctorId=docID)    
-    doc.remainingPatients = remainingPatients
-    doc.save()
-    
-    return True
-
-
-if "__main__" == __name__:
-    addAllPatientsToDoctorsDB("chris")
+    return allPatients
