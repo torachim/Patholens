@@ -10,8 +10,11 @@
 <body>
     <h1>Bildanzeige</h1>
     <p> Hier kommt die: {{ image_url }}</p>
-    <canvas id="imageBrain" style="width: 800px; height: 600px;"></canvas>
-
+    <select id="imageFormat">
+        <option value="FLAIR" selected>FLAIR</option>
+        <option value="T2">T2</option>
+    </select>
+    <canvas id="imageBrain" style="width: 800px; height: 200px;"></canvas>
     <script>
         const imageID = "{{ imageID }}"
     </script>

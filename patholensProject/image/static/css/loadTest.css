@@ -1,4 +1,8 @@
+body{
+    background-color: white;
+}
+
 #gl {
     width: 800px;
-    height: 600px;
+    height: 200px;
 }

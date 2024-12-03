@@ -159,3 +159,8 @@ EXTERNAL_DATASET_PATH = os.path.join(BASE_DIR, "website_data/")
 MEDIA_URL = "/media/"
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+SUPPORTED_IMAGE_FORMATS = {
+    "FLAIR": "_space-orig_FLAIR.nii.gz",
+    "T2": "_space-orig_T1w.nii.gz",
+}

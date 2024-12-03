@@ -10,50 +10,58 @@ document.addEventListener('DOMContentLoaded', function() {
 
     nv.attachToCanvas(canvas);
 
-    //const apiURL = `image/api/getImage/${imageID}`;
-    const apiURL = `http://127.0.0.1:8000/image/api/getImage/${imageID}`;
+    const baseApiURL = `/image/api/getImage/${imageID}`;
+    //const baseApiURL = `http://127.0.0.1:8000/image/api/getImage/${imageID}`;
 
-    console.log(`API URL: ${apiURL}`);
+    document.getElementById("imageFormat").addEventListener("change", (event) => {
+        const selectedFormat = event.target.value;
 
-    fetch(apiURL)
-        .then(response => response.arrayBuffer())
-        .then(data => console.log("ArrayBuffer size:", data.byteLength))
-        .catch(err => console.error(err));
+        console.log(selectedFormat)
 
-    fetch(apiURL)
-        .then(response => {
-            console.log("Response status:", response.status);
-            if(!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            
-            console.log(response)
-            return response.json();
-        })
-        .then(data => {
-            const imageURL = `http://127.0.0.1:8000${data.path}`;
-            console.log("Image URL:", imageURL);
+        const apiURL = `${baseApiURL}/?format =${selectedFormat}`;
 
 
-            //const fileURL = URL.createObjectURL(blob);
+        console.log(`API URL: ${apiURL}`);
 
-            //console.log("File URL:", fileURL)
+        fetch(apiURL)
+            .then(response => response.arrayBuffer())
+            .then(data => console.log("ArrayBuffer size:", data.byteLength))
+            .catch(err => console.error(err));
 
-        // const blob = new Blob([arrayBuffer], {type: "application/gzip"});
-            //const blobURL = URL.createObjectURL(blob);
+        fetch(apiURL)
+            .then(response => {
+                console.log("Response status:", response.status);
+                if(!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                console.log(response)
+                return response.json();
+            })
+            .then(data => {
+                const imageURL = `http://127.0.0.1:8000${data.path}`;
+                console.log("Image URL:", imageURL);
 
-            //console.log("BlobURL: ", blobURL)
 
-            nv.loadVolumes([
-                {
-                    url: imageURL,
-                    schema: "nifti"
-                },
-            ]);
+                //const fileURL = URL.createObjectURL(blob);
 
-        })
-        .catch(err => {
-            console.error("Error loading NIfTI file:", err);
-        });
+                //console.log("File URL:", fileURL)
 
+            // const blob = new Blob([arrayBuffer], {type: "application/gzip"});
+                //const blobURL = URL.createObjectURL(blob);
+
+                //console.log("BlobURL: ", blobURL)
+
+                nv.loadVolumes([
+                    {
+                        url: imageURL,
+                        schema: "nifti"
+                    },
+                ]);
+
+            })
+            .catch(err => {
+                console.error("Error loading NIfTI file:", err);
+            });
+    });
 })
