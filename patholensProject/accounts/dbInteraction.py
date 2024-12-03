@@ -3,6 +3,8 @@ import os
 import sys
 import django
 from pathlib import Path
+import numpy as np
+import random
 
 # Add project path (root directory where manage.py is located)
 sys.path.append(str(Path(__file__).resolve().parent.parent))
@@ -22,6 +24,11 @@ def createDoctor(user):
     allUrls = dataPipeline.getAllPatientsUrls()
     allDataSets = dataPipeline.getAllDataSets()
 
+    # shuffle the URLs randomly so that each doctor has a different order
+    for url in allUrls:
+        shuffeldUrls = dataPipeline.randomSort(allUrls[url]["url"])
+        allUrls[url]["url"] = shuffeldUrls
+
     # Generate ids for the patients and combine them
     # for each data Set: key = id, value = path to patient in data Set
     ids = addIdsToUrls(allDataSets, allUrls)
@@ -40,7 +47,6 @@ def createDoctor(user):
 
 
 def addIdsToUrls(allDataSets, allUrls):
-
     ids = {}
 
     for dataSet in allDataSets:
@@ -59,9 +65,8 @@ def addIdsToUrls(allDataSets, allUrls):
     return ids
 
 
-# create random amount of ids
+# create arandom amount of ids
 def createUUIDs(amount):
-
     allUUIDs = []
     for i in range(amount):
         allUUIDs.append(str(uuid.uuid4()))
@@ -69,24 +74,59 @@ def createUUIDs(amount):
     return allUUIDs
 
 
-def addFinishedPatient(doctorID, toBeAddedPatients: dict):
-    # Exit when Doctors is not existing
-    if Doctors.objects.filter(doctorID=doctorID).exists() == False:
+# dict muss be in the form: {"dataSet": {id: urlpath, ...}, ...}
+def addFinishedPatient(docID, toBeAddedPatients):
+    # Check if the doctor exists in the database
+    if not Doctors.objects.filter(doctorID=docID).exists():
         return False
 
-    doctor = Doctors.objects.get(doctorID=doctorID)
-    finishedPatient = doctor.finishedPatients
+    if not isinstance(toBeAddedPatients, dict):
+        raise ValueError("toBeAddedPatients must be a dictionary")
 
-    for patients in finishedPatient:
+    doctor = Doctors.objects.get(doctorID=docID)
+    finishedPatients = doctor.finishedPatients
+
+    for patients in finishedPatients:
 
         # If the key does not exist or is None, initialize it as an empty dict
-        if patients not in finishedPatient or finishedPatient[patients] is None:
-            finishedPatient[patients] = {}
+        if patients not in finishedPatients or finishedPatients[patients] is None:
+            finishedPatients[patients] = {}
 
         # Add new keys or overwrite existing values
         for key, value in toBeAddedPatients[patients].items():
-            finishedPatient[patients][key] = value
+            finishedPatients[patients][key] = value
 
     doctor.save()
 
     return True
+
+
+def getRandomPicturePath(docID, dataSet):
+    # Check if the doctor exists in the database
+    if not Doctors.objects.filter(doctorID=docID).exists():
+        return False
+
+    doctor = Doctors.objects.get(doctorID=docID)
+
+    if dataSet not in doctor.allPatients or dataSet not in doctor.finishedPatients:
+        raise KeyError(f"Data set '{dataSet}' not found for doctor {docID}")
+
+    allPatients = doctor.allPatients
+    finishedPatients = doctor.finishedPatients
+
+    allPatientsAsList = list(allPatients[dataSet].keys())
+    finishedPatientsAsList = list(finishedPatients[dataSet].keys())
+
+    remainingPatients = list(set(allPatientsAsList) - set(finishedPatientsAsList))
+
+    # Return False if no remaining patients are available
+    if len(remainingPatients) <= 0:
+        return False
+
+    # Randomly select a patient from the remaining ones
+    index = random.randint(0, len(remainingPatients) - 1)
+
+    idForPicture = remainingPatients[index]
+    urlForPicture = allPatients[dataSet][idForPicture]
+
+    return (idForPicture, urlForPicture)
