@@ -1,3 +1,44 @@
 from django.test import TestCase
+from dbInteraction import *
+import unittest
+from accounts.models import Doctors
+from django.contrib.auth.models import User
 
-# Create your tests here.
+
+class TestDbInteraction(unittest.TestCase):
+
+    # is called first
+    def setUp(self):
+        # Create a test user
+        self.testUser = User.objects.create_user(
+            username="lukasTesteATgmailPOINTcom",
+            email="lukasTeste@gmail.com",
+            first_name="NameVomLuggas",
+            last_name="GehtDichNichtsAn",
+            password="Ultimatives5HeadPassword",
+        )
+
+    def testCreateDoctor(self):
+        createDoctor(self.testUser)
+
+    def testAddFinishedPatient(self):
+        doc = createDoctor(self.testUser)
+        idFromTestUser = doc.doctorID
+
+        toBeAdded = {}
+
+        toBeAdded["lunge"] = {}
+        toBeAdded["websiteData"] = {"id-for-bsp": "websiteData-00089"}
+        addFinishedPatient(idFromTestUser, toBeAdded)
+
+        toBeAdded["websiteData"] = {"id-for-bsp-2": "websiteData-0004"}
+        toBeAdded["lunge"] = {"id-for-lunge-bsp": "lunge-0304"}
+        addFinishedPatient(idFromTestUser, toBeAdded)
+
+    # is called last
+    def tearDown(self):
+        self.testUser.delete()
+
+
+if __name__ == "__main__":
+    unittest.main()
