@@ -22,4 +22,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('accounts.urls')),
     path('startingPage/', views.homepage, name = "StartingPage"),
+    path('home1/', views.home1, name='home1'),  # Die neue URL für home1.html
+    
 ]
+

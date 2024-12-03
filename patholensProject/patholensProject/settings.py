@@ -139,3 +139,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = "/"
 
+X_FRAME_OPTIONS = 'ALLOWALL'  # Um das Einbetten der Seite in einen Iframe zu erlauben
