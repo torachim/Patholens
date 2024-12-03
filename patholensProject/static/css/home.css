@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Cabin');
+
 body {
     margin: 0; /* Entfernt den Standardabstand */
     font-family: Arial, sans-serif; /*Schriftart*/
@@ -23,6 +25,7 @@ body {
     flex: 1; /* Nimmt verfügbaren Platz ein */
     padding: 10px; /*Innenabstand zu allen Seiten*/
     display: flex;
+    width: 35%;
     flex-direction: column; /* Anordnung der Elemente in einer Spalte */
     align-items: flex-start; /* Elemente am Anfang horizontal ausrichten */
     background-color: #24617B;
@@ -31,12 +34,11 @@ body {
 }
 
 .leftPanel .profile {
-    font-family: Calibri;
     display: flex;
     align-items: center;
     margin-top: 40px;
     height: 100px;
-    margin-left: -50;
+    margin-right: 15%;
     position: relative;
     left: 60px;
     top: 33px;
@@ -51,6 +53,7 @@ body {
 }
 
 .leftPanel .profileInfo {
+    font-family: "Calibri", sans-serif;
     font-size: 16px;
     line-height: 1.2;
     max-width: 200px;
