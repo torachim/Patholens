@@ -18,7 +18,7 @@ from accounts.models import Doctors
 
 
 BASEDIR = Path(__file__).resolve().parent.parent
-DATASETPATH = os.path.join(BASEDIR, "dataSets")
+DATASETPATH = os.path.join(BASEDIR, "media")
 
 
 # Go through all data Sets in the directory and return the names of the data Sets
