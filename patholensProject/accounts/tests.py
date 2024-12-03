@@ -2,6 +2,7 @@ from django.test import TestCase
 from dbInteraction import *
 import unittest
 from accounts.models import Doctors
+from image.models import Diagnosis
 from django.contrib.auth.models import User
 
 

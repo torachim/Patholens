@@ -18,6 +18,7 @@ django.setup()
 
 import image.dataPipeline as dataPipeline
 from accounts.models import Doctors
+from image.models import Diagnosis
 
 
 def createDoctor(user):
@@ -130,3 +131,15 @@ def getRandomPicturePath(docID, dataSet):
     urlForPicture = allPatients[dataSet][idForPicture]
 
     return (idForPicture, urlForPicture)
+
+
+def addDiagnosis(diagID, docID, confidence, imageUrl):
+    # Check if the doctor exists in the database
+    if not Doctors.objects.filter(doctorID=docID).exists():
+        return False
+
+    diag = Diagnosis.objects.create(
+        diagID=diagID, doctorID=docID, confidence=confidence, imageUrl=imageUrl
+    )
+
+    return diag

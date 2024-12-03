@@ -64,4 +64,3 @@ def randomSort(aList):
     # shuffels the list random
     newList = np.random.permutation(aList)
     return list(newList)
-
