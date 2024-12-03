@@ -156,3 +156,6 @@ LOGIN_URL = "/"
 
 EXTERNAL_DATASET_PATH = os.path.join(BASE_DIR, "website_data/")
 
+MEDIA_URL = "/media/"
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
