@@ -1,13 +1,20 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/loadTest.css' %}" />
     <title>Bildanzeige</title>
 </head>
 <body>
     <h1>Bildanzeige</h1>
     <p> Hier kommt die: {{ image_url }}</p>
-    <div id="gl"></div>
+    <canvas id="imageBrain" style="width: 800px; height: 600px;"></canvas>
+
+    <script>
+        const imageID = "{{ imageID }}"
+    </script>
+    <script  type="module" src="{% static 'js/main.js' %}" defer></script>
 </body>
 </html>

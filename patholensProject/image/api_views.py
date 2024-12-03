@@ -19,12 +19,11 @@ class GetImageAPIView(APIView):
             print(imageFile)
 
             if not os.path.exists(imageFile):
-                print("nicht geil")
                 return Response({"error": "Image not found"}, status = status.HTTP_404_NOT_FOUND)
 
-            return FileResponse(open(imageFile, "rb"), as_attachment=True, filename= f"sub-{imageID}_space-orig_FLAIR.nii.gz")
+            return FileResponse(open(imageFile, "rb"), content_type='application/gzip' ,as_attachment=True)
+        
         except Exception as e:
-            print("kacke")
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             
 
