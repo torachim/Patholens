@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 import django
 import sys
+import numpy as np
 
 
 # Add project path (root directory where manage.py is located)
@@ -57,3 +58,10 @@ def getAllPatientsUrls():
         allPatients[dataSet] = {"url": allSubIDs}
 
     return allPatients
+
+
+def randomSort(aList):
+    # shuffels the list random
+    newList = np.random.permutation(aList)
+    return list(newList)
+
