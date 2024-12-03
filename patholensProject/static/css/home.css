@@ -1,4 +1,3 @@
-/* Grundlegende Stile für den Body */
 body {
     margin: 0; /* Entfernt den Standardabstand */
     font-family: Arial, sans-serif; /*Schriftart*/
@@ -8,54 +7,6 @@ body {
     flex-direction: column; /* Anordnung der Elemente vertikal */
     height: 100vh;
 }
-
- /*Top-Bar Navigation 
-nav.top-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #24617B;
-    padding: 10px 20px;
-    height: 60px;
-    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.5);
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 10;
-}
-
- Logo ganz links 
-.top-bar .logo {
-    font-size: 24px;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-}
-
-.top-bar .logo i {
-    font-size: 48px;
-    color: #ffffff;
-}
-
-.top-bar .logo span {
-    margin-left: 10px;
-}
-
-Container für Hilfe- und Logout-Symbole 
-.top-bar .icon-container {
-    display: flex;
-    align-items: center;
-    gap: 15px;  Abstand zwischen den Symbolen 
-}
-
- Allgemeine Stile für Icons 
-.top-bar .icon-container img {
-    width: 40px;
-    height: 40px;
-    cursor: pointer;
-}*/
-
 
 
 
@@ -86,32 +37,32 @@ Container für Hilfe- und Logout-Symbole
     height: 100px;
     margin-left: -50;
     position: relative;
-    left: 55px;
+    left: 60px;
     top: 33px;
 }
 
 .leftPanel .profile img {
-    width: 50px;
-    height: 50px;
+    width: 55px;
+    height: 55px;
     border-radius: 50%;
     margin-right: 20px;
     background-color: #e0e8ea;
 }
 
 .leftPanel .profileInfo {
-    font-size: 14px;
+    font-size: 16px;
     line-height: 1.2;
     max-width: 200px;
 }
 
 .leftPanel .profileInfo .name {
-    font-size: 25px;
+    font-size: 27px;
     font-weight: bold;
     white-space: nowrap;
 }
 
 .leftPanel .profileInfo .email {  
-    font-size: 16px;
+    font-size: 18px;
     color: #ffffff;
     margin-top: 5px;
 }
@@ -119,12 +70,12 @@ Container für Hilfe- und Logout-Symbole
 .leftPanel .buttons {
     display: flex;
     flex-direction: column;
-    gap: 35px;
-    width: 65%;
+    gap: 38px;
+    width: 70%;
     margin-bottom: 240px;
     position: relative;
-    left: 55px;
-    top: 55px;
+    left: 60px;
+    top: 60px;
 }
 
 
@@ -135,7 +86,7 @@ Container für Hilfe- und Logout-Symbole
     color: #FFFFFF;
     border: none;
     padding: 14px 30px;
-    font-size: 18px;
+    font-size: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     cursor: pointer;
@@ -152,7 +103,7 @@ Container für Hilfe- und Logout-Symbole
 
 .right-frame {
     
-    position: relative;         /* Fixiert das Element beim Scrollen */               /* Abstand vom oberen Rand der Seite (anpassbar) */
+    position: relative;                     
     right: 30px;             /* Abstand vom rechten Rand des Bildschirms */
     width: 1000px;            /* Breite des Frames (anpassbar) */
     height: 81vh;            /* Höhe des Frames (70% der Höhe des Bildschirms, anpassbar) */
@@ -162,7 +113,7 @@ Container für Hilfe- und Logout-Symbole
 
 /* Optional: Wenn das iframe geladen wird und die Seite eine Scrollbar benötigt */
 .right-frame {
-    overflow: auto;          /* Aktiviert das Scrollen innerhalb des Frames, wenn der Inhalt zu groß ist */
+    overflow: auto;         
 }
 
 .welcomeText {
