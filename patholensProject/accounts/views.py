@@ -141,3 +141,13 @@ def loginView(request):
         print("Error as POST was not used")
         
     return render(request, "accounts/login.html", {"information": information})
+
+
+def logoutView(request, calledFrom):
+    #if called from one of these pages, the process needs to be saved before logging out
+    if calledFrom == "diagnosisPage" or calledFrom == "editPage":
+        # TO-DO: save progress
+        pass 
+
+    logout(request)
+    return redirect("/") # redirects to the login screen
