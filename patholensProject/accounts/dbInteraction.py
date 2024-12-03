@@ -22,14 +22,24 @@ def createDoctor(user):
     allUrls = dataPipeline.getAllPatientsUrls()
     allDataSets = dataPipeline.getAllDataSets()
 
-    ids = generateIdsForUrls(allDataSets, allUrls)
+    # Generate ids for the patients and combine them
+    # for each data Set: key = id, value = path to patient in data Set
+    ids = addIdsToUrls(allDataSets, allUrls)
 
-    doc = Doctors.objects.create(doctorID=user, allPatients=ids)
+    # Generate the json for the finishes patients which are in the beginning empty
+    remaining = {}
+
+    for dataSet in allDataSets:
+        remaining[dataSet] = {}
+
+    doc = Doctors.objects.create(
+        doctorID=user, allPatients=ids, finishedPatients=remaining
+    )
 
     return doc
 
 
-def generateIdsForUrls(allDataSets, allUrls):
+def addIdsToUrls(allDataSets, allUrls):
 
     ids = {}
 
@@ -49,7 +59,7 @@ def generateIdsForUrls(allDataSets, allUrls):
     return ids
 
 
-# creates random ids
+# create random amount of ids
 def createUUIDs(amount):
 
     allUUIDs = []
@@ -57,3 +67,26 @@ def createUUIDs(amount):
         allUUIDs.append(str(uuid.uuid4()))
 
     return allUUIDs
+
+
+def addFinishedPatient(doctorID, toBeAddedPatients: dict):
+    # Exit when Doctors is not existing
+    if Doctors.objects.filter(doctorID=doctorID).exists() == False:
+        return False
+
+    doctor = Doctors.objects.get(doctorID=doctorID)
+    finishedPatient = doctor.finishedPatients
+
+    for patients in finishedPatient:
+
+        # If the key does not exist or is None, initialize it as an empty dict
+        if patients not in finishedPatient or finishedPatient[patients] is None:
+            finishedPatient[patients] = {}
+
+        # Add new keys or overwrite existing values
+        for key, value in toBeAddedPatients[patients].items():
+            finishedPatient[patients][key] = value
+
+    doctor.save()
+
+    return True
