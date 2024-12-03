@@ -3,7 +3,6 @@ import os
 import sys
 import django
 from pathlib import Path
-import numpy as np
 import random
 
 # Add project path (root directory where manage.py is located)
@@ -16,18 +15,17 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "patholensProject.settings")
 django.setup()
 
 
-import image.dataPipeline as dataPipeline
+import image.dataHandler as dataHandler
 from accounts.models import Doctors
-from image.models import Diagnosis
 
 
 def createDoctor(user):
-    allUrls = dataPipeline.getAllPatientsUrls()
-    allDataSets = dataPipeline.getAllDataSets()
+    allUrls = dataHandler.getAllPatientsUrls()
+    allDataSets = dataHandler.getAllDataSets()
 
     # shuffle the URLs randomly so that each doctor has a different order
     for url in allUrls:
-        shuffeldUrls = dataPipeline.randomSort(allUrls[url]["url"])
+        shuffeldUrls = dataHandler.shuffleList(allUrls[url]["url"])
         allUrls[url]["url"] = shuffeldUrls
 
     # Generate ids for the patients and combine them
@@ -131,15 +129,3 @@ def getRandomPicturePath(docID, dataSet):
     urlForPicture = allPatients[dataSet][idForPicture]
 
     return (idForPicture, urlForPicture)
-
-
-def addDiagnosis(diagID, docID, confidence, imageUrl):
-    # Check if the doctor exists in the database
-    if not Doctors.objects.filter(doctorID=docID).exists():
-        return False
-
-    diag = Diagnosis.objects.create(
-        diagID=diagID, doctorID=docID, confidence=confidence, imageUrl=imageUrl
-    )
-
-    return diag

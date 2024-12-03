@@ -6,10 +6,9 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import redirect
-from accounts.models import Doctors
 
 # the python file which handles the creation of Doctor DB
-from . import dbInteraction
+from . import doctorManager
 
 
 def signupView(request):
@@ -90,7 +89,7 @@ def signupView(request):
         )
 
         # creates a doctor
-        dbInteraction.createDoctor(user)
+        doctorManager.createDoctor(user)
 
         # login of user
         login(request, user)

@@ -16,7 +16,7 @@ class Diagnosis(models.Model):
         return str(self.diagID)
 
 
-# useTime class for storing the timestamps of executed actions during diagnosiskönwnn
+# useTime class for storing the timestamps of executed actions during diagnosis
 class UseTime(models.Model):
     timeID = models.AutoField(primary_key=True)
     # CASCADE: if the referenced diagnosis is deleted, the useTime entry will be automatically deleted aswell

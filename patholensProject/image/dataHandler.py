@@ -14,8 +14,6 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "patholensProject.settings")
 # Initialize Django
 django.setup()
 
-from accounts.models import Doctors
-
 
 BASEDIR = Path(__file__).resolve().parent.parent
 DATASETPATH = os.path.join(BASEDIR, "media")
@@ -60,7 +58,7 @@ def getAllPatientsUrls():
     return allPatients
 
 
-def randomSort(aList):
+def shuffleList(aList):
     # shuffels the list random
     newList = np.random.permutation(aList)
     return list(newList)
