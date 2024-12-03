@@ -15,9 +15,18 @@ django.setup()
 
 
 import image.dataPipeline as dataPipeline
-#from models import Doctors
+from accounts.models import Doctors
 
 
+def createDoctor(user):
+    allUrls = dataPipeline.getAllPatientsUrls()
+    allDataSets = dataPipeline.getAllDataSets()
+
+    ids = generateIdsForUrls(allDataSets, allUrls)
+
+    doc = Doctors.objects.create(doctorID=user, allPatients=ids)
+
+    return doc
 
 
 def generateIdsForUrls(allDataSets, allUrls):
@@ -48,6 +57,3 @@ def createUUIDs(amount):
         allUUIDs.append(str(uuid.uuid4()))
 
     return allUUIDs
-
-if __name__ == "__main__":
-    createDoctor()

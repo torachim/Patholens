@@ -9,7 +9,7 @@ from django.shortcuts import redirect
 from accounts.models import Doctors
 
 # the python file which handles the creation of Doctor DB
-import patholensProject.accounts.dbInteraction as dbInteraction
+from . import dbInteraction
 
 
 def signupView(request):
@@ -89,8 +89,8 @@ def signupView(request):
             password=password,
         )
 
-        #TODO: import dbInteraction
-        #dbInteraction.createDocotr(user)
+        # creates a doctor
+        dbInteraction.createDoctor(user)
 
         # login of user
         login(request, user)
@@ -116,7 +116,6 @@ def loginView(request):
 
     # user is already logged in
     if request.user.is_authenticated:
-        # TODO: rediretc to starting page
         return redirect("StartingPage")
 
     if request.method == "POST":
