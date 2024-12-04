@@ -25,21 +25,21 @@ def createDoctor(user):
 
     # shuffle the URLs randomly so that each doctor has a different order
     for url in allUrls:
-        shuffeldUrls = dataHandler.shuffleList(allUrls[url]["url"])
-        allUrls[url]["url"] = shuffeldUrls
+        shuffledUrls = dataHandler.shuffleList(allUrls[url]["url"])
+        allUrls[url]["url"] = shuffledUrls
 
     # Generate ids for the patients and combine them
-    # for each data Set: key = id, value = path to patient in data Set
+    # for each data set: key = id, value = path to patient in data set
     ids = addIdsToUrls(allDataSets, allUrls)
 
-    # Generate the json for the finishes patients which are in the beginning empty
+    # Generate the json for the finished patients which are in the beginning empty
     remaining = {}
 
     for dataSet in allDataSets:
         remaining[dataSet] = {}
 
     doc = Doctors.objects.create(
-        doctorID=user, allPatients=ids, finishedPatients=remaining
+        doctorID=user, remainingPatients=ids, finishedPatients=remaining
     )
 
     return doc
@@ -64,7 +64,7 @@ def addIdsToUrls(allDataSets, allUrls):
     return ids
 
 
-# create arandom amount of ids
+# creates a certain amount of random ids
 def createUUIDs(amount):
     allUUIDs = []
     for i in range(amount):
@@ -73,7 +73,7 @@ def createUUIDs(amount):
     return allUUIDs
 
 
-# dict muss be in the form: {"dataSet": {id: urlpath, ...}, ...}
+# dict must be in the form: {"dataSet": {id: url path, ...}, ...}
 def addFinishedPatient(docID, toBeAddedPatients):
     # Check if the doctor exists in the database
     if not Doctors.objects.filter(doctorID=docID).exists():
@@ -107,25 +107,20 @@ def getRandomPicturePath(docID, dataSet):
 
     doctor = Doctors.objects.get(doctorID=docID)
 
-    if dataSet not in doctor.allPatients or dataSet not in doctor.finishedPatients:
+    if dataSet not in doctor.remainingPatients:
         raise KeyError(f"Data set '{dataSet}' not found for doctor {docID}")
 
-    allPatients = doctor.allPatients
-    finishedPatients = doctor.finishedPatients
-
-    allPatientsAsList = list(allPatients[dataSet].keys())
-    finishedPatientsAsList = list(finishedPatients[dataSet].keys())
-
-    remainingPatients = list(set(allPatientsAsList) - set(finishedPatientsAsList))
+    remainingPatients = doctor.remainingPatients
+    remainingPatientsAsList = list(remainingPatients[dataSet].keys())
 
     # Return False if no remaining patients are available
-    if len(remainingPatients) <= 0:
+    if len(remainingPatientsAsList) <= 0:
         return False
 
     # Randomly select a patient from the remaining ones
-    index = random.randint(0, len(remainingPatients) - 1)
+    index = random.randint(0, len(remainingPatientsAsList) - 1)
 
-    idForPicture = remainingPatients[index]
-    urlForPicture = allPatients[dataSet][idForPicture]
+    idForPicture = remainingPatientsAsList[index]
+    urlForPicture = remainingPatients[dataSet][idForPicture]
 
     return (idForPicture, urlForPicture)

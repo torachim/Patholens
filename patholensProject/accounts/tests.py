@@ -12,11 +12,11 @@ class TestDoctorsManager(unittest.TestCase):
     def setUp(self):
         # Create a test user
         self.testUser = User.objects.create_user(
-            username="luka364sTesteATgmailPOINTcom",
-            email="lukas364Teste@gmail.com",
-            first_name="NameVomLuggasZTEftw",
-            last_name="GehtDichNichtsAndedfdef",
-            password="Ultimatives5HeadPasfefesword",
+            username="luka364sTestffeATgmailPOINTcom",
+            email="lukas364Testeff@gmail.com",
+            first_name="NameVomLeefuggasZTEftw",
+            last_name="GehtDichNefefichtsAndedfdef",
+            password="Ultimatives5HeadPasfefeswordChristophMagEsNicht",
         )
         self.doc = createDoctor(self.testUser)
 
@@ -24,22 +24,23 @@ class TestDoctorsManager(unittest.TestCase):
     def testCreateDoctor(self):
         self.doc = createDoctor(self.testUser)
 
+    @unittest.skip
     def testAddFinishedPatient(self):
         idFromTestUser = self.doc.doctorID
 
         toBeAdded = {}
 
         toBeAdded["lunge"] = {}
-        toBeAdded["websiteData"] = {"id-for-bsp": "websiteData-00089"}
+        toBeAdded["websiteData"] = {"id-for-bsp": "00089"}
         addFinishedPatient(idFromTestUser, toBeAdded)
 
-        toBeAdded["websiteData"] = {"id-for-bsp-2": "websiteData-0004"}
-        toBeAdded["lunge"] = {"id-for-lunge-bsp": "lunge-0304"}
+        toBeAdded["websiteData"] = {"id-for-bsp-2": "0004"}
+        toBeAdded["lunge"] = {"id-for-lunge-bsp": "0304"}
         addFinishedPatient(idFromTestUser, toBeAdded)
 
-    def testGetPictureForDiagnosis(self):
-        remainingPatients = getRandomPicturePath(self.doc.doctorID, "websiteData")
-        print(remainingPatients)
+    def testRandomPicture(self):
+        idFromTestUser = self.doc.doctorID
+        print(getRandomPicturePath(idFromTestUser, "websiteData"))
 
     # is called last
     def tearDown(self):

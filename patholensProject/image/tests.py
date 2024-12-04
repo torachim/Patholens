@@ -25,8 +25,8 @@ class TestDataHandler(unittest.TestCase):
             "lunge-0010",
             "lunge-0000",
         ]
-        shuffeldList = shuffleList(toBeSortedList)
-        self.assertNotEqual(toBeSortedList, shuffeldList)
+        shuffledList = shuffleList(toBeSortedList)
+        self.assertNotEqual(toBeSortedList, shuffledList)
 
 
 if __name__ == "__main__":
