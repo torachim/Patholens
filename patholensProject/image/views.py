@@ -57,4 +57,4 @@ def renderImageView(request, imageID):
     return render(request, 'image/loadTest.html', {'imageID' : imageID})
 
 def renderImageViewII(request, imageID):
-    return render(request, 'image/index.html', {'imageID': imageID})
+    return render(request, 'image/diagnosisPage.html', {'imageID': imageID})

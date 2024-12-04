@@ -30,11 +30,8 @@ urlpatterns = [
     path('diagnosis/', views.diagnosisView, name='patholensDiagnosis'),
     path('diagnosis/<int:diag_id>/', views.diagnosisView, name='patholensDiagnosisWithID'),
     path('confidence/<int:diagID>/', views.saveConfidence, name='saveConfidence'),
-]
 
-urlpatterns = [
     path('api/getImage/<str:imageID>/', GetImageAPIView.as_view(), name='getImage'),
     path('diagnosis/<str:imageID>/', renderImageView, name='imageView'),
     path('other/<str:imageID>/', renderImageViewII, name='otherView')
-
 ]
