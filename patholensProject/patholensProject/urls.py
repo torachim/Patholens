@@ -26,11 +26,9 @@ urlpatterns = [
 
     path('admin/', admin.site.urls),
     path('', include('accounts.urls')),
-    path('image/', include('image.urls')),
     path('startingPage/', views.homepage, name = "StartingPage"),
-    path('', include('image.urls')),
+    #path('', include('image.urls')),
     
-
     # YOUR PATTERNS
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     # Optional UI:
@@ -40,3 +38,6 @@ urlpatterns = [
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+    #path('image/', include('image.urls')),

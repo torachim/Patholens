@@ -16,25 +16,23 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from . import views
 from django.conf import settings
 from django.conf.urls.static import static
 from .api_views import GetImageAPIView
-from .views import renderImageView
+from .views import diagnosisView
+#from .views import renderImageView
 from .views import renderImageViewII
 
 
 urlpatterns = [
     
     path('', include('accounts.urls')),
-    path('diagnosis/', views.diagnosisView, name='patholensDiagnosis'),
-    path('diagnosis/<int:diag_id>/', views.diagnosisView, name='patholensDiagnosisWithID'),
-    path('confidence/<int:diagID>/', views.saveConfidence, name='saveConfidence'),
-]
-
-urlpatterns = [
+    #path('diagnosis/<str:imageID>/', diagnosisView, name='patholensDiagnosis'),
+    #path('confidence/<int:diagID>/', views.saveConfidence, name='saveConfidence'),
+    
     path('api/getImage/<str:imageID>/', GetImageAPIView.as_view(), name='getImage'),
-    path('diagnosis/<str:imageID>/', renderImageView, name='imageView'),
+   # path('diagnosis/<str:imageID>/', renderImageView, name='imageView'),
     path('other/<str:imageID>/', renderImageViewII, name='otherView')
-
 ]
+
+

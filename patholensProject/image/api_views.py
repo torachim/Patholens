@@ -12,7 +12,6 @@ class GetImageAPIView(APIView):
     def get(self, request, imageID):
 
         try:
-
             imageFormat = request.GET.get("format ")
             if not imageFormat:
                 print("Format parameter missing; using default FLAIR.")

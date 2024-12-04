@@ -9,9 +9,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     const canvas = document.getElementById("imageBrain");
-    canvas.style.width = "700px";
-    canvas.style.height = "600px";
-    canvas.style.backgroundColor = "#000000";
 
     nv.attachToCanvas(canvas);
 
