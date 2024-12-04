@@ -1,3 +1,4 @@
+import requests
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
@@ -50,3 +51,10 @@ def saveConfidence(request, diagID):
     else:
        
         return JsonResponse({'error': 'Invalid request method. Use POST.'}, status=405)
+from django.urls import reverse
+
+def renderImageView(request, imageID):
+    return render(request, 'image/loadTest.html', {'imageID' : imageID})
+
+def renderImageViewII(request, imageID):
+    return render(request, 'image/index.html', {'imageID': imageID})

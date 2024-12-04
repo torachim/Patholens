@@ -42,8 +42,24 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'drf_spectacular'
 ]
 
+
+
+'''REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Patholens API',
+    'DESCRIPTION' : 'API to access the brainscan data in .nii.gz format',
+    'VERSION' : '1.0.0',
+    'SERVE_INCLUDE_SCHEMA' : False,
+}
+'''
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -60,7 +76,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         # BASE_DIR was added for home.html
-        'DIRS': [BASE_DIR / "templates"],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],  # Pfad zum zentralen Template-Verzeichnis
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -128,7 +144,8 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static')
+    os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, 'data', 'images')  # Hinzufügen dieses Pfades
 ]
 
 # Default primary key field type
@@ -139,3 +156,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = "/"
 
+EXTERNAL_DATASET_PATH = os.path.join(BASE_DIR, "website_data/")
+
+MEDIA_URL = "/media/"
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+SUPPORTED_IMAGE_FORMATS = {
+    "FLAIR": "_space-orig_FLAIR.nii.gz",
+    "T2": "_space-orig_T1w.nii.gz",
+}

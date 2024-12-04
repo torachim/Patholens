@@ -17,9 +17,7 @@
     <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
     <meta http-equiv="pragma" content="no-cache" />
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
-    {% block extraCSS %}
-    <!-- Extra CSS will go here -->
-    {% endblock %}
+    {% block extraCSS %}{% endblock %}
     <script src="https://kit.fontawesome.com/179535dd9d.js" crossorigin="anonymous"></script>
     <title>{% block title %}Website{% endblock %}</title>
 </head>
@@ -27,7 +25,7 @@
     
     <div class="topBar">
         <div class="NameIcon">
-            <img alt="icon" src="../static/images/icons8-experiment-versuch-ios-17-glyph-96 copy.png">
+            <img alt="icon" src="{% static '/images/icons8-experiment-versuch-ios-17-glyph-96 copy.png' %}">
             <p>PathoLens</p>
         </div>
         <div class="Buttons">
@@ -37,11 +35,11 @@
             {%endblock%}
         </div>
     </div>
-    
-
-        {% block content %}
-         <!-- Content from the child page will go here -->
-        {% endblock %}
+    {% block content %}
+    <!-- Content from child pages will go here -->
+    {% endblock content %}
+    <!-- JavaScript Block -->
+    {% block extraJS %}{% endblock %}
     
     <div class="helpSlide" id="helpWindow">
         <div class="closeHelp">
@@ -96,6 +94,9 @@
 
 
     </script>
+<<<<<<< HEAD
     
 </body>
 </html>
+=======
+>>>>>>> loadPicturesAPI

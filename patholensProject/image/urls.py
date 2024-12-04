@@ -19,6 +19,9 @@ from django.urls import path, include
 from . import views
 from django.conf import settings
 from django.conf.urls.static import static
+from .api_views import GetImageAPIView
+from .views import renderImageView
+from .views import renderImageViewII
 
 
 urlpatterns = [
@@ -29,3 +32,9 @@ urlpatterns = [
     path('confidence/<int:diagID>/', views.saveConfidence, name='saveConfidence'),
 ]
 
+urlpatterns = [
+    path('api/getImage/<str:imageID>/', GetImageAPIView.as_view(), name='getImage'),
+    path('diagnosis/<str:imageID>/', renderImageView, name='imageView'),
+    path('other/<str:imageID>/', renderImageViewII, name='otherView')
+
+]
