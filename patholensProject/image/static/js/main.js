@@ -11,7 +11,6 @@ document.addEventListener('DOMContentLoaded', function() {
     nv.attachToCanvas(canvas);
 
     const baseApiURL = `/image/api/getImage/${imageID}`;
-    //const baseApiURL = `http://127.0.0.1:8000/image/api/getImage/${imageID}`;
 
     document.getElementById("imageFormat").addEventListener("change", (event) => {
         const selectedFormat = event.target.value;
@@ -23,10 +22,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         console.log(`API URL: ${apiURL}`);
 
-        fetch(apiURL)
-            .then(response => response.arrayBuffer())
-            .then(data => console.log("ArrayBuffer size:", data.byteLength))
-            .catch(err => console.error(err));
 
         fetch(apiURL)
             .then(response => {
@@ -42,15 +37,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 const imageURL = `http://127.0.0.1:8000${data.path}`;
                 console.log("Image URL:", imageURL);
 
-
-                //const fileURL = URL.createObjectURL(blob);
-
-                //console.log("File URL:", fileURL)
-
-            // const blob = new Blob([arrayBuffer], {type: "application/gzip"});
-                //const blobURL = URL.createObjectURL(blob);
-
-                //console.log("BlobURL: ", blobURL)
 
                 nv.loadVolumes([
                     {

@@ -12,11 +12,7 @@ class GetImageAPIView(APIView):
     def get(self, request, imageID):
 
         try:
-            #datasetPath = settings.EXTERNAL_DATASET_PATH
-            #imagePath = os.path.join(datasetPath, f"sub-{imageID}")
-            #imageFile = os.path.join(imagePath, "anat", f"sub-{imageID}_space-orig_FLAIR.nii.gz")
 
-            #print(imageFile)
             imageFormat = request.GET.get("format ")
             if not imageFormat:
                 print("Format parameter missing; using default FLAIR.")
@@ -38,10 +34,6 @@ class GetImageAPIView(APIView):
             relativePath = f"/media/website_data/sub-{imageID}/anat/sub-{imageID}{fileSuffix}"
             return Response({"path": relativePath}, status=status.HTTP_200_OK)
 
-            #if not os.path.exists(imageFile):
-             #   return Response({"error": "Image not found"}, status = status.HTTP_404_NOT_FOUND)
-
-            #return FileResponse(open(imageFile, "rb"), content_type='application/gzip' ,as_attachment=True, status = status.HTTP_200_OK)
 
         
         except Exception as e:
