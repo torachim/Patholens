@@ -25,5 +25,7 @@ urlpatterns = [
     
     path('', include('accounts.urls')),
     path('diagnosis/', views.diagnosisView, name='patholensDiagnosis'),
+    path('diagnosis/<int:diag_id>/', views.diagnosisView, name='patholensDiagnosisWithID'),
+    path('confidence/<int:diagID>/', views.saveConfidence, name='saveConfidence'),
 ]
 
