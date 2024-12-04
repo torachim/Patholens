@@ -14,12 +14,12 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "patholensProject.settings")
 # Initialize Django
 django.setup()
 
-
+# Specifies the base directory of the project (the directory that contains manage.py),
 BASEDIR = Path(__file__).resolve().parent.parent
 DATASETPATH = os.path.join(BASEDIR, "media")
 
 
-# Go through all data Sets in the directory and return the names of the data Sets
+# Go through all data sets in the directory and return the names of the data sets
 def getAllDataSets():
     global BASEDIR, DATASETPATH
 
@@ -51,7 +51,7 @@ def getAllPatientsUrls():
             if "sub-" in sub:
                 # Splits the string at '-' and takes only the number of the string (our ID)
                 subID = sub.split("-")[1]
-                allSubIDs.append(dataSet + "-" + subID)
+                allSubIDs.append(subID)
 
         allPatients[dataSet] = {"url": allSubIDs}
 
@@ -59,6 +59,6 @@ def getAllPatientsUrls():
 
 
 def shuffleList(aList):
-    # shuffels the list random
+    # shuffles the list random
     newList = np.random.permutation(aList)
     return list(newList)
