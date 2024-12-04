@@ -34,18 +34,21 @@
           </div>
 
           <div class="buttons">
-              <button onclick="changeFrame('window', 'url1.html')">Continue Diagnosis</button>
+            <button onclick="window.location.href='url.html'">Continue Diagnosis</button>
               <label for="newDiagnosisCheckbox" style="cursor: pointer">
-                <button onclick="changeFrame('window', 'url2.html')">New Diagnosis</button>
+                <button onclick="window.open( {% url 'selectDataset' %},'window')">New Diagnosis</button>
           </div>
      </div>
 
       <!-- Window on the right side -->
       <iframe class="right-frame"
       src="{% url 'homeWindow' %}"
-      class="frame-container" 
       name = "window"
       style="border: none">
       </iframe>
+      
+
+
+      
   </div>
 {% endblock %}

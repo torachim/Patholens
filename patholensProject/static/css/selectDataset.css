@@ -1,0 +1,22 @@
+body {
+    align-items: center;
+    flex: 1.65;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    background-color: #00242F;
+    height: calc(100% - 40px);
+    margin: 20px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.container{
+    text-align: center;
+    font-size: 17px;
+    font-style: bold;
+    margin: 80px;
+    color: #ffffff;
+    font: optional;
+}

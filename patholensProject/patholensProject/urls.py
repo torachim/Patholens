@@ -23,5 +23,6 @@ urlpatterns = [
     path('', include('accounts.urls')),
     path('startingPage/', views.homepage, name = "StartingPage"),
     path('homeWindow/', views.homeWindow, name='homeWindow'),  
+    path('selectDataset/', views.data, name='selectDataset'), 
 ]
 
