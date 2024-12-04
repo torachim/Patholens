@@ -1,0 +1,20 @@
+{% extends 'base.html' %} 
+{% load static %} 
+{% block extraCSS %}
+<link rel="stylesheet" href="{% static 'css/index.css' %}" />
+{% endblock %} 
+
+{% block title %} 
+  PathoLens 
+{% endblock %} 
+
+{% block content %}
+<canvas id="niivue-canvas" style="width: 800px; height: 700px;"></canvas>
+{% endblock %}
+
+{% block extraJS %}
+<script type="module" src="{% static 'js/main.js' %}"></script>
+<script type="module" src="{% static 'js/index.js' %}"></script>
+{% endblock %}
+</body>
+</html>

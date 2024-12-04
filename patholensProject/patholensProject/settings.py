@@ -48,9 +48,10 @@ INSTALLED_APPS = [
 
 
 
-REST_FRAMEWORK = {
+'''REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
+
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Patholens API',
@@ -58,7 +59,7 @@ SPECTACULAR_SETTINGS = {
     'VERSION' : '1.0.0',
     'SERVE_INCLUDE_SCHEMA' : False,
 }
-
+'''
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -75,7 +76,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         # BASE_DIR was added for home.html
-        'DIRS': [BASE_DIR / "templates"],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],  # Pfad zum zentralen Template-Verzeichnis
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -143,7 +144,8 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static')
+    os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, 'data', 'images')  # Hinzufügen dieses Pfades
 ]
 
 # Default primary key field type
