@@ -9,12 +9,21 @@
 {% endblock %} 
 
 {% block content %}
-<canvas id="niivue-canvas" style="width: 800px; height: 700px;"></canvas>
+
+<select id="imageFormat">
+  <option value="FLAIR" selected>FLAIR</option>
+  <option value="T2">T2</option>
+</select>
+
+<div class="imageBox">
+  <canvas id="imageBrain" width="1770" height="500"></canvas>
+</div>
 {% endblock %}
 
 {% block extraJS %}
+<script>
+  const imageID = "{{ imageID }}";
+</script> 
 <script type="module" src="{% static 'js/main.js' %}"></script>
 <script type="module" src="{% static 'js/index.js' %}"></script>
 {% endblock %}
-</body>
-</html>
