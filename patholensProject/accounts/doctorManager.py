@@ -4,6 +4,7 @@ import sys
 import django
 from pathlib import Path
 import random
+from django.contrib.auth.models import User
 
 # Add project path (root directory where manage.py is located)
 sys.path.append(str(Path(__file__).resolve().parent.parent))
@@ -19,7 +20,17 @@ import image.dataHandler as dataHandler
 from accounts.models import Doctors
 
 
-def createDoctor(user):
+def createDoctor(user: django.contrib.auth.models.User):
+    """
+    Creates a new doctor entry in the database, associates them with a set of shuffled patient URLs,
+    and prepares patient data for future processing.
+
+    Args:
+        user (django.contrib.auth.models.User):  The`User`object representing the doctor to be created.
+
+    Returns:
+        Doctors: The created doctor object, including information about the remaining and finished patients.
+    """
     allUrls = dataHandler.getAllPatientsUrls()
     allDataSets = dataHandler.getAllDataSets()
 
@@ -45,27 +56,61 @@ def createDoctor(user):
     return doc
 
 
-def addIdsToUrls(allDataSets, allUrls):
-    ids = {}
+def addIdsToUrls(allDataSets: list, allUrls: dict):
+    """
+    Generates a dictionary that associates each dataset with patient IDs and their respective picture URLs.
+
+    Args:
+        allDataSets (list): A list of dataset names to be processed.
+        allUrls (dict): A dictionary containing URLs for the pictures, structured as:
+            {
+                "dataSetName":
+                {
+                    "urls": ["url1", "url2", ...]
+                },
+                ...
+            }
+
+    Returns:
+        dict: An dictionary which has the following format:
+            {
+                "dataSet":
+                {
+                    "patient id": "url to the picture",
+                    ...
+                },
+                ...
+            }
+    """
+
+    idsAndUrls = {}
 
     for dataSet in allDataSets:
         urls = allUrls[dataSet]["url"]
         amount = len(urls)
-        uuid = createUUIDs(amount)
+        patientIDs = createUUIDs(amount)
 
         # Initialize the dictionary for dataSet if it does not exist yet
-        if dataSet not in ids:
-            ids[dataSet] = {}
+        if dataSet not in idsAndUrls:
+            idsAndUrls[dataSet] = {}
 
         # Add urls and uuids to dictionary
         for index in range(amount):
-            ids[dataSet][uuid[index]] = urls[index]
+            idsAndUrls[dataSet][patientIDs[index]] = urls[index]
 
-    return ids
+    return idsAndUrls
 
 
-# creates a certain amount of random ids
-def createUUIDs(amount):
+def createUUIDs(amount: int):
+    """
+    Generates a specified number of unique UUIDs (Universally Unique Identifiers).
+
+    Args:
+        amount (int): The number of unique UUIDs to generate.
+
+    Returns:
+        list: A list of randomly generated UUIDs in string format.
+    """
     allUUIDs = []
     for i in range(amount):
         allUUIDs.append(str(uuid.uuid4()))
@@ -73,8 +118,29 @@ def createUUIDs(amount):
     return allUUIDs
 
 
-# dict must be in the form: {"dataSet": {id: url path, ...}, ...}
-def addFinishedPatient(docID, toBeAddedPatients):
+def addFinishedPatient(docID: str, toBeAddedPatients: dict):
+    """
+    Adds patients to the finishedPatients dictionary of the specified doctor.
+
+    Args:
+        docID (str): The unique identifier of the doctor
+        toBeAddedPatients (dict): A dictionary containing the patients to be added to the `finishedPatients` dictionary. The structure must follow this format:
+            {
+                "dataSet":
+                {
+                    "patient id": "url to the picture",
+                    ...
+                },
+                ...
+            }
+
+
+    Raises:
+        ValueError: If the `toBeAddedPatients`is not a dictionary
+
+    Returns:
+        bool: True if the operation was successful, False if the doctor does not exist.
+    """
     # Check if the doctor exists in the database
     if not Doctors.objects.filter(doctorID=docID).exists():
         return False
@@ -100,7 +166,21 @@ def addFinishedPatient(docID, toBeAddedPatients):
     return True
 
 
-def getRandomPicturePath(docID, dataSet):
+def getRandomPicturePath(docID: str, dataSet: str):
+    """
+    Args:
+        docID (str): The unique identifier of the doctor
+        dataSet (str): The name of the dataset, which must exist within the `remainingPatients` dictionary associated with the doctor.
+
+    Raises:
+        KeyError: If the specified dataset (dataSet) is not found in the doctor's `remainingPatients` dictionary.
+
+    Returns:
+        tuple: A tuple containing:
+            - str: The ID of the diagnosis entry.
+            - str: The URL of the picture.
+        Returns False if no remaining patients are available or the doctor does not exist.
+    """
     # Check if the doctor exists in the database
     if not Doctors.objects.filter(doctorID=docID).exists():
         return False
