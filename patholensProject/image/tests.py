@@ -9,7 +9,7 @@ class TestDataHandler(unittest.TestCase):
     @unittest.skip  # skip
     def testGetDataSets(self):
         rightOutput = ["websiteData"]
-        self.assertEqual(getAllDataSets(), rightOutput)
+        self.assertEqual(getDataSetNames(), rightOutput)
 
     @unittest.skip  # skip
     def testAddAllPatientsToDoctorsDB(self):

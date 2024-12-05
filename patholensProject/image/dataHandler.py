@@ -19,7 +19,7 @@ BASEDIR = Path(__file__).resolve().parent.parent
 DATASETPATH = os.path.join(BASEDIR, "media")
 
 
-def getAllDataSets():
+def getDataSetNames():
     """
     Retrieves all datasets from the specified directory.
 
@@ -65,7 +65,7 @@ def getAllPatientsUrls():
 
     allPatients = {}
 
-    allDataSets = getAllDataSets()
+    allDataSets = getDataSetNames()
 
     for dataSet in allDataSets:
         # Has all the paths to the availabe data sets

@@ -31,7 +31,7 @@ def createDoctor(user: django.contrib.auth.models.User):
         Doctors: The created doctor object, including information about the remaining and finished patients.
     """
     allUrls = dataHandler.getAllPatientsUrls()
-    allDataSets = dataHandler.getAllDataSets()
+    allDataSets = dataHandler.getDataSetNames()
 
     # shuffle the URLs randomly so that each doctor has a different order
     for url in allUrls:
