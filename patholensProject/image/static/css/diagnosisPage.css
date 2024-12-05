@@ -36,8 +36,6 @@ body{
 }
 
 
-
-
 .toolButton {
     background-color: #D9D9D9; 
     border: none;
@@ -90,23 +88,12 @@ body{
     width: 100%;
 }
 
-#brainImage {
-    width: 100% !important;
-    height: 600px !important;
-    background-color: #000000;
-    margin-top: 100px !important;
-}
 
 .imageBox{
     margin-top: 50px;
 }
 
-#content {
-    display: flex !important;
-    justify-content: center !important; /* Zentriert den Inhalt horizontal */
-    align-items: center !important;    /* Zentriert den Inhalt vertikal */
-    min-height: 100vh;      /* Mindesthöhe, damit das Flexbox-Container vollständig sichtbar ist */
-}
+
 
 
 .radio-form {

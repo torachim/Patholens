@@ -1,13 +1,33 @@
 import { Niivue } from "./index.js";
 
-
-
 document.addEventListener('DOMContentLoaded', function() {
 
     const nv = new Niivue()
+
     const canvas = document.getElementById("imageBrain");
 
+    function adjustCanvasForDPI(canvas) {
+        const context = canvas.getContext('2d');
+        const dpi = window.devicePixelRatio || 1;
+    
+        // Hol die Größe aus CSS
+        const computedStyle = getComputedStyle(canvas);
+        const width = parseInt(computedStyle.getPropertyValue('width'), 10);
+        const height = parseInt(computedStyle.getPropertyValue('height'), 10);
+    
+        // Setze die echte Auflösung des Canvas
+        canvas.width = width * dpi;
+        canvas.height = height * dpi;
+    
+    }
+    
+
+
     nv.attachToCanvas(canvas);
+
+    // Nach der Niivue-Initialisierung ausführen
+    adjustCanvasForDPI(canvas);
+
 
     const baseApiURL = `/image/api/getImage/${imageID}`;
 
@@ -25,12 +45,8 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
   
-
-
     console.log(selectedFormat)
-
-    
-
+  
     function loadImage(format) {
         const apiURL = `${baseApiURL}/?format =${format}`;
         console.log(`API URL: ${apiURL}`);
