@@ -19,7 +19,7 @@ def diagnosisView(request):
 
 
 def diagnosisView(request, diagID): 
-    diagnosisObj = diagnosis.objects.get(diagID=diag_id)
+    diagnosisObj = diagnosis.objects.get(diagID=diagID)
     return render(request, 'image/diagnosisPage.html', {'diagID': diagnosisObj.diagID})
 
 
@@ -51,10 +51,7 @@ def saveConfidence(request, diagID):
     else:
        
         return JsonResponse({'error': 'Invalid request method. Use POST.'}, status=405)
-from django.urls import reverse
 
-def renderImageView(request, imageID):
-    return render(request, 'image/loadTest.html', {'imageID' : imageID})
 
-def renderImageViewII(request, imageID):
+def testRenderImageView(request, imageID):
     return render(request, 'image/diagnosisPage.html', {'imageID': imageID})

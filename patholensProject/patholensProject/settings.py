@@ -76,7 +76,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         # BASE_DIR was added for home.html
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],  # Pfad zum zentralen Template-Verzeichnis
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],  
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -145,7 +145,7 @@ STATIC_URL = 'static/'
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
-   # os.path.join(BASE_DIR, 'data', 'images')  # Hinzufügen dieses Pfades
+    #os.path.join(BASE_DIR, 'data', 'images')  
 ]
 
 # Default primary key field type

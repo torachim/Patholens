@@ -8,9 +8,25 @@ import os
 
 
 class GetImageAPIView(APIView):
-    
-    def get(self, request, imageID):
+    """API Class to get the image to a given diagnosisID
+       (now its still the imageID for testing reasons)
 
+    Args:
+        APIView (_type_): APIView imported from python
+    """
+
+    def get(self, request, imageID):
+        """Function to get the image to a given diagnosisID
+           (now its still the imageID for testing reasons)
+
+        Args:
+            request (_type_): _description_
+            imageID (string): ID of an Image
+
+        Returns:
+            Path: The path to find the requestet image
+        """
+        
         try:
             imageFormat = request.GET.get("format ")
             if not imageFormat:
@@ -29,7 +45,7 @@ class GetImageAPIView(APIView):
             if not os.path.exists(imagePath):
                 return Response({"error": "Image not found"}, status=status.HTTP_404_NOT_FOUND)
             
-            # Relativer Pfad für den Client
+            # relative path for the client
             relativePath = f"/media/website_data/sub-{imageID}/anat/sub-{imageID}{fileSuffix}"
             return Response({"path": relativePath}, status=status.HTTP_200_OK)
 

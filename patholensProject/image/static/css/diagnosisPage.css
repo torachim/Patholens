@@ -96,7 +96,7 @@ body{
 
 
 
-.radio-form {
+.radioForm {
     display: flex;
     gap: 100px; 
     align-items: center;
@@ -134,14 +134,14 @@ input[type="radio"]:checked::before {
 
 
 
-.radio-form label {
+.radioForm label {
     display: flex;
     align-items: center; 
     gap: 12px; 
 }
 
 
-.radio-form label p {
+.radioForm label p {
     margin: 0; 
     font-size: 18px; 
     color: white; 
@@ -189,7 +189,7 @@ input[type="radio"]:checked::before {
 }
 
 
-.popup-overlay {
+.popupOverlay {
     
     position: fixed;
     top: 0;
@@ -206,9 +206,7 @@ input[type="radio"]:checked::before {
 
 
 
-.popup-frame {
-
-    
+.popupFrame {
     position: relative;
     background: #005E7A;
     padding: 20px 30px;
@@ -221,7 +219,7 @@ input[type="radio"]:checked::before {
     
 }
 
-.popup-frame p {
+.popupFrame p {
     font-family: 'Cabin', sans-serif;
     color: white;
     font-size: 20px;
@@ -231,7 +229,7 @@ input[type="radio"]:checked::before {
 
 
 
-.popup-close {
+.popupClose {
   
     position: absolute; 
     top: 10px;
@@ -246,7 +244,7 @@ input[type="radio"]:checked::before {
     line-height: 30px
 }
 
-.popup-confirm{
+.popupConfirm{
     background-color: #00afb9;
     border: none;
     width: 200px;
@@ -265,13 +263,13 @@ input[type="radio"]:checked::before {
     transform: translateX(-50%);
 }
 
-.popup-confirm:hover {
+.popupConfirm:hover {
     background-color: #008a91; 
     
 }
 
 
-.confidence-meter-container {
+.confidenceMeterContainer {
     position: absolute;
     width: 70%;
     top: 50%;
@@ -282,7 +280,7 @@ input[type="radio"]:checked::before {
 }
 
 
-.confidence-meter {
+.confidenceMeter {
     width: 100%;
     -webkit-appearance: none; 
     appearance: none;
@@ -294,7 +292,7 @@ input[type="radio"]:checked::before {
     box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3); 
 }
 
-.confidence-meter::-webkit-slider-thumb {
+.confidenceMeter::-webkit-slider-thumb {
     -webkit-appearance: none; 
     appearance: none;
     width: 10px;

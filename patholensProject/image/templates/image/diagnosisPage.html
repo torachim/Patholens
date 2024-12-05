@@ -37,14 +37,14 @@
 
 
 <div class="imageBox">
-    <canvas id="imageBrain" width="100%" height="400%"></canvas>
+    <canvas id="imageBrain" width="100%" height="395px"></canvas>
 </div>
 
 
 
 
 <div class="container">
-    <form class="radio-form">
+    <form class="radioForm">
         <label>
             <input type="radio" name="option" value="FLAIR" checked>
             <p>FLAIR</p>
@@ -60,30 +60,27 @@
 </div>
 
 
-
-
-
 <div class="patientID">
     <p>ID: 50044456</p>
 </div>
 
 
-<div class="popup-overlay" id="popupOverlay">
-    <div class="popup-frame">
+<div class="popupOverlay" id="popupOverlay">
+    <div class="popupFrame">
         
-        <button class="popup-close" id="closePopup">&times;</button>
+        <button class="popupClose" id="closePopup">&times;</button>
         
         <p>Please state your confidence</p>
 
-        <div class="confidence-meter-container">
+        <div class="confidenceMeterContainer">
             
-            <input type="range" class="confidence-meter" min="0" max="100" value="50" id="confidenceMeter">
+            <input type="range" class="confidenceMeter" min="0" max="100" value="50" id="confidenceMeter">
   
 
             <div class="tooltip" id="tooltip">50</div>
         </div>
 
-        <button class="popup-confirm">Confirm</button>
+        <button class="popupConfirm">Confirm</button>
     </div>
 </div>
 

@@ -6,26 +6,24 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const canvas = document.getElementById("imageBrain");
 
+    //function to resize the canvas field in dependency of the device
     function adjustCanvasForDPI(canvas) {
         const context = canvas.getContext('2d');
         const dpi = window.devicePixelRatio || 1;
     
-        // Hol die Größe aus CSS
+        // Get the size from the canvas element from the css
         const computedStyle = getComputedStyle(canvas);
         const width = parseInt(computedStyle.getPropertyValue('width'), 10);
         const height = parseInt(computedStyle.getPropertyValue('height'), 10);
     
-        // Setze die echte Auflösung des Canvas
+        // set the new width and height 
         canvas.width = width * dpi;
         canvas.height = height * dpi;
     
     }
     
-
-
     nv.attachToCanvas(canvas);
 
-    // Nach der Niivue-Initialisierung ausführen
     adjustCanvasForDPI(canvas);
 
 
@@ -36,6 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let selectedFormat = "FLAIR";
     loadImage(selectedFormat);
 
+    //function to change the picture format if the buttons are clicked
     const radioButtons = document.querySelectorAll('input[name="option"]');
     radioButtons.forEach(radio => {
         radio.addEventListener('change', (event) => {
@@ -48,12 +47,15 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log(selectedFormat)
   
     function loadImage(format) {
+        //get the apiURL to fetch the path to the requested image
         const apiURL = `${baseApiURL}/?format =${format}`;
         console.log(`API URL: ${apiURL}`);
 
+        //fetch the data from the given apiURL
         fetch(apiURL)
             .then(response => {
                 console.log("Response status:", response.status);
+                //if response not ok throw the error
                 if(!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
@@ -62,10 +64,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 return response.json();
             })
             .then(data => {
+                //get the image URL with the data.path from the api
                 const imageURL = `http://127.0.0.1:8000${data.path}`;
                 console.log("Image URL:", imageURL);
 
-                
+                //load the nifti with the fetched imageURL 
                 nv.loadVolumes([
                     {
                         url: imageURL,
@@ -74,6 +77,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 ]);
 
             })
+            //catch the possible error
             .catch(err => {
                 console.error("Error loading NIfTI file:", err);
             });
