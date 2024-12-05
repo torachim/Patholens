@@ -14,17 +14,17 @@ from .models import diagnosis  # Import your model
 import json
 
 # Create your views here.
-def diagnosisView(request, imageID):
-    return render(request, 'image/diagnosisPage.html', {"imageID": imageID})
+def diagnosisView(request):
+    return render(request, 'diagnosisPage.html')
 
 
-#def diagnosisView(request, diag_id): 
-#    diagnosisObj = diagnosis.objects.get(diagID=diag_id)
-#    return render(request, 'diagnosisPage.html', {'diagID': diagnosisObj.diagID})
+def diagnosisView(request, diagID): 
+    diagnosisObj = diagnosis.objects.get(diagID=diag_id)
+    return render(request, 'image/diagnosisPage.html', {'diagID': diagnosisObj.diagID})
 
 
 
-"""def saveConfidence(request, diagID):
+def saveConfidence(request, diagID):
     if request.method == 'POST':
         try:
             # Parse JSON data from the request body
@@ -51,10 +51,10 @@ def diagnosisView(request, imageID):
     else:
        
         return JsonResponse({'error': 'Invalid request method. Use POST.'}, status=405)
-from django.urls import reverse """
+from django.urls import reverse
 
-#def renderImageView(request, imageID):
- #   return render(request, 'image/loadTest.html', {'imageID' : imageID})
+def renderImageView(request, imageID):
+    return render(request, 'image/loadTest.html', {'imageID' : imageID})
 
 def renderImageViewII(request, imageID):
-    return render(request, 'image/index.html', {'imageID': imageID})
+    return render(request, 'image/diagnosisPage.html', {'imageID': imageID})

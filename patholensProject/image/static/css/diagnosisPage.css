@@ -336,3 +336,20 @@ input[type="radio"]:checked::before {
 
 
 
+#brainImage {
+    width: 100% !important;
+    height: 600px !important;
+    background-color: #000000;
+    margin-top: 100px !important;
+}
+
+.imageBox{
+    margin-top: 100px;
+}
+
+#content {
+    display: flex !important;
+    justify-content: center !important; /* Zentriert den Inhalt horizontal */
+    align-items: center !important;    /* Zentriert den Inhalt vertikal */
+    min-height: 100vh;      /* Mindesthöhe, damit das Flexbox-Container vollständig sichtbar ist */
+}
