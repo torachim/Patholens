@@ -32,6 +32,7 @@ body{
     height: 40px; 
     margin: 20px auto; 
     margin-top: 25px; 
+    margin-bottom: -30px;
 }
 
 
@@ -112,6 +113,8 @@ body{
     display: flex;
     gap: 100px; 
     align-items: center;
+    margin-top: 10px;
+    margin-bottom: -40px;
 }
 
 
@@ -334,22 +337,22 @@ input[type="radio"]:checked::before {
 }  
     
 
-
-
 #brainImage {
     width: 100% !important;
-    height: 600px !important;
+    height: 70% !important;
     background-color: #000000;
-    margin-top: 100px !important;
+    margin-top: 50px !important;
 }
 
 .imageBox{
-    margin-top: 100px;
+    margin-top: 50px;
+    width: 100% !important;
+    height: 100% !important;
 }
 
 #content {
     display: flex !important;
-    justify-content: center !important; /* Zentriert den Inhalt horizontal */
-    align-items: center !important;    /* Zentriert den Inhalt vertikal */
-    min-height: 100vh;      /* Mindesthöhe, damit das Flexbox-Container vollständig sichtbar ist */
+    justify-content: center !important;
+    align-items: center !important;  
+    min-height: 100vh;     
 }
