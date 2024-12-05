@@ -4,7 +4,6 @@ import sys
 import django
 from pathlib import Path
 import random
-from django.contrib.auth.models import User
 
 # Add project path (root directory where manage.py is located)
 sys.path.append(str(Path(__file__).resolve().parent.parent))
