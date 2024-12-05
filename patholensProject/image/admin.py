@@ -1,7 +1,7 @@
 from django.contrib import admin
-from .models import useTime, diagnosis
+from .models import UseTime, Diagnosis
 
 # Register your models here.
 
-admin.site.register(useTime)
-admin.site.register(diagnosis)
+admin.site.register(UseTime)
+admin.site.register(Diagnosis)
