@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from rest_framework.response import Response
 from rest_framework import status
 from django.conf import settings
-from .models import diagnosis
+from .models import Diagnosis
 import os
 
 

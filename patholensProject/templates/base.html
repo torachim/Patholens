@@ -29,11 +29,13 @@
             <p>PathoLens</p>
         </div>
         <div class="Buttons">
-            {%block topbar %}
-            <i class="fa-solid fa-circle-question" style="color: #ffffff;" id="openHelp" data-tooltip="Get Help"></i> 
+            {% block topbar %}
+            <i class="fa-solid fa-circle-question" style="color: #ffffff;" id="openHelp" data-tooltip="Get Help"></i>
+            {% endblock %} 
             {% block logoutLink%}
                 <a href="/logout/basePage"><i class="fa-solid fa-right-from-bracket" style="color: #ffffff;" id="logoutIcon"></i></a>
             {% endblock%}
+
         </div>
     </div>
     {% block content %}

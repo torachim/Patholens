@@ -6,11 +6,10 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
 from django.shortcuts import redirect
-from image.models import diagnosis
+from image.models import Diagnosis
 from django.http import HttpResponse
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
-from .models import diagnosis  # Import your model
 import json
 
 # Create your views here.
