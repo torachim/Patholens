@@ -145,7 +145,7 @@ STATIC_URL = 'static/'
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
-    os.path.join(BASE_DIR, 'data', 'images')  # Hinzufügen dieses Pfades
+   # os.path.join(BASE_DIR, 'data', 'images')  # Hinzufügen dieses Pfades
 ]
 
 # Default primary key field type
