@@ -8,15 +8,22 @@
     <link rel="stylesheet" href="{% static 'css/selectDataset.css' %}?v=2" />
 </head>
 <body>
+
+    <div class="frame-container">
+        <iframe class="background-frame" src="{% url 'homeWindow' %}" frameborder="0"></iframe>
+        <div class="overlay"></div>
+    </div>
+
     <div class="container">
-        <h1>Available DataSets</h1>
-        <ul class="datasetsList">
+        <h1>Select dataset </h1>
+        <div class="datasetsList">
             {% for dataset in allDataSets %}
-                <li>{{ dataset }}</li>
-            {% empty %}
-                <li>No datasets available.</li>
+                <!-- Button für jedes Dataset mit dem Namen -->
+                <button onclick="window.location.href='#'">
+                    {{ dataset }}
+                </button>
             {% endfor %}
-        </ul>
+        </div>
     </div>
 </body>
 </html>

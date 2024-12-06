@@ -35,20 +35,18 @@
 
           <div class="buttons">
             <button onclick="window.location.href='url.html'">Continue Diagnosis</button>
-              <label for="newDiagnosisCheckbox" style="cursor: pointer">
-                <button onclick="window.open( {% url 'selectDataset' %},'window')">New Diagnosis</button>
+            <button onclick="window.open( {% url 'selectDataset' %},'windowFrame')">New Diagnosis</button>
+                <label for="newDiagnosisCheckbox" style="cursor: pointer">                                                                                                         
           </div>
      </div>
 
       <!-- Window on the right side -->
       <iframe class="right-frame"
       src="{% url 'homeWindow' %}"
-      name = "window"
+      name = "windowFrame"
       style="border: none">
       </iframe>
       
-
-
       
   </div>
 {% endblock %}
