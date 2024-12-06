@@ -84,7 +84,6 @@ body {
   
 }
 
-
 .leftPanel .buttons button {
     background-color: #00AFB9;
     font-family: Calibri;
@@ -106,10 +105,12 @@ body {
     transform: scale(1.02);
 }
 
-.leftPanel .buttons button:active {
+.leftPanel .buttons button:focus {
     background-color: #535c5e; /* Darker color when clicked */
     transform: translateY(2px); /* Button wird nach unten verschoben */
     box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.2); /* Schatteneffekt, der den "gedrückten" Look verstärkt */
+    outline: none; /* Entfernt den Standard-Fokusrahmen */
+
 }
 
 

@@ -13,6 +13,12 @@ def data(request):
         "Dataset 1",
         "Dataset 2",
         "Dataset 3",
+        "Dataset 1",
+        "Dataset 2",
+        "Dataset 3",
+        "Dataset 1",
+        "Dataset 2",
+        "Dataset 3",
     ]
      
     return render(request, 'selectDataset.html', {'allDataSets': allDataSets})
