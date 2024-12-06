@@ -1,4 +1,3 @@
-/* Grundlegendes Styling für den Body */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -10,49 +9,52 @@ body {
     background-color: #f0f0f0;
 }
 
+
+/* Overlay over the background image */
 .overlay {
-    position: fixed; /* Stellt sicher, dass das Overlay über der gesamten Seite liegt */
+    position: fixed; /* Ensures that the overlay covers the entire page */
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Halbtransparente schwarze Farbe für den Dunkel-Effekt */
-    backdrop-filter: blur(5px); /* Weichzeichner (Blur-Effekt) auf die gesamte Seite anwenden */
-    z-index: -1; /* Stellt sicher, dass das Overlay vor dem Inhalt liegt */
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black color*/
+    backdrop-filter: blur(5px); /* Blur effect */
+    z-index: -1; /* Ensures that the overlay is in front of the content */
 }
 
+/*background*/
 frame-container {
-    position: relative; /* Ermöglicht die Positionierung des Overlays */
+    position: relative; 
     width: 100%;
-    height: 100vh; /* Volle Bildschirmhöhe */
-    overflow: hidden; /* Verhindert Scrollen im Hintergrund */
+    height: 100vh; 
+    overflow: hidden; 
 }
 
-/* Styling für das Hintergrund-iframe (soll das ganze Bild einnehmen) */
+/* Frame used in the background */
 .background-frame {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    border: none; /* Entfernt den Rahmen des iFrames */
-    z-index: -2; /* Hintergrund, ganz unten */
+    border: none; 
+    z-index: -2; /* at the very bottom */
 }
 
-/* Container für den Inhalt */
+
+/* Container for the datasets*/
 .container {
     padding: 20px;
-   
     background-color: #00242F; 
     text-align: center;
     display: flex;
-    flex-direction: column; /* Keep elements stacked vertically */
+    flex-direction: column; 
     justify-content: flex-start; /* Start from the top of the container */
-    align-items: center; /* Horizontale Zentrierung */
-    gap: 20px; /* Abstand zwischen den Buttons */
+    align-items: center; 
+    gap: 20px; /* gap betweeen buttons */
     width: 100%;
     max-width: 450px;
-    height: 250px; /* Feste Höhe für den Container */
+    height: 240px; 
     border-radius: 10px;
     box-shadow: 0 10px 16px rgba(0, 0, 0, 0.3); /* Schattierung */
     overflow-y: auto;
@@ -62,26 +64,23 @@ h1{
     color: #ffffff;
     font-size: 25px;
     font-style: bold;
-    font-family: Calibri;
+    font-family: 'Calibri';
     margin-top: 1%;
     margin-bottom: 1%;
-
 }
 
-/* Styling für die Liste der Datasets */
 .datasetsList {
     display: flex;
     flex-direction: column;
     gap: 15px;
-    width: 60%; /* Passt sich an die Container-Breite an */
+    width: 60%; 
 }
 
-/* Button-Styling */
 button {
     padding: 10px 15px;
     font-size: 18px;
     font: bold;
-    font-family: Calibri;
+    font-family: 'Calibri';
     color: #ffffff;
     background-color: #016685;
     border: none;
@@ -91,7 +90,6 @@ button {
     transition: background-color 0.3s, transform 0.2s;
 }
 
-/* Hover-Effekt für Buttons */
 button:hover {
     background-color: #0284ab;
     transform: translateY(-2px);
@@ -99,8 +97,8 @@ button:hover {
 }
 
 button:active {
-    background-color: #6E898A; /* Darker color when clicked */
-    transform: translateY(2px); /* Button wird nach unten verschoben */
-    box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.2); /* Schatteneffekt, der den "gedrückten" Look verstärkt */
+    background-color: #6E898A; 
+    transform: translateY(2px); 
+    box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.2); 
 }
 

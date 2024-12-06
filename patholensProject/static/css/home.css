@@ -1,35 +1,33 @@
 @import url('https://fonts.googleapis.com/css?family=Cabin');
 
 body {
-    margin: 0; /* Entfernt den Standardabstand */
-    font-family: Arial, sans-serif; /*Schriftart*/
     background-color:  #24617B;
     color: #ffffff;
     display: flex; 
-    flex-direction: column; /* Anordnung der Elemente vertikal */
+    flex-direction: column;
     height: 100vh;
 }
 
 
-
+/*arranges all the elements on the page*/
 .mainContent {
     display: flex;
     flex-direction: row;
     align-items: center;
-    flex: 1; /* Nimmt verfügbaren Platz ein */
-    height: calc(100vh - 100px);/* Setzt die Höhe auf die volle Viewport-Höhe minus 100px */
-    overflow: hidden; /* Verhindert das Überlaufen von Inhalt */
+    flex: 1; /* Takes up available space */
+    height: calc(100vh - 100px);
+    overflow: hidden; 
 }
 
 .leftPanel {
-    flex: 1; /* Nimmt verfügbaren Platz ein */
-    padding: 10px; /*Innenabstand zu allen Seiten*/
+    flex: 1; 
+    padding: 10px; /*Padding(Innenabstand) on all sides*/
     display: flex;
     width: 35%;
     flex-direction: column; /* Anordnung der Elemente in einer Spalte */
-    align-items: flex-start; /* Elemente am Anfang horizontal ausrichten */
+    align-items: flex-start; /*Aligns elements at the start horizontally*/
     background-color: #24617B;
-    overflow-y: auto; /* Ermöglicht vertikales Scrollen */
+    overflow-y: auto; /* Allows vertical scrolling*/
     
 }
 
@@ -54,9 +52,10 @@ body {
 }
 
 .leftPanel .profileInfo {
-    font-family: "Calibri", sans-serif;
+    font-family: 'Calibri';
     font-size: 16px;
-    line-height: 1.2;
+    color: #ffffff;
+    line-height: 1.2; /*space betweens the lines*/
     max-width: 200px;
     margin-bottom: 50%;
 }
@@ -64,12 +63,11 @@ body {
 .leftPanel .profileInfo .name {
     font-size: 27px;
     font-weight: bold;
-    white-space: nowrap;
+    white-space: nowrap; /*prevents text from wrapping to the next line*/
 }
 
 .leftPanel .profileInfo .email {  
     font-size: 18px;
-    color: #ffffff;
     margin-top: 5px;
 }
 
@@ -86,18 +84,18 @@ body {
 
 .leftPanel .buttons button {
     background-color: #00AFB9;
-    font-family: Calibri;
-    font-weight: bold;
     color: #FFFFFF;
+    font-family: 'Calibri';
+    font-weight: bold;
+    font-size: 20px;
     border: none;
     padding: 14px 30px;
-    font-size: 20px;
+    text-align: center;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     cursor: pointer;
     transition: background-color 0.3s, transform 0.2s;
     width: 100%;
-    text-align: center;
 }
 
 .leftPanel .buttons button:hover {
@@ -106,25 +104,23 @@ body {
 }
 
 .leftPanel .buttons button:focus {
-    background-color: #535c5e; /* Darker color when clicked */
-    transform: translateY(2px); /* Button wird nach unten verschoben */
-    box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.2); /* Schatteneffekt, der den "gedrückten" Look verstärkt */
-    outline: none; /* Entfernt den Standard-Fokusrahmen */
-
+    background-color: #535c5e; 
+    transform: translateY(2px); /* button is moved down */
+    box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.2); 
 }
 
 
+/*window on the right side*/
 .right-frame {
-    
-    position: relative;                     
-    right: 15px;             /* Abstand vom rechten Rand des Bildschirms */
-    width: 65%;            /* Breite des Frames (anpassbar) */
-    height: 85vh;            /* Höhe des Frames */
-    border-radius: 10px;     /* Abgerundete Ecken */
+    position: relative;                    
+    right: 15px;             
+    width: 65%;            
+    height: 85vh;            
+    border-radius: 10px;     
     box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.3); 
 }
 
-/* Optional: Wenn das iframe geladen wird und die Seite eine Scrollbar benötigt */
+/* adds a scrollbar to an element if its content overflows */
 .right-frame {
     overflow: auto;         
 }

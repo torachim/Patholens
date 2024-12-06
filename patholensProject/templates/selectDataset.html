@@ -9,21 +9,25 @@
 </head>
 <body>
 
+    <!-- Start image as background -->
     <div class="frame-container">
         <iframe class="background-frame" src="{% url 'homeWindow' %}" frameborder="0"></iframe>
         <div class="overlay"></div>
     </div>
 
+    <!-- box with the datasets -->
     <div class="container">
         <h1>Select dataset </h1>
         <div class="datasetsList">
             {% for dataset in allDataSets %}
-                <!-- Button für jedes Dataset mit dem Namen -->
+                <!-- Button for each dataset -->
                 <button onclick="window.location.href='#'">
                     {{ dataset }}
                 </button>
             {% endfor %}
         </div>
     </div>
+
 </body>
+
 </html>

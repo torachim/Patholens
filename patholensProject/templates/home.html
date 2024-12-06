@@ -11,12 +11,9 @@
 <link rel="stylesheet" href="{% static 'css/home.css' %}?v=1" />
 {% endblock %} 
 
-{% block title %} 
-  PathoLens 
-{% endblock %} 
-
 {% block content %}
   <div class="mainContent">
+
       <!-- Left Panel -->
       <div class="leftPanel">
           <div class="profile">
@@ -35,16 +32,16 @@
 
           <div class="buttons">
             <button onclick="window.location.href='url.html'">Continue Diagnosis</button>
-            <button onclick="window.open( {% url 'selectDataset' %},'windowFrame')">New Diagnosis</button>
-                <label for="newDiagnosisCheckbox" style="cursor: pointer">                                                                                                         
+            <button onclick="window.open( {% url 'selectDataset' %},'windowFrame')">New Diagnosis</button>                                                                                                        
           </div>
+
      </div>
 
       <!-- Window on the right side -->
       <iframe class="right-frame"
-      src="{% url 'homeWindow' %}"
-      name = "windowFrame"
-      style="border: none">
+        src="{% url 'homeWindow' %}"
+        name = "windowFrame"
+        style="border: none">
       </iframe>
       
       
