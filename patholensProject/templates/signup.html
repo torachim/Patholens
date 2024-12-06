@@ -1,0 +1,95 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="{% static 'css/signup.css' %}" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Cabin:wght@400;500;600;700&display=swap"
+            rel="stylesheet"
+        />
+
+        <title>Document</title>
+    </head>
+    <body>
+        <div class="head"></div>
+        <div class="box">
+            <h2>SIGN UP</h2>
+            <h4>Enter your data</h4>
+
+            <form method="POST" action="{% url 'patholensSignUp' %}">
+                {% csrf_token %}
+                <div class="inputContainer">
+                    <div class="inputContainer2">
+                        <div class="inputBoxFirstname">
+                            <input id ="firstName" name="firstName" type="text" placeholder="First Name" />
+                        </div>
+                        <div class="inputName">
+                            <input name="lastName" id="lastName" type="text" placeholder="Last Name" />
+                        </div>
+                    </div>
+
+                    <div class="inputBoxes">
+                        <input name="email" id="email" type="email" placeholder="example@ulkbonn.com"/>
+                        <div class="passwordContainer">
+                            <input name="password" id="password" type="password" placeholder="Password"/>
+                            <span class= "togglePassword" id="togglePassword1">
+                                <i class ="eye-icon" id="eyeIcon1"></i>
+                            </span>
+                        </div>
+
+                        <div class="passwordContainer">
+                            <input name="confirmPassword" id="confirmPassword" type="password" placeholder="Confirm Password"/>
+                            <span class="togglePassword" id="togglePassword2">
+                                <i class="eye-icon" id="eyeIcon2"></i>
+                            </span>
+                        </div>
+                        
+                        <script>
+                            
+                            function togglePasswordVisibility(inputId, iconId) {
+                                const passwordField = document.getElementById(inputId);
+                                const eyeIcon = document.getElementById(iconId);
+                        
+                                if (passwordField.type == 'password') {
+                                    passwordField.type = 'text';
+                                    eyeIcon.classList.add('open'); 
+                                } else {
+                                    passwordField.type = 'password';
+                                    eyeIcon.classList.remove('open'); 
+                                }
+                            }
+                        
+                            // Event listeners for both password fields
+                            document.getElementById('togglePassword1').addEventListener('click', function () {
+                                togglePasswordVisibility('password', 'eyeIcon1');
+                            });
+                        
+                            document.getElementById('togglePassword2').addEventListener('click', function () {
+                                togglePasswordVisibility('confirmPassword', 'eyeIcon2');
+                            });
+                        </script>
+                        
+                        {% if not information.availableUser %}
+                            <p class="information"> An account with this email already exists.</p>
+                        {% elif not information.equalPasswords %}
+                            <p class="information"> The passwords you entered do not match. </p>
+                        {% elif not information.passwordStrength %}
+                            <p class="information"> Your password is too weak. </p>
+                        {% elif not information.entryComplete%}
+                            <p class="information">Some fields are missing. </p>
+                        {% endif %}
+                    </div>
+
+                    <div class="signupBoxLinks">
+                        <div class="signupButton">
+                            <button type="submit">Sign up</button>
+                        </div>
+                        <p>Have an account? <a href="/">Log in</a></p>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </body>
+</html>
