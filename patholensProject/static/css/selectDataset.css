@@ -42,11 +42,12 @@ frame-container {
 /* Container für den Inhalt */
 .container {
     padding: 20px;
+   
     background-color: #00242F; 
     text-align: center;
-    display: flex; /* Aktiviert Flexbox */
-    flex-direction: column; /* Elemente untereinander anordnen */
-    justify-content: center; /* Vertikale Zentrierung */
+    display: flex;
+    flex-direction: column; /* Keep elements stacked vertically */
+    justify-content: flex-start; /* Start from the top of the container */
     align-items: center; /* Horizontale Zentrierung */
     gap: 20px; /* Abstand zwischen den Buttons */
     width: 100%;
