@@ -4,7 +4,6 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import redirect
 
 # the python file which handles the creation of Doctor DB

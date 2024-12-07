@@ -3,14 +3,13 @@ from django.http import JsonResponse
 from rest_framework.response import Response
 from rest_framework import status
 from django.conf import settings
-from .models import Diagnosis
 import os
 
 
 class GetImageAPIView(APIView):
     """
     API Class to get the image to a given diagnosisID
-       (now its still the imageID for testing reasons)
+       (now its still the diagnosisID for testing reasons)
 
     Args:
         APIView: Imported from python
@@ -18,11 +17,11 @@ class GetImageAPIView(APIView):
 
     def get(self, request, diagnosisID):
         """
-        Function to get the image to a given diagnosisID (now its still the imageID for testing reasons)
+        Function to get the image to a given diagnosisID (now its still the diagnosisID for testing reasons)
 
         Args:
             request ():
-            imageID (string): ID of an Image
+            diagnosisID (string): ID of an Image
 
         Returns:
             Path: The path to find the requestet image

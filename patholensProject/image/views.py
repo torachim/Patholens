@@ -54,9 +54,7 @@ def saveConfidence(request, diagID):
 
 
 @login_required
-def newDiagnosis(request):
-    # TODO: call function and get id
-    diagnosisID = "10"
+def newDiagnosis(request, diagnosisID):
     return render(request, "image/diagnosisPage.html", {"diagnosisID": diagnosisID})
 
 

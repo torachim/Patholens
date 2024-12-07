@@ -1,11 +1,9 @@
 from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
+from django.contrib.auth.decorators import login_required
 from accounts.doctorManager import getRandomDiagnosis
 from accounts.diagnosisManager import createDiagnosis
-from image import views
 from accounts.models import Doctors
-from image.models import Diagnosis
 
 from image import views
 
@@ -27,4 +25,5 @@ def forwardingInformation(request):
 
     print("Hier")
     return render(request, "image/diagnosisPage.html", {"diagnosisID": diagID})
+    #return redirect('newDiagnosis', {"diagnosisID": diagID})
 
