@@ -1,54 +1,63 @@
-{% extends 'base.html' %} 
-{% load static %} 
-{% block extraCSS %}
+{% extends 'base.html' %} {% load static %} {% block extraCSS %}
+
+
+
 
 <link rel="stylesheet" href="{% static 'css/home.css' %}" />
-{% endblock %} 
+{% endblock %} {% block title %} PathoLens {% endblock %} {% block logoutLink %}
+<a href="/logout/homePage">
+    <i
+        class="fa-solid fa-right-from-bracket"
+        style="color: #ffffff"
+        id="logoutIcon"
+    >
+    </i>
+</a>
+{% endblock %} {% block content %}
+<div class="mainContent">
+    <!-- Left Panel -->
+    <div class="leftPanel">
+        <div class="profile">
+            <img
+                src="{% static 'images/profilePicture.png' %}"
+                alt="Picture"
+                class="profilePicture"
+            />
+            <div class="profileInfo">
+                <div class="name">
+                    {{ user.first_name }} {{ user.last_name }}
+                </div>
+                <div class="email">{{ user.email }}</div>
+            </div>
+        </div>
 
-{% block title %} 
-  PathoLens 
-{% endblock %} 
+        <div class="buttons">
+            <button>Continue Diagnosis</button>
+            <label for="newDiagnosisCheckbox" style="cursor: pointer">
+                <button id= "newDiagnosis">New Diagnosis</button>
+            </label>
+        </div>
+    </div>
 
-{% block logoutLink %}
-    <a href="/logout/homePage"><i class="fa-solid fa-right-from-bracket" style="color: #ffffff;" id="logoutIcon"></i></a>
-{% endblock %}
+    <!-- Right Panel -->
+    <div class="rightPanel">
+        <div class="welcomeText">
+            <h1>Welcome Back Doctor</h1>
+        </div>
+        <img
+            src="{% static 'images/welcome.png' %}"
+            alt="Brain Image"
+            class="welcomeImage"
+        />
+    </div>
+</div>
 
-{% block content %}
-  <div class="mainContent">
-      <!-- Left Panel -->
-      <div class="leftPanel">
-          <div class="profile">
-              <img
-                  src="{% static 'images/profilePicture.png' %}"
-                  alt="Picture"
-                  class="profilePicture"
-              />
-              <div class="profileInfo">
-                  <div class="name">
-                      {{ user.first_name }} {{ user.last_name }}
-                  </div>
-                  <div class="email">{{ user.email }}</div>
-              </div>
-          </div>
 
-          <div class="buttons">
-              <button>Continue Diagnosis</button>
-              <label for="newDiagnosisCheckbox" style="cursor: pointer">
-                  <button>New Diagnosis</button></label
-              >
-          </div>
-      </div>
+<script>
+    document.getElementById('newDiagnosis').addEventListener('click', () => {
+        fetch('forwarding/');
+    });
 
-      <!-- Right Panel -->
-      <div class="rightPanel">
-          <div class="welcomeText">
-              <h1>Welcome Back Doctor</h1>
-          </div>
-          <img
-              src="{% static 'images/welcome.png' %}"
-              alt="Brain Image"
-              class="welcomeImage"
-          />
-      </div>
-  </div>
+</script>
+
 {% endblock %}
