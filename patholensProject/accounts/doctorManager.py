@@ -165,7 +165,7 @@ def addFinishedPatient(docID: str, toBeAddedPatients: dict):
     return True
 
 
-def getRandomPicturePath(docID: str, dataSet: str):
+def getRandomDiagnosis(docID: str, dataSet: str):
     """
     Args:
         docID (str): The unique identifier of the doctor

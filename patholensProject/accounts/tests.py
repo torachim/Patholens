@@ -40,7 +40,7 @@ class TestDoctorsManager(unittest.TestCase):
 
     def testRandomPicture(self):
         idFromTestUser = self.doc.doctorID
-        print(getRandomPicturePath(idFromTestUser, "websiteData"))
+        print(getRandomDiagnosis(idFromTestUser, "websiteData"))
 
     # is called last
     def tearDown(self):

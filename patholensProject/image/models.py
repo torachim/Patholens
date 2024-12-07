@@ -7,7 +7,7 @@ from accounts.models import Doctors
 class Diagnosis(models.Model):
     diagID = models.CharField(primary_key=True, max_length=100)
     # PROTECT: if the referenced doctor is deleted, the diagnosis won't be deleted
-    doctorID = models.ForeignKey(Doctors, on_delete=models.PROTECT)
+    doctor = models.ForeignKey(Doctors, on_delete=models.PROTECT)
     confidence = models.PositiveSmallIntegerField(null=True, blank=True)
     # contains the number of the patient and the name of the data set
     imageUrl = models.CharField(null=False, max_length=20, default="Unknown")

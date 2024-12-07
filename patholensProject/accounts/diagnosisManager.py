@@ -17,7 +17,7 @@ from image.models import Diagnosis
 from accounts.models import Doctors
 
 
-def createDiagnosis(diagID: str, docID: int, imageUrl: str):
+def createDiagnosis(diagID: str, docObject: int, imageUrl: str):
     """
     Creates a new diagnosis and associates it with a specified doctor and the patient image.
 
@@ -33,11 +33,11 @@ def createDiagnosis(diagID: str, docID: int, imageUrl: str):
 
     # Check if the doctor exists in the database or if a diagnosis with the ID already exists
     if (
-        not Doctors.objects.filter(doctorID=docID).exists()
+        not Doctors.objects.filter(doctorID=docObject).exists()
         or Diagnosis.objects.filter(diagID=diagID).exists()
     ):
         return False
 
-    diag = Diagnosis.objects.create(diagID=diagID, doctorID=docID, imageUrl=imageUrl)
+    diag = Diagnosis.objects.create(diagID=diagID, doctor=docObject, imageUrl=imageUrl)
 
     return diag

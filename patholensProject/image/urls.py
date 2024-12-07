@@ -14,21 +14,23 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.contrib import admin
 from django.urls import path, include
 from . import views
 from django.conf import settings
 from django.conf.urls.static import static
 from .api_views import GetImageAPIView
-from .views import testRenderImageView
 
+from .views import testRenderImageView
 
 urlpatterns = [
     
     path('', include('accounts.urls')),
     path('diagnosis/<int:diagID>/', views.diagnosisView, name='patholensDiagnosisWithID'),
     path('confidence/<int:diagID>/', views.saveConfidence, name='saveConfidence'),
-
-    path('api/getImage/<str:imageID>/', GetImageAPIView.as_view(), name='getImage'),
-    path('other/<str:imageID>/', testRenderImageView, name='otherView')
+    
+    path('api/getImage/<str:diagnosisID>/', GetImageAPIView.as_view(), name='getImage'),
+    path('other/<str:diagnosisID>/', testRenderImageView, name='otherView'),
+    path('newDiagnosis/<str:diagnosisID>/', views.newDiagnosis, name='newDiagnosis'),
 ]
