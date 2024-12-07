@@ -207,9 +207,6 @@ document.addEventListener("DOMContentLoaded", () => {
 {%endblock%}
 
 {% block extraJS %}
-<script>
-  const imageID = "{{ imageID }}";
-</script> 
 <script type="module" src="{% static 'js/main.js' %}"></script>
 <script type="module" src="{% static 'js/index.js' %}"></script>
 {% endblock %}

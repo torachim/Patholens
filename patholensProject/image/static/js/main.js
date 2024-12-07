@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
     adjustCanvasForDPI(canvas);
 
 
-    const baseApiURL = `/image/api/getImage/${imageID}`;
+    const baseApiURL = `/image/api/getImage/${diagnosisID}`;
 
 
     // Load FLAIR default
