@@ -113,8 +113,10 @@ document.addEventListener('DOMContentLoaded', function() {
         nv.setDrawingEnabled(false);
     }  
 
+    // enables erasing the drawing by clicking on eraser
     document.getElementById("eraseTool").addEventListener("click", function(e){
         nv.setDrawingEnabled(true);
+        // 0 = Eraser and true => eraser ist filled so a whole area can be erased
         changeDrawingMode(0, true);
     });    
 })
