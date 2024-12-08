@@ -113,20 +113,8 @@ document.addEventListener('DOMContentLoaded', function() {
         nv.setDrawingEnabled(false);
     }  
 
-
-
-
-
-    function eraseDrawing(mode, filled) {
-        nv.setPenValue(mode, filled);
-    }
-
     document.getElementById("eraseTool").addEventListener("click", function(e){
         nv.setDrawingEnabled(true);
-        eraseDrawing(0, false);
-        nv.set
-    });
-
-
-    
+        changeDrawingMode(0, true);
+    });    
 })
