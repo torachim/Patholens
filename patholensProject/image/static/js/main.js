@@ -26,6 +26,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     adjustCanvasForDPI(canvas);
 
+    nv.setMultiplanarPadPixels(60);
+
 
     const baseApiURL = `/image/api/getImage/${imageID}`;
 
