@@ -165,7 +165,7 @@ def addFinishedPatient(docID: str, toBeAddedPatients: dict):
     return True
 
 
-def getRandomDiagnosis(docID: str, dataSet: str):
+def getRandomIdAndUrl(docID: str, dataSet: str):
     """
     Args:
         docID (str): The unique identifier of the doctor
@@ -203,3 +203,13 @@ def getRandomDiagnosis(docID: str, dataSet: str):
     urlForPicture = remainingPatients[dataSet][idForPicture]
 
     return (idForPicture, urlForPicture)
+
+
+def getDoctorObject(docID: str):
+    # Check if the doctor exists in the database
+    if not Doctors.objects.filter(doctorID=docID).exists():
+        return False
+
+    doctor = Doctors.objects.get(doctorID=docID)
+    return doctor
+    
