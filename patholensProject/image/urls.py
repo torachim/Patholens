@@ -22,7 +22,6 @@ from .api_views import GetImageAPIView
 urlpatterns = [
     
     path('', include('accounts.urls')),
-    path('diagnosis/<int:diagID>/', views.diagnosisView, name='patholensDiagnosisWithID'),
     path('confidence/<int:diagID>/', views.saveConfidence, name='saveConfidence'),
     
     path('api/getImage/<str:diagnosisID>/', GetImageAPIView.as_view(), name='getImage'),

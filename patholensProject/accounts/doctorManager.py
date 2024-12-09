@@ -167,12 +167,15 @@ def addFinishedPatient(docID: str, toBeAddedPatients: dict):
 
 def getRandomIdAndUrl(docID: str, dataSet: str):
     """
+
+    Returns a random diagnosis id with the linked url from the doctors`remainingPatients`dictionary.
+
     Args:
         docID (str): The unique identifier of the doctor
-        dataSet (str): The name of the dataset, which must exist within the `remainingPatients` dictionary associated with the doctor.
+        dataSet (str): The name of the dataset, which must exist within the`remainingPatients`dictionary associated with the doctor.
 
     Raises:
-        KeyError: If the specified dataset (dataSet) is not found in the doctor's `remainingPatients` dictionary.
+        KeyError: If the specified dataset (dataSet) is not found in the doctor's`remainingPatients`dictionary.
 
     Returns:
         tuple: A tuple containing:
@@ -206,10 +209,19 @@ def getRandomIdAndUrl(docID: str, dataSet: str):
 
 
 def getDoctorObject(docID: str):
+    """
+    Returns the object to the linked doctor
+
+    Args:
+        docID (str): The ID of the doctor
+
+    Returns:
+        Doctor: Returns the object of the Doctor
+    """
+
     # Check if the doctor exists in the database
     if not Doctors.objects.filter(doctorID=docID).exists():
         return False
 
     doctor = Doctors.objects.get(doctorID=docID)
     return doctor
-    

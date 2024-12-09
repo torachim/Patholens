@@ -5,15 +5,6 @@ from django.shortcuts import get_object_or_404
 import json
 from django.contrib.auth.decorators import login_required
 
-# Create your views here.
-def diagnosisView(request):
-    return render(request, "diagnosisPage.html")
-
-
-def diagnosisView(request, diagID):
-    diagnosisObj = Diagnosis.objects.get(diagID=diagID)
-    return render(request, "image/diagnosisPage.html", {"diagID": diagnosisObj.diagID})
-
 
 def saveConfidence(request, diagID):
     if request.method == "POST":

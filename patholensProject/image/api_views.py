@@ -10,7 +10,6 @@ from accounts.diagnosisManager import getUrl
 class GetImageAPIView(APIView):
     """
     API Class to get the image to a given diagnosisID
-       (now its still the diagnosisID for testing reasons)
 
     Args:
         APIView: Imported from python
@@ -18,10 +17,11 @@ class GetImageAPIView(APIView):
 
     def get(self, request, diagnosisID):
         """
-        Function to get the image to a given diagnosisID (now its still the diagnosisID for testing reasons)
+        Function to get the image to a given diagnosisID
 
         Args:
-            request ():
+            request (HttpRequest): The HTTP request object, which contains metadata and parameters.
+
             diagnosisID (string): ID of an Image
 
         Returns:
@@ -39,7 +39,7 @@ class GetImageAPIView(APIView):
             if imageFormat not in settings.SUPPORTED_IMAGE_FORMATS:
                 return JsonResponse({"error": "Invalid format"}, status=400)
 
-
+            # from the diagnosis ID get the path to the image
             imageID = getUrl(diagnosisID)
             
             

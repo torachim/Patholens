@@ -42,20 +42,21 @@ def createDiagnosis(diagID: str, docObject: int, imageUrl: str):
 
     return diag
 
+
 def getUrl(diagID: str):
-    """_summary_
+    """
+    Retunrs the url from the diagnosis.
 
     Args:
-        diagID (str): _description_
+        diagID (str): Diagnosis ID
 
     Returns:
-        _type_: _description_
+        str: The url to the image of the patient (the patient number)
     """
     if Diagnosis.objects.filter(diagID=diagID).exists() == False:
         return None
-    
+
     diagObject = Diagnosis.objects.get(diagID=diagID)
     url = diagObject.imageUrl
-    
+
     return url
-    

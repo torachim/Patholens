@@ -2,8 +2,6 @@ from django.test import TestCase
 from doctorManager import *
 from diagnosisManager import *
 import unittest
-from accounts.models import Doctors
-from image.models import Diagnosis
 from django.contrib.auth.models import User
 
 
@@ -42,11 +40,11 @@ class TestDoctorsManager(unittest.TestCase):
     def testRandomPicture(self):
         idFromTestUser = self.doc.doctorID
         print(getRandomIdAndUrl(idFromTestUser, "websiteData"))
-        
-    
+
     # is called last
     def tearDown(self):
         self.testUser.delete()
+
 
 class TestDiagnosisManager(unittest.TestCase):
     # is called first
@@ -61,20 +59,18 @@ class TestDiagnosisManager(unittest.TestCase):
         )
         self.doc = createDoctor(self.testUser)
 
-        
-        
     def testGetPicture(self):
-        idDiag, urlForPicture = getRandomIdAndUrl(self.doc.doctorID, 'website_data')
+        idDiag, urlForPicture = getRandomIdAndUrl(self.doc.doctorID, "website_data")
         docObject = getDoctorObject(self.testUser.id)
-        
+
         diag = createDiagnosis(idDiag, docObject, urlForPicture)
-        
+
         self.assertEqual(getUrl(idDiag), diag.imageUrl)
-     
+
     # is called last
     def tearDown(self):
         self.testUser.delete()
-    
-    
+
+
 if __name__ == "__main__":
-    unittest.main(defaultTest='TestDiagnosisManager')
+    unittest.main(defaultTest="TestDiagnosisManager")
