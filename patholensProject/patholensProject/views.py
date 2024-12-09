@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
-from accounts.doctorManager import getRandomDiagnosis
+from accounts.doctorManager import getRandomIdAndUrl
 from accounts.diagnosisManager import createDiagnosis
-from accounts.models import Doctors
+from accounts.doctorManager import *
+from accounts.diagnosisManager import *
 
 from image import views
 
@@ -15,15 +16,9 @@ def homepage(request):
 @login_required
 def forwardingInformation(request):
 
-    docID = request.user.id
-    docObject = Doctors.objects.get(doctorID=docID)
-
-    (diagID, urlForPicture) = getRandomDiagnosis(docID, "website_data")
-
-    dia = createDiagnosis(diagID=diagID, docObject=docObject, imageUrl=urlForPicture)
-
-
-    print("Hier")
-    return render(request, "image/diagnosisPage.html", {"diagnosisID": diagID})
-    #return redirect('newDiagnosis', {"diagnosisID": diagID})
+    diagnosisID, urlForPicture = getRandomIdAndUrl(request.user.id , 'website_data')
+    docObject = getDoctorObject(request.user.id)
+    createDiagnosis(diagnosisID, docObject, urlForPicture)
+    
+    return redirect('newDiagnosis', diagnosisID= diagnosisID)
 
