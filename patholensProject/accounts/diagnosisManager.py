@@ -41,3 +41,21 @@ def createDiagnosis(diagID: str, docObject: int, imageUrl: str):
     diag = Diagnosis.objects.create(diagID=diagID, doctor=docObject, imageUrl=imageUrl)
 
     return diag
+
+def getUrl(diagID: str):
+    """_summary_
+
+    Args:
+        diagID (str): _description_
+
+    Returns:
+        _type_: _description_
+    """
+    if Diagnosis.objects.filter(diagID=diagID).exists() == False:
+        return None
+    
+    diagObject = Diagnosis.objects.get(diagID=diagID)
+    url = diagObject.imageUrl
+    
+    return url
+    
