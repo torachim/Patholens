@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.conf import settings
 import os
+from accounts.diagnosisManager import getUrl
 
 
 class GetImageAPIView(APIView):
@@ -38,11 +39,15 @@ class GetImageAPIView(APIView):
             if imageFormat not in settings.SUPPORTED_IMAGE_FORMATS:
                 return JsonResponse({"error": "Invalid format"}, status=400)
 
+
+            imageID = getUrl(diagnosisID)
+            
+            
             fileSuffix = settings.SUPPORTED_IMAGE_FORMATS[imageFormat]
 
             imagePath = os.path.join(
                 settings.MEDIA_ROOT,
-                f"website_data/sub-{diagnosisID}/anat/sub-{diagnosisID}{fileSuffix}",
+                f"website_data/sub-{imageID}/anat/sub-{imageID}{fileSuffix}",
             )
             if not os.path.exists(imagePath):
                 return Response(
@@ -51,7 +56,7 @@ class GetImageAPIView(APIView):
 
             # relative path for the client
             relativePath = (
-                f"/media/website_data/sub-{diagnosisID}/anat/sub-{diagnosisID}{fileSuffix}"
+                f"/media/website_data/sub-{imageID}/anat/sub-{imageID}{fileSuffix}"
             )
             return Response({"path": relativePath}, status=status.HTTP_200_OK)
 
