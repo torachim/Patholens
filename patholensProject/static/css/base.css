@@ -60,13 +60,14 @@ body{
 .helpSlide {
     position: fixed;
     top: 0;
-    right: -350px;
-    width: 300px;
+    right: -600px;
+    width: 550px;
     height: 100%;
     color: #f7f7f7;
     background-color: #333;
     opacity: 0.9;
     padding: 20px;
+    padding-right: 5px;
     display: flex;
     flex-direction: column;
     transition: right 0.5s ease-in-out;
@@ -98,8 +99,35 @@ body{
 .helpContent p {
     line-height: 20px;
     font-size: 16px;
+    margin-right: 20px;
+    margin-top: 10px;
+    margin-bottom: 30px;
+    text-align: justify;
+    text-align-last: left;
 }
 
 .helpContent h2 {
     font-size: 24px;
+    text-align: center;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+}
+
+.helpContent h3 {
+    margin-bottom: 0px;
+}
+
+.helpContent hr{
+    width: 515px;
+    margin: 0;
+    margin-bottom: 25px;
+    margin-top: 25px;
+}
+
+.thanks{
+    display: flex;
+    flex-direction: row;
+    margin-top: 10px;
+    justify-content: center;
 }
