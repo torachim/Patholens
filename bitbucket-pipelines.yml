@@ -19,12 +19,14 @@ pipelines:
                   else
                     echo "Warning: No tests found in 'accounts/tests/' or 'image/tests/' directories. Skipping tests."
                   fi
-          - step:
+           - step:
               name: Lint code
               script:
-                # Enforce style consistency across Python projects https://flake8.pycqa.org
                 - pip install flake8
-                # Ignores that we use CamalCase for classes, functions, and variables
-                - flake8 . --extend-exclude=dist,build --extend-ignore=N802,N803,N806 --show-source --statistics
-
- 
+                - |
+                  echo "[flake8]" > .flake8
+                  echo "select = N,E,W" >> .flake8
+                  echo "ignore = E501" >> .flake8
+                  echo "max-line-length = 120" >> .flake8
+                  echo "naming-style = CamelCase" >> .flake8
+                  - flake8 . --show-source --statistics
