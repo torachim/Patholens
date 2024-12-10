@@ -175,7 +175,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
 
-
     document.getElementById("frameTool").addEventListener("click", function () {
         nv.setDrawingEnabled(true);
         nv.opts.dragMode = DRAG_MODE.callbackOnly;
