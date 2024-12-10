@@ -2,6 +2,7 @@ import { Niivue, DRAG_MODE } from "./index.js";
 
 document.addEventListener('DOMContentLoaded', function() {
 
+    // function that is executed when the user stops dragging
     const onDragRelease = (data) => {
         const value = 1; // Color for rectangle (1 = Red)
         nv.setPenValue(value);
@@ -174,11 +175,12 @@ document.addEventListener('DOMContentLoaded', function() {
         changeDrawingMode(0, true);
     });
 
-
+    // INFO: You need to right click and drag to draw rectangle
+    // enable rectangle drawing when the corresponding button in html is clicked
     document.getElementById("frameTool").addEventListener("click", function () {
         nv.setDrawingEnabled(true);
-        nv.opts.dragMode = DRAG_MODE.callbackOnly;
-        nv.opts.onDragRelease = onDragRelease; 
+        nv.opts.dragMode = DRAG_MODE.callbackOnly;  // Draw rectangle only when dragging
+        nv.opts.onDragRelease = onDragRelease;      // Set callback for rectangle drawing
     });
 
 })
