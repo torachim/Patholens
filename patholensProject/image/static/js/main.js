@@ -40,6 +40,13 @@ document.addEventListener('DOMContentLoaded', function() {
             bottomLeft = [fixedX, minY, maxZ];
             bottomRight = [fixedX, maxY, maxZ];
         }
+
+        nv.drawPenLine(topLeft, topRight, value);
+        nv.drawPenLine(topRight, bottomRight, value);
+        nv.drawPenLine(bottomRight, bottomLeft, value);
+        nv.drawPenLine(bottomLeft, topLeft, value);
+
+        nv.refreshDrawing(true);
     };
 
 
