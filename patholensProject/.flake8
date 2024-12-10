@@ -1,3 +1,0 @@
-[flake8]
-# ignores snake case in classes, functions & variables
-ignore = N802, N803, N806
