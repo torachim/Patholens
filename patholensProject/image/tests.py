@@ -1,7 +1,6 @@
 from django.test import TestCase
 from dataHandler import *
 import unittest
-from django.contrib.auth.models import User
 
 
 class TestDataHandler(unittest.TestCase):

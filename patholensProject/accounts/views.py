@@ -4,7 +4,6 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import redirect
 
 # the python file which handles the creation of Doctor DB
@@ -145,15 +144,15 @@ def loginView(request):
 
     else:
         print("Error as POST was not used")
-        
+
     return render(request, "accounts/login.html", {"information": information})
 
 
 def logoutView(request, calledFrom):
-    #if called from one of these pages, the process needs to be saved before logging out
+    # if called from one of these pages, the process needs to be saved before logging out
     if calledFrom == "diagnosisPage" or calledFrom == "editPage":
         # TO-DO: save progress
-        pass 
+        pass
 
     logout(request)
-    return redirect("/") # redirects to the login screen
+    return redirect("/")  # redirects to the login screen

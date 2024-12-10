@@ -29,11 +29,14 @@ urlpatterns = [
     path('', include('accounts.urls')),
     path('image/', include('image.urls')),
     path('startingPage/', views.homepage, name = "StartingPage"),
+    path('startingPage/forwarding/', views.forwardingInformation, name='forwardingInformation'),
+
+    
     # YOUR PATTERNS
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     # Optional UI:
     path('api/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
-    path('api/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
+    path('api/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc')
 ]
 
 if settings.DEBUG:
