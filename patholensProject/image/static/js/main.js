@@ -1,8 +1,11 @@
-import { Niivue } from "./index.js";
+import { Niivue, DRAG_MODE } from "./index.js";
 
 document.addEventListener('DOMContentLoaded', function() {
 
-    const nv = new Niivue()
+    const nv = new Niivue({
+        onDragRelease: onDragRelease,
+        dragMode: DRAG_MODE.callbackOnly,
+      });
 
     const canvas = document.getElementById("imageBrain");
 
@@ -122,14 +125,6 @@ document.addEventListener('DOMContentLoaded', function() {
         // 0 = Eraser and true => eraser ist filled so a whole area can be erased
         changeDrawingMode(0, true);
 
-    });
-    
-
-
-    // 3D Koordinaten: x,y,z => x = links - rechts      y = vorne - hinten       z = oben - unten
-    document.getElementById("frameTool").addEventListener("click", function (e) {
-    
-        nv.getNoPaddingNoBorderCanvasRelativeMousePosition(e, canvas);
     });
     
 
