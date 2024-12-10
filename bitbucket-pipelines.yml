@@ -2,7 +2,7 @@ image: python:3.12
 
 pipelines:
   branches:
-    '**':  # Runs for all branches:
+    '**':  # Runs for all branches
       - parallel:
           - step:
               name: Test
@@ -19,7 +19,7 @@ pipelines:
                   else
                     echo "Warning: No tests found in 'accounts/tests/' or 'image/tests/' directories. Skipping tests."
                   fi
-           - step:
+          - step:
               name: Lint code
               script:
                 - pip install flake8
@@ -29,4 +29,4 @@ pipelines:
                   echo "ignore = E501" >> .flake8
                   echo "max-line-length = 120" >> .flake8
                   echo "naming-style = CamelCase" >> .flake8
-                  - flake8 . --show-source --statistics
+                - flake8 . --show-source --statistics
