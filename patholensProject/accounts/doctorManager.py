@@ -165,7 +165,7 @@ def addFinishedPatient(docID: str, toBeAddedPatients: dict):
     return True
 
 
-def getRandomIdAndUrl(docID: str, dataSet: str):
+def getRandomIDAndURL(docID: str, dataSet: str):
     """
 
     Returns a random diagnosis id with the linked url from the doctors`remainingPatients`dictionary.

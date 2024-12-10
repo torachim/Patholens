@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.conf import settings
 import os
-from accounts.diagnosisManager import getUrl
+from accounts.diagnosisManager import getURL
 
 
 class GetImageAPIView(APIView):
@@ -25,7 +25,7 @@ class GetImageAPIView(APIView):
             diagnosisID (string): ID of an Image
 
         Returns:
-            Path: The path to find the requestet image
+            Path: The path to find the requested image
         """
 
         try:
@@ -39,8 +39,8 @@ class GetImageAPIView(APIView):
             if imageFormat not in settings.SUPPORTED_IMAGE_FORMATS:
                 return JsonResponse({"error": "Invalid format"}, status=400)
 
-            # from the diagnosis ID get the path to the image
-            imageID = getUrl(diagnosisID)
+            # get the path to the image of a given diagnosis
+            imageID = getURL(diagnosisID)
             
             
             fileSuffix = settings.SUPPORTED_IMAGE_FORMATS[imageFormat]

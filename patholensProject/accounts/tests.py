@@ -39,7 +39,7 @@ class TestDoctorsManager(unittest.TestCase):
 
     def testRandomPicture(self):
         idFromTestUser = self.doc.doctorID
-        print(getRandomIdAndUrl(idFromTestUser, "websiteData"))
+        print(getRandomIDAndURL(idFromTestUser, "websiteData"))
 
     # is called last
     def tearDown(self):
@@ -60,12 +60,12 @@ class TestDiagnosisManager(unittest.TestCase):
         self.doc = createDoctor(self.testUser)
 
     def testGetPicture(self):
-        idDiag, urlForPicture = getRandomIdAndUrl(self.doc.doctorID, "website_data")
+        idDiag, urlForPicture = getRandomIDAndURL(self.doc.doctorID, "website_data")
         docObject = getDoctorObject(self.testUser.id)
 
         diag = createDiagnosis(idDiag, docObject, urlForPicture)
 
-        self.assertEqual(getUrl(idDiag), diag.imageUrl)
+        self.assertEqual(getURL(idDiag), diag.imageUrl)
 
     # is called last
     def tearDown(self):

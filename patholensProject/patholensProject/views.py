@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
-from accounts.doctorManager import getRandomIdAndUrl
+from accounts.doctorManager import getRandomIDAndURL
 from accounts.diagnosisManager import createDiagnosis
 from accounts.doctorManager import *
 from accounts.diagnosisManager import *
@@ -31,7 +31,7 @@ def forwardingInformation(request):
 
     """
     # TODO: change website_data to variable which should be given to the function
-    diagnosisID, urlForPicture = getRandomIdAndUrl(request.user.id, "website_data")
+    diagnosisID, urlForPicture = getRandomIDAndURL(request.user.id, "website_data")
     docObject = getDoctorObject(request.user.id)
     createDiagnosis(diagnosisID, docObject, urlForPicture)
 

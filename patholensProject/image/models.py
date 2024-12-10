@@ -5,7 +5,7 @@ from accounts.models import Doctors
 # diagnosis class for linkage between the different db entries that "participate" in a certain diagnosis
 class Diagnosis(models.Model):
     diagID = models.CharField(primary_key=True, max_length=100)
-    # PROTECT: if the referenced doctor is deleted, the diagnosis will be deleted as well
+    # If the referenced doctor is deleted, the diagnosis will be deleted as well
     doctor = models.ForeignKey(Doctors, on_delete=models.CASCADE)
     confidence = models.PositiveSmallIntegerField(null=True, blank=True)
     # contains the number of the patient and the name of the data set

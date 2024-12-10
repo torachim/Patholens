@@ -1,10 +1,15 @@
-{% extends 'base.html' %} {% load static %} {% block extraCSS %}
-
+{% extends 'base.html' %} 
+{% load static %} 
+{% block extraCSS %}
 
 
 
 <link rel="stylesheet" href="{% static 'css/home.css' %}" />
-{% endblock %} {% block title %} PathoLens {% endblock %} {% block logoutLink %}
+{% endblock %} 
+
+{% block title %} PathoLens {% endblock %} 
+
+{% block logoutLink %}
 <a href="/logout/homePage">
     <i
         class="fa-solid fa-right-from-bracket"
@@ -13,7 +18,9 @@
     >
     </i>
 </a>
-{% endblock %} {% block content %}
+{% endblock %} 
+
+{% block content %}
 <div class="mainContent">
     <!-- Left Panel -->
     <div class="leftPanel">

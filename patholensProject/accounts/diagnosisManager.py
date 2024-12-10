@@ -43,9 +43,9 @@ def createDiagnosis(diagID: str, docObject: int, imageUrl: str):
     return diag
 
 
-def getUrl(diagID: str):
+def getURL(diagID: str):
     """
-    Retunrs the url from the diagnosis.
+    Returns the url from the diagnosis.
 
     Args:
         diagID (str): Diagnosis ID
