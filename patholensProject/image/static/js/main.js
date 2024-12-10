@@ -172,7 +172,14 @@ document.addEventListener('DOMContentLoaded', function() {
         nv.setDrawingEnabled(true);
         // 0 = Eraser and true => eraser ist filled so a whole area can be erased
         changeDrawingMode(0, true);
+    });
 
+
+
+    document.getElementById("frameTool").addEventListener("click", function () {
+        nv.setDrawingEnabled(true);
+        nv.opts.dragMode = DRAG_MODE.callbackOnly;
+        nv.opts.onDragRelease = onDragRelease; 
     });
 
 })
