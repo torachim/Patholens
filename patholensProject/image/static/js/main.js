@@ -2,6 +2,47 @@ import { Niivue, DRAG_MODE } from "./index.js";
 
 document.addEventListener('DOMContentLoaded', function() {
 
+    const onDragRelease = (data) => {
+        const value = 1; // Color for rectangle (1 = Red)
+        nv.setPenValue(value);
+
+        const { voxStart, voxEnd, axCorSag } = data;
+        let topLeft, topRight, bottomLeft, bottomRight;
+
+        if (axCorSag === 0) {
+            const minX = Math.min(voxStart[0], voxEnd[0]);
+            const maxX = Math.max(voxStart[0], voxEnd[0]);
+            const minY = Math.min(voxStart[1], voxEnd[1]);
+            const maxY = Math.max(voxStart[1], voxEnd[1]);
+            const fixedZ = voxStart[2];
+            topLeft = [minX, minY, fixedZ];
+            topRight = [maxX, minY, fixedZ];
+            bottomLeft = [minX, maxY, fixedZ];
+            bottomRight = [maxX, maxY, fixedZ];
+        } else if (axCorSag === 1) {
+            const minX = Math.min(voxStart[0], voxEnd[0]);
+            const maxX = Math.max(voxStart[0], voxEnd[0]);
+            const minZ = Math.min(voxStart[2], voxEnd[2]);
+            const maxZ = Math.max(voxStart[2], voxEnd[2]);
+            const fixedY = voxStart[1];
+            topLeft = [minX, fixedY, minZ];
+            topRight = [maxX, fixedY, minZ];
+            bottomLeft = [minX, fixedY, maxZ];
+            bottomRight = [maxX, fixedY, maxZ];
+        } else if (axCorSag === 2) {
+            const minY = Math.min(voxStart[1], voxEnd[1]);
+            const maxY = Math.max(voxStart[1], voxEnd[1]);
+            const minZ = Math.min(voxStart[2], voxEnd[2]);
+            const maxZ = Math.max(voxStart[2], voxEnd[2]);
+            const fixedX = voxStart[0];
+            topLeft = [fixedX, minY, minZ];
+            topRight = [fixedX, maxY, minZ];
+            bottomLeft = [fixedX, minY, maxZ];
+            bottomRight = [fixedX, maxY, maxZ];
+        }
+    };
+
+
     const nv = new Niivue({
         onDragRelease: onDragRelease,
         dragMode: DRAG_MODE.callbackOnly,
@@ -126,6 +167,5 @@ document.addEventListener('DOMContentLoaded', function() {
         changeDrawingMode(0, true);
 
     });
-    
 
 })
