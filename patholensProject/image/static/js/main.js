@@ -153,4 +153,34 @@ document.addEventListener('DOMContentLoaded', function() {
         nv.opts.onDragRelease = onDragRelease;      // Set callback for rectangle drawing
     });
 
+
+    // Drawing functions from here on
+    nv.setDrawOpacity(0.65);
+    
+    /**
+     * 
+     * @param {int} mode
+     * - 0 = Eraser, 4 = yellow, 6 = purple
+     * @param {boolean} filled
+     * True => drawn shape will be filled
+     */
+    function changeDrawingMode(mode, filled){
+        nv.setPenValue(mode, filled);
+    }
+
+    // Pixel
+    document.getElementById("selectTool").addEventListener("click", function(e){
+        nv.setDrawingEnabled(true);  
+        changeDrawingMode(6, false);
+    });
+    
+
+    // disables drawing after a Pixel is marked
+    document.getElementById("imageBrain").addEventListener("mouseup", disableDrawing)
+
+    // disables drawing
+    function disableDrawing(){
+        nv.setDrawingEnabled(false);
+    }  
+  
 });
