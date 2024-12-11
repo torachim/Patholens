@@ -88,6 +88,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     adjustCanvasForDPI(canvas);
 
+    nv.setMultiplanarPadPixels(60);
+
 
     const baseApiURL = `/image/api/getImage/${imageID}`;
 
@@ -105,9 +107,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-  
-    console.log(selectedFormat)
-  
+    
     function loadImage(format) {
         //get the apiURL to fetch the path to the requested image
         const apiURL = `${baseApiURL}/?format =${format}`;
@@ -145,16 +145,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     }
 
-
-    // INFO: You need to right click and drag to draw rectangle
-    // enable rectangle drawing when the corresponding button in html is clicked
-    document.getElementById("frameTool").addEventListener("click", (event) => {
-        nv.setDrawingEnabled(true);
-        nv.opts.dragMode = DRAG_MODE.callbackOnly;  // Draw rectangle only when dragging
-        nv.opts.onDragRelease = onDragRelease;      // Set callback for rectangle drawing
-    });
-
-
     // Drawing functions from here on
     nv.setDrawOpacity(0.65);
     
@@ -183,5 +173,21 @@ document.addEventListener('DOMContentLoaded', function() {
     function disableDrawing(){
         nv.setDrawingEnabled(false);
     }  
-  
+
+    
+    // enables erasing the drawing by clicking on eraser
+    document.getElementById("eraseTool").addEventListener("click", function(e){
+        nv.setDrawingEnabled(true);
+        // 0 = Eraser and true => eraser ist filled so a whole area can be erased
+        changeDrawingMode(0, true);
+    });
+
+    // INFO: You need to right click and drag to draw rectangle
+    // enable rectangle drawing when the corresponding button in html is clicked
+    document.getElementById("frameTool").addEventListener("click", function () {
+        nv.setDrawingEnabled(true);
+        nv.opts.dragMode = DRAG_MODE.callbackOnly;  // Draw rectangle only when dragging
+        nv.opts.onDragRelease = onDragRelease;      // Set callback for rectangle drawing
+    });
+
 });
