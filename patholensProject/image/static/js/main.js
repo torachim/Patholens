@@ -2,7 +2,9 @@ import { Niivue } from "./index.js";
 
 document.addEventListener('DOMContentLoaded', function() {
 
-    const nv = new Niivue()
+    const nv = new Niivue({
+        penSize: 3
+    })
 
     const canvas = document.getElementById("imageBrain");
 
@@ -112,5 +114,13 @@ document.addEventListener('DOMContentLoaded', function() {
     function disableDrawing(){
         nv.setDrawingEnabled(false);
     }  
+
+    
+    // Rectangle
+    document.getElementById("frameTool").addEventListener("click", drawRectangle)
+
+    function drawRectangle(){
+        
+    }
     
 })
