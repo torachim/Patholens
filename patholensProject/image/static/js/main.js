@@ -65,6 +65,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const nv = new Niivue({
         onDragRelease: onDragRelease,
         dragMode: DRAG_MODE.callbackOnly,
+        penSize: 3,
     });
         
     const canvas = document.getElementById("imageBrain");
