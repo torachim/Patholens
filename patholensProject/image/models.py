@@ -19,8 +19,8 @@ class Diagnosis(models.Model):
 class UseTime(models.Model):
     #timeID = models.AutoField(primary_key=True)
     # CASCADE: if the referenced diagnosis is deleted, the useTime entry will be automatically deleted aswell
-    diagID = models.OneToOneField(Diagnosis, on_delete=models.CASCADE, db_column="diagID", primary_key=True)
+    diag= models.OneToOneField(Diagnosis, on_delete=models.CASCADE, primary_key=True, default=1)
     actionTime = models.JSONField(null=True)
 
     def __str__(self):
-        return str(self.diagID)
+        return str(self.diag)

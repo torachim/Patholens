@@ -5,6 +5,7 @@ from accounts.doctorManager import getRandomIDAndURL
 from accounts.diagnosisManager import createDiagnosis
 from accounts.doctorManager import *
 from accounts.diagnosisManager import *
+from image.timeHandler import *
 
 from image import views
 
@@ -33,6 +34,8 @@ def forwardingInformation(request):
     # TODO: change website_data to variable which should be given to the function
     diagnosisID, urlForPicture = getRandomIDAndURL(request.user.id, "website_data")
     docObject = getDoctorObject(request.user.id)
-    createDiagnosis(diagnosisID, docObject, urlForPicture)
+    diag = createDiagnosis(diagnosisID, docObject, urlForPicture)
+
+    createUseTime(diag)
 
     return redirect("newDiagnosis", diagnosisID=diagnosisID)
