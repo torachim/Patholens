@@ -19,7 +19,7 @@ class TestDiagnosisManager(unittest.TestCase):
         self.doc = createDoctor(self.testUser)
 
     def testGetPicture(self):
-        idDiag, urlForPicture = getRandomIDAndURL(self.doc.doctorID, "website_data")
+        idDiag, urlForPicture = getRandomURL(self.doc.doctorID, "website_data")
         docObject = getDoctorObject(self.testUser.id)
 
         diag = createDiagnosis(idDiag, docObject, urlForPicture)
