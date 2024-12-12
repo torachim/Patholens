@@ -3,6 +3,7 @@ from pathlib import Path
 import django
 import sys
 import numpy as np
+from django.apps import apps
 
 
 # Add project path (root directory where manage.py is located)
@@ -11,12 +12,16 @@ sys.path.append(str(Path(__file__).resolve().parent.parent))
 # Define Django settings
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "patholensProject.settings")
 
-# Initialize Django
-django.setup()
+# Check if Django is already initialized
+if not apps.ready:
+    django.setup()
+    
 
 # Specifies the base directory of the project (the directory that contains manage.py),
 BASEDIR = Path(__file__).resolve().parent.parent
 DATASETPATH = os.path.join(BASEDIR, "media")
+
+from image.models import Media
 
 
 def getDataSetNames():
@@ -40,47 +45,30 @@ def getDataSetNames():
     return allDataSets
 
 
-def getAllPatientsUrls():
+def getPatientURLs(dataset: str):
     """
-    Retrieves a dictionary of all patient IDs grouped by datasets.
+    The function goes through the media folder and extracts all the patient IDs as our url.
 
-    This function iterates through all datasets in the `DATASETPATH` directory, and for each dataset, it
-    looks for subdirectories that contain patient data. It extracts the patient ID from each subdirectory name
-    (based on the string pattern "sub-<ID>"), and stores these IDs in a dictionary where the key is the dataset
-    name and the value is a dictionary containing a list of patient IDs (URLs).
+    Args:
+        dataset (str): The name of the dataset.
 
     Returns:
-        dict: A dictionary where the keys are dataset names and the values are dictionaries with a key `"url"`
-            that holds a list of patient IDs in the following form:
-            {
-            "dataSet":
-                {
-                    "url" : ["id of the patient", "id of the second patient" ...]
-                },
-            ...
-            }
+        List[str]: A list of patient IDs extracted from the dataset folder.
 
     """
     global DATASETPATH
 
-    allPatients = {}
+    # Has all the paths to the available data sets
+    allSubPaths = os.listdir(os.path.join(DATASETPATH, dataset))
 
-    allDataSets = getDataSetNames()
+    allSubURLs = []
+    for sub in allSubPaths:
+        if "sub-" in sub:
+            # Splits the string at '-' and takes only the number of the string (our ID)
+            subID = sub.split("-")[1]
+            allSubURLs.append(subID)
 
-    for dataSet in allDataSets:
-        # Has all the paths to the availabe data sets
-        allSubPaths = os.listdir(os.path.join(DATASETPATH, dataSet))
-
-        allSubIDs = []
-        for sub in allSubPaths:
-            if "sub-" in sub:
-                # Splits the string at '-' and takes only the number of the string (our ID)
-                subID = sub.split("-")[1]
-                allSubIDs.append(subID)
-
-        allPatients[dataSet] = {"url": allSubIDs}
-
-    return allPatients
+    return allSubURLs
 
 
 def shuffleList(aList: list):
@@ -97,3 +85,50 @@ def shuffleList(aList: list):
     # shuffles the list random
     newList = np.random.permutation(aList)
     return list(newList)
+
+
+def addMedia():
+    """
+    This function processes all datasets in the media directory, checks if they already exist in the Media 
+    database, and updates or adds new dataset entries accordingly.
+
+
+    Returns:
+        bool:  
+        - `True`if the function successfully processes all datasets, updates existing ones, and creates new entries as needed.
+        - `False`if their are no datasets in the directory.
+    """
+    allDatasets = getDataSetNames()
+    
+    if allDatasets == []:
+        return False
+
+    for datasetName in allDatasets:
+        
+        url = getPatientURLs(datasetName)
+        
+        # dataset exists in the media db 
+        if Media.objects.filter(name=datasetName).exists():
+            media = Media.objects.get(name=datasetName)    
+            
+            savedURLAsString = media.url
+            # convert the string to a list by splitting the string at ','
+            savedURLAsList = [s.strip() for s in savedURLAsString.split(",")]
+
+            # if patients where added after creating the dataset in the db: add the missing patients
+            if len(savedURLAsList) < len(url):
+                # adds all missing patinents url to savedURLAsList
+                [savedURLAsList.append(patientURL) for patientURL in url if patientURL not in savedURLAsList]
+                
+                # converts the list to a string
+                savedURLAsList = str(savedURLAsList).replace("[", "").replace("]", "").replace("'", "")
+                
+                media.url = savedURLAsList
+                media.save()
+        
+        # dataset needs to be added to the media db     
+        else:
+            url = str(url).replace("[", "").replace("]", "").replace("'", "")
+            Media.objects.create(name=datasetName, url=url)
+    
+    return True
