@@ -15,7 +15,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "patholensProject.settings")
 django.setup()
 
 
-import image.dataHandler as dataHandler
+from image.mediaHandler import *
 from accounts.models import Doctors
 
 
@@ -54,47 +54,54 @@ def createUUIDs(amount: int):
     return allUUIDs
 
 
-def getRandomIDAndURL(docID: str, dataSet: str):
+def getRandomURL(docID: str, datasetName: str):
     """
-
-    Returns a random diagnosis id with the linked url from the doctors`remainingPatients`dictionary.
+    Returns a URL for a patient or a status message depending on the doctor's progress with the dataset.
 
     Args:
-        docID (str): The unique identifier of the doctor
-        dataSet (str): The name of the dataset, which must exist within the`remainingPatients`dictionary associated with the doctor.
-
-    Raises:
-        KeyError: If the specified dataset (dataSet) is not found in the doctor's`remainingPatients`dictionary.
+        docID (str): The doctor's ID.
+        dataSet (str): The name of the dataset.
 
     Returns:
-        tuple: A tuple containing:
-            - str: The ID of the diagnosis entry.
-            - str: The URL of the picture.
-        Returns False if no remaining patients are available or the doctor does not exist.
+        dict: A dictionary with the keys:
+            - "status" (str): The status of the operation ('success', 'error', 'finished').
+            - "url" (str, optional): The URL of the patient (if status is 'success').
+            - "message" (str, optional): A message explaining the status.
     """
     # Check if the doctor exists in the database
     if not Doctors.objects.filter(doctorID=docID).exists():
-        return False
+        return {"status": "error", "message": "Doctor not found"}
 
     doctor = Doctors.objects.get(doctorID=docID)
+     
+    urls = getPatientURLs(datasetName)
+    if not urls:
+        return {"status": "error", "message": "No URLs available for the dataset"}
 
-    if dataSet not in doctor.remainingPatients:
-        raise KeyError(f"Data set '{dataSet}' not found for doctor {docID}")
+    
+    datasetNamesAndURL = doctor.finishedPatients
+    
+    finishedDatasets = list(datasetNamesAndURL.keys())
 
-    remainingPatients = doctor.remainingPatients
-    remainingPatientsAsList = list(remainingPatients[dataSet].keys())
+    
+    # doctor is going to use the dataset for the first time
+    if datasetName not in finishedDatasets:
+        index = random.randint(0, len(urls)-1)
+        return {"status": "success", "url": urls[index]}
 
-    # Return False if no remaining patients are available
-    if len(remainingPatientsAsList) <= 0:
-        return False
+    # the datasetname is already used and can be looked up
+    finishedPatients = list(datasetNamesAndURL[datasetName].values())
 
-    # Randomly select a patient from the remaining ones
-    index = random.randint(0, len(remainingPatientsAsList) - 1)
+    # doctor has edited all the pictures of the dataset
+    if len(finishedPatients) == len(urls):
+        return {"status": "finished"}
 
-    idForPicture = remainingPatientsAsList[index]
-    urlForPicture = remainingPatients[dataSet][idForPicture]
-
-    return (idForPicture, urlForPicture)
+    
+    # get a random url (patient) from the remaining patients of the dataset   
+    else:
+        remaining = [patient for patient in urls if patient not in finishedPatients]
+        index = random.randint(0, len(remaining)-1)
+        return {"status": "success", "url": remaining[index]}
 
 
 def getDoctorObject(docID: str):
@@ -116,7 +123,7 @@ def getDoctorObject(docID: str):
     return doctor
 
 
-def addFinishedPatient(docID: str, datasetUrlKey: str, url: str):
+def addFinishedPatient(docID: str, datasetName: str, url: str, uuid: str):
     """
     Adds a URL entry to a finished patient dataset for a doctor.
 
@@ -135,11 +142,12 @@ def addFinishedPatient(docID: str, datasetUrlKey: str, url: str):
     doctor = Doctors.objects.get(doctorID=docID)    
     finishedPatients = doctor.finishedPatients
     
-    # creates a unique id and returns it in a list
-    uuid = createUUIDs(1)[0]   
-    if datasetUrlKey not in finishedPatients:
-        finishedPatients[datasetUrlKey] = {}
+    if datasetName not in finishedPatients:
+        finishedPatients[datasetName] = {}
 
-    finishedPatients[datasetUrlKey][uuid] = url
-
+    finishedPatients[datasetName][uuid] = url
+    
+    doctor.finishedPatients = finishedPatients
+    doctor.save()
+    
     return True
