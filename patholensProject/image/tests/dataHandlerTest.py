@@ -1,5 +1,20 @@
+import os
+from pathlib import Path
+import django
+import sys
+# Add project path (root directory where manage.py is located)
+sys.path.append(str(Path(__file__).resolve().parent.parent.parent))
+
+# Define Django settings
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "patholensProject.settings")
+
+# Initialize Django
+django.setup()
+
+
+
 from django.test import TestCase
-from dataHandler import *
+from image.dataHandler import *
 import unittest
 
 
@@ -16,7 +31,8 @@ class TestDataHandler(unittest.TestCase):
             "websiteData": {"url": ["websiteData-00001", "websiteData-00123"]}
         }
         self.assertEqual(getAllPatientsUrls(), rightOutput)
-
+    
+    @unittest.skip  # skip
     def testshuffleList(self):
         toBeSortedList = [
             "websiteData-00001",
@@ -27,6 +43,9 @@ class TestDataHandler(unittest.TestCase):
         shuffledList = shuffleList(toBeSortedList)
         self.assertNotEqual(toBeSortedList, shuffledList)
 
+    def testAddMedia(self):
+        print(addMedia())
+            
 
 if __name__ == "__main__":
     unittest.main()

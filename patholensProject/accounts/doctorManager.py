@@ -37,51 +37,6 @@ def createDoctor(user: django.contrib.auth.models.User):
     return doc
 
 
-def addIdsToUrls(allDataSets: list, allUrls: dict):
-    """
-    Generates a dictionary that associates each dataset with patient IDs and their respective picture URLs.
-
-    Args:
-        allDataSets (list): A list of dataset names to be processed.
-        allUrls (dict): A dictionary containing URLs for the pictures, structured as:
-            {
-                "dataSetName":
-                {
-                    "urls": ["url1", "url2", ...]
-                },
-                ...
-            }
-
-    Returns:
-        dict: An dictionary which has the following format:
-            {
-                "dataSet":
-                {
-                    "patient id": "url to the picture",
-                    ...
-                },
-                ...
-            }
-    """
-
-    idsAndUrls = {}
-
-    for dataSet in allDataSets:
-        urls = allUrls[dataSet]["url"]
-        amount = len(urls)
-        patientIDs = createUUIDs(amount)
-
-        # Initialize the dictionary for dataSet if it does not exist yet
-        if dataSet not in idsAndUrls:
-            idsAndUrls[dataSet] = {}
-
-        # Add urls and uuids to dictionary
-        for index in range(amount):
-            idsAndUrls[dataSet][patientIDs[index]] = urls[index]
-
-    return idsAndUrls
-
-
 def createUUIDs(amount: int):
     """
     Generates a specified number of unique UUIDs (Universally Unique Identifiers).
@@ -162,7 +117,17 @@ def getDoctorObject(docID: str):
 
 
 def addFinishedPatient(docID: str, datasetUrlKey: str, url: str):
-    
+    """
+    Adds a URL entry to a finished patient dataset for a doctor.
+
+    Args:
+        docID (str): The ID of the doctor.
+        datasetUrlKey (str): The key of the dataset under which the URL will be stored.
+        url (str): The URL to be added to the finished patient dataset.
+
+    Returns:
+        bool: Returns True if the entry was successfully added, otherwise False.
+    """
     # Check if the doctor exists in the database
     if not Doctors.objects.filter(doctorID=docID).exists():
         return False
@@ -170,7 +135,7 @@ def addFinishedPatient(docID: str, datasetUrlKey: str, url: str):
     doctor = Doctors.objects.get(doctorID=docID)    
     finishedPatients = doctor.finishedPatients
     
-    # create unique id
+    # creates a unique id and returns it in a list
     uuid = createUUIDs(1)[0]   
     if datasetUrlKey not in finishedPatients:
         finishedPatients[datasetUrlKey] = {}
