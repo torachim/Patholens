@@ -54,8 +54,10 @@ __pycache__/
 *.db
 
 db.sqlite3
+
 media/
 
 schema.yml
 
 website_data
+

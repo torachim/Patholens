@@ -36,3 +36,18 @@ def forwardingInformation(request):
     createDiagnosis(diagnosisID, docObject, urlForPicture)
 
     return redirect("newDiagnosis", diagnosisID=diagnosisID)
+
+    return render(request, 'home.html')
+@login_required
+def homeWindow(request):
+    return render(request, 'homeWindow.html')
+
+def data(request):
+    allDataSets = [
+        "Dataset 1",
+        "Dataset 2",
+        "Dataset 3",
+    ]
+     
+    return render(request, 'selectDataset.html', {'allDataSets': allDataSets})
+

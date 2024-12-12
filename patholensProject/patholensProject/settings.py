@@ -154,6 +154,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = "/"
 
+
 EXTERNAL_DATASET_PATH = os.path.join(BASE_DIR, "website_data/")
 
 MEDIA_URL = "/media/"
@@ -164,3 +165,6 @@ SUPPORTED_IMAGE_FORMATS = {
     "FLAIR": "_space-orig_FLAIR.nii.gz",
     "T1": "_space-orig_T1w.nii.gz",
 }
+
+X_FRAME_OPTIONS = 'ALLOWALL'  # Um das Einbetten der Seite in einen Iframe zu erlauben
+
