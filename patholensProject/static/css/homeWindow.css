@@ -17,27 +17,26 @@ body {
 
 h1 {
     text-align: center;
-    font-size: 60px;
-    font-style: bold;
+    font-size: 65px;
     margin-top: 50px;
     color: #ffffff;
-    font: 'Cabin';
+    font-family: 'Cabin', sans-serif;
     margin-bottom: 5px;     
 }
 
 h3 {
     margin-top: 10px;
     text-align: center;
-    font-size: 45px;
+    font-size: 40px;
     color: #ffffff;
-    font: 'Cabin';
+    font-family: 'Cabin', sans-serif;
 }
 
 
 .welcomeImage {
     width: 100%;
-    max-width: 450px; 
-    margin: -5px;  
+    max-width: 550px; 
+    margin: -20px;  
 }
 
 

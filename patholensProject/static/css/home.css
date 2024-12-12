@@ -14,20 +14,20 @@ body {
     display: flex;
     flex-direction: row;
     align-items: center;
-    flex: 1; /* Takes up available space */
+    flex: 1; 
     height: calc(100vh - 100px);
     overflow: hidden; 
 }
 
 .leftPanel {
     flex: 1; 
-    padding: 10px; /*Padding(Innenabstand) on all sides*/
+    padding: 10px; 
     display: flex;
     width: 35%;
-    flex-direction: column; /* Anordnung der Elemente in einer Spalte */
-    align-items: flex-start; /*Aligns elements at the start horizontally*/
+    flex-direction: column; 
+    align-items: flex-start; 
     background-color: #24617B;
-    overflow-y: auto; /* Allows vertical scrolling*/
+    overflow-y: auto; 
     
 }
 
@@ -55,7 +55,7 @@ body {
     font-family: 'Calibri';
     font-size: 16px;
     color: #ffffff;
-    line-height: 1.2; /*space betweens the lines*/
+    line-height: 1.2; 
     max-width: 200px;
     margin-bottom: 50%;
 }
@@ -105,13 +105,13 @@ body {
 
 .leftPanel .buttons button:focus {
     background-color: #535c5e; 
-    transform: translateY(2px); /* button is moved down */
+    transform: translateY(2px);
     box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.2); 
 }
 
 
 /*window on the right side*/
-.right-frame {
+.rightFrame {
     position: relative;                    
     right: 15px;             
     width: 65%;            
@@ -121,7 +121,7 @@ body {
 }
 
 /* adds a scrollbar to an element if its content overflows */
-.right-frame {
+.rightFrame {
     overflow: auto;         
 }
 

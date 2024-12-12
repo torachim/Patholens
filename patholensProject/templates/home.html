@@ -12,38 +12,49 @@
 {% endblock %} 
 
 {% block content %}
+
+
+<!-- Close Effect--->
+<body onclick="window.open( {% url 'homeWindow' %},'windowFrame')">
   <div class="mainContent">
 
-      <!-- Left Panel -->
-      <div class="leftPanel">
-          <div class="profile">
-              <img
-                  src="{% static 'images/profilePicture.png' %}"
-                  alt="Picture"
-                  class="profilePicture"
-              />
-              <div class="profileInfo">
-                  <div class="name">
-                      {{ user.first_name }} {{ user.last_name }}
-                  </div>
-                  <div class="email">{{ user.email }}</div>
+    <!-- Left Panel -->
+    <div class="leftPanel">
+
+      <div class="profile">
+          <img
+              src="{% static 'images/profilePicture.png' %}"
+              alt="Picture"
+              class="profilePicture"
+          />
+          <div class="profileInfo">
+              <div class="name">
+                  {{ user.first_name }} {{ user.last_name }}
               </div>
+              <div class="email">{{ user.email }}</div>
           </div>
-
-          <div class="buttons">
-            <button onclick="window.location.href='url.html'">Continue Diagnosis</button>
-            <button onclick="window.open( {% url 'selectDataset' %},'windowFrame')">New Diagnosis</button>                                                                                                        
-          </div>
-
-     </div>
-
-      <!-- Window on the right side -->
-      <iframe class="right-frame"
-        src="{% url 'homeWindow' %}"
-        name = "windowFrame"
-        style="border: none">
-      </iframe>
+        </div>
       
-      
+      <div class="buttons">
+        <button onclick="event.stopPropagation();window.location.href='url.html'">Continue Diagnosis</button>
+        <button onclick="event.stopPropagation();window.open( {% url 'selectDataset' %},'windowFrame')">New Diagnosis</button>                                                                                                        
+      </div>
+
+    </div>
+  
+
+    <!-- Window on the right side -->
+    <iframe class="rightFrame"
+      src="{% url 'homeWindow' %}"
+      name = "windowFrame"
+      style="border: none">
+    </iframe>
+
   </div>
+</body>
+
+
+      
+   
+
 {% endblock %}

@@ -12,33 +12,34 @@ body {
 
 /* Overlay over the background image */
 .overlay {
-    position: fixed; /* Ensures that the overlay covers the entire page */
+    position: fixed; 
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black color*/
-    backdrop-filter: blur(5px); /* Blur effect */
+    background-color: rgba(0, 0, 0, 0.5); 
+    backdrop-filter: blur(5px); 
     z-index: -1; /* Ensures that the overlay is in front of the content */
 }
 
 /*background*/
-frame-container {
-    position: relative; 
+.frameContainer {
+    position: fixed;
     width: 100%;
     height: 100vh; 
     overflow: hidden; 
+    z-index: -2;
 }
 
 /* Frame used in the background */
-.background-frame {
+.backgroundFrame {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     border: none; 
-    z-index: -2; /* at the very bottom */
+    z-index: -3; /* at the very bottom */
 }
 
 
@@ -49,14 +50,14 @@ frame-container {
     text-align: center;
     display: flex;
     flex-direction: column; 
-    justify-content: flex-start; /* Start from the top of the container */
+    justify-content: flex-start; 
     align-items: center; 
-    gap: 20px; /* gap betweeen buttons */
+    gap: 20px; 
     width: 100%;
     max-width: 450px;
     height: 240px; 
     border-radius: 10px;
-    box-shadow: 0 10px 16px rgba(0, 0, 0, 0.3); /* Schattierung */
+    box-shadow: 0 10px 16px rgba(0, 0, 0, 0.3);
     overflow-y: auto;
 }
 

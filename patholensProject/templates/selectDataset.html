@@ -7,11 +7,13 @@
     <title>All DataSets</title>
     <link rel="stylesheet" href="{% static 'css/selectDataset.css' %}?v=2" />
 </head>
-<body>
+
+<!-- Close Effect--->
+<body onclick="window.location.href='{% url 'homeWindow' %}'">
 
     <!-- Start image as background -->
-    <div class="frame-container">
-        <iframe class="background-frame" src="{% url 'homeWindow' %}" frameborder="0"></iframe>
+    <div class="frameContainer">
+        <iframe class="backgroundFrame" src="{% url 'homeWindow' %}" frameborder="0"></iframe>
         <div class="overlay"></div>
     </div>
 
@@ -21,7 +23,7 @@
         <div class="datasetsList">
             {% for dataset in allDataSets %}
                 <!-- Button for each dataset -->
-                <button onclick="window.location.href='#'">
+                <button onclick="event.stopPropagation(); window.location.href='#'">
                     {{ dataset }}
                 </button>
             {% endfor %}
@@ -29,5 +31,7 @@
     </div>
 
 </body>
+
+
 
 </html>
