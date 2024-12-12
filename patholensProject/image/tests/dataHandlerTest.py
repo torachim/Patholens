@@ -15,6 +15,7 @@ django.setup()
 
 from django.test import TestCase
 from image.dataHandler import *
+from image.mediaHandler import addMedia
 import unittest
 
 
@@ -28,9 +29,9 @@ class TestDataHandler(unittest.TestCase):
     @unittest.skip  # skip
     def testAddAllPatientsToDoctorsDB(self):
         rightOutput = {
-            "websiteData": {"url": ["websiteData-00001", "websiteData-00123"]}
+            "website_data": {"url": ["websiteData-00001", "websiteData-00123"]}
         }
-        self.assertEqual(getAllPatientsUrls(), rightOutput)
+        self.assertEqual(getPatientURLsFromFolder("website_data"), rightOutput)
     
     @unittest.skip  # skip
     def testshuffleList(self):

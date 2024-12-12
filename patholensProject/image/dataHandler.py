@@ -45,7 +45,7 @@ def getDataSetNames():
     return allDataSets
 
 
-def getPatientURLs(dataset: str):
+def getPatientURLsFromFolder(dataset: str):
     """
     The function goes through the media folder and extracts all the patient IDs as our url.
 
@@ -86,49 +86,3 @@ def shuffleList(aList: list):
     newList = np.random.permutation(aList)
     return list(newList)
 
-
-def addMedia():
-    """
-    This function processes all datasets in the media directory, checks if they already exist in the Media 
-    database, and updates or adds new dataset entries accordingly.
-
-
-    Returns:
-        bool:  
-        - `True`if the function successfully processes all datasets, updates existing ones, and creates new entries as needed.
-        - `False`if their are no datasets in the directory.
-    """
-    allDatasets = getDataSetNames()
-    
-    if allDatasets == []:
-        return False
-
-    for datasetName in allDatasets:
-        
-        url = getPatientURLs(datasetName)
-        
-        # dataset exists in the media db 
-        if Media.objects.filter(name=datasetName).exists():
-            media = Media.objects.get(name=datasetName)    
-            
-            savedURLAsString = media.url
-            # convert the string to a list by splitting the string at ','
-            savedURLAsList = [s.strip() for s in savedURLAsString.split(",")]
-
-            # if patients where added after creating the dataset in the db: add the missing patients
-            if len(savedURLAsList) < len(url):
-                # adds all missing patinents url to savedURLAsList
-                [savedURLAsList.append(patientURL) for patientURL in url if patientURL not in savedURLAsList]
-                
-                # converts the list to a string
-                savedURLAsList = str(savedURLAsList).replace("[", "").replace("]", "").replace("'", "")
-                
-                media.url = savedURLAsList
-                media.save()
-        
-        # dataset needs to be added to the media db     
-        else:
-            url = str(url).replace("[", "").replace("]", "").replace("'", "")
-            Media.objects.create(name=datasetName, url=url)
-    
-    return True

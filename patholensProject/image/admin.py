@@ -6,14 +6,12 @@ admin.site.register(UseTime)
 admin.site.register(Diagnosis)
 
 
-
-
 class MediaAdmin(admin.ModelAdmin):
     actions = ["addMedia"]
 
     def addMedia(self, request, queryset=None):
         try:
-            from image.dataHandler import addMedia
+            from image.mediaHandler import addMedia
             addMedia()
         except Exception as e:
             self.message_user(request, "The new datasets where added to the Media Database", messages.SUCCESS)
