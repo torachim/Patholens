@@ -47,3 +47,8 @@ def saveConfidence(request, diagID):
 def newDiagnosis(request, diagnosisID):
 
     return render(request, "image/diagnosisPage.html", {"diagnosisID": diagnosisID})
+
+
+
+def AIPage(request):
+    return render(request, "image/AIPage.html")

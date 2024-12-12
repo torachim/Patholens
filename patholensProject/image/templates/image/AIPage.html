@@ -1,0 +1,80 @@
+{% extends 'base.html' %} 
+{% load static %} 
+{% block extraCSS %}
+
+<link rel="stylesheet" href="{% static 'css/diagnosisPage.css' %}?v=1" />
+
+
+{% endblock %} 
+
+{% block title %} 
+  Diagnosis Page 
+{% endblock %} 
+
+
+{% block topbar %}
+<a href="/startingPage" class="homeButton">
+    <i class="fa-solid fa-house" style="color: #ffffff;"></i>
+</a>
+<i class="fa-solid fa-circle-question" style="color: #ffffff;" id="openHelp" data-tooltip="Get Help"></i>
+{% endblock %}
+
+
+
+
+<div class="imageBox">
+    <canvas id="imageBrain" width="100%" height="395%"></canvas>
+</div>
+
+
+
+<div class="container">
+    <form class="radioForm">
+        <label>
+            <input type="radio" name="option" value="myDiagnosis" checked>
+            <p>my diagnosis</p>
+        </label>
+        <label>
+            <input type="radio" name="option" value="AIDiagnosis">
+            <p>AI diagnosis</p>
+        </label>
+        <label>
+            <input type="radio" name="option" value="showOverlay">
+            <p>show overlay</p>
+        </label>
+    </form>
+</div>
+
+
+<div class="finishDiagnosisButton">
+    <button type="button" id="finishButton">Finish Diagnosis</button>
+</div>
+
+
+<div class="patientID">
+    <p>ID: 50044456</p>
+</div>
+
+
+<div class="popupOverlay" id="popupOverlay">
+    <div class="popupFrame">
+        
+        <button class="popupClose" id="closePopup">&times;</button>
+        
+        <p>Please state your confidence</p>
+
+        <div class="confidenceMeterContainer">
+            
+            <input type="range" class="confidenceMeter" min="0" max="100" value="50" id="confidenceMeter">
+  
+
+            <div class="tooltip" id="tooltip">50</div>
+        </div>
+
+        <button class="popupConfirm">Confirm</button>
+    </div>
+</div>
+
+
+<script>
+
