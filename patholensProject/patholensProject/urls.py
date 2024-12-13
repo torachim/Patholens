@@ -31,7 +31,11 @@ urlpatterns = [
     path('startingPage/', views.homepage, name = "StartingPage"),
 
     path('startingPage/forwarding/', views.forwardingInformation, name='forwardingInformation'),
-
+    # not an completly finished solution
+    #TODO: change so that not only the small frame has our image
+    path('selectDataset/forwarding/', views.forwardingInformation, name='forwardingInformation'),
+    
+    
     path('homeWindow/', views.homeWindow, name='homeWindow'),  
     path('selectDataset/', views.data, name='selectDataset'), 
 
