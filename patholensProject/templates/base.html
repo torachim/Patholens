@@ -30,7 +30,7 @@
         </div>
         <div class="Buttons">
             <i class="fa-solid fa-circle-question" style="color: #ffffff;" id="openHelp" data-tooltip="Get Help" onclick="event.stopPropagation();"></i> 
-            <i class="fa-solid fa-right-from-bracket" style="color: #ffffff;" onclick="event.stopPropagation();" ></i>
+            <a href="/logout/basePage"><i class="fa-solid fa-right-from-bracket" style="color: #ffffff;"></i></a>
 
         </div>
     </div>
@@ -137,7 +137,8 @@
 
         closeHelpWindow.addEventListener("click", () => {
             helpWindow.style.right = "-600px";
-        })
+        });
+
 
     </script>
     
