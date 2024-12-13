@@ -133,31 +133,16 @@ input[type="radio"]:checked::before {
     color: white; 
     font-family: Calibri, Arial, sans-serif;
     font-weight: bold;
+    transition: transform 0.025s ease; 
 }
 
 
-input[type="radio"]:checked {
-     
-    border-color:rgb(231, 230, 230);  
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); 
+input[type="radio"]:checked {   
+    box-shadow: 0 4px 7px rgba(0, 0, 0, 0.4); 
+}
 
-}
-/* Change text color when the radio button is checked */
-input[type="radio"]:checked + p {
-    color: rgb(231, 230, 230);  
-}
 /* Change text color and scale when the radio button is checked */
-input[type="radio"]:checked + p {
-    color: rgb(231, 230, 230); 
-    transform: scale(1.1);
+input[type="radio"]:checked + p { 
+    transform: scale(1.025);
 }
 
-/* Text transition */
-.radioForm label p {
-    margin: 0; 
-    font-size: 18px; 
-    color: white; 
-    font-family: Calibri, Arial, sans-serif;
-    font-weight: bold;
-    transition: color 0.2s ease, transform 0.1s ease; 
-}
