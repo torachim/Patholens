@@ -11,8 +11,6 @@ class Doctors(models.Model):
     # will get the id of the diagnosis
     activePatient = models.CharField(null=True, max_length=50)
 
-    # ids from the patients
-    remainingPatients = models.JSONField(null=True)
     finishedPatients = models.JSONField(null=True)
 
     def __str__(self):
