@@ -19,10 +19,15 @@
 
 {%block content%}
 
+
+<div class="patientID">
+    <p>ID: 50044456</p>
+</div>
+
+
 <div class="imageBox">
     <canvas id="imageBrain" width="100%" height="395%"></canvas>
 </div>
-
 
 
 <div class="container">
@@ -43,36 +48,12 @@
 </div>
 
 
-<div class="Buttons">
+<div class="nextButton">
     <button type="button" id="TakeMyDiagnosis">Take My Diagnosis</button>
     <button type="button" id="TakeAIDiagnosis">Take AI Diagnosis</button>
     <button type="button" id="editDiagnosis">edit Diagnosis</button>
 </div>
 
-
-<div class="patientID">
-    <p>ID: 50044456</p>
-</div>
-
-
-<!--<div class="popupOverlay" id="popupOverlay">
-    <div class="popupFrame">
-        
-        <button class="popupClose" id="closePopup">&times;</button>
-        
-        <p>Please state your confidence</p>
-
-        <div class="confidenceMeterContainer">
-            
-            <input type="range" class="confidenceMeter" min="0" max="100" value="50" id="confidenceMeter">
-  
-
-            <div class="tooltip" id="tooltip">50</div>
-        </div>
-
-        <button class="popupConfirm">Confirm</button>
-    </div>
-</div>-->
 {%endblock%}
 
 <script>
