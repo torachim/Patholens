@@ -23,7 +23,7 @@
         <div class="datasetsList">
             {% for dataset in allDataSets %}
                 <!-- Button for each dataset -->
-                <button onclick="event.stopPropagation(); window.location.href='forwarding'">
+                <button onclick="window.top.location.href='forwarding'">
                     {{ dataset }}
                 </button>
             {% endfor %}
