@@ -31,7 +31,7 @@ body{
     border-radius: 10px; 
     padding: 10px 20px; 
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3); 
-    gap: 90px; 
+    gap: 60px; 
     width: 370px; 
     height: 40px; 
     margin: 20px auto; 
@@ -79,6 +79,12 @@ body{
 
 #eraseTool i {
     font-size: 24px;
+    color: #434343;
+}
+
+.undoTool i {
+    font-size: 37px;
+    transform: scale(1.5); /* Vergrößert das Icon */
     color: #434343;
 }
 
