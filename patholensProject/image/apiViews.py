@@ -3,6 +3,7 @@ from django.http import JsonResponse
 from rest_framework.response import Response
 from rest_framework import status
 from django.conf import settings
+from .models import Diagnosis
 import os
 from accounts.diagnosisManager import getURL
 
@@ -64,3 +65,43 @@ class GetImageAPIView(APIView):
             return Response(
                 {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
+class SaveConfidenceAPIView(APIView):
+
+
+   
+    def post(self, request, diagID):
+        """
+        This function saves the confidence value of the diganosis in the db
+
+        Args:
+            request (_type_): _description_
+            diagID (string): ID of an diagnosis
+
+        Returns:
+            none
+        """
+
+        try:
+            data = request.data
+            confidence = data.get('confidence')
+
+            # check if it is a valid value 
+            if confidence is None or not (0 <= int(confidence) <= 100):
+                return Response({'error': 'Invalid confidence value. It must be between 0 and 100.'}, status=status.HTTP_400_BAD_REQUEST)
+
+            if not Diagnosis.objects.filter( diagID=diagID).exists():
+                return Response(
+                    {'error': f'Diagnosis with diagID {diagID} does not exist.'},
+                    status=status.HTTP_404_NOT_FOUND
+                )
+
+            
+            diag = Diagnosis.objects.get(diagID=diagID)
+            # store confidence value 
+            diag.confidence = int(confidence)
+            diag.save()
+
+            return Response({'message': 'Confidence value saved successfully via API!'}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'error': f'An unexpected error occurred: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
