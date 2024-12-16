@@ -83,8 +83,7 @@ body{
 }
 
 .undoTool i {
-    font-size: 37px;
-    transform: scale(1.5); /* Vergrößert das Icon */
+    font-size: 29px;
     color: #434343;
 }
 

@@ -66,6 +66,7 @@ document.addEventListener('DOMContentLoaded', function() {
         onDragRelease: onDragRelease,
         dragMode: DRAG_MODE.callbackOnly,
         penSize: 3,
+        maxDrawUndoBitmaps: 30,     // max 30 undos possible
     });
         
     const canvas = document.getElementById("imageBrain");
@@ -145,9 +146,12 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     }
 
+
+
     // Drawing functions from here on
     nv.setDrawOpacity(0.65);
-    
+
+
     /**
      * 
      * @param {int} mode
@@ -161,6 +165,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Pixel
     document.getElementById("selectTool").addEventListener("click", function(e){
+        saveDrawingState();
         nv.setDrawingEnabled(true);  
         changeDrawingMode(6, false);
     });
@@ -189,5 +194,6 @@ document.addEventListener('DOMContentLoaded', function() {
         nv.opts.dragMode = DRAG_MODE.callbackOnly;  // Draw rectangle only when dragging
         nv.opts.onDragRelease = onDragRelease;      // Set callback for rectangle drawing
     });
+
 
 });
