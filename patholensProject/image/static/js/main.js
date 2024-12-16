@@ -196,4 +196,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
 
+    // Undo the drawing/erasing
+    document.getElementById("undoTool").addEventListener("click", function (e) {
+        nv.drawUndo();
+    });
+
 });
