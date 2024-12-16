@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function() {
         onDragRelease: onDragRelease,
         dragMode: DRAG_MODE.callbackOnly,
         penSize: 3,
-        maxDrawUndoBitmaps: 30,     // max 30 undos possible
+        maxDrawUndoBitmaps: 200,     // max 200 undos possible
     });
         
     const canvas = document.getElementById("imageBrain");
