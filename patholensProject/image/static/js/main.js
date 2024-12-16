@@ -152,6 +152,13 @@ document.addEventListener('DOMContentLoaded', function() {
     nv.setDrawOpacity(0.65);
 
 
+
+    // Add drawing state to history
+    function saveDrawingState() {
+        nv.drawAddUndoBitmap();
+    }
+
+
     /**
      * 
      * @param {int} mode
@@ -182,6 +189,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // enables erasing the drawing by clicking on eraser
     document.getElementById("eraseTool").addEventListener("click", function(e){
+        saveDrawingState();
         nv.setDrawingEnabled(true);
         // 0 = Eraser and true => eraser ist filled so a whole area can be erased
         changeDrawingMode(0, true);
@@ -190,6 +198,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // INFO: You need to right click and drag to draw rectangle
     // enable rectangle drawing when the corresponding button in html is clicked
     document.getElementById("frameTool").addEventListener("click", function () {
+        saveDrawingState();
         nv.setDrawingEnabled(true);
         nv.opts.dragMode = DRAG_MODE.callbackOnly;  // Draw rectangle only when dragging
         nv.opts.onDragRelease = onDragRelease;      // Set callback for rectangle drawing
