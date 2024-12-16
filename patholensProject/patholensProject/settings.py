@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
-import os
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -144,8 +143,7 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-    #os.path.join(BASE_DIR, 'data', 'images')  
+    os.path.join(BASE_DIR, 'static') 
 ]
 
 # Default primary key field type
@@ -155,6 +153,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 LOGIN_URL = "/"
+
 
 EXTERNAL_DATASET_PATH = os.path.join(BASE_DIR, "website_data/")
 
@@ -166,3 +165,6 @@ SUPPORTED_IMAGE_FORMATS = {
     "FLAIR": "_space-orig_FLAIR.nii.gz",
     "T1": "_space-orig_T1w.nii.gz",
 }
+
+X_FRAME_OPTIONS = 'ALLOWALL'  # Um das Einbetten der Seite in einen Iframe zu erlauben
+

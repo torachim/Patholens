@@ -2,53 +2,55 @@
 {% load static %} 
 {% block extraCSS %}
 
-<link rel="stylesheet" href="{% static 'css/home.css' %}" />
+<meta http-equiv="cache-control" content="max-age=0" />
+<meta http-equiv="cache-control" content="no-cache" />
+<meta http-equiv="expires" content="0" />
+<meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
+<meta http-equiv="pragma" content="no-cache" />
+<link rel="stylesheet" href="{% static 'css/home.css' %}?v=1" />
 {% endblock %} 
-
-{% block title %} 
-  PathoLens 
-{% endblock %} 
-
-{% block logoutLink %}
-    <a href="/logout/homePage"><i class="fa-solid fa-right-from-bracket" style="color: #ffffff;" id="logoutIcon"></i></a>
-{% endblock %}
 
 {% block content %}
+
+
+<!-- Close Effect--->
+<body onclick="window.open( {% url 'homeWindow' %},'windowFrame')">
   <div class="mainContent">
-      <!-- Left Panel -->
-      <div class="leftPanel">
-          <div class="profile">
-              <img
-                  src="{% static 'images/profilePicture.png' %}"
-                  alt="Picture"
-                  class="profilePicture"
-              />
-              <div class="profileInfo">
-                  <div class="name">
-                      {{ user.first_name }} {{ user.last_name }}
-                  </div>
-                  <div class="email">{{ user.email }}</div>
-              </div>
-          </div>
 
-          <div class="buttons">
-              <button>Continue Diagnosis</button>
-              <label for="newDiagnosisCheckbox" style="cursor: pointer">
-                  <button>New Diagnosis</button></label
-              >
-          </div>
-      </div>
+    <!-- Left Panel -->
+    <div class="leftPanel">
 
-      <!-- Right Panel -->
-      <div class="rightPanel">
-          <div class="welcomeText">
-              <h1>Welcome Back Doctor</h1>
-          </div>
+      <div class="profile">
           <img
-              src="{% static 'images/welcome.png' %}"
-              alt="Brain Image"
-              class="welcomeImage"
+              src="{% static 'images/profilePicture.png' %}"
+              alt="Picture"
+              class="profilePicture"
           />
+          <div class="profileInfo">
+              <div class="name">
+                  {{ user.first_name }} {{ user.last_name }}
+              </div>
+              <div class="email">{{ user.email }}</div>
+          </div>
+        </div>
+      
+      <div class="buttons">
+        <button onclick="event.stopPropagation();window.location.href='url.html'">Continue Diagnosis</button>
+        <button onclick="event.stopPropagation();window.open( {% url 'selectDataset' %},'windowFrame')">New Diagnosis</button>                                                                                                        
       </div>
+
+    </div>
+  
+
+    <!-- Window on the right side -->
+    <iframe class="rightFrame"
+      src="{% url 'homeWindow' %}"
+      name = "windowFrame"
+      style="border: none">
+    </iframe>
+
   </div>
+</body>
+
+
 {% endblock %}

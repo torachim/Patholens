@@ -2,7 +2,8 @@ import os
 from pathlib import Path
 import django
 import sys
-import numpy as np  
+import numpy as np
+from django.apps import apps
 
 
 # Add project path (root directory where manage.py is located)
@@ -11,12 +12,16 @@ sys.path.append(str(Path(__file__).resolve().parent.parent))
 # Define Django settings
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "patholensProject.settings")
 
-# Initialize Django
-django.setup()
+# Check if Django is already initialized
+if not apps.ready:
+    django.setup()
+    
 
 # Specifies the base directory of the project (the directory that contains manage.py),
 BASEDIR = Path(__file__).resolve().parent.parent
 DATASETPATH = os.path.join(BASEDIR, "media")
+
+from image.models import Media
 
 
 def getDataSetNames():
@@ -40,53 +45,34 @@ def getDataSetNames():
     return allDataSets
 
 
-def getAllPatientsUrls():
+def getPatientURLsFromFolder(dataset: str):
     """
-    Retrieves a dictionary of all patient IDs grouped by datasets.
+    The function goes through the media folder and extracts all the patient IDs as our url.
 
-    This function iterates through all datasets in the `DATASETPATH` directory, and for each dataset, it
-    looks for subdirectories that contain patient data. It extracts the patient ID from each subdirectory name
-    (based on the string pattern "sub-<ID>"), and stores these IDs in a dictionary where the key is the dataset
-    name and the value is a dictionary containing a list of patient IDs (URLs).
+    Args:
+        dataset (str): The name of the dataset.
 
     Returns:
-        dict: A dictionary where the keys are dataset names and the values are dictionaries with a key `"url"`
-            that holds a list of patient IDs in the following form:
-            {
-            "dataSet":
-                {
-                    "url" : ["id of the patient", "id of the second patient" ...]
-                },
-            ...
-            }
+        List[str]: A list of patient IDs extracted from the dataset folder.
 
     """
     global DATASETPATH
 
-    allPatients = {}
+    # Has all the paths to the available data sets
+    allSubPaths = os.listdir(os.path.join(DATASETPATH, dataset))
 
-    allDataSets = getDataSetNames()
+    allSubURLs = []
+    for sub in allSubPaths:
+        if "sub-" in sub:
+            # Splits the string at '-' and takes only the number of the string (our ID)
+            subID = sub.split("-")[1]
+            allSubURLs.append(subID)
 
-    for dataSet in allDataSets:
-        # Has all the paths to the availabe data sets
-        allSubPaths = os.listdir(os.path.join(DATASETPATH, dataSet))
-
-        allSubIDs = []
-        for sub in allSubPaths:
-            if "sub-" in sub:
-                # Splits the string at '-' and takes only the number of the string (our ID)
-                subID = sub.split("-")[1]
-                allSubIDs.append(subID)
-
-        allPatients[dataSet] = {"url": allSubIDs}
-
-    return allPatients
+    return allSubURLs
 
 
 def shuffleList(aList: list):
     """
-    Shuffles the elements of the given list randomly.
-
     This function takes a list of elements and shuffles them in place using a random permutation.
 
     Args:
@@ -99,3 +85,4 @@ def shuffleList(aList: list):
     # shuffles the list random
     newList = np.random.permutation(aList)
     return list(newList)
+

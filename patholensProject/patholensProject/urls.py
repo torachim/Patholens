@@ -29,12 +29,23 @@ urlpatterns = [
     path('', include('accounts.urls')),
     path('image/', include('image.urls')),
     path('startingPage/', views.homepage, name = "StartingPage"),
+
+    path('startingPage/forwarding/', views.forwardingInformation, name='forwardingInformation'),
+    # not an completly finished solution
+    #TODO: change so that not only the small frame has our image
+    path('selectDataset/forwarding/', views.forwardingInformation, name='forwardingInformation'),
+    
+    
+    path('homeWindow/', views.homeWindow, name='homeWindow'),  
+    path('selectDataset/', views.data, name='selectDataset'), 
+
     # YOUR PATTERNS
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     # Optional UI:
     path('api/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
-    path('api/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
+    path('api/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc')
 ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
