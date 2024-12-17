@@ -1,10 +1,14 @@
 from rest_framework.views import APIView
 from django.http import JsonResponse
 from rest_framework.response import Response
+from rest_framework.decorators import api_view
 from rest_framework import status
 from django.conf import settings
 import os
 from accounts.diagnosisManager import getURL
+from .timeHandler import setUseTime
+
+from image.models import Diagnosis, UseTime
 
 
 class GetImageAPIView(APIView):
@@ -64,3 +68,29 @@ class GetImageAPIView(APIView):
             return Response(
                 {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
+class SetUseTimeAPIView(APIView):
+
+    def post(self, request):
+        try:
+            diagnosisID = request.data.get('diagnosisID')
+            action = request.data.get('action')
+            timestamp = request.data.get('absoluteTime')
+            print(diagnosisID, action, timestamp)
+
+            if not all([diagnosisID, action, timestamp]):
+                print("1234")
+                return Response({'error': 'diagnosisID, action and timestmap are necessery'}, status=status.HTTP_400_BAD_REQUEST)
+            
+            result = setUseTime(diagnosisID, action, timestamp)
+
+            return Response(result, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            print("hallo")
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+        
+
+    

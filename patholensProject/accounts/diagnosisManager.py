@@ -40,6 +40,8 @@ def createDiagnosis(diagID: str, docObject: int, imageUrl: str):
 
     diag = Diagnosis.objects.create(diagID=diagID, doctor=docObject, imageUrl=imageUrl)
 
+    print(diag)
+
     return diag
 
 

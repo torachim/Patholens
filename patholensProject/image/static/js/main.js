@@ -1,7 +1,50 @@
 import { Niivue, DRAG_MODE } from "./index.js";
 
-document.addEventListener('DOMContentLoaded', function() {
+let startTime, endTime
 
+function startTimer(){
+    startTime = performance.now();
+}
+
+function endTimer(action){
+    endTime = performance.now();
+
+    const absoluteTime =  endTime - startTime;
+
+    sendTimeAPI(action, absoluteTime)
+}
+
+
+
+function sendTimeAPI(action, absoluteTime){
+    const actionTime = {
+            action: action,
+            absoluteTime: absoluteTime,
+            diagnosisID: diagnosisID,
+    }
+
+
+    fetch('/image/api/setUseTime/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+             'X-CSRFToken': csrfToken,
+        },
+        body: JSON.stringify(actionTime)
+    })
+    .then(response => {
+        if(!response.ok){
+            throw new Error('Error while saving the time!');
+        }
+        return response.json()
+    })
+    .then(data => console.log('Saving Time succesfull', data))
+    .catch(error => console.log('error', error))
+
+}
+
+
+document.addEventListener('DOMContentLoaded', function() {
     //function to drag a rectangle in the niivue 
     // define what happens on dragRelase (right mouse up)
     const onDragRelease = (data) => {
@@ -58,6 +101,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // refresh the drawing
             nv.refreshDrawing(true) // true will force a redraw of the entire scene (equivalent to calling drawScene() in niivue)
             nv.setDrawingEnabled(false); //drawingEnabled equals false so you have to click the button again to draw another rechtangle
+            endTimer("rectangle")
         }
     }
         
@@ -161,6 +205,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Pixel
     document.getElementById("selectTool").addEventListener("click", function(e){
+        startTimer()
         nv.setDrawingEnabled(true);  
         changeDrawingMode(6, false);
     });
@@ -171,6 +216,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // disables drawing
     function disableDrawing(){
+        endTimer('freehand drawing')
         nv.setDrawingEnabled(false);
     }  
 
@@ -185,6 +231,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // INFO: You need to right click and drag to draw rectangle
     // enable rectangle drawing when the corresponding button in html is clicked
     document.getElementById("frameTool").addEventListener("click", function () {
+        startTimer()
         nv.setDrawingEnabled(true);
         nv.opts.dragMode = DRAG_MODE.callbackOnly;  // Draw rectangle only when dragging
         nv.opts.onDragRelease = onDragRelease;      // Set callback for rectangle drawing
