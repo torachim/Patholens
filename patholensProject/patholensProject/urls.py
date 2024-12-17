@@ -28,11 +28,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('accounts.urls')),
     path('image/', include('image.urls')),
+    
     path('startingPage/', views.homepage, name = "StartingPage"),
-
-    path('startingPage/forwarding/', views.forwardingInformation, name='forwardingInformation'),
-    # not an completly finished solution
-    #TODO: change so that not only the small frame has our image
     path('selectDataset/forwarding/', views.forwardingInformation, name='forwardingInformation'),
     
     
