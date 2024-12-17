@@ -40,7 +40,9 @@ def getNamesFromMediaFolder():
 
     if pathExists and pathIsDirectory:
         for dir in os.listdir(DATASETPATH):
-            allDataSets.append(dir)
+            # folders which are starting with . are system folders and should not be added 
+            if not dir.startswith("."):
+                allDataSets.append(dir)
 
     return allDataSets
 

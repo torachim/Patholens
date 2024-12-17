@@ -35,6 +35,7 @@ urlpatterns = [
     
     path('homeWindow/', views.homeWindow, name='homeWindow'),  
     path('selectDataset/', views.data, name='selectDataset'), 
+    path("selectDataset/finished/<str:datasetName>/", views.finished, name="finishedDatasets"),
 
     # YOUR PATTERNS
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),

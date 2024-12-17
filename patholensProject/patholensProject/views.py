@@ -3,11 +3,11 @@ from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from accounts.doctorManager import getRandomURL
 from accounts.diagnosisManager import createDiagnosis
-from accounts.doctorManager import *
 from accounts.diagnosisManager import *
 
 from image.views import *
 from image.mediaHandler import *
+from accounts.doctorManager import *
 
 
 @login_required
@@ -63,14 +63,23 @@ def forwardingInformation(request, datasetName):
 
         return redirect("newDiagnosis", diagnosisID=uuid)
 
+
 @login_required
 def homeWindow(request):
     return render(request, 'homeWindow.html')
 
+
 @login_required
 def data(request):
     mediaNames = getAllDatasetNames()
-     
-    return render(request, 'selectDataset.html', {'allDataSets': mediaNames})
+    finished = finishedDatasets(request.user.id)
+    
+    notFinished = [media for media in mediaNames if media not in finished]
+    
+    return render(request, 'selectDataset.html', {'allDataSets': notFinished, 'finishedDatasets': finished})
 
+
+@login_required
+def finished(request):
+    return render(request, "home.html")
         

@@ -23,10 +23,17 @@
         <div class="datasetsList">
             {% for dataset in allDataSets %}
                 <!-- Button for each dataset -->
-                <button onclick="window.top.location.href='forwarding/{{dataset}}'">
+                <button id="notFinished" onclick="window.top.location.href='forwarding/{{dataset}}'">
                     {{ dataset }}
                 </button>
             {% endfor %}
+            
+            {% for dataset in finishedDatasets %}
+            <button id="finished" onclick="event.stopPropagation(); window.location.href='finished/{{dataset}}'">
+                {{ dataset }}
+            </button>
+            {% endfor %}
+
         </div>
     </div>
 

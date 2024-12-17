@@ -83,7 +83,6 @@ button {
     font: bold;
     font-family: 'Calibri';
     color: #ffffff;
-    background-color: #016685;
     border: none;
     border-radius: 8px;
     cursor: pointer;
@@ -91,7 +90,15 @@ button {
     transition: background-color 0.3s, transform 0.2s;
 }
 
-button:hover {
+#notFinished {
+    background-color: #016685;
+}
+
+#finished {
+    background-color: #545B63;
+}
+
+#notFinished:hover {
     background-color: #0284ab;
     transform: translateY(-2px);
     transform: scale(1.01);

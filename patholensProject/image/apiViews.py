@@ -68,8 +68,6 @@ class GetImageAPIView(APIView):
 
 class SaveConfidenceAPIView(APIView):
 
-
-   
     def post(self, request, diagID):
         """
         This function saves the confidence value of the diganosis in the db
