@@ -58,21 +58,14 @@ def setUseTime(diagID: str, action: str, duration):
             print(useTimeAction)
 
             if useTimeAction == {}:
-                print("asdf")
                 k = 1
                 useTimeAction[k] = newActionTime
             
             else:
-                print("tutz")
                 lastKey = list(useTimeAction)[-1]
-                print(lastKey)
-                print("zup")
                 newKey = int(lastKey) + 1
-                print("pol")
-                print(newKey)
                 useTimeAction[newKey] = newActionTime
-            
-            print(useTimeAction)
+    
 
             serializer = useTimeSerialize(
                 instance = useTimeInstance,
@@ -81,7 +74,6 @@ def setUseTime(diagID: str, action: str, duration):
                        },
             )
 
-            print("was läuft")
 
             if serializer.is_valid():
                 serializer.save()

@@ -1,47 +1,6 @@
 import { Niivue, DRAG_MODE } from "./index.js";
 
-let startTime, endTime
 
-function startTimer(){
-    startTime = performance.now();
-}
-
-function endTimer(action){
-    endTime = performance.now();
-
-    const absoluteTime =  endTime - startTime;
-
-    sendTimeAPI(action, absoluteTime)
-}
-
-
-
-function sendTimeAPI(action, absoluteTime){
-    const actionTime = {
-            action: action,
-            absoluteTime: absoluteTime,
-            diagnosisID: diagnosisID,
-    }
-
-
-    fetch('/image/api/setUseTime/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-             'X-CSRFToken': csrfToken,
-        },
-        body: JSON.stringify(actionTime)
-    })
-    .then(response => {
-        if(!response.ok){
-            throw new Error('Error while saving the time!');
-        }
-        return response.json()
-    })
-    .then(data => console.log('Saving Time succesfull', data))
-    .catch(error => console.log('error', error))
-
-}
 
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -236,5 +195,50 @@ document.addEventListener('DOMContentLoaded', function() {
         nv.opts.dragMode = DRAG_MODE.callbackOnly;  // Draw rectangle only when dragging
         nv.opts.onDragRelease = onDragRelease;      // Set callback for rectangle drawing
     });
+
+    let startTime, endTime
+
+function startTimer(){
+    startTime = performance.now();
+}
+
+function endTimer(action){
+    if(nv.opts.drawingEnabled){
+        endTime = performance.now();
+
+        const absoluteTime =  endTime - startTime;
+
+        sendTimeAPI(action, absoluteTime)
+    }
+}
+
+
+
+function sendTimeAPI(action, absoluteTime){
+    const actionTime = {
+            action: action,
+            absoluteTime: absoluteTime,
+            diagnosisID: diagnosisID,
+    }
+
+
+    fetch('/image/api/setUseTime/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+             'X-CSRFToken': csrfToken,
+        },
+        body: JSON.stringify(actionTime)
+    })
+    .then(response => {
+        if(!response.ok){
+            throw new Error('Error while saving the time!');
+        }
+        return response.json()
+    })
+    .then(data => console.log('Saving Time succesfull', data))
+    .catch(error => console.log('error', error))
+
+}
 
 });
