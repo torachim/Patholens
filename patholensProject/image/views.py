@@ -16,3 +16,7 @@ def newDiagnosis(request, diagnosisID):
 
 def testRenderImageView(request, imageID):
     return render(request, 'image/diagnosisPage.html', {'imageID': imageID})
+@login_required
+def AIPage(request):
+    return render(request, "image/AIPage.html")
+
