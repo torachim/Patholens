@@ -105,3 +105,59 @@ class SaveConfidenceAPIView(APIView):
             return Response({'message': 'Confidence value saved successfully via API!'}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({'error': f'An unexpected error occurred: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class GetAIMaskPathsAPIView(APIView):
+    """
+    API Class to get the paths of AI-generated masks for a given subject ID.
+    """
+
+    def get(self, request, subject_id):
+        """
+        Retrieve all AI mask paths for the given subject ID.
+
+        Args:
+            request: The HTTP request object.
+            subject_id (str): ID of the subject (e.g., 'sub-00001').
+
+        Returns:
+            JsonResponse: A list of relative paths to the AI masks.
+        """
+        try:
+            # Basis-Pfad zu den AI-Masken
+            base_path = os.path.join(
+                settings.MEDIA_ROOT, 
+                "website_data", 
+                "derivatives", 
+                "ai", 
+                subject_id, 
+                "pred"
+            )
+
+            # Überprüfen, ob der Ordner existiert
+            if not os.path.exists(base_path):
+                return Response(
+                    {"error": f"Path not found: {base_path}"},
+                    status=status.HTTP_404_NOT_FOUND
+                )
+
+            # Filtere Dateien, die 'mask' enthalten und auf '.nii.gz' enden
+            mask_files = [
+                file for file in os.listdir(base_path)
+                if "mask" in file and file.endswith(".nii.gz")
+            ]
+
+            # Erstelle relative Pfade für die Masken
+            relative_paths = [
+                f"/media/website_data/derivatives/ai/{subject_id}/pred/{file}"
+                for file in mask_files
+            ]
+
+            # Rückgabe der Pfade
+            return Response({"masks": relative_paths}, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return Response(
+                {"error": str(e)}, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
