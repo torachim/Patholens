@@ -80,7 +80,6 @@ class SetUseTimeAPIView(APIView):
             print(diagnosisID, action, timestamp)
 
             if not all([diagnosisID, action, timestamp]):
-                print("1234")
                 return Response({'error': 'diagnosisID, action and timestmap are necessery'}, status=status.HTTP_400_BAD_REQUEST)
             
             result = setUseTime(diagnosisID, action, timestamp)

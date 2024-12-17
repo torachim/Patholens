@@ -59,14 +59,16 @@ def setUseTime(diagID: str, action: str, duration):
 
             if useTimeAction == {}:
                 print("asdf")
-                useTimeAction[1] = newActionTime
+                k = 1
+                useTimeAction[k] = newActionTime
             
             else:
                 print("tutz")
-                lastKey = next(reversed(useTimeAction))
+                lastKey = list(useTimeAction)[-1]
                 print(lastKey)
                 print("zup")
-                newKey = lastKey + 1
+                newKey = int(lastKey) + 1
+                print("pol")
                 print(newKey)
                 useTimeAction[newKey] = newActionTime
             
