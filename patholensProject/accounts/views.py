@@ -5,6 +5,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.contrib.auth import authenticate, login
 from django.shortcuts import redirect
+from image.mediaHandler import addMedia
 
 # the python file which handles the creation of Doctor DB
 from . import doctorManager
@@ -92,6 +93,8 @@ def signupView(request):
 
         # login of user
         login(request, user)
+        addMedia()
+        
         return redirect("StartingPage")
 
     else:
@@ -136,6 +139,7 @@ def loginView(request):
         # login was successful
         if user is not None:
             login(request, user)
+            addMedia()
             return redirect("StartingPage")
 
         # password is incorrect

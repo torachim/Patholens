@@ -1,142 +1,101 @@
-/* Grundlegende Stile für den Body */
+@import url('https://fonts.googleapis.com/css?family=Cabin');
+
 body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: #24617B;
+    background-color:  #24617B;
     color: #ffffff;
-    display: flex;
+    display: flex; 
     flex-direction: column;
     height: 100vh;
 }
 
-/* Top-Bar Navigation */
-nav.top-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #24617B;
-    padding: 10px 20px;
-    height: 60px;
-    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.5);
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 10;
-}
 
-/* Logo ganz links */
-.top-bar .logo {
-    font-size: 24px;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-}
-
-.top-bar .logo i {
-    font-size: 48px;
-    color: #ffffff;
-}
-
-.top-bar .logo span {
-    margin-left: 10px;
-}
-
-/* Container für Hilfe- und Logout-Symbole */
-.top-bar .icon-container {
-    display: flex;
-    align-items: center;
-    gap: 15px; /* Abstand zwischen den Symbolen */
-}
-
-/* Allgemeine Stile für Icons */
-.top-bar .icon-container img {
-    width: 40px;
-    height: 40px;
-    cursor: pointer;
-}
-
-
-
-
+/*arranges all the elements on the page*/
 .mainContent {
     display: flex;
-    flex: 1;
-    margin-top: 100px;
+    flex-direction: row;
+    align-items: center;
+    flex: 1; 
     height: calc(100vh - 100px);
-    overflow: hidden;
+    overflow: hidden; 
 }
 
 .leftPanel {
-    flex: 1;
-    padding: 20px;
+    flex: 1; 
+    padding: 10px; 
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: flex-start;
+    width: 35%;
+    flex-direction: column; 
+    align-items: flex-start; 
     background-color: #24617B;
-    overflow-y: auto;
+    overflow-y: auto; 
+    
 }
 
 .leftPanel .profile {
     display: flex;
     align-items: center;
-    margin-bottom: 20px;
-    height: 100px;
-    margin-left: 0;
+    margin-top: 40px;
+    height: 70px;
+    margin-right: 15%;
     position: relative;
-    left: 55px;
+    left: 60px;
     top: 33px;
 }
 
 .leftPanel .profile img {
-    width: 60px;
-    height: 60px;
+    width: 65px;
+    height: 65px;
     border-radius: 50%;
-    margin-right: 20px;
-    background-color: #e0e8ea;
+    margin-right: 10px;
+    margin-bottom: 50%;
+    
 }
 
 .leftPanel .profileInfo {
+    font-family: 'Calibri';
     font-size: 16px;
-    line-height: 1.2;
+    color: #ffffff;
+    line-height: 1.2; 
     max-width: 200px;
+    margin-bottom: 50%;
 }
 
 .leftPanel .profileInfo .name {
-    font-size: 25px;
+    font-size: 27px;
     font-weight: bold;
-    white-space: nowrap;
+    white-space: nowrap; /*prevents text from wrapping to the next line*/
 }
 
-.leftPanel .profileInfo .email {
+.leftPanel .profileInfo .email {  
     font-size: 18px;
-    color: #ffffff;
     margin-top: 5px;
 }
 
 .leftPanel .buttons {
     display: flex;
     flex-direction: column;
-    gap: 28px;
-    width: 80%;
-    margin-bottom: 190px;
+    gap: 50px;
+    width: 70%;
+    margin-top: 90px;
     position: relative;
-    left: 55px;
-    top: 33px;
+    left: 60px;
+  
 }
 
 .leftPanel .buttons button {
     background-color: #00AFB9;
     color: #FFFFFF;
+    font-family: 'Calibri';
+    font-weight: bold;
+    font-size: 20px;
     border: none;
-    padding: 15px 30px;
-    font-size: 18px;
+    padding: 14px 30px;
+    text-align: center;
     border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     cursor: pointer;
     transition: background-color 0.3s, transform 0.2s;
     width: 100%;
-    text-align: center;
 }
 
 .leftPanel .buttons button:hover {
@@ -144,37 +103,25 @@ nav.top-bar {
     transform: scale(1.02);
 }
 
-.rightPanel {
-    flex: 1.65;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    background-color: #00242F;
-    height: calc(100% - 40px);
-    margin: 20px;
-    padding: 20px;
-    border-radius: 20px;
-    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.5);
-    box-sizing: border-box;
-    position: relative;
-    overflow: hidden;
+.leftPanel .buttons button:focus {
+    background-color: #535c5e; 
+    transform: translateY(2px);
+    box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.2); 
 }
 
-.welcomeText {
-    text-align: center;
-    margin-bottom: 20px;
+
+/*window on the right side*/
+.rightFrame {
+    position: relative;                    
+    right: 15px;             
+    width: 65%;            
+    height: 85vh;            
+    border-radius: 10px;     
+    box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.3); 
 }
 
-.welcomeText h1 {
-    font-size: 2.5rem;
-    color: #FFFFFF;
-    margin: 50px;
+/* adds a scrollbar to an element if its content overflows */
+.rightFrame {
+    overflow: auto;         
 }
 
-.welcomeImage {
-    max-width: 100%;
-    max-height: calc(100% - 80px);
-    object-fit: contain;
-    border-radius: 15px;
-}

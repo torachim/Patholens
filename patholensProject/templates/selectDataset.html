@@ -1,0 +1,36 @@
+{% load static %} 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All DataSets</title>
+    <link rel="stylesheet" href="{% static 'css/selectDataset.css' %}?v=2" />
+</head>
+
+<!-- Close Effect--->
+<body onclick="window.location.href='{% url 'homeWindow' %}'">
+
+    <!-- Start image as background -->
+    <div class="frameContainer">
+        <iframe class="backgroundFrame" src="{% url 'homeWindow' %}" frameborder="0"></iframe>
+        <div class="overlay"></div>
+    </div>
+
+    <!-- box with the datasets -->
+    <div class="container">
+        <h1>Select dataset </h1>
+        <div class="datasetsList">
+            {% for dataset in allDataSets %}
+                <!-- Button for each dataset -->
+                <button onclick="window.top.location.href='forwarding'">
+                    {{ dataset }}
+                </button>
+            {% endfor %}
+        </div>
+    </div>
+
+</body>
+
+
+</html>

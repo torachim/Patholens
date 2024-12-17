@@ -23,23 +23,9 @@ class TestDoctorsManager(unittest.TestCase):
     def testCreateDoctor(self):
         self.doc = createDoctor(self.testUser)
 
-    @unittest.skip
-    def testAddFinishedPatient(self):
-        idFromTestUser = self.doc.doctorID
-
-        toBeAdded = {}
-
-        toBeAdded["lunge"] = {}
-        toBeAdded["websiteData"] = {"id-for-bsp": "00089"}
-        addFinishedPatient(idFromTestUser, toBeAdded)
-
-        toBeAdded["websiteData"] = {"id-for-bsp-2": "0004"}
-        toBeAdded["lunge"] = {"id-for-lunge-bsp": "0304"}
-        addFinishedPatient(idFromTestUser, toBeAdded)
-
     def testRandomPicture(self):
         idFromTestUser = self.doc.doctorID
-        print(getRandomIDAndURL(idFromTestUser, "websiteData"))
+        print(getRandomURL(idFromTestUser, "websiteData"))
 
     # is called last
     def tearDown(self):
