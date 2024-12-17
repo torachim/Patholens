@@ -14,6 +14,52 @@ body{
     background-color: aliceblue;
 }
 
+/* Dropdown-Container */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* Dropdown-Button */
+.dropbtn {
+    background-color: #3498db;
+    color: white;
+    padding: 12px 16px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    display: block;
+    text-align: center;
+}
+
+/* Stil für das Dropdown (select) */
+.dropdown-select {
+    display: none; /* Versteckt das Dropdown-Menü */
+}
+
+/* Benutzersichtbarkeit des Dropdowns über das Label */
+.dropdown select:focus + label,
+.dropdown select {
+    display: block; /* Dropdown anzeigen */
+}
+
+/* Label als Button */
+label {
+    background-color: #3498db;
+    color: white;
+    padding: 12px 16px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 4px;
+    text-align: center;
+}
+
+/* Optional: Dropdown-Optionen-Stile anpassen */
+.dropdown option {
+    background-color: #f9f9f9;
+    padding: 10px;
+}
+
 
 .nextButton {
     display: flex;            
