@@ -65,6 +65,10 @@ body{
     transform: rotate(-20deg); 
 }
 
+#freehandDrawingIcon{
+    max-width: 24px;
+    max-height: 24px;
+}
 
 .outlineSquare {
     width: 24px; 
