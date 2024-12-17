@@ -109,55 +109,58 @@ class SaveConfidenceAPIView(APIView):
 
 class GetAIMasksAPIView(APIView):
     """
-    API Class to get the paths of AI-generated masks for a given subject ID.
+    API Class to get the image to a given diagnosisID
+
+    Args:
+        APIView: Imported from python
     """
 
-    def get(self, request, subject_id):
+    def get(self, request, diagnosisID):
         """
-        Retrieve all AI mask paths for the given subject ID.
+        Function to get the image to a given diagnosisID
 
         Args:
-            request: The HTTP request object.
-            subject_id (str): ID of the subject (e.g., 'sub-00001').
+            request (HttpRequest): The HTTP request object, which contains metadata and parameters.
+
+            diagnosisID (string): ID of an Image
 
         Returns:
-            JsonResponse: A list of relative paths to the AI masks.
+            Path: The path to find the requested image
         """
-        try:
-            # Basis-Pfad zu den AI-Masken
-            base_path = os.path.join(
-                settings.MEDIA_ROOT, 
-                "website_data", 
-                "derivatives", 
-                "ai", 
-                subject_id, 
-                "pred"
-            )
 
-            # Überprüfen, ob der Ordner existiert
-            if not os.path.exists(base_path):
+        try:
+            imageFormat = request.GET.get("format ")
+            if not imageFormat:
+                print("Format parameter missing; using default DEEPFCD.")
+                imageFormat = "DEEPFCD"
+
+            imageFormat = imageFormat.upper()
+
+            if imageFormat not in settings.SUPPORTED_IMAGE_FORMATS:
+                return JsonResponse({"error": "Invalid format"}, status=400)
+
+            # get the path to the image of a given diagnosis
+            imageID = getURL(diagnosisID)
+            
+            
+            fileSuffix = settings.SUPPORTED_IMAGE_FORMATS[imageFormat]
+
+            imagePath = os.path.join(
+                settings.MEDIA_ROOT,
+                f"website_data/derivatives/ai/sub-{imageID}/pred/{imageID}{fileSuffix}"
+            )
+            if not os.path.exists(imagePath):
                 return Response(
-                    {"error": f"Path not found: {base_path}"},
-                    status=status.HTTP_404_NOT_FOUND
+                    {"error": "Image not found"}, status=status.HTTP_404_NOT_FOUND
                 )
 
-            # Filtere Dateien, die 'mask' enthalten und auf '.nii.gz' enden
-            mask_files = [
-                file for file in os.listdir(base_path)
-                if "mask" in file and file.endswith(".nii.gz")
-            ]
-
-            # Erstelle relative Pfade für die Masken
-            relative_paths = [
-                f"/media/website_data/derivatives/ai/{subject_id}/pred/{file}"
-                for file in mask_files
-            ]
-
-            # Rückgabe der Pfade
-            return Response({"masks": relative_paths}, status=status.HTTP_200_OK)
+            # relative path for the client
+            relativePath = (
+                f"/media/website_data/derivatives/ai/sub-{imageID}/pred/{imageID}{fileSuffix}"
+            )
+            return Response({"path": relativePath}, status=status.HTTP_200_OK)
 
         except Exception as e:
             return Response(
-                {"error": str(e)}, 
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
