@@ -69,10 +69,10 @@ def getRandomURL(docID: str, datasetName: str):
             - "message" (str, optional): A message explaining the status.
     """
     # Check if the doctor exists in the database
-    if not Doctors.objects.filter(doctorID=docID).exists():
+    doctor = getDoctorObject(docID)
+    
+    if doctor == False:
         return {"status": "error", "message": "Doctor not found"}
-
-    doctor = Doctors.objects.get(doctorID=docID)
      
     urls = getPatientURLs(datasetName)
     if not urls:
@@ -151,3 +151,24 @@ def addFinishedPatient(docID: str, datasetName: str, url: str, uuid: str):
     doctor.save()
     
     return True
+
+
+def finishedDatasets(docID: str):
+    docObject = getDoctorObject(docID)
+
+    datasetNamesAndURL = docObject.finishedPatients
+    startedDatasets = list(datasetNamesAndURL.keys())
+    
+    finishedDatasets = []
+    
+    for dataset in startedDatasets:
+        # the patients that the doctor finished to edit
+        finishedPatientULRs = list(datasetNamesAndURL[dataset])
+        # all patients in the dataset 
+        allPatientURLS = getPatientURLs(dataset)
+
+        if len(finishedPatientULRs) == len(allPatientURLS):
+            finishedDatasets.append(dataset)
+            
+    return finishedDatasets
+    

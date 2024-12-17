@@ -140,6 +140,7 @@ def loginView(request):
         if user is not None:
             login(request, user)
             addMedia()
+            doctorManager.finishedDatasets(user.id)
             return redirect("StartingPage")
 
         # password is incorrect

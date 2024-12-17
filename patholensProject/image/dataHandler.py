@@ -24,7 +24,7 @@ DATASETPATH = os.path.join(BASEDIR, "media")
 from image.models import Media
 
 
-def getDataSetNames():
+def getNamesFromMediaFolder():
     """
     Retrieves all datasets from the specified directory.
 

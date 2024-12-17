@@ -33,7 +33,7 @@ def addMedia():
         - `True`if the function successfully processes all datasets, updates existing ones, and creates new entries as needed.
         - `False`if their are no datasets in the directory.
     """
-    allDatasets = getDataSetNames()
+    allDatasets = getNamesFromMediaFolder()
     
     if allDatasets == []:
         return False
@@ -67,7 +67,6 @@ def addMedia():
             Media.objects.create(name=datasetName, url=url)
     
     return True
-
 
 def getPatientURLs(datasetName: str):
     savedURLAsList = []
