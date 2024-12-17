@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
-from accounts.doctorManager import getRandomIDAndURL
+from accounts.doctorManager import getRandomURL
 from accounts.diagnosisManager import createDiagnosis
 from accounts.doctorManager import *
 from accounts.diagnosisManager import *
@@ -18,24 +18,66 @@ def homepage(request):
 @login_required
 def forwardingInformation(request):
     """
-    Handles the forwarding of information to create a new diagnosis and redirects to the diagnosis page.
-
-    This view generates a random diagnosis ID and associated URL, creates a new diagnosis entry,
-    and then redirects the user to a page to view the patient.
-
+    Handles the forwarding of an unfinished dataset to the user for diagnosis.
+    
+    This function:
+    - Retrieves a random url from the dataset.
+    - Redirects the user based on the dataset's status (finished, error, or unfinished).
+    - If the dataset is unfinished, the function proceeds to create a diagnosis.
+    
     Args:
-        request (HttpRequest): The HTTP request object, which contains metadata and parameters.
-
-
+    - request: The HTTP request object, used to fetch the logged-in user's data.
+    
     Returns:
-        HttpResponseRedirect: A redirect response to the 'newDiagnosis' view, passing the newly created diagnosis ID in the URL.
-
+    - Redirect: Based on the dataset status (finished, error, or diagnosis creation).
+    
+    
     """
+    
     # TODO: change website_data to variable which should be given to the function
-    diagnosisID, urlForPicture = getRandomIDAndURL(request.user.id, "website_data")
-    docObject = getDoctorObject(request.user.id)
-    diag = createDiagnosis(diagnosisID, docObject, urlForPicture)
+    datasetName = "website_data"
+    
+    message = getRandomURL(request.user.id, datasetName)
+    
+    # TODO: Add a own function that checks which dataset is finished -> should be checked after loggin in !!! 
+    # that dataset should not be clickable, maybe gray -> when clicked maybe show message that the dataset is finished
+    if message["status"] == "finished":
+        # TODO: CHANFE TO A OTHER URL (have to wait for snehs branch)
+        print("All the patients are edited")
+        return redirect("/")
+    
+    elif message["status"] == "error":
+        #TODO: redirect to the correct URL (have to wait for snehs branch)
+        print(message["message"])
+        return redirect ("/")
+    
+    else:
+        
+        pictureURL = message["url"]
+        
+        docObject = getDoctorObject(request.user.id)
+        
+        uuid = createUUIDs(1)[0]
+        
+        diag = createDiagnosis(uuid, docObject, pictureURL)
 
-    createUseTime(diag)
+        createUseTime(diag)
+        
+        addFinishedPatient(request.user.id, datasetName, pictureURL, uuid)
 
-    return redirect("newDiagnosis", diagnosisID=diagnosisID)
+        return redirect("newDiagnosis", diagnosisID=uuid)
+
+@login_required
+def homeWindow(request):
+    return render(request, 'homeWindow.html')
+
+def data(request):
+    allDataSets = [
+        "Dataset 1",
+        "Dataset 2",
+        "Dataset 3",
+    ]
+     
+    return render(request, 'selectDataset.html', {'allDataSets': allDataSets})
+
+        

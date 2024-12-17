@@ -25,16 +25,14 @@
     
     <div class="topBar">
         <div class="NameIcon">
-            <img alt="icon" src="{% static '/images/icons8-experiment-versuch-ios-17-glyph-96 copy.png' %}">
+            <a href="/startingPage"><img alt="icon" src="{% static '/images/icons8-experiment-versuch-ios-17-glyph-96 copy.png' %}"></a>
             <p>PathoLens</p>
         </div>
         <div class="Buttons">
-            {% block topbar %}
-            <i class="fa-solid fa-circle-question" style="color: #ffffff;" id="openHelp" data-tooltip="Get Help"></i>
-            {% endblock %} 
-            {% block logoutLink%}
-                <a href="/logout/basePage"><i class="fa-solid fa-right-from-bracket" style="color: #ffffff;" id="logoutIcon"></i></a>
-            {% endblock%}
+            <i class="fa-solid fa-circle-question" style="color: #ffffff;" id="openHelp" data-tooltip="Get Help" onclick="event.stopPropagation();"></i> 
+            {% with request.resolver_match.url_name as currentPage %}
+            <a href="/logout/{{ currentPage }}"><i class="fa-solid fa-right-from-bracket" style="color: #ffffff;"></i></a>
+            {% endwith %}
 
         </div>
     </div>
@@ -141,7 +139,8 @@
 
         closeHelpWindow.addEventListener("click", () => {
             helpWindow.style.right = "-600px";
-        })
+        });
+
 
     </script>
     
