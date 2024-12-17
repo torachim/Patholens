@@ -18,11 +18,12 @@ Including another URLconf
 from django.urls import path, include
 from . import views
 from .apiViews import GetImageAPIView
+from .apiViews import SaveConfidenceAPIView
 
 urlpatterns = [
     
     path('', include('accounts.urls')),
-    path('confidence/<int:diagID>/', views.saveConfidence, name='saveConfidence'),
+    path('api/saveConfidence/<int:diagID>/', SaveConfidenceAPIView.as_view(), name='saveConfidence'),
     
     path('api/getImage/<str:diagnosisID>/', GetImageAPIView.as_view(), name='getImage'),
     path('newDiagnosis/<str:diagnosisID>/', views.newDiagnosis, name='newDiagnosis'),
