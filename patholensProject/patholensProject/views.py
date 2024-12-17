@@ -6,7 +6,8 @@ from accounts.diagnosisManager import createDiagnosis
 from accounts.doctorManager import *
 from accounts.diagnosisManager import *
 
-from image import views
+from image.views import *
+from image.mediaHandler import *
 
 
 @login_required
@@ -15,7 +16,7 @@ def homepage(request):
 
 
 @login_required
-def forwardingInformation(request):
+def forwardingInformation(request, datasetName):
     """
     Handles the forwarding of an unfinished dataset to the user for diagnosis.
     
@@ -26,15 +27,13 @@ def forwardingInformation(request):
     
     Args:
     - request: The HTTP request object, used to fetch the logged-in user's data.
+    - datasetName (str): The dataset the user choose.
     
     Returns:
     - Redirect: Based on the dataset status (finished, error, or diagnosis creation).
     
     
     """
-    
-    # TODO: change website_data to variable which should be given to the function
-    datasetName = "website_data"
     
     message = getRandomURL(request.user.id, datasetName)
     
@@ -68,13 +67,10 @@ def forwardingInformation(request):
 def homeWindow(request):
     return render(request, 'homeWindow.html')
 
+@login_required
 def data(request):
-    allDataSets = [
-        "Dataset 1",
-        "Dataset 2",
-        "Dataset 3",
-    ]
+    mediaNames = getAllDatasetNames()
      
-    return render(request, 'selectDataset.html', {'allDataSets': allDataSets})
+    return render(request, 'selectDataset.html', {'allDataSets': mediaNames})
 
         

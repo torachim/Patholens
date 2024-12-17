@@ -30,7 +30,7 @@ urlpatterns = [
     path('image/', include('image.urls')),
     
     path('startingPage/', views.homepage, name = "StartingPage"),
-    path('selectDataset/forwarding/', views.forwardingInformation, name='forwardingInformation'),
+    path('selectDataset/forwarding/<str:datasetName>/', views.forwardingInformation, name='forwardingInformation'),
     
     
     path('homeWindow/', views.homeWindow, name='homeWindow'),  
