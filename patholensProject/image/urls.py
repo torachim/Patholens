@@ -19,6 +19,7 @@ from django.urls import path, include
 from . import views
 from .apiViews import GetImageAPIView
 from .apiViews import SaveConfidenceAPIView
+from .apiViews import GetAIMasksAPIView
 
 urlpatterns = [
     
@@ -30,6 +31,7 @@ urlpatterns = [
     
 
     path('AIpage/', views.AIPage, name='AIpage'),
+    path('api/getAImask/<str:diagnosisID>/', GetAIMasksAPIView.as_view(), name='getAImask')
 
 
 ]

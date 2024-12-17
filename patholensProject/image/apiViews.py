@@ -107,7 +107,7 @@ class SaveConfidenceAPIView(APIView):
             return Response({'error': f'An unexpected error occurred: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class GetAIMaskPathsAPIView(APIView):
+class GetAIMasksAPIView(APIView):
     """
     API Class to get the paths of AI-generated masks for a given subject ID.
     """
