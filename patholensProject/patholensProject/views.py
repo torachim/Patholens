@@ -80,6 +80,7 @@ def data(request):
 
 
 @login_required
-def finished(request):
-    return render(request, "home.html")
+def finished(request, datasetName: str):
+    datasetName = datasetName.title()
+    return render(request, "finishedMessage.html", {'datasetName' : datasetName})
         

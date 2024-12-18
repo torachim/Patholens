@@ -1,0 +1,33 @@
+{% load static %} 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finished dataset</title>
+    <link rel="stylesheet" href="{% static 'css/finishedMessage.css' %}?v=1" />
+</head>
+
+<!-- Close Effect--->
+<body onclick="window.location.href='/homeWindow'">
+
+    <!-- Start image as background -->
+    <div class="frameContainer">
+        <iframe class="backgroundFrame" src="{% url 'homeWindow' %}" frameborder="0"></iframe>
+        <div class="overlay"></div>
+    </div>
+
+    <div class="container">
+        <h1>{{ datasetName }}</h1>
+        <p>
+            You edited all the patients in {{ datasetName }}.
+        </p>
+        <p>
+            A Email is following.
+        </p>
+    </div>
+
+</body>
+
+
+</html>
