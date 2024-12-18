@@ -208,13 +208,12 @@ document.addEventListener('DOMContentLoaded', function() {
         nv.opts.onDragRelease = onDragRelease;      // Set callback for rectangle drawing
     });
 
-
-
-
+    // Function to start the timer 
     function startTimer(){
         startTime = performance.now();
     }
 
+    // Function to send the timer and give the time to the API
     function endTimer(action){
         if(nv.opts.drawingEnabled){
 
@@ -226,8 +225,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-
-
+    // Function to send the useTime with the API to the backend
     function sendTimeAPI(action, absoluteTime){
         const actionTime = {
                 action: action,
@@ -235,7 +233,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 diagnosisID: diagnosisID,
         }
 
-
+        // Fetch the API URL
         fetch('/image/api/setUseTime/', {
             method: 'POST',
             headers: {
@@ -253,6 +251,55 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(data => console.log('Saving Time succesfull', data))
         .catch(error => console.log('error', error))
 
+    }
+
+    // Buttons in the confidence Window
+    const confirmButton = document.querySelector('.popupConfirm');
+    const confidenceSlider = document.getElementById('confidenceMeter');
+
+    // Fetch diagID from the hidden input field
+    const diagID = document.getElementById('diagID').value;
+
+    // Listener for the confirmation button
+    confirmButton.addEventListener('click', () => {
+        const confidenceValue = confidenceSlider.value;
+
+        // Send the confidence to the backend
+        fetch(`/image/api/saveConfidence/${diagID}/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken') 
+            },
+            body: JSON.stringify({
+                confidence: confidenceValue
+            })
+        })
+        .then(response => {
+            if (response.ok) {
+                alert('Confidence updated successfully!');
+                return response.json();
+            } else {
+                throw new Error('Failed to save confidence value');
+            }
+        })
+        .catch(error => console.error(error));
+    });
+
+    // Function to retrieve CSRF token
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
     }
 
 });

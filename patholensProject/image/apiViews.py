@@ -85,15 +85,25 @@ class SetUseTimeAPIView(APIView):
             timestamp = request.data.get('absoluteTime')
 
             if not all([diagnosisID, action, timestamp]):
-                return Response({'error': 'diagnosisID, action and timestmap are necessery'}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({
+                                 'status': 'error',
+                                 'message': 'Missing required field: Timestamps, action, diagnosisID'},
+                                  status=status.HTTP_400_BAD_REQUEST)
             
             result = setUseTime(diagnosisID, action, timestamp)
 
-            return Response(result, status=status.HTTP_200_OK)
+            return Response({
+                             'status': 'success',
+                             'message': 'Time entry successfully',
+                             'data': result},
+                              status=status.HTTP_200_OK)
 
         except Exception as e:
-            print("hallo")
-            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({
+                            'status': 'error',
+                            'message': f'An unexpected error occurred: {str(e)}'
+                            },
+                            status=status.HTTP_400_BAD_REQUEST)
 
 
         
