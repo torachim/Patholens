@@ -35,7 +35,7 @@ def setUseTime(diagID: str, action: str, duration):
     Args:
         diagID (str): The diagnosis ID for the diagnosis where the action takes place
         action (str): The action (f.e "rectangle" or "freehand")
-        duration (_type_): The duration for the given action
+        duration (float): The duration for the given action
 
     Returns:
         useTime: The use edited useTime object
@@ -43,19 +43,14 @@ def setUseTime(diagID: str, action: str, duration):
     try:
         diagnosis = Diagnosis.objects.get(diagID = diagID)
 
-        print(diagnosis)
-
         with transaction.atomic():
-            print("was geht")
             useTimeInstance = UseTime.objects.get(diag = diagnosis)
 
-            newActionTime = {action: duration}
+            roundDuration = round(duration, 2)
 
-
+            newActionTime = {action: roundDuration}
 
             useTimeAction = useTimeInstance.actionTime or {}
-
-            print(useTimeAction)
 
             if useTimeAction == {}:
                 k = 1
@@ -66,14 +61,12 @@ def setUseTime(diagID: str, action: str, duration):
                 newKey = int(lastKey) + 1
                 useTimeAction[newKey] = newActionTime
     
-
             serializer = useTimeSerialize(
                 instance = useTimeInstance,
                 data = {"diag": diagnosis,
                         "actionTime": useTimeAction
                        },
             )
-
 
             if serializer.is_valid():
                 serializer.save()

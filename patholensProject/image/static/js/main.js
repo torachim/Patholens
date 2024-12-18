@@ -1,8 +1,5 @@
 import { Niivue, DRAG_MODE } from "./index.js";
 
-
-
-
 document.addEventListener('DOMContentLoaded', function() {
 
     let startTime, endTime

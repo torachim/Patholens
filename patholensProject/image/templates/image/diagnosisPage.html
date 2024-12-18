@@ -147,7 +147,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 </script>
 
-<input type="hidden" id="diagID" value="{{ diagID }}">
+<input type="hidden" id="diagID" value="{{ diagnosisID }}">
 <script>
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -160,7 +160,7 @@ document.addEventListener("DOMContentLoaded", () => {
     confirmButton.addEventListener('click', () => {
         const confidenceValue = confidenceSlider.value;
 
-        fetch(`/confidence/${diagID}/`, {
+        fetch(`/image/api/saveConfidence/${diagID}/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

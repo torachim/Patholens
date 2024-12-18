@@ -24,7 +24,7 @@ from .apiViews import SaveConfidenceAPIView
 urlpatterns = [
     
     path('', include('accounts.urls')),
-    path('api/saveConfidence/<int:diagID>/', SaveConfidenceAPIView.as_view(), name='saveConfidence'),
+    path('api/saveConfidence/<str:diagID>/', SaveConfidenceAPIView.as_view(), name='saveConfidence'),
     
     path('api/getImage/<str:diagnosisID>/', GetImageAPIView.as_view(), name='getImage'),
     path('api/setUseTime/', SetUseTimeAPIView.as_view(), name='setUseTime'),

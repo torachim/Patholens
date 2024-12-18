@@ -73,11 +73,16 @@ class GetImageAPIView(APIView):
 class SetUseTimeAPIView(APIView):
 
     def post(self, request):
+        """
+        API Endpoint to save the use time from given by the frontend
+
+        Returns:
+            Response: Response if the use time got saved correctly
+        """
         try:
             diagnosisID = request.data.get('diagnosisID')
             action = request.data.get('action')
             timestamp = request.data.get('absoluteTime')
-            print(diagnosisID, action, timestamp)
 
             if not all([diagnosisID, action, timestamp]):
                 return Response({'error': 'diagnosisID, action and timestmap are necessery'}, status=status.HTTP_400_BAD_REQUEST)
