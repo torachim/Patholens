@@ -19,29 +19,6 @@ body {
     cursor: pointer;
 }
 
-/* Wrapper for both toolbars */
-.toolbarContainer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px; /* Space between toolbars */
-    margin-top: 25px;
-    margin-bottom: -30px;
-}
-
-/* Undo toolbar styling */
-.undoToolbar {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #00485E;
-    border-radius: 10px;
-    padding: 10px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
-    width: 50px; /* Width for a single button */
-    height: 40px; /* Same height as the main toolbar */
-}
-
 /* Main toolbar styling */
 .toolbar {
     display: flex;
@@ -51,9 +28,12 @@ body {
     border-radius: 10px;
     padding: 10px 20px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
-    gap: 60px;
-    width: 290px;
+    gap: 55px;
+    width: 370px;
     height: 40px;
+    margin: 20px auto; 
+    margin-top: 25px; 
+    margin-bottom: -30px;
 }
 
 /* Tool button styling */
@@ -97,12 +77,9 @@ body {
 }
 
 
-.undoTool i {
-    font-size: 30px; /* Make the icon larger */
-    line-height: 1; /* Prevent vertical alignment issues */
-    margin: 0; /* Remove unnecessary margins */
-    padding: 0; /* Remove unnecessary padding */
-    color: #434343; /* Keep the icon color consistent */
+#undoTool i {
+    font-size: 24px;
+    color: #434343;
 }
 
 

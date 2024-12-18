@@ -22,28 +22,22 @@
 {%block content%}
 
 
-<div class="toolbarContainer">
-    <!-- Undo-Toolbar -->
-    <div class="undoToolbar">
-        <button class="toolButton" id="undoTool">
-            <i class="fa-solid fa-rotate-left"></i>
-        </button>
-    </div>
+<div class="toolbar">    
+    <button class="toolButton" id="selectTool">
+        <i class="fa-solid fa-arrow-pointer" ></i>
+    </button>
 
-    <!-- Haupt-Toolbar -->
-    <div class="toolbar">
-        <button class="toolButton" id="selectTool">
-            <i class="fa-solid fa-arrow-pointer"></i>
-        </button>
+    <button class="toolButton" id="frameTool">
+        <div class="outlineSquare"></div>
+    </button>
 
-        <button class="toolButton" id="frameTool">
-            <div class="outlineSquare"></div>
-        </button>
+    <button class="toolButton" id="eraseTool">
+        <i class="fa-solid fa-eraser"></i>
+    </button>
 
-        <button class="toolButton" id="eraseTool">
-            <i class="fa-solid fa-eraser"></i>
-        </button>
-    </div>
+    <button class="toolButton" id="undoTool">
+        <i class="fa-solid fa-rotate-left"></i>    
+    </button>
 </div>
 
 <div class="imageBox">
