@@ -1,0 +1,61 @@
+networks:
+  asd:
+    name: asd
+
+volumes:
+  app:
+  data:
+
+services:
+  fcd-assistant:
+    image: fcd-assistant:dev
+    # depends_on: comment out because patholens doesnt have a health check
+    #   patholens:
+    #     condition: service_healthy
+    restart: always
+    networks:
+      - "asd"
+    ports:
+      - "127.0.0.1:4200:4200"
+    environment:
+      - PATHOLENS_URL="http://localhost:8000"
+
+  patholens:
+    image: patholens:dev
+    depends_on:
+      database:
+        condition: service_healthy
+    networks:
+      - "asd"
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment:
+      DB_NAME: asd-data
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_PORT: 5432
+      DB_HOST: database
+
+  database:
+    image: postgres:16
+    container_name: "project-data"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=asd-data
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - "asd"
+    volumes:
+      - data:/var/lib/postgresql/data

@@ -1,0 +1,149 @@
+---
+components:
+  - name: backend
+    product: "patholens"
+    deployment_name: "patholens-as"
+    service_name: "as-patholens"
+    ingress_name: "ingress-patholens-as"
+    route_name: "route-patholens-as"
+    scaling:
+      count: 1
+    labels:
+      group: asd
+      product: patholens
+      type: as
+      version: 0.0.1
+    specs:
+      memory_request: 100Mi
+      memory_limit: 2Gi
+      cpu_request: 1m
+      cpu_limit: 4
+    context_root_prefix: patholens
+    image: patholens:dev
+    ports:
+    - local: 8000
+      cluster: 8000
+    paths:
+    - "/patholens"
+    env:
+    - name: FIX_EARS
+      value: "TRUE"
+    secret:
+      secrets:
+      - name: BACKEND_API_KEY
+        username: "BACKEND_API_KEY"
+        password: "test"
+    readinessProbe:
+      command:
+      - echo "TODO Implement Readiness Probe"
+      initialDelaySeconds: 120
+      periodSeconds: 10
+      failureThreshold: 1
+      successThreshold: 1
+    securityContext:
+      seLinuxOptions: 's0:c32,c4'
+      runAsUser: 1234
+      runAsGroup: 100
+      fsGroup: 100
+      capabilities: 
+      - "NET_ADMIN"
+      - "SYS_TIME"
+      - "NET_RAW"
+    livenessProbe:
+      command:
+       - echo "TODO Implement Readiness Probe"
+      initialDelaySeconds: 120
+      periodSeconds: 60
+      failureThreshold: 10
+      successThreshold: 1
+
+  - name: frontend
+    product: "fcd-assistant"
+    deployment_name: "fcd-assistant-as"
+    service_name: "as-fcd-assistant"
+    ingress_name: "ingress-fcd-assistant-as"
+    route_name: "route-fcd-assistant-as"
+    scaling:
+      count: 1
+    labels:
+      group: asd
+      product: fcd-assistant
+      type: as
+      version: 0.0.1
+    specs:
+      memory_request: 100Mi
+      memory_limit: 2Gi
+      cpu_request: 1m
+      cpu_limit: 4
+    context_root_prefix: fcd-assistant
+    image: fcd-assistant:dev
+    ports:
+    - local: 4200
+      cluster: 4200
+    paths:
+    - "/fcd-assistant"
+    env:
+    - name: PATHOLENS_URL
+      value: "as-patholens:8000"
+    secret:
+      secrets:
+      - name: BACKEND_API_KEY
+        username: "BACKEND_API_KEY"
+        password: "test"
+    readinessProbe:
+      command:
+      - echo "TODO Implement Readiness Probe"
+      initialDelaySeconds: 120
+      periodSeconds: 10
+      failureThreshold: 1
+      successThreshold: 1
+    securityContext:
+      seLinuxOptions: 's0:c32,c4'
+      runAsUser: 1234
+      runAsGroup: 100
+      fsGroup: 100
+      capabilities: 
+      - "NET_ADMIN"
+      - "SYS_TIME"
+      - "NET_RAW"
+    livenessProbe:
+      command:
+       - echo "TODO Implement Readiness Probe"
+      initialDelaySeconds: 120
+      periodSeconds: 60
+      failureThreshold: 10
+      successThreshold: 1
+
+  - name: db
+    product: "postgres"
+    deployment_name: "postgres-db"
+    service_name: "dbpostgres"
+    ingress_name: "ingress-postgres-db"
+    route_name: "route-postgres-db"
+    scaling:
+      count: 1
+    labels:
+      group: asd
+      product: postgres
+      type: db
+      version: 16
+    specs:
+      memory_request: 10Mi
+      memory_limit: 3584Mi
+      cpu_request: 1m
+      cpu_limit: 4
+    persistence:
+      yml_name: "pvc-postgres-db"
+      claim_name: "postgres-pvc-db"
+      volume_name: "postgres-persistence-db"
+      storage_class: managed-premium
+      storage_capacity: 1Gi
+    volume_path: /mnt/data
+    image: postgres:16
+    ports:
+    - local: 5432
+      cluster: 5432
+#    env:
+    securityContext:
+      runAsUser: 26
+      runAsGroup: 26

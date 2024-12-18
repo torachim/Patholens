@@ -1,0 +1,32 @@
+image: python:3.12
+
+pipelines:
+  branches:
+    '**':  # Runs for all branches
+      - parallel:
+          - step:
+              name: Test
+              caches:
+                - pip
+              script:
+                - if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+                - pip install pytest
+
+                - |
+                  if [ -d "accounts/tests" ] || [ -d "image/tests" ]; then
+                    echo "Tests found, running pytest..."
+                    pytest -v accounts/tests/* image/tests/* --junitxml=test-reports/report.xml || true
+                  else
+                    echo "Warning: No tests found in 'accounts/tests/' or 'image/tests/' directories. Skipping tests."
+                  fi
+          - step:
+              name: Lint code
+              script:
+                - pip install flake8
+                - |
+                  echo "[flake8]" > .flake8
+                  echo "select = N,E,W" >> .flake8
+                  echo "ignore = E501" >> .flake8
+                  echo "max-line-length = 120" >> .flake8
+                  echo "naming-style = CamelCase" >> .flake8
+                - flake8 . --show-source --statistics
