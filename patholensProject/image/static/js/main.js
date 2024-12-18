@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let startTime, endTime
 
     let drawRectangle = false
+    let erasing = false
     //function to drag a rectangle in the niivue 
     // define what happens on dragRelase (right mouse up)
     const onDragRelease = (data) => {
@@ -183,8 +184,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // disables drawing
     function disableDrawing(){
-        if(!drawRectangle){
+        if(!drawRectangle && !erasing){
             endTimer('freehand drawing')
+        }
+        else if(!drawRectangle && erasing){
+            endTimer('erasing')
         }
         nv.setDrawingEnabled(false);
     }  
@@ -195,6 +199,7 @@ document.addEventListener('DOMContentLoaded', function() {
         nv.setDrawingEnabled(true);
         // 0 = Eraser and true => eraser ist filled so a whole area can be erased
         changeDrawingMode(0, true);
+        erasing = true
     });
 
     // INFO: You need to right click and drag to draw rectangle
@@ -209,48 +214,48 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-function startTimer(){
-    startTime = performance.now();
-}
-
-function endTimer(action){
-    if(nv.opts.drawingEnabled){
-
-        endTime = performance.now();
-
-        const absoluteTime =  endTime - startTime;
-
-        sendTimeAPI(action, absoluteTime)
-    }
-}
-
-
-
-function sendTimeAPI(action, absoluteTime){
-    const actionTime = {
-            action: action,
-            absoluteTime: absoluteTime,
-            diagnosisID: diagnosisID,
+    function startTimer(){
+        startTime = performance.now();
     }
 
+    function endTimer(action){
+        if(nv.opts.drawingEnabled){
 
-    fetch('/image/api/setUseTime/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-             'X-CSRFToken': csrfToken,
-        },
-        body: JSON.stringify(actionTime)
-    })
-    .then(response => {
-        if(!response.ok){
-            throw new Error('Error while saving the time!');
+            endTime = performance.now();
+
+            const absoluteTime =  endTime - startTime;
+
+            sendTimeAPI(action, absoluteTime)
         }
-        return response.json()
-    })
-    .then(data => console.log('Saving Time succesfull', data))
-    .catch(error => console.log('error', error))
+    }
 
-}
+
+
+    function sendTimeAPI(action, absoluteTime){
+        const actionTime = {
+                action: action,
+                absoluteTime: absoluteTime,
+                diagnosisID: diagnosisID,
+        }
+
+
+        fetch('/image/api/setUseTime/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken,
+            },
+            body: JSON.stringify(actionTime)
+        })
+        .then(response => {
+            if(!response.ok){
+                throw new Error('Error while saving the time!');
+            }
+            return response.json()
+        })
+        .then(data => console.log('Saving Time succesfull', data))
+        .catch(error => console.log('error', error))
+
+    }
 
 });
