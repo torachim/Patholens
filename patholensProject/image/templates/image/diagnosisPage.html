@@ -85,36 +85,6 @@
 </div>
 
 
-<script>
-
-document.addEventListener("DOMContentLoaded", () => {
-    const finishButton = document.getElementById("finishButton");
-    const popupOverlay = document.getElementById("popupOverlay");
-    const closePopup = document.getElementById("closePopup");
-
-    popupOverlay.style.display = "none";
-
-
-
-    finishButton.addEventListener("click", () => {
-        popupOverlay.style.display = "flex";
-    });
-
-    
-    closePopup.addEventListener("click", () => {
-        popupOverlay.style.display = "none";
-    });
-
-    
-    popupOverlay.addEventListener("click", (e) => {
-        if (e.target === popupOverlay) {
-            popupOverlay.style.display = "none";
-        }
-    });
-});
-
-</script>
-
 
 <script>
     const slider = document.getElementById('confidenceMeter');

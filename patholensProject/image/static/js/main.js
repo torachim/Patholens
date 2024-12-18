@@ -2,15 +2,15 @@ import { Niivue, DRAG_MODE } from "./index.js";
 
 document.addEventListener('DOMContentLoaded', function() {
 
-    let startTime, endTime
+    let startTime, endTime;
 
-    let drawRectangle = false
-    let erasing = false
+    let drawRectangle = false;
+    let erasing = false;
     //function to drag a rectangle in the niivue 
     // define what happens on dragRelase (right mouse up)
     const onDragRelease = (data) => {
 
-        drawRectangle = true
+        drawRectangle = true;
 
         //if drawing is enabled
         if (nv.opts.drawingEnabled){
@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function() {
             nv.drawPenLine(bottomLeft, topLeft, value)
             // refresh the drawing
             nv.refreshDrawing(true) // true will force a redraw of the entire scene (equivalent to calling drawScene() in niivue)
-            endTimer("rectangle")
+            endTimer("Rectangle")
             nv.setDrawingEnabled(false); //drawingEnabled equals false so you have to click the button again to draw another rechtangle
 
         }
@@ -169,7 +169,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Pixel
     document.getElementById("selectTool").addEventListener("click", function(e){
-        drawRectangle = false
+        drawRectangle = false;
+        erasing = false;
         startTimer()
         nv.setDrawingEnabled(true);  
         changeDrawingMode(6, false);
@@ -182,10 +183,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // disables drawing
     function disableDrawing(){
         if(!drawRectangle && !erasing){
-            endTimer('freehand drawing')
+            endTimer('Freehand drawing')
         }
         else if(!drawRectangle && erasing){
-            endTimer('erasing')
+            endTimer('Erasing')
+            erasing = false
         }
         nv.setDrawingEnabled(false);
     }  
@@ -193,10 +195,13 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // enables erasing the drawing by clicking on eraser
     document.getElementById("eraseTool").addEventListener("click", function(e){
+        erasing = true;
+        drawRectangle = false;
+        startTimer();
         nv.setDrawingEnabled(true);
         // 0 = Eraser and true => eraser ist filled so a whole area can be erased
         changeDrawingMode(0, true);
-        erasing = true
+       
     });
 
     // INFO: You need to right click and drag to draw rectangle
@@ -211,18 +216,16 @@ document.addEventListener('DOMContentLoaded', function() {
     // Function to start the timer 
     function startTimer(){
         startTime = performance.now();
+        console.log("start")
     }
 
     // Function to send the timer and give the time to the API
     function endTimer(action){
-        if(nv.opts.drawingEnabled){
+        endTime = performance.now();
 
-            endTime = performance.now();
+        const absoluteTime =  endTime - startTime;
 
-            const absoluteTime =  endTime - startTime;
-
-            sendTimeAPI(action, absoluteTime)
-        }
+        sendTimeAPI(action, absoluteTime)
     }
 
     // Function to send the useTime with the API to the backend
@@ -263,13 +266,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // Listener for the confirmation button
     confirmButton.addEventListener('click', () => {
         const confidenceValue = confidenceSlider.value;
+        
 
         // Send the confidence to the backend
         fetch(`/image/api/saveConfidence/${diagID}/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRFToken': getCookie('csrftoken') 
+                'X-CSRFToken': csrfToken
             },
             body: JSON.stringify({
                 confidence: confidenceValue
@@ -284,6 +288,9 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         })
         .catch(error => console.error(error));
+        
+        setTimeout(() => {endTimer('Confidence confirmed')}, 100);
+    
     });
 
     // Function to retrieve CSRF token
@@ -301,5 +308,32 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         return cookieValue;
     }
+
+    const finishButton = document.getElementById("finishButton");
+    const popupOverlay = document.getElementById("popupOverlay");
+    const closePopup = document.getElementById("closePopup");
+
+    popupOverlay.style.display = "none";
+
+
+    // Function to show the confidence window
+    finishButton.addEventListener("click", () => {
+        popupOverlay.style.display = "flex";
+        startTimer();
+    });
+
+    // Functions to close the confidence window
+    closePopup.addEventListener("click", () => {
+        popupOverlay.style.display = "none";
+        endTimer('Aborted confidence');
+    });
+
+    
+    popupOverlay.addEventListener("click", (e) => {
+        if (e.target === popupOverlay) {
+            popupOverlay.style.display = "none";
+            endTimer('Aborted confidence');
+        }
+    });
 
 });
