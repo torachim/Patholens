@@ -1,0 +1,216 @@
+{{- range $value := .Values.components }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $value.deployment_name }}
+  labels:
+    group: {{ $value.labels.group }}
+    product: {{ $value.deployment_name }}
+    type: {{ $value.labels.type }}
+    version: {{ $value.labels.version }}
+    release: {{ $value.labels.product }}
+{{- range $k, $v := $value.labels.extra }}
+    {{ $k }}: {{ $v }}
+{{- end }}
+spec:
+  replicas: {{ $value.scaling.count }}
+  selector:
+    matchLabels:
+      group: {{ $value.labels.group }}
+      product: {{ $value.deployment_name }}
+      type: {{ $value.labels.type }}
+      release: {{ $value.labels.product }}
+  strategy:
+    type: Recreate
+
+  template:
+    metadata:
+      name: {{ $value.deployment_name }}
+      labels:
+        group: {{ $value.labels.group }}
+        product: {{ $value.deployment_name }}
+        type: {{ $value.labels.type }}
+        version: {{ $value.labels.version }}
+        release: {{ $value.labels.product }}
+{{-     range $k, $v := $value.labels.extra }}
+        {{ $k }}: {{ $v }}
+{{-     end }}
+
+    spec:
+{{-   if $value.securityContext }}
+      securityContext:
+{{-     if $value.securityContext.seLinuxOptions }}
+        seLinuxOptions:
+          level: '{{ $value.securityContext.seLinuxOptions }}'
+{{-     end }}
+{{-     if (toString $value.securityContext.runAsGroup) }}
+        runAsGroup: {{ $value.securityContext.runAsGroup }}
+{{-     end }}
+{{-     if (toString $value.securityContext.runAsUser) }}
+        runAsUser: {{ $value.securityContext.runAsUser }}
+{{-     end }}
+{{-     if (toString $value.securityContext.fsGroup) }}
+        fsGroup: {{ $value.securityContext.fsGroup }}
+{{-     end }}
+{{-   end }}
+
+      containers:
+      - name: {{ $value.labels.type }}
+        image: {{ $value.image }}
+{{-     if and $value.securityContext $value.securityContext.capabilities }}
+        securityContext:
+          capabilities:
+            add:
+{{-         range $value.securityContext.capabilities }}
+            - "{{ . }}"
+{{-         end }}
+{{-     end }}
+        imagePullPolicy: IfNotPresent
+        ports:
+{{-     range $value.ports }}
+        - name: "{{ $value.name | trunc 10 }}-{{ .local }}"
+          containerPort: {{ .local }}
+{{-     end }}
+
+        env:
+{{-     range $value.env }}
+        - name: {{ .name | quote }}
+          value: {{ .value | quote }}
+{{-     end }}
+{{-     if $value.secret }}
+{{-     range $value.secret.secrets }}
+        - name: {{ .username }}
+          valueFrom:
+            secretKeyRef:
+              name: {{ $value.secret.yml_name }}
+              key: {{ .username }}
+{{-     end }}
+{{-     end }}
+
+        resources:
+          limits:
+            cpu: "{{ $value.specs.cpu_limit }}"
+            memory: "{{ $value.specs.memory_limit }}"
+          requests:
+            cpu: "{{ $value.specs.cpu_request }}"
+            memory: "{{ $value.specs.memory_request }}"
+
+{{-     if $value.readinessProbe }}
+        readinessProbe:
+          exec:
+            command:
+            - /bin/sh
+            - '-c'
+            - >
+{{-         range $value.readinessProbe.command }}
+              {{ . }}
+{{-         end }}
+          initialDelaySeconds: {{ $value.readinessProbe.initialDelaySeconds }}
+          periodSeconds: {{ $value.readinessProbe.periodSeconds }}
+          failureThreshold: {{ $value.readinessProbe.failureThreshold }}
+          successThreshold: {{ $value.readinessProbe.successThreshold }}
+{{-     end }}
+
+{{-     if $value.livenessProbe }}
+        livenessProbe:
+          exec:
+            command:
+            - /bin/sh
+            - '-c'
+            - >
+{{-         range $value.livenessProbe.command }}
+              {{ . }}
+{{-         end }}
+          initialDelaySeconds: {{ $value.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ $value.livenessProbe.periodSeconds }}
+          failureThreshold: {{ $value.livenessProbe.failureThreshold }}
+          successThreshold: {{ $value.livenessProbe.successThreshold }}
+{{-     end }}
+
+{{-     if $value.lifecycle }}
+        lifecycle:
+          postStart:
+            exec:
+              command:
+              - /bin/sh
+              - '-c'
+              - >
+{{-           range $value.lifecycle.command }}
+                {{ . }}
+{{-           end }}
+{{-     end }}
+{{-     if $value.persistence }}
+        volumeMounts:
+          - name: "{{ $value.persistence.volume_name }}"
+            mountPath: "{{ $value.volume_path }}"
+            subPath: db
+{{-     end }}
+
+{{-   if $value.persistence }}
+      volumes:
+        - name: "{{ $value.persistence.volume_name }}"
+          persistentVolumeClaim:
+            claimName: "{{ $value.persistence.claim_name }}"
+{{-   end }}
+
+{{-   if $value.init_container  }}
+      initContainers:
+{{-   range $value.init_container }}
+      - name: {{ .name | quote }}
+        image: {{ .image | quote }}
+        command:
+        - /bin/sh
+        - '-c'
+        - >
+{{-     range .command }}
+          {{ . }}
+{{-     end }}
+{{-     if .env }}
+        env:
+{{-     range .env }}
+        - name: {{ .name | quote }}
+          value: {{ .value | quote }}
+{{-     end }}
+{{-     end }}
+{{-   end }}
+{{-   end }}
+
+      tolerations:
+      - key: node.kubernetes.io/not-ready
+        operator: Exists
+        effect: NoExecute
+
+      - key: node.kubernetes.io/not-ready
+        operator: Exists
+        effect: NoSchedule
+
+      - key: node.kubernetes.io/unreachable
+        operator: Exists
+        effect: NoExecute
+
+      - key: node.kubernetes.io/out-of-disk
+        operator: Exists
+        effect: NoExecute
+
+      - key: node.kubernetes.io/memory-pressure
+        operator: Exists
+        effect: NoExecute
+
+      - key: node.kubernetes.io/disk-pressure
+        operator: Exists
+        effect: NoExecute
+
+      - key: use
+        value: autoscale
+        operator: Equal
+        effect: NoSchedule
+
+      - key: use
+        value: autoscale
+        operator: Equal
+        effect: NoExecute
+
+      #- key: node-role.kubernetes.io/master
+      #  effect: NoSchedule
+{{- end }}
