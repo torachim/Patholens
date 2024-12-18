@@ -4,9 +4,15 @@ import { Niivue, DRAG_MODE } from "./index.js";
 
 
 document.addEventListener('DOMContentLoaded', function() {
+
+    let startTime, endTime
+
+    let drawRectangle = false
     //function to drag a rectangle in the niivue 
     // define what happens on dragRelase (right mouse up)
     const onDragRelease = (data) => {
+
+        drawRectangle = true
 
         //if drawing is enabled
         if (nv.opts.drawingEnabled){
@@ -59,8 +65,9 @@ document.addEventListener('DOMContentLoaded', function() {
             nv.drawPenLine(bottomLeft, topLeft, value)
             // refresh the drawing
             nv.refreshDrawing(true) // true will force a redraw of the entire scene (equivalent to calling drawScene() in niivue)
-            nv.setDrawingEnabled(false); //drawingEnabled equals false so you have to click the button again to draw another rechtangle
             endTimer("rectangle")
+            nv.setDrawingEnabled(false); //drawingEnabled equals false so you have to click the button again to draw another rechtangle
+
         }
     }
         
@@ -164,6 +171,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Pixel
     document.getElementById("selectTool").addEventListener("click", function(e){
+        drawRectangle = false
         startTimer()
         nv.setDrawingEnabled(true);  
         changeDrawingMode(6, false);
@@ -175,7 +183,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // disables drawing
     function disableDrawing(){
-        endTimer('freehand drawing')
+        if(!drawRectangle){
+            endTimer('freehand drawing')
+        }
         nv.setDrawingEnabled(false);
     }  
 
@@ -196,7 +206,8 @@ document.addEventListener('DOMContentLoaded', function() {
         nv.opts.onDragRelease = onDragRelease;      // Set callback for rectangle drawing
     });
 
-    let startTime, endTime
+
+
 
 function startTimer(){
     startTime = performance.now();
@@ -204,6 +215,7 @@ function startTimer(){
 
 function endTimer(action){
     if(nv.opts.drawingEnabled){
+
         endTime = performance.now();
 
         const absoluteTime =  endTime - startTime;
