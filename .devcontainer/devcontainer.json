@@ -12,6 +12,9 @@
       "customizations": {
         "vscode": {
           "extensions": [
+            "KorbinianEckstein.niivue",
+            "ms-python.python",
+            "eamodio.gitlens"
         ]
         }
       },

@@ -5,6 +5,6 @@ name: patholens
 description: Helm Chart für PG ASD
 type: application
 # Version vom Chart
-version: 1.0.0
+version: 0.0.1
 # Version von patholens
 appVersion: 0.0.1
