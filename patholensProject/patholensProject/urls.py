@@ -28,16 +28,16 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('accounts.urls')),
     path('image/', include('image.urls')),
-    path('startingPage/', views.homepage, name = "StartingPage"),
+    path('startingPage/', views.homepage, name="StartingPage"),
 
     path('startingPage/forwarding/', views.forwardingInformation, name='forwardingInformation'),
     # not an completly finished solution
-    #TODO: change so that not only the small frame has our image
+    # TODO: change so that not only the small frame has our image
     path('selectDataset/forwarding/', views.forwardingInformation, name='forwardingInformation'),
     
     
-    path('homeWindow/', views.homeWindow, name='homeWindow'),  
-    path('selectDataset/', views.data, name='selectDataset'), 
+    path('homeWindow/', views.homeWindow, name='homeWindow'),
+    path('selectDataset/', views.data, name='selectDataset'),
 
     # YOUR PATTERNS
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
@@ -48,4 +48,3 @@ urlpatterns = [
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-

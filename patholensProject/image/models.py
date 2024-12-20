@@ -8,7 +8,7 @@ class Diagnosis(models.Model):
     # If the referenced doctor is deleted, the diagnosis will be deleted as well
     doctor = models.ForeignKey(Doctors, on_delete=models.CASCADE)
     confidence = models.PositiveSmallIntegerField(null=True, blank=True)
-    editedDiagConfidence = models.PositiveSmallIntegerField(null = True, blank = True)
+    editedDiagConfidence = models.PositiveSmallIntegerField(null=True, blank=True)
     # contains the number of the patient and the name of the data set
     imageUrl = models.CharField(null=False, max_length=20, default="Unknown")
 
@@ -26,6 +26,7 @@ class UseTime(models.Model):
 
     def __str__(self):
         return str(self.timeID)
+
 
 class Media(models.Model):
     # uniquqe of the dataset

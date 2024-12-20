@@ -130,7 +130,7 @@ def loginView(request):
         userExistent = User.objects.filter(username=email).exists()
 
         # user is not existent
-        if userExistent == False:
+        if not userExistent:
             information["username"] = False
             return render(request, "accounts/login.html", {"information": information})
 
