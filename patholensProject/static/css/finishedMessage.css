@@ -66,17 +66,19 @@ h1{
     font-size: 35px;
     font-style: bold;
     font-family: 'Calibri';
-    margin-top: 1%;
+    margin-top: 2%;
     margin-bottom: 1%;
+    justify-content: center;
 }
 
 
 p {
     color: #ffffff;
-    font-size: 25px;
+    font-size: 20px;
     font-style: normal;
     font-family: 'Calibri';
-    margin-top: 1%;
-    margin-bottom: 1%;
+    justify-content: center;
+    align-items: center;
+
 }
 

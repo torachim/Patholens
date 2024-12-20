@@ -35,18 +35,14 @@ def forwardingInformation(request, datasetName):
     
     """
     
+    datasetName = datasetName.upper()
     message = getRandomURL(request.user.id, datasetName)
     
-    # TODO: Add a own function that checks which dataset is finished -> should be checked after loggin in !!! 
-    # that dataset should not be clickable, maybe gray -> when clicked maybe show message that the dataset is finished
+    
     if message["status"] == "finished":
-        # TODO: CHANFE TO A OTHER URL (have to wait for snehs branch)
-        print("All the patients are edited")
-        return redirect("/")
+        return render(request, 'finishedMessage.html')
     
     elif message["status"] == "error":
-        #TODO: redirect to the correct URL (have to wait for snehs branch)
-        print(message["message"])
         return redirect ("/")
     
     else:
@@ -74,9 +70,10 @@ def data(request):
     mediaNames = getAllDatasetNames()
     finished = finishedDatasets(request.user.id)
     
-    notFinished = [media for media in mediaNames if media not in finished]
-    
-    return render(request, 'selectDataset.html', {'allDataSets': notFinished, 'finishedDatasets': finished})
+    notFinished = [media.title() for media in mediaNames if media not in finished]
+    finishedTitle = [item.title() for item in finished]
+        
+    return render(request, 'selectDataset.html', {'allDataSets': notFinished, 'finishedDatasets': finishedTitle})
 
 
 @login_required
