@@ -73,9 +73,22 @@ body{
     transition: right 0.5s ease-in-out;
 }
 
+#openHelp{
+    margin-right: 10px;
+    width: 40px;
+    height: 40px;
+}
+
 #helpButton {
     width: 40px;
     height: 40px;
+    margin-right: 10px;
+}
+
+#logoutButton {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
 }
 
 
@@ -94,10 +107,6 @@ body{
     color: #f7f7f7;
 }
 
-.openHelp {
-    max-width: 20px;
-    max-height: 20px;
-}
 
 .helpContent{
     overflow-y: scroll;

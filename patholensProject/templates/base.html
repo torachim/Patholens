@@ -29,13 +29,15 @@
             <p>PathoLens</p>
         </div>
         <div class="Buttons">
+            {% block topBar %}
+            <!--Additional buttons will go here-->
+            {% endblock topBar %}
             <i id="openHelp" data-tooltip="Get Help" onclick="event.stopPropagation();">
                 <img alt="helpButton" src="{% static 'images\HelpButton.png' %}" id="helpButton">
             </i>
             {% with request.resolver_match.url_name as currentPage %}
-            <a href="/logout/{{ currentPage }}"><i class="fa-solid fa-right-from-bracket" style="color: #ffffff;"></i></a>
+            <a href="/logout/{{ currentPage }}"><img alt="logout" src="{% static 'images\LogoutIcon.png' %}" id="logoutButton"></a>
             {% endwith %}
-
         </div>
     </div>
     {% block content %}

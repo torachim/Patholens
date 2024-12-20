@@ -11,15 +11,21 @@ body{
 }
 
 .homeButton {
-    margin-left: 25px;
+    margin-right: 10px;
     text-decoration: none;
     font-size: 30px;
+    width: 40px;
+    height: 40px;
 }
 
 .homeButton i {
     cursor: pointer;
 }
 
+#homeIcon {
+    width: 40px;
+    height: 40px;
+}
 
 
 /* Toolbar Styling */
