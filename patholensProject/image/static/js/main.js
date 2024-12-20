@@ -230,5 +230,10 @@ document.addEventListener('DOMContentLoaded', function() {
             alert("An error occurred while saving the image.");
         }
     }
+    
+
+    document.getElementById("confirmButton").addEventListener("click", function(e){
+        saveEditedImage();
+    });
 
 });
