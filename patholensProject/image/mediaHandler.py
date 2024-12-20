@@ -81,7 +81,6 @@ def getPatientURLs(datasetName: str):
     return savedURLAsList 
 
 def getAllDatasetNames():
-    mediaObjects = []
-    [mediaObjects.append(m.name) for m in Media.objects.all()]
-
+    mediaObjects = [m.name.upper() for m in Media.objects.all()]
+    
     return mediaObjects
