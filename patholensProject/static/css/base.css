@@ -2,7 +2,6 @@
 
 body{
     background-color: #005E7A;
-
     margin: 0;
     padding: 0;
 }
@@ -14,11 +13,10 @@ body{
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    height: 75px; /* Breite (vertikal)*/
+    height: 75px;
     margin: 0;
     box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.5);
     padding: 0;
-    margin: 0;
 }
 
 .NameIcon {
