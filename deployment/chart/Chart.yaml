@@ -1,0 +1,10 @@
+---
+apiVersion: v2
+
+name: patholens
+description: Helm Chart für PG ASD
+type: application
+# Version vom Chart
+version: 0.0.1
+# Version von patholens
+appVersion: 0.0.1
