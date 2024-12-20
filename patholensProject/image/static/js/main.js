@@ -210,4 +210,25 @@ document.addEventListener('DOMContentLoaded', function() {
         nv.drawUndo();
     });
 
+
+
+    function saveEditedImage() {
+        const filename = `edited_image_${diagnosisID}.nii.gz`; // Generate filename
+        const options = {
+            filename: filename,
+            isSaveDrawing: true, // save the drawing
+            volumeByIndex: 0 // Speichere die Hintergrundebene
+        };
+    
+        const result = nv.saveImage(options);
+    
+        if (result) {
+            console.log(`Image saved as ${filename}`);
+            alert(`Image has been saved as ${filename}`);
+        } else {
+            console.error("Failed to save the image.");
+            alert("An error occurred while saving the image.");
+        }
+    }
+
 });
