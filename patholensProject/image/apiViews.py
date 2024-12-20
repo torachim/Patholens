@@ -36,7 +36,6 @@ class GetImageAPIView(APIView):
         try:
             imageFormat = request.GET.get("format ")
             if not imageFormat:
-                print("Format parameter missing; using default FLAIR.")
                 imageFormat = "FLAIR"
 
             imageFormat = imageFormat.upper()
@@ -84,10 +83,7 @@ class SetUseTimeAPIView(APIView):
             action = request.data.get('action')
             timestamp = request.data.get('absoluteTime')
 
-            print(diagnosisID, action, timestamp)
-
             if not all([diagnosisID, action, timestamp]):
-                print("Hallo")
                 return Response({
                                  'status': 'error',
                                  'message': 'Missing required field: Timestamps, action, diagnosisID'},
@@ -102,7 +98,6 @@ class SetUseTimeAPIView(APIView):
                               status=status.HTTP_200_OK)
 
         except Exception as e:
-            print("Hallo")
             return Response({
                             'status': 'error',
                             'message': f'An unexpected error occurred: {str(e)}'
