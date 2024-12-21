@@ -17,6 +17,7 @@ Including another URLconf
 
 from django.urls import path, include
 from . import views
+from .apiViews import SetUseTimeAPIView
 from .apiViews import GetImageAPIView
 from .apiViews import SaveConfidenceAPIView
 from .apiViews import GetAIMasksAPIView
@@ -24,9 +25,10 @@ from .apiViews import GetAIMasksAPIView
 urlpatterns = [
     
     path('', include('accounts.urls')),
-    path('api/saveConfidence/<int:diagID>/', SaveConfidenceAPIView.as_view(), name='saveConfidence'),
+    path('api/saveConfidence/<str:diagID>/', SaveConfidenceAPIView.as_view(), name='saveConfidence'),
     
     path('api/getImage/<str:diagnosisID>/', GetImageAPIView.as_view(), name='getImage'),
+    path('api/setUseTime/', SetUseTimeAPIView.as_view(), name='setUseTime'),
     path('newDiagnosis/<str:diagnosisID>/', views.newDiagnosis, name='newDiagnosis'),
     
 

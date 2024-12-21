@@ -6,16 +6,14 @@ from django.contrib.auth.models import User
 from accounts.models import Doctors
 
 class SaveConfidenceAPITest(TestCase):
-
     """ 
-  
     Test suite for the SaveConfidenceAPIView.
 
     This test case verifies the functionality of the SaveConfidenceAPIView, 
     which is responsible for saving the confidence value of a diagnosis in the database. 
     It ensures the API handles valid and invalid inputs as expected.
   """
-  
+
     def setUp(self):
         
         self.user = User.objects.create(username="testuser")
@@ -25,7 +23,7 @@ class SaveConfidenceAPITest(TestCase):
         self.diag = Diagnosis.objects.create(
             diagID=1,
             confidence=0,
-            doctor=self.doctor  
+            doctor=self.doctor
         )
 
     def testValidConfidence(self):

@@ -5,14 +5,13 @@ from accounts.doctorManager import getRandomURL
 from accounts.diagnosisManager import createDiagnosis
 from accounts.doctorManager import *
 from accounts.diagnosisManager import *
+from image.timeHandler import *
 
 from image import views
-
 
 @login_required
 def homepage(request):
     return render(request, "home.html")
-
 
 @login_required
 def forwardingInformation(request):
@@ -29,8 +28,6 @@ def forwardingInformation(request):
     
     Returns:
     - Redirect: Based on the dataset status (finished, error, or diagnosis creation).
-    
-    
     """
     
     # TODO: change website_data to variable which should be given to the function
@@ -38,7 +35,7 @@ def forwardingInformation(request):
     
     message = getRandomURL(request.user.id, datasetName)
     
-    # TODO: Add a own function that checks which dataset is finished -> should be checked after loggin in !!! 
+    # TODO: Add a own function that checks which dataset is finished -> should be checked after loggin in !!!
     # that dataset should not be clickable, maybe gray -> when clicked maybe show message that the dataset is finished
     if message["status"] == "finished":
         # TODO: CHANFE TO A OTHER URL (have to wait for snehs branch)
@@ -46,9 +43,9 @@ def forwardingInformation(request):
         return redirect("/")
     
     elif message["status"] == "error":
-        #TODO: redirect to the correct URL (have to wait for snehs branch)
+        # TODO: redirect to the correct URL (have to wait for snehs branch)
         print(message["message"])
-        return redirect ("/")
+        return redirect("/")
     
     else:
         
@@ -58,7 +55,9 @@ def forwardingInformation(request):
         
         uuid = createUUIDs(1)[0]
         
-        createDiagnosis(uuid, docObject, pictureURL)
+        diag = createDiagnosis(uuid, docObject, pictureURL)
+
+        createUseTime(diag)
         
         addFinishedPatient(request.user.id, datasetName, pictureURL, uuid)
 
@@ -68,13 +67,12 @@ def forwardingInformation(request):
 def homeWindow(request):
     return render(request, 'homeWindow.html')
 
+
 def data(request):
     allDataSets = [
         "Dataset 1",
         "Dataset 2",
         "Dataset 3",
     ]
-     
+    
     return render(request, 'selectDataset.html', {'allDataSets': allDataSets})
-
-        
