@@ -9,11 +9,9 @@ from image.views import *
 from image.mediaHandler import *
 from accounts.doctorManager import *
 
-
 @login_required
 def homepage(request):
     return render(request, "home.html")
-
 
 @login_required
 def forwardingInformation(request, datasetName):
@@ -31,8 +29,6 @@ def forwardingInformation(request, datasetName):
     
     Returns:
     - Redirect: Based on the dataset status (finished, error, or diagnosis creation).
-    
-    
     """
     
     datasetName = datasetName.upper()

@@ -43,7 +43,6 @@ class GetImageAPIView(APIView):
             # get the path to the image of a given diagnosis
             imageID = getURL(diagnosisID)
             
-            
             fileSuffix = settings.SUPPORTED_IMAGE_FORMATS[imageFormat]
 
             imagePath = os.path.join(
@@ -66,6 +65,7 @@ class GetImageAPIView(APIView):
                 {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
+
 class SaveConfidenceAPIView(APIView):
 
     def post(self, request, diagID):
@@ -84,19 +84,18 @@ class SaveConfidenceAPIView(APIView):
             data = request.data
             confidence = data.get('confidence')
 
-            # check if it is a valid value 
+            # check if it is a valid value
             if confidence is None or not (0 <= int(confidence) <= 100):
                 return Response({'error': 'Invalid confidence value. It must be between 0 and 100.'}, status=status.HTTP_400_BAD_REQUEST)
 
-            if not Diagnosis.objects.filter( diagID=diagID).exists():
+            if not Diagnosis.objects.filter(diagID=diagID).exists():
                 return Response(
                     {'error': f'Diagnosis with diagID {diagID} does not exist.'},
                     status=status.HTTP_404_NOT_FOUND
                 )
-
             
             diag = Diagnosis.objects.get(diagID=diagID)
-            # store confidence value 
+            # store confidence value
             diag.confidence = int(confidence)
             diag.save()
 

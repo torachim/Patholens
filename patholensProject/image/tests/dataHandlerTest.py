@@ -11,8 +11,6 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "patholensProject.settings")
 # Initialize Django
 django.setup()
 
-
-
 from django.test import TestCase
 from image.dataHandler import *
 from image.mediaHandler import addMedia

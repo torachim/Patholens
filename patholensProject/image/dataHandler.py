@@ -87,4 +87,3 @@ def shuffleList(aList: list):
     # shuffles the list random
     newList = np.random.permutation(aList)
     return list(newList)
-
