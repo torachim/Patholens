@@ -5,6 +5,7 @@ from accounts.doctorManager import getRandomURL
 from accounts.diagnosisManager import createDiagnosis
 from accounts.doctorManager import *
 from accounts.diagnosisManager import *
+from image.timeHandler import *
 
 from image import views
 
@@ -54,7 +55,9 @@ def forwardingInformation(request):
         
         uuid = createUUIDs(1)[0]
         
-        createDiagnosis(uuid, docObject, pictureURL)
+        diag = createDiagnosis(uuid, docObject, pictureURL)
+
+        createUseTime(diag)
         
         addFinishedPatient(request.user.id, datasetName, pictureURL, uuid)
 
