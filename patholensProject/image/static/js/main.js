@@ -307,6 +307,8 @@ document.addEventListener('DOMContentLoaded', function() {
          .catch(error => console.error(error));
 
          endTimer('Confidence confirmed');
+
+         window.location.assign(`/image/AIpage/${diagnosisID}`);
      }
 
     // Function to retrieve CSRF token
