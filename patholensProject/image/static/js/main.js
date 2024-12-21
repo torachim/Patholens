@@ -2,9 +2,15 @@ import { Niivue, DRAG_MODE } from "./index.js";
 
 document.addEventListener('DOMContentLoaded', function() {
 
+    let startTime, endTime;
+
+    let drawRectangle = false;
+    let erasing = false;
     //function to drag a rectangle in the niivue 
     // define what happens on dragRelase (right mouse up)
     const onDragRelease = (data) => {
+
+        drawRectangle = true;
 
         //if drawing is enabled
         if (nv.opts.drawingEnabled){
@@ -57,6 +63,7 @@ document.addEventListener('DOMContentLoaded', function() {
             nv.drawPenLine(bottomLeft, topLeft, value)
             // refresh the drawing
             nv.refreshDrawing(true) // true will force a redraw of the entire scene (equivalent to calling drawScene() in niivue)
+            endTimer("Rectangle")
             nv.setDrawingEnabled(false); //drawingEnabled equals false so you have to click the button again to draw another rechtangle
         }
     }
@@ -172,6 +179,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Pixel
     document.getElementById("selectTool").addEventListener("click", function(e){
+        drawRectangle = false;
+        erasing = false;
+        startTimer()
         saveDrawingState();
         nv.setDrawingEnabled(true);  
         changeDrawingMode(6, false);
@@ -183,31 +193,168 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // disables drawing
     function disableDrawing(){
+        if(!drawRectangle && !erasing){
+            endTimer('Freehand drawing')
+        }
+        else if(!drawRectangle && erasing){
+            endTimer('Erasing')
+            erasing = false
+        }
         nv.setDrawingEnabled(false);
     }  
 
     
     // enables erasing the drawing by clicking on eraser
     document.getElementById("eraseTool").addEventListener("click", function(e){
+        erasing = true;
+        drawRectangle = false;
+        startTimer();
         saveDrawingState();
         nv.setDrawingEnabled(true);
         // 0 = Eraser and true => eraser ist filled so a whole area can be erased
         changeDrawingMode(0, true);
+       
     });
 
     // INFO: You need to right click and drag to draw rectangle
     // enable rectangle drawing when the corresponding button in html is clicked
     document.getElementById("frameTool").addEventListener("click", function () {
+        startTimer()
         saveDrawingState();
         nv.setDrawingEnabled(true);
         nv.opts.dragMode = DRAG_MODE.callbackOnly;  // Draw rectangle only when dragging
         nv.opts.onDragRelease = onDragRelease;      // Set callback for rectangle drawing
     });
 
+    // Function to start the timer 
+    function startTimer(){
+        startTime = performance.now();
+    }
+
+    // Function to send the timer and give the time to the API
+    function endTimer(action){
+        endTime = performance.now();
+
+        const absoluteTime =  endTime - startTime;
+
+        sendTimeAPI(action, absoluteTime)
+    }
+
+    // Function to send the useTime with the API to the backend
+    function sendTimeAPI(action, absoluteTime){
+        const actionTime = {
+                action: action,
+                absoluteTime: absoluteTime,
+                diagnosisID: diagnosisID,
+        }
+
+        // Fetch the API URL
+        fetch('/image/api/setUseTime/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken,
+            },
+            body: JSON.stringify(actionTime)
+        })
+        .then(response => {
+            if(!response.ok){
+                throw new Error('Error while saving the time!');
+            }
+            return response.json()
+        })
+        .then(data => console.log('Saving Time succesfull', data))
+        .catch(error => console.log('error', error))
+
+    }
+
+    // Buttons in the confidence Window
+    const confirmButton = document.querySelector('.popupConfirm');
+    const confidenceSlider = document.getElementById('confidenceMeter');
+
+    // Fetch diagID from the hidden input field
+    const diagID = document.getElementById('diagID').value;
+
+    // Listener for the confirmation button
+    confirmButton.addEventListener('click', () => {
+        const confidenceValue = confidenceSlider.value;
+        
+        sendData(confidenceValue);
+    });
+
+    // Send the confidence to the backend
+    // Async function to handle an error that sometimes
+    // appeares because of the two fetch calls back to back
+    async function sendData(confidenceValue){
+        await fetch(`/image/api/saveConfidence/${diagID}/`, {
+             method: 'POST',
+             headers: {
+                 'Content-Type': 'application/json',
+                 'X-CSRFToken': getCookie('csrftoken') 
+             },
+             body: JSON.stringify({
+                 confidence: confidenceValue
+             })
+         })
+         .then(response => {
+             if (response.ok) {
+                 alert('Confidence updated successfully!');
+                 return response.json();
+             } else {
+                 throw new Error('Failed to save confidence value');
+             }
+         })
+         .catch(error => console.error(error));
+
+         endTimer('Confidence confirmed');
+     }
+
+    // Function to retrieve CSRF token
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    const finishButton = document.getElementById("finishButton");
+    const popupOverlay = document.getElementById("popupOverlay");
+    const closePopup = document.getElementById("closePopup");
+
+    popupOverlay.style.display = "none";
+
+
+    // Function to show the confidence window
+    finishButton.addEventListener("click", () => {
+        popupOverlay.style.display = "flex";
+        startTimer();
+    });
+
+    // Functions to close the confidence window
+    closePopup.addEventListener("click", () => {
+        popupOverlay.style.display = "none";
+        endTimer('Aborted confidence');
+    });
+
+    
+    popupOverlay.addEventListener("click", (e) => {
+        if (e.target === popupOverlay) {
+            popupOverlay.style.display = "none";
+            endTimer('Aborted confidence');
+        }
+    })
 
     // Undo the drawing/erasing
     document.getElementById("undoTool").addEventListener("click", function (e) {
         nv.drawUndo();
-    });
+    })
 
-});
+})
