@@ -32,6 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Load  default
     let selectedFormat = "DEEPFCD";
+    loadImage(selectedFormat);
     
 
     // Get the select element with the ID 'AIdropdown'
@@ -42,9 +43,9 @@ document.addEventListener('DOMContentLoaded', function() {
         // Get the value of the selected option
         selectedFormat = event.target.value;
         loadImage(selectedFormat);
+        
     });
 
-    
 
     function loadImage(format) {
         //get the apiURL to fetch the path to the requested image
@@ -82,6 +83,5 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.error("Error loading NIfTI file:", err);
             });
     }
-
 
 });

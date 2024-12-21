@@ -1,5 +1,8 @@
 import { Niivue, DRAG_MODE } from "./index.js";
 
+//TODO: Maybe remove one of the now two ways that are included to 
+// get the diagnosisID
+
 document.addEventListener('DOMContentLoaded', function() {
 
     let startTime, endTime;
