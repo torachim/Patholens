@@ -32,7 +32,7 @@ urlpatterns = [
     path('newDiagnosis/<str:diagnosisID>/', views.newDiagnosis, name='newDiagnosis'),
     
 
-    path('AIpage/', views.AIPage, name='AIpage'),
+    path('AIpage/<str:diagnosisID>', views.AIPage, name='AIpage'),
     path('api/getAImask/<str:diagnosisID>/', GetAIMasksAPIView.as_view(), name='getAImask')
 
 

@@ -32,17 +32,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Load  default
     let selectedFormat = "DEEPFCD";
-    loadImage(selectedFormat);
+    
 
     // Get the select element with the ID 'AIdropdown'
     const aiDropdown = document.getElementById('AIdropdown');
 
     // Add an event listener for the 'change' event
     aiDropdown.addEventListener('change', (event) => {
-    // Get the value of the selected option
-    const selectedAI = event.target.value;
-    loadImage(selectedAI);
+        // Get the value of the selected option
+        selectedFormat = event.target.value;
+        loadImage(selectedFormat);
     });
+
+    
 
     function loadImage(format) {
         //get the apiURL to fetch the path to the requested image

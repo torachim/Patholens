@@ -167,8 +167,6 @@ input[type="radio"]:checked::before {
 }
 
 
-<<<<<<< HEAD
-=======
 /* finnish diagnosis button */
 .finishDiagnosisButton {
     position: fixed; 
@@ -334,4 +332,3 @@ input[type="radio"]:checked::before {
     white-space: nowrap;
     
 }  
->>>>>>> development

@@ -169,6 +169,7 @@ class GetAIMasksAPIView(APIView):
 
             imageFormat = imageFormat.upper()
 
+
             if imageFormat not in settings.SUPPORTED_IMAGE_FORMATS:
                 return JsonResponse({"error": "Invalid format"}, status=400)
 
@@ -180,8 +181,9 @@ class GetAIMasksAPIView(APIView):
 
             imagePath = os.path.join(
                 settings.MEDIA_ROOT,
-                f"website_data/derivatives/ai/sub-{imageID}/pred/{imageID}{fileSuffix}"
+                f"website_data/derivatives/ai/sub-{imageID}/pred/sub-{imageID}{fileSuffix}"
             )
+
             if not os.path.exists(imagePath):
                 return Response(
                     {"error": "Image not found"}, status=status.HTTP_404_NOT_FOUND
@@ -189,7 +191,7 @@ class GetAIMasksAPIView(APIView):
 
             # relative path for the client
             relativePath = (
-                f"/media/website_data/derivatives/ai/sub-{imageID}/pred/{imageID}{fileSuffix}"
+                f"/media/website_data/derivatives/ai/sub-{imageID}/pred/sub-{imageID}{fileSuffix}"
             )
             return Response({"path": relativePath}, status=status.HTTP_200_OK)
 

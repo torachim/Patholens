@@ -164,10 +164,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 SUPPORTED_IMAGE_FORMATS = {
     "FLAIR": "_space-orig_FLAIR.nii.gz",
     "T1": "_space-orig_T1w.nii.gz",
-    "DEEPFCD": "_space-orig_acq-deepfcd_mask",
-    "MAP18": "_space-orig_acq-map18_mask",
-    "MELD": "_space-orig_acq-meld_mask",
-    "NNUNET": "_space-orig_acq-nnunet_mask"
+    "DEEPFCD": "_space-orig_acq-deepfcd_mask.nii.gz",
+    "MAP18": "_space-orig_acq-map18_mask.nii.gz",
+    "MELD": "_space-orig_acq-meld_mask.nii.gz",
+    "NNUNET": "_space-orig_acq-nnunet_mask.nii.gz"
 
 }
 
