@@ -73,6 +73,7 @@ document.addEventListener('DOMContentLoaded', function() {
         onDragRelease: onDragRelease,
         dragMode: DRAG_MODE.callbackOnly,
         penSize: 3,
+        maxDrawUndoBitmaps: 200,     // max 200 undos possible
     });
         
     const canvas = document.getElementById("imageBrain");
@@ -152,9 +153,19 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     }
 
+
+
     // Drawing functions from here on
     nv.setDrawOpacity(0.65);
-    
+
+
+
+    // Add drawing state to history
+    function saveDrawingState() {
+        nv.drawAddUndoBitmap();
+    }
+
+
     /**
      * 
      * @param {int} mode
@@ -171,6 +182,7 @@ document.addEventListener('DOMContentLoaded', function() {
         drawRectangle = false;
         erasing = false;
         startTimer()
+        saveDrawingState();
         nv.setDrawingEnabled(true);  
         changeDrawingMode(6, false);
     });
@@ -197,6 +209,7 @@ document.addEventListener('DOMContentLoaded', function() {
         erasing = true;
         drawRectangle = false;
         startTimer();
+        saveDrawingState();
         nv.setDrawingEnabled(true);
         // 0 = Eraser and true => eraser ist filled so a whole area can be erased
         changeDrawingMode(0, true);
@@ -207,6 +220,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // enable rectangle drawing when the corresponding button in html is clicked
     document.getElementById("frameTool").addEventListener("click", function () {
         startTimer()
+        saveDrawingState();
         nv.setDrawingEnabled(true);
         nv.opts.dragMode = DRAG_MODE.callbackOnly;  // Draw rectangle only when dragging
         nv.opts.onDragRelease = onDragRelease;      // Set callback for rectangle drawing
@@ -336,6 +350,11 @@ document.addEventListener('DOMContentLoaded', function() {
             popupOverlay.style.display = "none";
             endTimer('Aborted confidence');
         }
-    });
+    })
 
-});
+    // Undo the drawing/erasing
+    document.getElementById("undoTool").addEventListener("click", function (e) {
+        nv.drawUndo();
+    })
+
+})

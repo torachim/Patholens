@@ -1,7 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Cabin');
 
-
-body{
+body {
     background-color: #00242F !important;
     display: flex;
     flex-direction: column;
@@ -11,76 +10,91 @@ body{
 }
 
 .homeButton {
-    margin-left: 25px;
+    margin-right: 10px;
     text-decoration: none;
     font-size: 30px;
+    width: 40px;
+    height: 40px;
 }
 
 .homeButton i {
     cursor: pointer;
 }
 
+#homeIcon {
+    width: 40px;
+    height: 40px;
+}
 
 
-/* Toolbar Styling */
+/* Main toolbar styling */
 .toolbar {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #00485E; 
-    border-radius: 10px; 
-    padding: 10px 20px; 
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3); 
-    gap: 90px; 
-    width: 370px; 
-    height: 40px; 
+    background-color: #00485E;
+    border-radius: 10px;
+    padding: 10px 20px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+    gap: 55px;
+    width: 370px;
+    height: 40px;
     margin: 20px auto; 
     margin-top: 25px; 
     margin-bottom: -30px;
 }
 
-/* tool Button styling */
+/* Tool button styling */
 .toolButton {
-    background-color: #D9D9D9; 
+    background-color: #D9D9D9;
     border: none;
-    border-radius: 10px; 
-    width: 45px; 
-    height: 40px; 
+    border-radius: 10px;
+    width: 45px;
+    height: 40px;
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
-    transition: transform 0.2s ease, box-shadow 0.2s ease; 
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-
 .toolButton:active {
-    transform: translateY(2px); 
+    transform: translateY(2px);
 }
 
 #selectTool i {
     font-size: 24px;
     color: #434343;
-    transform: rotate(-20deg); 
+    transform: rotate(-20deg);
 }
 
+#freehandDrawingIcon{
+    max-width: 24px;
+    max-height: 24px;
+}
 
 .outlineSquare {
-    width: 24px; 
-    height: 20px; 
-    border: 3.8px solid #434343; 
+    width: 24px;
+    height: 20px;
+    border: 3.8px solid #434343;
     border-radius: 2px;
-    background-color: transparent; 
+    background-color: transparent;
     display: inline-block;
-
-    box-sizing: border-box; 
+    box-sizing: border-box;
 }
 
 #eraseTool i {
     font-size: 24px;
     color: #434343;
 }
+
+
+#undoTool i {
+    font-size: 24px;
+    color: #434343;
+}
+
 
 /* container for the radio boxes */
 .container {
@@ -134,7 +148,6 @@ input[type="radio"]:checked::before {
     left: 50%;
     transform: translate(-50%, -50%); 
 }
-
 
 
 
@@ -209,7 +222,6 @@ input[type="radio"]:checked::before {
 }
 
 
-
 .popupFrame {
     position: relative;
     background: #005E7A;
@@ -230,8 +242,6 @@ input[type="radio"]:checked::before {
     margin-top: 50px;
 
 }
-
-
 
 .popupClose {
   
@@ -260,7 +270,6 @@ input[type="radio"]:checked::before {
     font-weight: regular;
     cursor: pointer;
     box-shadow: 5px 5px rgba(0, 0, 0, 0.2);
-    bottom: 20px;
     position: absolute;
     bottom: 60px;
     left: 50%;
@@ -322,7 +331,4 @@ input[type="radio"]:checked::before {
     visibility: hidden; 
     white-space: nowrap;
     
-
 }  
-    
-

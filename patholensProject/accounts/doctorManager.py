@@ -31,7 +31,7 @@ def createDoctor(user: django.contrib.auth.models.User):
     """
 
     doc = Doctors.objects.create(
-        doctorID=user, finishedPatients = {}
+        doctorID=user, finishedPatients={}
     )
 
     return doc
@@ -73,17 +73,17 @@ def getRandomURL(docID: str, datasetName: str):
         return {"status": "error", "message": "Doctor not found"}
 
     doctor = Doctors.objects.get(doctorID=docID)
-     
+    
     urls = getPatientURLs(datasetName)
     if not urls:
         return {"status": "error", "message": "No URLs available for the dataset"}
 
-    
+
     datasetNamesAndURL = doctor.finishedPatients
     
     finishedDatasets = list(datasetNamesAndURL.keys())
 
-    
+
     # doctor is going to use the dataset for the first time
     if datasetName not in finishedDatasets:
         index = random.randint(0, len(urls)-1)
@@ -97,10 +97,10 @@ def getRandomURL(docID: str, datasetName: str):
         return {"status": "finished"}
 
     
-    # get a random url (patient) from the remaining patients of the dataset   
+    # get a random url (patient) from the remaining patients of the dataset
     else:
         remaining = [patient for patient in urls if patient not in finishedPatients]
-        index = random.randint(0, len(remaining)-1)
+        index = random.randint(0, len(remaining) - 1)
         return {"status": "success", "url": remaining[index]}
 
 
@@ -139,7 +139,7 @@ def addFinishedPatient(docID: str, datasetName: str, url: str, uuid: str):
     if not Doctors.objects.filter(doctorID=docID).exists():
         return False
 
-    doctor = Doctors.objects.get(doctorID=docID)    
+    doctor = Doctors.objects.get(doctorID=docID)
     finishedPatients = doctor.finishedPatients
     
     if datasetName not in finishedPatients:
