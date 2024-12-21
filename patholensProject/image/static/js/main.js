@@ -65,7 +65,6 @@ document.addEventListener('DOMContentLoaded', function() {
             nv.refreshDrawing(true) // true will force a redraw of the entire scene (equivalent to calling drawScene() in niivue)
             endTimer("Rectangle")
             nv.setDrawingEnabled(false); //drawingEnabled equals false so you have to click the button again to draw another rechtangle
-
         }
     }
         
@@ -216,7 +215,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Function to start the timer 
     function startTimer(){
         startTime = performance.now();
-        console.log("start")
     }
 
     // Function to send the timer and give the time to the API
@@ -267,33 +265,35 @@ document.addEventListener('DOMContentLoaded', function() {
     confirmButton.addEventListener('click', () => {
         const confidenceValue = confidenceSlider.value;
         
-        // Send the confidence to the backend
-        // Async function to handle an error that sometimes
-        // appeares because of the two fetch calls back to back
-        async function sendData(){
-           await fetch(`/image/api/saveConfidence/${diagID}/`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': getCookie('csrftoken') 
-                },
-                body: JSON.stringify({
-                    confidence: confidenceValue
-                })
-            })
-            .then(response => {
-                if (response.ok) {
-                    alert('Confidence updated successfully!');
-                    return response.json();
-                } else {
-                    throw new Error('Failed to save confidence value');
-                }
-            })
-            .catch(error => console.error(error));
-
-            endTimer('Confidence confirmed');
-        }
+        sendData(confidenceValue);
     });
+
+    // Send the confidence to the backend
+    // Async function to handle an error that sometimes
+    // appeares because of the two fetch calls back to back
+    async function sendData(confidenceValue){
+        await fetch(`/image/api/saveConfidence/${diagID}/`, {
+             method: 'POST',
+             headers: {
+                 'Content-Type': 'application/json',
+                 'X-CSRFToken': getCookie('csrftoken') 
+             },
+             body: JSON.stringify({
+                 confidence: confidenceValue
+             })
+         })
+         .then(response => {
+             if (response.ok) {
+                 alert('Confidence updated successfully!');
+                 return response.json();
+             } else {
+                 throw new Error('Failed to save confidence value');
+             }
+         })
+         .catch(error => console.error(error));
+
+         endTimer('Confidence confirmed');
+     }
 
     // Function to retrieve CSRF token
     function getCookie(name) {

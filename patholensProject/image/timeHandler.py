@@ -1,12 +1,6 @@
-import uuid
-import os
-import sys
-import django
-from pathlib import Path
 from image.models import UseTime
 from image.models import Diagnosis
 from rest_framework.exceptions import ValidationError
-from rest_framework.response import Response
 from django.db import transaction
 from .serializer import useTimeSerialize
 
@@ -28,7 +22,7 @@ def createUseTime(diagObjesct: Diagnosis):
 
 
 
-def setUseTime(diagID: str, action: str, duration):
+def setUseTime(diagID: str, action: str, duration: float):
     """
     Creates a dictionary which includes the action and the needed time to finnished this action.
     This dictionary get added to the entry with given diagnois.
@@ -42,10 +36,10 @@ def setUseTime(diagID: str, action: str, duration):
         useTime: The use edited useTime object
     """
     try:
-        diagnosis = Diagnosis.objects.get(diagID = diagID)
+        diagnosis = Diagnosis.objects.get(diagID=diagID)
 
         with transaction.atomic():
-            useTimeInstance = UseTime.objects.get(diag = diagnosis)
+            useTimeInstance=UseTime.objects.get(diag=diagnosis)
 
             roundDuration = round(duration, 2)
 

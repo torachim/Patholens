@@ -127,7 +127,6 @@
 </script> 
 {% csrf_token %}
 <script>
-    // Das CSRF-Token wird aus einem Meta-Tag oder einem versteckten Formularfeld extrahiert
     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 </script>
 <script type="module" src="{% static 'js/main.js' %}"></script>

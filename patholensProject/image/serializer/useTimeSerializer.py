@@ -5,3 +5,4 @@ class useTimeSerialize(serializers.ModelSerializer):
     class Meta:
         model = UseTime
         fields = ['diag', 'actionTime']
+        

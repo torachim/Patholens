@@ -1,7 +1,6 @@
 from rest_framework.views import APIView
 from django.http import JsonResponse
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
 from rest_framework import status
 from django.conf import settings
 from .models import Diagnosis
@@ -9,7 +8,7 @@ import os
 from accounts.diagnosisManager import getURL
 from .timeHandler import setUseTime
 
-from image.models import Diagnosis, UseTime
+from image.models import Diagnosis
 
 
 class GetImageAPIView(APIView):
@@ -138,7 +137,6 @@ class SaveConfidenceAPIView(APIView):
                     status=status.HTTP_404_NOT_FOUND
                 )
 
-            
             diag = Diagnosis.objects.get(diagID=diagID)
             # store confidence value 
             diag.confidence = int(confidence)
