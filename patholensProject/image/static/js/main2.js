@@ -22,9 +22,10 @@ document.addEventListener('DOMContentLoaded', function () {
     nv.attachToCanvas(canvas);
     adjustCanvasForDPI(canvas);
     nv.setMultiplanarPadPixels(60);
+    
 
     // Base API URL
-    const baseApiURL = `/image/api/getAImask/${diagnosisID}`;
+    const baseApiURL = `/image/api/getImageAndMask/${diagnosisID}`;
     let selectedFormat = "DEEPFCD";
 
     // Load default image and mask
@@ -38,27 +39,19 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     function loadImageWithMask(format) {
-        const mriApiURL = `/image/api/getMRI/${diagnosisID}`; // API for the MRI image
-        const maskApiURL = `${baseApiURL}/?format=${format}`; // API for the AI mask
+        const apiURL = `${baseApiURL}/?format=${format}`; // Combined API URL
 
-        // Fetch both MRI and Mask URLs
-        Promise.all([
-            fetch(mriApiURL).then(response => {
+        // Fetch combined MRI and Mask URLs
+        fetch(apiURL)
+            .then(response => {
                 if (!response.ok) {
-                    throw new Error(`MRI HTTP error! status: ${response.status}`);
+                    throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 return response.json();
-            }),
-            fetch(maskApiURL).then(response => {
-                if (!response.ok) {
-                    throw new Error(`Mask HTTP error! status: ${response.status}`);
-                }
-                return response.json();
-            }),
-        ])
-            .then(([mriData, maskData]) => {
-                const mriURL = `http://127.0.0.1:8000${mriData.path}`;
-                const maskURL = `http://127.0.0.1:8000${maskData.path}`;
+            })
+            .then(data => {
+                const mriURL = `http://127.0.0.1:8000${data.mriPath}`;
+                const maskURL = `http://127.0.0.1:8000${data.maskPath}`;
                 console.log("MRI URL:", mriURL);
                 console.log("Mask URL:", maskURL);
 

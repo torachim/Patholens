@@ -146,12 +146,14 @@ class GetImageAndMaskAPIView(APIView):
     """
 
     def get(self, request, diagnosisID):
-        try:
-            imageFormat = request.GET.get("format")  # Fixed the trailing space
-            if not imageFormat:
-                imageFormat = "DEEPFCD"
+        import logging
+        logger = logging.getLogger(__name__)
 
-            imageFormat = imageFormat.upper()
+        try:
+            if not diagnosisID:
+                return Response({"error": "diagnosisID is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+            imageFormat = request.GET.get("format", "DEEPFCD").upper()
 
             if imageFormat not in settings.SUPPORTED_IMAGE_FORMATS:
                 return JsonResponse({"error": "Invalid format"}, status=400)
@@ -159,38 +161,44 @@ class GetImageAndMaskAPIView(APIView):
             # Get the MRI image path
             imageID = getURL(diagnosisID)
             fileSuffix = settings.SUPPORTED_IMAGE_FORMATS["FLAIR"]  # Default MRI format
-            mriPath = os.path.join(
-                settings.MEDIA_ROOT,
-                f"website_data/sub-{imageID}/anat/sub-{imageID}{fileSuffix}",
+            mriPath = os.path.normpath(
+                os.path.join(
+                    settings.MEDIA_ROOT,
+                    f"website_data/sub-{imageID}/anat/sub-{imageID}{fileSuffix}",
+                )
             )
 
             # Get the AI mask path
             fileSuffix = settings.SUPPORTED_IMAGE_FORMATS[imageFormat]
-            maskPath = os.path.join(
-                settings.MEDIA_ROOT,
-                f"website_data/derivatives/ai/sub-{imageID}/pred/sub-{imageID}{fileSuffix}",
+            maskPath = os.path.normpath(
+                os.path.join(
+                    settings.MEDIA_ROOT,
+                    f"website_data/derivatives/ai/sub-{imageID}/pred/sub-{imageID}{fileSuffix}",
+                )
             )
 
-            if not os.path.exists(mriPath) or not os.path.exists(maskPath):
+            if not os.path.exists(mriPath):
                 return Response(
-                    {"error": "MRI or AI mask not found"},
+                    {"error": f"MRI file not found at {mriPath}"},
+                    status=status.HTTP_404_NOT_FOUND,
+                )
+            if not os.path.exists(maskPath):
+                return Response(
+                    {"error": f"AI mask file not found at {maskPath}"},
                     status=status.HTTP_404_NOT_FOUND,
                 )
 
             # Relative paths for the client
-            mriRelativePath = (
-                f"/media/website_data/sub-{imageID}/anat/sub-{imageID}{fileSuffix}"
-            )
-            maskRelativePath = (
-                f"/media/website_data/derivatives/ai/sub-{imageID}/pred/sub-{imageID}{fileSuffix}"
-            )
+            mriRelativePath = f"/media/website_data/sub-{imageID}/anat/sub-{imageID}{fileSuffix}"
+            maskRelativePath = f"/media/website_data/derivatives/ai/sub-{imageID}/pred/sub-{imageID}{fileSuffix}"
 
             return Response(
-                {"mriPath": mriRelativePath, "maskPath": maskRelativePath},
+                {"status": "success", "data": {"mriPath": mriRelativePath, "maskPath": maskRelativePath}},
                 status=status.HTTP_200_OK,
             )
 
         except Exception as e:
+            logger.error(f"Error fetching image and mask: {e}")
             return Response(
                 {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
