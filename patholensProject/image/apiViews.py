@@ -138,3 +138,59 @@ class SaveConfidenceAPIView(APIView):
             return Response({'message': 'Confidence value saved successfully via API!'}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({'error': f'An unexpected error occurred: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class GetImageAndMaskAPIView(APIView):
+    """
+    API Class to get both the MRI image and AI mask for a given diagnosisID.
+    """
+
+    def get(self, request, diagnosisID):
+        try:
+            imageFormat = request.GET.get("format")  # Fixed the trailing space
+            if not imageFormat:
+                imageFormat = "DEEPFCD"
+
+            imageFormat = imageFormat.upper()
+
+            if imageFormat not in settings.SUPPORTED_IMAGE_FORMATS:
+                return JsonResponse({"error": "Invalid format"}, status=400)
+
+            # Get the MRI image path
+            imageID = getURL(diagnosisID)
+            fileSuffix = settings.SUPPORTED_IMAGE_FORMATS["FLAIR"]  # Default MRI format
+            mriPath = os.path.join(
+                settings.MEDIA_ROOT,
+                f"website_data/sub-{imageID}/anat/sub-{imageID}{fileSuffix}",
+            )
+
+            # Get the AI mask path
+            fileSuffix = settings.SUPPORTED_IMAGE_FORMATS[imageFormat]
+            maskPath = os.path.join(
+                settings.MEDIA_ROOT,
+                f"website_data/derivatives/ai/sub-{imageID}/pred/sub-{imageID}{fileSuffix}",
+            )
+
+            if not os.path.exists(mriPath) or not os.path.exists(maskPath):
+                return Response(
+                    {"error": "MRI or AI mask not found"},
+                    status=status.HTTP_404_NOT_FOUND,
+                )
+
+            # Relative paths for the client
+            mriRelativePath = (
+                f"/media/website_data/sub-{imageID}/anat/sub-{imageID}{fileSuffix}"
+            )
+            maskRelativePath = (
+                f"/media/website_data/derivatives/ai/sub-{imageID}/pred/sub-{imageID}{fileSuffix}"
+            )
+
+            return Response(
+                {"mriPath": mriRelativePath, "maskPath": maskRelativePath},
+                status=status.HTTP_200_OK,
+            )
+
+        except Exception as e:
+            return Response(
+                {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )

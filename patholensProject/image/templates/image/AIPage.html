@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block extraCSS %}
+  <link rel="stylesheet" href="{% static 'css/AIPage.css' %}?v=2" />
+{% endblock %}
+
+{% block topbar %}
+  <a href="/startingPage" class="homeButton"><i class="fa-solid fa-house" style="color: #ffffff;"></i></a>
+  <i class="fa-solid fa-circle-question" style="color: #ffffff;" id="openHelp" data-tooltip="Get Help"></i>
+{% endblock %}
+
+{% block content %}
+  <div class="imageBox">
+    <canvas id="imageBrain" width="100%" height="395%"></canvas>
+  </div>
+
+  <div class="dropdown">
+    <select id="dropdown2" class="dropdown-select">
+      <option value="myDiagnosis">my diagnosis</option>
+      <option value="AIDiagnosi">AI diagnosis</option>
+      <option value="showOverlay" selected>show overlay</option>
+    </select>
+  </div>
+  <div class="dropdown">
+    <select id="dropdown1" class="dropdown-select">
+      <option value="T1">T1</option>
+      <option value="Flaire" selected>Flaire</option>
+    </select>
+  </div>
+  <div class="dropdown">
+    <select id="AIdropdown" class="dropdown-select">
+      <option value="DEEPFCD" selected>deepfcd</option>
+      <option value="MAP18">map18</option>
+      <option value="MELD">meld</option>
+      <option value="NNUNET">nnunet</option>
+    </select>
+  </div>
+
+  <div class="nextButton">
+    <button type="button" id="TakeMyDiagnosis">Take My Diagnosis</button>
+    <button type="button" id="TakeAIDiagnosis">Take AI Diagnosis</button>
+    <button type="button" id="editDiagnosis">edit Diagnosis</button>
+  </div>
+{% endblock %}
+
+{% block extraJS %}
+  <script>
+    const diagnosisID = '{{ diagnosisID }}'
+  </script>
+  <script type="module" src="{% static 'js/main2.js' %}"></script>
+  <script type="module" src="{% static 'js/index.js' %}"></script>
+{% endblock %}
