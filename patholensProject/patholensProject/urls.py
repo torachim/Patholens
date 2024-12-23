@@ -33,8 +33,8 @@ urlpatterns = [
     path('selectDataset/forwarding/<str:datasetName>/', views.forwardingInformation, name='forwardingInformation'),
     
     
-    path('homeWindow/', views.homeWindow, name='homeWindow'),  
-    path('selectDataset/', views.data, name='selectDataset'), 
+    path('homeWindow/', views.homeWindow, name='homeWindow'), 
+    path('selectDataset/', views.data, name='selectDataset'),
     path("selectDataset/finished/<str:datasetName>/", views.finished, name="finishedDatasets"),
 
     # YOUR PATTERNS

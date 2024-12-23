@@ -154,6 +154,22 @@ def addFinishedPatient(docID: str, datasetName: str, url: str, uuid: str):
 
 
 def finishedDatasets(docID: str):
+    """
+    Identifies datasets where all patients have been marked as finished.
+    
+    This function retrieves the datasets associated with a specific doctor and checks 
+    if all patients within each dataset have been completed. A dataset is considered 
+    finished if the number of patients marked as completed matches the total number 
+    of patients in the dataset.
+
+    Args:
+        docID (str): The ID for the doctor.
+
+    Returns:
+        list: A list of dataset names where all patients have been completed.
+    """
+    
+    
     docObject = getDoctorObject(docID)
 
     datasetNamesAndURL = docObject.finishedPatients
@@ -171,4 +187,3 @@ def finishedDatasets(docID: str):
             finishedDatasets.append(dataset)
             
     return finishedDatasets
-    

@@ -39,7 +39,7 @@ def forwardingInformation(request, datasetName):
         return render(request, 'finishedMessage.html')
     
     elif message["status"] == "error":
-        return redirect ("/")
+        return redirect("/")
     
     else:
         
@@ -75,5 +75,5 @@ def data(request):
 @login_required
 def finished(request, datasetName: str):
     datasetName = datasetName.title()
-    return render(request, "finishedMessage.html", {'datasetName' : datasetName})
+    return render(request, "finishedMessage.html", {'datasetName': datasetName})
         

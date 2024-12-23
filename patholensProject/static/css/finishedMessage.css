@@ -22,6 +22,7 @@ body {
     z-index: -1; /* Ensures that the overlay is in front of the content */
 }
 
+
 /*background*/
 .frameContainer {
     position: fixed;
@@ -30,6 +31,7 @@ body {
     overflow: hidden; 
     z-index: -2;
 }
+
 
 /* Frame used in the background */
 .backgroundFrame {
@@ -61,6 +63,7 @@ body {
     overflow-y: auto;
 }
 
+
 h1{
     color: #ffffff;
     font-size: 35px;
@@ -79,6 +82,4 @@ p {
     font-family: 'Calibri';
     justify-content: center;
     align-items: center;
-
 }
-
