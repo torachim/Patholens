@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     function loadImageWithMask(format) {
-        const apiURL = `${baseApiURL}/?format=${format}`; // Combined API URL
+        const apiURL = `${baseApiURL}/?format =${format}`; // Combined API URL
 
         // Fetch combined MRI and Mask URLs
         fetch(apiURL)
@@ -50,8 +50,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 return response.json();
             })
             .then(data => {
-                const mriURL = `http://127.0.0.1:8000${data.mriPath}`;
-                const maskURL = `http://127.0.0.1:8000${data.maskPath}`;
+                const URLs = data.data;
+                const mriURL = `http://127.0.0.1:8000${URLs.mriPath}`;
+                const maskURL = `http://127.0.0.1:8000${URLs.maskPath}`;
                 console.log("MRI URL:", mriURL);
                 console.log("Mask URL:", maskURL);
 
@@ -65,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         url: maskURL,
                         schema: "nifti",
                         colorMap: "red", // Distinct color for the mask
-                        opacity: 0.5,    // Adjust transparency of the mask
+                        opacity: 0.9,    // Adjust transparency of the mask
                     },
                 ]);
             })

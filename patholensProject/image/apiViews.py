@@ -153,27 +153,27 @@ class GetImageAndMaskAPIView(APIView):
             if not diagnosisID:
                 return Response({"error": "diagnosisID is required"}, status=status.HTTP_400_BAD_REQUEST)
 
-            imageFormat = request.GET.get("format", "DEEPFCD").upper()
+            imageFormat = request.GET.get("format ", "DEEPFCD").upper()
 
             if imageFormat not in settings.SUPPORTED_IMAGE_FORMATS:
                 return JsonResponse({"error": "Invalid format"}, status=400)
 
             # Get the MRI image path
             imageID = getURL(diagnosisID)
-            fileSuffix = settings.SUPPORTED_IMAGE_FORMATS["FLAIR"]  # Default MRI format
+            fileSuffixMri = settings.SUPPORTED_IMAGE_FORMATS["FLAIR"]  # Default MRI format
             mriPath = os.path.normpath(
                 os.path.join(
                     settings.MEDIA_ROOT,
-                    f"website_data/sub-{imageID}/anat/sub-{imageID}{fileSuffix}",
+                    f"website_data/sub-{imageID}/anat/sub-{imageID}{fileSuffixMri}",
                 )
             )
 
             # Get the AI mask path
-            fileSuffix = settings.SUPPORTED_IMAGE_FORMATS[imageFormat]
+            fileSuffixMask = settings.SUPPORTED_IMAGE_FORMATS[imageFormat]
             maskPath = os.path.normpath(
                 os.path.join(
                     settings.MEDIA_ROOT,
-                    f"website_data/derivatives/ai/sub-{imageID}/pred/sub-{imageID}{fileSuffix}",
+                    f"website_data/derivatives/ai/sub-{imageID}/pred/sub-{imageID}{fileSuffixMask}",
                 )
             )
 
@@ -189,8 +189,9 @@ class GetImageAndMaskAPIView(APIView):
                 )
 
             # Relative paths for the client
-            mriRelativePath = f"/media/website_data/sub-{imageID}/anat/sub-{imageID}{fileSuffix}"
-            maskRelativePath = f"/media/website_data/derivatives/ai/sub-{imageID}/pred/sub-{imageID}{fileSuffix}"
+            mriRelativePath = f"/media/website_data/sub-{imageID}/anat/sub-{imageID}{fileSuffixMri}"
+            maskRelativePath = f"/media/website_data/derivatives/ai/sub-{imageID}/pred/sub-{imageID}{fileSuffixMask}"
+
 
             return Response(
                 {"status": "success", "data": {"mriPath": mriRelativePath, "maskPath": maskRelativePath}},
