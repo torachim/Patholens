@@ -14,13 +14,109 @@ body{
     background-color: aliceblue;
 }
 
-/* Dropdown-Container */
-.dropdown {
-    position: relative;
-    display: inline-block;
+/* Container für das Dropdown */
+.dropdown-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px 0;
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
 }
 
-/* Dropdown-Button */
+/* Dropdown-Wrapper */
+.dropdown {
+    position: relative;
+}
+
+/* Dropdown-Select Styling */
+.dropdown-select {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 150px;
+    padding: 10px 20px;
+    background-color: #3498db;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    position: relative;
+    text-align: left;
+}
+
+/* Pfeil Styling */
+.dropdown-arrow {
+    content: "";
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    transform: rotate(45deg); /* Pfeil nach unten */
+    transition: transform 0.3s ease; /* Animierte Drehung des Pfeils */
+}
+
+/* Dropdown-Text */
+.dropdown-text {
+    flex: 1;
+    padding-right: 10px;
+}
+
+/* Dropdown-Boxen ausblenden */
+.dropdown-select-box {
+    display: none;
+}
+
+/* Dropdown-Menü Styling */
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: white;
+    border: 1px solid #3498db;
+    border-radius: 4px;
+    z-index: 1000;
+}
+
+/* Dropdown-Item Styling */
+.dropdown-item {
+    padding: 10px 20px;
+    background-color: #f9f9f9;
+    cursor: pointer;
+}
+
+/* Dropdown-Item Hover */
+.dropdown-item:hover {
+    background-color: #3498db;
+    color: white;
+}
+
+/* Dropdown anzeigen, wenn das Dropdown-Select fokussiert ist */
+.dropdown-select-box:focus + .dropdown-menu {
+    display: block;
+}
+
+/* Wenn das Dropdown geöffnet ist, dreht sich der Pfeil nach oben */
+.dropdown-select-box:focus + .dropdown-menu + .dropdown-select .dropdown-arrow {
+    transform: rotate(-135deg); /* Pfeil nach oben drehen */
+}
+
+/* Das Menü geht nach oben, wenn das Dropdown fokussiert ist */
+.dropdown-select-box:focus + .dropdown-menu {
+    bottom: 100%; /* Menü nach oben verschieben */
+}
+
+/* Wenn das Dropdown fokussiert ist, wird der Text weiß */
+.dropdown-select-box:focus + .dropdown-menu + .dropdown-select .dropdown-text {
+    color: #fff;
+}
+
+/* Die Standard-Position für den Dropdown-Button */
 .dropbtn {
     background-color: #3498db;
     color: white;
@@ -32,16 +128,11 @@ body{
     text-align: center;
 }
 
-/* Stil für das Dropdown (select) */
-.dropdown-select {
-    display: none; /* Versteckt das Dropdown-Menü */
-}
-
 /* Benutzersichtbarkeit des Dropdowns über das Label */
 .dropdown select:focus + label,
 .dropdown select {
     display: block; /* Dropdown anzeigen */
-}
+} 
 
 /* Label als Button */
 label {
@@ -54,11 +145,7 @@ label {
     text-align: center;
 }
 
-/* Optional: Dropdown-Optionen-Stile anpassen */
-.dropdown option {
-    background-color: #f9f9f9;
-    padding: 10px;
-}
+
 
 
 .nextButton {
