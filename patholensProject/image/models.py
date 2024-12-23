@@ -18,14 +18,16 @@ class Diagnosis(models.Model):
 
 # useTime class for storing the timestamps of executed actions during diagnosis
 class UseTime(models.Model):
-    timeID = models.AutoField(primary_key=True)
+    """
+    Table to safe the Time that the doctor needs to do an action during the
+    diagnosis process
+    """
     # CASCADE: if the referenced diagnosis is deleted, the useTime entry will be automatically deleted aswell
-    diagID = models.ForeignKey(Diagnosis, on_delete=models.CASCADE, db_column="diagID")
-    action = models.CharField(max_length=30, null=False)
-    timestamp = models.DurationField(null=False)
+    diag= models.OneToOneField(Diagnosis, on_delete=models.CASCADE, primary_key=True, default=1)
+    actionTime = models.JSONField(null=True)
 
     def __str__(self):
-        return str(self.timeID)
+        return str(self.diag)
 
 
 class Media(models.Model):

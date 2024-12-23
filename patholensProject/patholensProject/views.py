@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from accounts.doctorManager import getRandomURL
 from accounts.diagnosisManager import createDiagnosis
 from accounts.diagnosisManager import *
+from image.timeHandler import *
 
 from image.views import *
 from image.mediaHandler import *
@@ -49,7 +50,9 @@ def forwardingInformation(request, datasetName):
         
         uuid = createUUIDs(1)[0]
         
-        createDiagnosis(uuid, docObject, pictureURL)
+        diag = createDiagnosis(uuid, docObject, pictureURL)
+
+        createUseTime(diag)
         
         addFinishedPatient(request.user.id, datasetName, pictureURL, uuid)
 
