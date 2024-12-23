@@ -153,14 +153,15 @@ class GetImageAndMaskAPIView(APIView):
             if not diagnosisID:
                 return Response({"error": "diagnosisID is required"}, status=status.HTTP_400_BAD_REQUEST)
 
-            imageFormat = request.GET.get("format ", "DEEPFCD").upper()
+            imageFormatMask = request.GET.get("mask", "DEEPFCD").upper()
+            imageFormatMri = request.GET.get('mri').upper()
 
-            if imageFormat not in settings.SUPPORTED_IMAGE_FORMATS:
+            if imageFormatMask not in settings.SUPPORTED_IMAGE_FORMATS or imageFormatMri not in settings.SUPPORTED_IMAGE_FORMATS:
                 return JsonResponse({"error": "Invalid format"}, status=400)
 
             # Get the MRI image path
             imageID = getURL(diagnosisID)
-            fileSuffixMri = settings.SUPPORTED_IMAGE_FORMATS["FLAIR"]  # Default MRI format
+            fileSuffixMri = settings.SUPPORTED_IMAGE_FORMATS[imageFormatMri]  # Default MRI format
             mriPath = os.path.normpath(
                 os.path.join(
                     settings.MEDIA_ROOT,
@@ -169,7 +170,7 @@ class GetImageAndMaskAPIView(APIView):
             )
 
             # Get the AI mask path
-            fileSuffixMask = settings.SUPPORTED_IMAGE_FORMATS[imageFormat]
+            fileSuffixMask = settings.SUPPORTED_IMAGE_FORMATS[imageFormatMask]
             maskPath = os.path.normpath(
                 os.path.join(
                     settings.MEDIA_ROOT,

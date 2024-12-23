@@ -26,20 +26,35 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Base API URL
     const baseApiURL = `/image/api/getImageAndMask/${diagnosisID}`;
-    let selectedFormat = "DEEPFCD";
+    let selectedFormatMask = "DEEPFCD";
+    let selectedFormatMri = "FLAIR"
 
     // Load default image and mask
-    loadImageWithMask(selectedFormat);
+    loadImageWithMask(selectedFormatMask, selectedFormatMri);
 
     // Dropdown change listener
     const aiDropdown = document.getElementById('AIdropdown');
     aiDropdown.addEventListener('change', (event) => {
-        selectedFormat = event.target.value;
-        loadImageWithMask(selectedFormat);
+        selectedFormatMask = event.target.value;
+        loadImageWithMask(selectedFormatMask, selectedFormatMri);
     });
 
-    function loadImageWithMask(format) {
-        const apiURL = `${baseApiURL}/?format =${format}`; // Combined API URL
+    const formatDropdown = document.getElementById('formatDropdown');
+    formatDropdown.addEventListener('change', (event) => {
+        selectedFormatMri = event.target.value;
+        loadImageWithMask(selectedFormatMask, selectedFormatMri);
+    })
+
+    function loadImageWithMask(formatMask, formatMri) {
+
+        const params = new URLSearchParams({
+            mask: formatMask,
+            mri: formatMri,
+        });
+
+        const apiURL = `${baseApiURL}/?${params.toString()}`; // Combined API URL
+
+        console.log(apiURL)
 
         // Fetch combined MRI and Mask URLs
         fetch(apiURL)
