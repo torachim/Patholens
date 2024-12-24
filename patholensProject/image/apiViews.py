@@ -146,9 +146,16 @@ class GetImageAndMaskAPIView(APIView):
     """
 
     def get(self, request, diagnosisID):
-        import logging
-        logger = logging.getLogger(__name__)
+        """
+        API endpoint which returns the URL of the requested AI Mask and the 
+        brain image
 
+        Args:
+            diagnosisID (_type_): The given diagnosis
+
+        Returns:
+            _type_: URls for the requested AI Mask and brain image
+        """
         try:
             if not diagnosisID:
                 return Response({"error": "diagnosisID is required"}, status=status.HTTP_400_BAD_REQUEST)
@@ -200,7 +207,6 @@ class GetImageAndMaskAPIView(APIView):
             )
 
         except Exception as e:
-            logger.error(f"Error fetching image and mask: {e}")
             return Response(
                 {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )

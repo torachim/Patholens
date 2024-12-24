@@ -43,18 +43,17 @@ document.addEventListener('DOMContentLoaded', function () {
     formatDropdown.addEventListener('change', (event) => {
         selectedFormatMri = event.target.value;
         loadImageWithMask(selectedFormatMask, selectedFormatMri);
-    })
+    });
 
     function loadImageWithMask(formatMask, formatMri) {
 
+        // Parameters which get send to the backend -> the requested formats
         const params = new URLSearchParams({
             mask: formatMask,
             mri: formatMri,
         });
 
         const apiURL = `${baseApiURL}/?${params.toString()}`; // Combined API URL
-
-        console.log(apiURL)
 
         // Fetch combined MRI and Mask URLs
         fetch(apiURL)
