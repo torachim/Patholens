@@ -195,15 +195,6 @@ input[type="radio"]:checked::before {
 
 }
 
-.patientID{
-    position:fixed;
-    top: 80px;
-    left: 30px;
-    font-family:Calibri, Arial, sans-serif ;
-    color: white;
-    font-size: 18px;
-
-}
 
 /* Pop up for the confidence */
 .popupOverlay {
