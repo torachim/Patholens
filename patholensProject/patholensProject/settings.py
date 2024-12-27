@@ -168,3 +168,9 @@ SUPPORTED_IMAGE_FORMATS = {
 
 X_FRAME_OPTIONS = 'ALLOWALL'  # Um das Einbetten der Seite in einen Iframe zu erlauben
 
+
+# Maximal erlaubte Größe für Upload-Daten in Bytes
+DATA_UPLOAD_MAX_MEMORY_SIZE = 209715200  # 200 MB
+
+# Maximal erlaubte Größe für Datei-Uploads in Bytes
+FILE_UPLOAD_MAX_MEMORY_SIZE = 209715200  # 200 MB
