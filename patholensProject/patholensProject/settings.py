@@ -166,11 +166,11 @@ SUPPORTED_IMAGE_FORMATS = {
     "T1": "_space-orig_T1w.nii.gz",
 }
 
-X_FRAME_OPTIONS = 'ALLOWALL'  # Um das Einbetten der Seite in einen Iframe zu erlauben
+X_FRAME_OPTIONS = 'ALLOWALL'  # To allow embedding the page in an iframe
 
 
-# Maximal erlaubte Größe für Upload-Daten in Bytes
+# Maximum allowed size for upload data in bytes
 DATA_UPLOAD_MAX_MEMORY_SIZE = 209715200  # 200 MB
 
-# Maximal erlaubte Größe für Datei-Uploads in Bytes
+# Maximum allowed size for file uploads in bytes
 FILE_UPLOAD_MAX_MEMORY_SIZE = 209715200  # 200 MB

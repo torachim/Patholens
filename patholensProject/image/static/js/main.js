@@ -213,15 +213,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     function saveEditedImage() {
-        const filename = `edited_image_${diagnosisID}.nii.gz`; // Dynamischer Dateiname
+        const filename = `edited_image_${diagnosisID}.nii.gz`; // dynamic filename
     
-        // Generiere den Blob des Bildes
+        // Generate the blob of the image
         const imageBlob = nv.saveImage({
             isSaveDrawing: true,
             volumeByIndex: 0,
         });
     
-        // Erstelle ein FormData-Objekt
+        // Create a FormData object
         const formData = new FormData();
         formData.append("filename", filename);
         formData.append("image_file", new Blob([imageBlob], { type: "application/octet-stream" }));
@@ -229,9 +229,9 @@ document.addEventListener('DOMContentLoaded', function() {
         fetch("/image/save-edited-image/", {
             method: "POST",
             headers: {
-                "X-CSRFToken": getCookie("csrftoken"), // CSRF-Schutz
+                "X-CSRFToken": getCookie("csrftoken"), // CSRF-Security
             },
-            body: formData, // FormData wird gesendet
+            body: formData, // FormData is sent
         })
             .then((response) => {
                 if (response.ok) {
@@ -250,7 +250,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     
-    // CSRF-Token abrufen
+    // Retrieve CSRF token
     function getCookie(name) {
         let cookieValue = null;
         if (document.cookie && document.cookie !== "") {

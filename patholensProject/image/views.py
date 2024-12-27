@@ -24,17 +24,17 @@ def testRenderImageView(request, imageID):
 def save_edited_image(request):
     if request.method == "POST":
         try:
-            # Datei und Dateiname aus der Anfrage extrahieren
+            # Extract file and file name from the request
             image_file = request.FILES.get("image_file")
             filename = request.POST.get("filename")
 
             if not image_file or not filename:
                 return JsonResponse({"error": "Invalid data"}, status=400)
 
-            # Speicherpfad im Media-Ordner
+            # storage path in the media folder
             filepath = os.path.join(settings.MEDIA_ROOT, filename)
 
-            # Speichere die Datei
+            # Save the file
             with open(filepath, "wb") as f:
                 for chunk in image_file.chunks():
                     f.write(chunk)
