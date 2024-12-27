@@ -33,7 +33,7 @@ body{
 }
 
 /* Dropdown-Select Styling */
-.dropdown-select {
+.dropdown-select-box {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -41,23 +41,14 @@ body{
     padding: 10px 20px;
     background-color: #3498db;
     color: white;
-    border-radius: 4px;
     cursor: pointer;
     position: relative;
     text-align: left;
+    box-sizing: border-box;
 }
 
-/* Pfeil Styling */
-.dropdown-arrow {
-    content: "";
-    border: solid white;
-    border-width: 0 2px 2px 0;
-    display: inline-block;
-    width: 6px;
-    height: 6px;
-    transform: rotate(45deg); /* Pfeil nach unten */
-    transition: transform 0.3s ease; /* Animierte Drehung des Pfeils */
-}
+
+
 
 /* Dropdown-Text */
 .dropdown-text {
@@ -65,10 +56,7 @@ body{
     padding-right: 10px;
 }
 
-/* Dropdown-Boxen ausblenden */
-.dropdown-select-box {
-    display: none;
-}
+
 
 /* Dropdown-Menü Styling */
 .dropdown-menu {
@@ -77,16 +65,16 @@ body{
     top: 100%;
     left: 0;
     width: 100%;
-    background-color: white;
+    background-color:  #3498db;
     border: 1px solid #3498db;
-    border-radius: 4px;
+   
     z-index: 1000;
 }
 
 /* Dropdown-Item Styling */
 .dropdown-item {
     padding: 10px 20px;
-    background-color: #f9f9f9;
+    background-color:  #3498db;
     cursor: pointer;
 }
 
@@ -96,25 +84,7 @@ body{
     color: white;
 }
 
-/* Dropdown anzeigen, wenn das Dropdown-Select fokussiert ist */
-.dropdown-select-box:focus + .dropdown-menu {
-    display: block;
-}
 
-/* Wenn das Dropdown geöffnet ist, dreht sich der Pfeil nach oben */
-.dropdown-select-box:focus + .dropdown-menu + .dropdown-select .dropdown-arrow {
-    transform: rotate(-135deg); /* Pfeil nach oben drehen */
-}
-
-/* Das Menü geht nach oben, wenn das Dropdown fokussiert ist */
-.dropdown-select-box:focus + .dropdown-menu {
-    bottom: 100%; /* Menü nach oben verschieben */
-}
-
-/* Wenn das Dropdown fokussiert ist, wird der Text weiß */
-.dropdown-select-box:focus + .dropdown-menu + .dropdown-select .dropdown-text {
-    color: #fff;
-}
 
 /* Die Standard-Position für den Dropdown-Button */
 .dropbtn {
@@ -125,23 +95,6 @@ body{
     border: none;
     cursor: pointer;
     display: block;
-    text-align: center;
-}
-
-/* Benutzersichtbarkeit des Dropdowns über das Label */
-.dropdown select:focus + label,
-.dropdown select {
-    display: block; /* Dropdown anzeigen */
-} 
-
-/* Label als Button */
-label {
-    background-color: #3498db;
-    color: white;
-    padding: 12px 16px;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 4px;
     text-align: center;
 }
 
@@ -200,73 +153,4 @@ label {
     background-color:#008f97; 
 }
 
-
-/* container for the radio boxes */
-.container {
-    display: flex;
-    justify-content: center; 
-    align-items: center; 
-    position: absolute;
-    top: 17%; 
-    width: 100%;
-}
-
-/* radio buttons */
-.radioForm {
-    display: flex;
-    gap: 130px; 
-    align-items: center;
-    margin-top: 10px;
-    margin-bottom: -40px;
-}
-
-input[type="radio"] {
-    cursor: pointer;
-    width: 20px; 
-    height: 20px; 
-    margin: 0; 
-    background-color: #00242F;
-    border: 2px solid white;
-    appearance: none; 
-    border-radius: 50%;
-    position: relative;
-}
-
-input[type="radio"]:checked::before {
-    content: ''; 
-    display: block;
-    width: 10px; 
-    height: 10px; 
-    background-color: white; 
-    border-radius: 50%;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%); 
-}
-
-.radioForm label {
-    display: flex;
-    align-items: center; 
-    gap: 12px; 
-}
-
-.radioForm label p {
-    margin: 0; 
-    font-size: 18px; 
-    color: white; 
-    font-family: Calibri, Arial, sans-serif;
-    font-weight: bold;
-    transition: transform 0.025s ease; 
-}
-
-
-input[type="radio"]:checked {   
-    box-shadow: 0 4px 7px rgba(0, 0, 0, 0.4); 
-}
-
-/* Change text color and scale when the radio button is checked */
-input[type="radio"]:checked + p { 
-    transform: scale(1.025);
-}
 
