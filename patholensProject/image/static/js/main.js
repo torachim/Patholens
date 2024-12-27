@@ -224,9 +224,9 @@ document.addEventListener('DOMContentLoaded', function() {
         // Create a FormData object
         const formData = new FormData();
         formData.append("filename", filename);
-        formData.append("image_file", new Blob([imageBlob], { type: "application/octet-stream" }));
+        formData.append("imageFile", new Blob([imageBlob], { type: "application/octet-stream" }));
     
-        fetch("/image/save-edited-image/", {
+        fetch("/image/saveImage/", {
             method: "POST",
             headers: {
                 "X-CSRFToken": getCookie("csrftoken"), // CSRF-Security

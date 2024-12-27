@@ -21,11 +21,11 @@ def testRenderImageView(request, imageID):
     return render(request, 'image/diagnosisPage.html', {'imageID': imageID})
 
 
-def save_edited_image(request):
+def saveImage(request):
     if request.method == "POST":
         try:
             # Extract file and file name from the request
-            image_file = request.FILES.get("image_file")
+            image_file = request.FILES.get("imageFile")
             filename = request.POST.get("filename")
 
             if not image_file or not filename:

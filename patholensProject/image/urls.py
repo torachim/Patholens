@@ -28,5 +28,5 @@ urlpatterns = [
     path('api/getImage/<str:diagnosisID>/', GetImageAPIView.as_view(), name='getImage'),
     path('newDiagnosis/<str:diagnosisID>/', views.newDiagnosis, name='newDiagnosis'),
     
-    path("save-edited-image/", views.save_edited_image, name="save_edited_image"),
+    path("saveImage/", views.saveImage, name="saveImage"),
 ]
