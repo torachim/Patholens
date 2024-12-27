@@ -11,4 +11,4 @@ python3 ./manage.py migrate
 # Run Django Server
 echo "Run Django Server"
 python3 ./manage.py createsuperuser --noinput --username=admin
-python3 ./manage.py runserver 127.0.0.1:8000
+python3 ./manage.py runserver 0.0.0.0:8000

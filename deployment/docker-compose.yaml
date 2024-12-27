@@ -1,5 +1,3 @@
-version: "2.2"
-
 networks:
   asd:
     name: asd
@@ -11,9 +9,10 @@ volumes:
 services:
   fcd-assistant:
     image: fcd-assistant:dev
-    depends_on:
-      patholens:
-        condition: service_healthy
+    # depends_on: comment out because patholens doesnt have a health check
+    #   patholens:
+    #     condition: service_healthy
+    restart: always
     networks:
       - "asd"
     ports:
@@ -23,9 +22,9 @@ services:
 
   patholens:
     image: patholens:dev
-    # depends_on:
-    #   database:
-    #     condition: service_healthy
+    depends_on:
+      database:
+        condition: service_healthy
     networks:
       - "asd"
     ports:

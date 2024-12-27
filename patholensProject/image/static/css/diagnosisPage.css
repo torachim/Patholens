@@ -10,14 +10,22 @@ body {
 }
 
 .homeButton {
-    margin-left: 25px;
+    margin-right: 10px;
     text-decoration: none;
     font-size: 30px;
+    width: 40px;
+    height: 40px;
 }
 
 .homeButton i {
     cursor: pointer;
 }
+
+#homeIcon {
+    width: 40px;
+    height: 40px;
+}
+
 
 /* Main toolbar styling */
 .toolbar {
@@ -59,6 +67,11 @@ body {
     font-size: 24px;
     color: #434343;
     transform: rotate(-20deg);
+}
+
+#freehandDrawingIcon{
+    max-width: 24px;
+    max-height: 24px;
 }
 
 .outlineSquare {
@@ -138,7 +151,6 @@ input[type="radio"]:checked::before {
 
 
 
-
 .radioForm label {
     display: flex;
     align-items: center; 
@@ -210,7 +222,6 @@ input[type="radio"]:checked::before {
 }
 
 
-
 .popupFrame {
     position: relative;
     background: #005E7A;
@@ -231,8 +242,6 @@ input[type="radio"]:checked::before {
     margin-top: 50px;
 
 }
-
-
 
 .popupClose {
   
@@ -261,7 +270,6 @@ input[type="radio"]:checked::before {
     font-weight: regular;
     cursor: pointer;
     box-shadow: 5px 5px rgba(0, 0, 0, 0.2);
-    bottom: 20px;
     position: absolute;
     bottom: 60px;
     left: 50%;
@@ -323,7 +331,4 @@ input[type="radio"]:checked::before {
     visibility: hidden; 
     white-space: nowrap;
     
-
 }  
-    
-
