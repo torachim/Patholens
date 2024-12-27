@@ -225,8 +225,29 @@ document.addEventListener('DOMContentLoaded', function() {
         const formData = new FormData();
         formData.append("filename", filename);
         formData.append("image_file", new Blob([imageBlob], { type: "application/octet-stream" }));
+    
+        fetch("/image/save-edited-image/", {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": getCookie("csrftoken"), // CSRF-Schutz
+            },
+            body: formData, // FormData wird gesendet
+        })
+            .then((response) => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error("Failed to save the image");
+                }
+            })
+            .then((data) => {
+                alert("Image saved successfully!");
+            })
+            .catch((error) => {
+                console.error("Error during save operation:", error);
+                alert("An error occurred while saving the image.");
+            });
     }
-
     
     
     // Confirm-Button-Listener
