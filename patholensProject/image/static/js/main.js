@@ -241,11 +241,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             })
             .then((data) => {
-                alert("Image saved successfully!");
+                console.log("Image saved successfully!");
             })
             .catch((error) => {
                 console.error("Error during save operation:", error);
-                alert("An error occurred while saving the image.");
             });
     }
     
@@ -268,5 +267,5 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Confirm-Button-Listener
     document.getElementById("confirmButton").addEventListener("click", saveEditedImage);
-    
+    //Test 1
 });
