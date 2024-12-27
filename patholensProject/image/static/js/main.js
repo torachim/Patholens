@@ -213,27 +213,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     function saveEditedImage() {
-        const filename = `edited_image_${diagnosisID}.nii.gz`; // Generate filename
-        const options = {
-            filename: filename,
-            isSaveDrawing: true, // save the drawing
-            volumeByIndex: 0 // Speichere die Hintergrundebene
-        };
+        const filename = `edited_image_${diagnosisID}.nii.gz`; // Dynamischer Dateiname
     
-        const result = nv.saveImage(options);
+        // Generiere den Blob des Bildes
+        const imageBlob = nv.saveImage({
+            isSaveDrawing: true,
+            volumeByIndex: 0,
+        });
     
-        if (result) {
-            console.log(`Image saved as ${filename}`);
-            alert(`Image has been saved as ${filename}`);
-        } else {
-            console.error("Failed to save the image.");
-            alert("An error occurred while saving the image.");
-        }
+        // Erstelle ein FormData-Objekt
+        const formData = new FormData();
+        formData.append("filename", filename);
+        formData.append("image_file", new Blob([imageBlob], { type: "application/octet-stream" }));
     }
+
     
-
-    document.getElementById("confirmButton").addEventListener("click", function(e){
-        saveEditedImage();
-    });
-
+    
+    // Confirm-Button-Listener
+    document.getElementById("confirmButton").addEventListener("click", saveEditedImage);
+    
 });
