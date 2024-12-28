@@ -8,3 +8,7 @@ def newDiagnosis(request, diagnosisID):
 
 def testRenderImageView(request, imageID):
     return render(request, 'image/diagnosisPage.html', {'imageID': imageID})
+
+def editDiagnosis(request):
+    return render(request, 'image/editDiagnosis.html')
+

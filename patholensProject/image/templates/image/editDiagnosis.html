@@ -1,0 +1,51 @@
+{% extends 'base.html' %} 
+{% load static %} 
+{% csrf_token %}
+{% block extraCSS %}
+<link rel="stylesheet" href="{% static 'css/diagnosisPage.css' %}?v=2" />
+{% endblock %} 
+
+{% block title %} 
+  Diagnosis Page 
+{% endblock %} 
+
+<!--adds the homebutton-->
+{% block topBar %}
+<a href="/startingPage" class="homeButton">
+    <img alt="home" src="{% static 'icons\HomeButton.png' %}" id="homeIcon">
+</a>
+{% endblock %}
+
+{%block content%}
+
+
+<div class="toolbar">    
+    <button class="toolButton" id="selectTool">
+        <img alt="freehand drawing" src="{% static 'icons\FreehandDrawingIcon.png' %}" id="freehandDrawingIcon">
+    </button>
+
+    <button class="toolButton" id="frameTool">
+        <div class="outlineSquare"></div>
+    </button>
+
+    <button class="toolButton" id="eraseTool">
+        <i class="fa-solid fa-eraser"></i>
+    </button>
+
+    <button class="toolButton" id="undoTool">
+        <i class="fa-solid fa-rotate-left"></i>    
+    </button>
+</div>
+
+<div class="imageBox">
+    <canvas id="imageBrain" width="100%" height="376%"></canvas>
+</div>
+
+
+<div class="finishDiagnosisButton">
+    <button type="button" id="finishButton">Finish Diagnosis</button>
+</div>
+
+
+
+{% endblock %}

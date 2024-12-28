@@ -1,0 +1,273 @@
+@import url('https://fonts.googleapis.com/css?family=Cabin');
+
+body {
+    background-color: #00242F !important;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.homeButton {
+    margin-right: 10px;
+    text-decoration: none;
+    font-size: 30px;
+    width: 40px;
+    height: 40px;
+}
+
+.homeButton i {
+    cursor: pointer;
+}
+
+#homeIcon {
+    width: 40px;
+    height: 40px;
+}
+
+
+/* Main toolbar styling */
+.toolbar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #00485E;
+    border-radius: 10px;
+    padding: 10px 20px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+    gap: 55px;
+    width: 370px;
+    height: 40px;
+    margin: 20px auto; 
+    margin-top: 25px; 
+    margin-bottom: -30px;
+}
+
+/* Tool button styling */
+.toolButton {
+    background-color: #D9D9D9;
+    border: none;
+    border-radius: 10px;
+    width: 45px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.toolButton:active {
+    transform: translateY(2px);
+}
+
+#selectTool i {
+    font-size: 24px;
+    color: #434343;
+    transform: rotate(-20deg);
+}
+
+#freehandDrawingIcon{
+    max-width: 24px;
+    max-height: 24px;
+}
+
+.outlineSquare {
+    width: 24px;
+    height: 20px;
+    border: 3.8px solid #434343;
+    border-radius: 2px;
+    background-color: transparent;
+    display: inline-block;
+    box-sizing: border-box;
+}
+
+#eraseTool i {
+    font-size: 24px;
+    color: #434343;
+}
+
+
+#undoTool i {
+    font-size: 24px;
+    color: #434343;
+}
+
+
+/* container for the radio boxes */
+.container {
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+    position: absolute;
+    bottom: 80px; 
+    width: 100%;
+}
+
+/* container for the canvas */
+.imageBox{
+    margin-top: 50px;
+    color: rgb(242, 239, 227);
+}
+
+
+
+
+/* finnish diagnosis button */
+.finishDiagnosisButton {
+    position: fixed; 
+    bottom: 30px; 
+    right: 30px; 
+}
+
+.finishDiagnosisButton button {
+    background-color: #00afb9;
+    border: none;
+    width: 200px;
+    height: 35px;
+    border-radius: 8px;
+    color: white;
+    font-size: 18px;
+    font-family: Calibri, Arial, sans-serif;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 5px 5px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease; 
+}
+
+
+.finishDiagnosisButton button:hover {
+    background-color: #008a91; 
+
+}
+
+
+/* Pop up for the confidence */
+.popupOverlay {
+    
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7); 
+    backdrop-filter: blur(8px); 
+    display: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.popupFrame {
+    position: relative;
+    background: #005E7A;
+    padding: 20px 30px;
+    border-radius: 20px;
+    width: 450px;
+    height: 275px;
+    text-align: center;
+    align-items: center;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+    
+}
+
+.popupFrame p {
+    font-family: 'Cabin', sans-serif;
+    color: white;
+    font-size: 20px;
+    margin-top: 50px;
+
+}
+
+.popupClose {
+  
+    position: absolute; 
+    top: 10px;
+    right: 10px;
+    background-color: transparent;
+    color: white;
+    font-size: 30px;
+    border: none;
+    font-weight: regular;
+    text-align: center;
+    cursor: pointer;
+    line-height: 30px
+}
+
+.popupConfirm{
+    background-color: #00afb9;
+    border: none;
+    width: 200px;
+    height: 35px;
+    border-radius: 8px;
+    color: white;
+    font-size: 18px;
+    font-family: Calibri, Arial, sans-serif;
+    font-weight: regular;
+    cursor: pointer;
+    box-shadow: 5px 5px rgba(0, 0, 0, 0.2);
+    position: absolute;
+    bottom: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.popupConfirm:hover {
+    background-color: #008a91; 
+    
+}
+
+/* Confidence meter to enter your confidence */
+.confidenceMeterContainer {
+    position: absolute;
+    width: 70%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    
+
+}
+
+
+.confidenceMeter {
+    width: 100%;
+    -webkit-appearance: none; 
+    appearance: none;
+    height: 15px;
+    border-radius: 10px;
+    background: linear-gradient(to right, red, yellow, green); 
+    outline: none;
+    margin: 0;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3); 
+}
+
+.confidenceMeter::-webkit-slider-thumb {
+    -webkit-appearance: none; 
+    appearance: none;
+    width: 10px;
+    height: 35px;
+    background: #D9D9D9;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
+    
+}
+
+/* Value of the confidence */
+.tooltip {
+    position: absolute;
+    top: -45px; 
+    left: 50%; 
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.3);
+    color: white;
+    font-family: 'Calibri', sans-serif;
+    padding: 5px;
+    border-radius: 5px;
+    visibility: hidden; 
+    white-space: nowrap;
+    
+}  
