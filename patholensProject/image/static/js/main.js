@@ -265,9 +265,9 @@ document.addEventListener('DOMContentLoaded', function() {
         return cookieValue;
     }
     
-    // Confirm-Button-Listener
+    // save image if the confirm button is clicked
     document.getElementById("confirmButton").addEventListener("click", saveEditedImage);
     
-
+    // save image if logged out
     document.getElementById("logoutButton").addEventListener("click", saveEditedImage);
 });
