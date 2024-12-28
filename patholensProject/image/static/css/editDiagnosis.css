@@ -40,7 +40,7 @@ body {
     width: 370px;
     height: 40px;
     margin: 20px auto; 
-    margin-top: 25px; 
+    margin-top: 20px; 
     margin-bottom: -30px;
 }
 
@@ -106,13 +106,115 @@ body {
     width: 100%;
 }
 
-/* container for the canvas */
-.imageBox{
-    margin-top: 50px;
-    color: rgb(242, 239, 227);
+.imageBox {
+    width: 100%;  /* Container auf 100% der Breite */
+    height: 350px; /* Beispielhöhe für den Container */
+    background-color: aliceblue; /* Hintergrundfarbe für die Container-Fläche */
+    margin-top: 40px;
 }
 
+.dropdown-container {
+    display: flex;
+    justify-content: center; /* Zentriert die Dropdowns */
+    gap: 40px; /* Abstand zwischen den Dropdowns */
+    margin-top: 20px;
+}
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Cabin', sans-serif;
+}
 
+.container {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    background: #fafafa;
+}
+
+.dropdown {
+    position: relative;
+    top: 20px;
+    width: 150px;
+    height: 30px;
+}
+
+.dropdown::before {
+    content: "";
+    position: absolute;
+    top: 12px;
+    right: 10px;
+    z-index: 1000;
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 8px solid white; /* Farbe des Dreiecks */
+    transform: rotate(0deg); /* Kann angepasst werden, z. B. für nach unten gerichteten Pfeil */
+    pointer-events: none;
+}
+
+.dropdown.active::before {
+    top: 12px;
+    transform: rotate(-180deg);
+}
+
+.dropdown input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    background: linear-gradient(to right, #00242F 80%, #005E7A 20%) !important;
+    color: #fff;
+    font-size: 1.1em;
+    border: 2px solid #005E7A;
+    outline: none;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-family: Calibri, Arial, sans-serif;
+    display: flex;
+    
+}
+.dropdown.active input{
+    border-radius: 8px 8px 0 0;
+}
+
+.dropdown .options {
+    position: absolute;
+    top:30px;
+    width: 100%;
+    background: #00485E;
+    border: 2px solid #005E7A;
+    color: #fff;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+    border-radius: 0 0 8px 8px;
+    overflow: hidden;
+    display: none;
+}
+
+.dropdown.active .options {
+    display: block;
+    
+}
+
+.dropdown .options div {
+    padding: 6px 14px;
+    cursor: pointer;
+    border-bottom: 2px solid #005E7A /* strich zwiscehn den Einträgen*/
+    
+}
+
+.dropdown .options div:hover {
+    background:  #00242F;
+    color: #fff;
+    
+}
 
 
 /* finnish diagnosis button */
