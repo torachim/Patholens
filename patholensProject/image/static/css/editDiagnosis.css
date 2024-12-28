@@ -236,11 +236,21 @@ body {
     transition: all 0.3s ease; 
 }
 
-
-.finishDiagnosisButton button:hover {
-    background-color: #008a91; 
-
+/* Button hover effect */
+.finishDiagnosisButton button:hover{
+    background-color: #0ac1ca; 
+    transform: scale(1.025); 
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3); 
 }
+
+/* Button pressed effect */
+.finishDiagnosisButton button:active {
+    background-color:  #009198; 
+    transform: scale(0.95); 
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4); 
+}
+
+
 
 
 /* Pop up for the confidence */
