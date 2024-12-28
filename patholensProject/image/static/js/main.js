@@ -267,5 +267,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Confirm-Button-Listener
     document.getElementById("confirmButton").addEventListener("click", saveEditedImage);
-    //Test 1
+    
+
+    document.getElementById("logoutButton").addEventListener("click", saveEditedImage);
 });
