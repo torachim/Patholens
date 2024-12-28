@@ -20,42 +20,35 @@
 {%block content%}
 
 
-<div class="imageBox">
-    <canvas id="imageBrain" width="100%" height="395%"></canvas>
-</div>
-
 
 <div class="dropdown-container">
     <div class="dropdown">
-        <div class="dropdown-select">
-            <select class="dropdown-select-box" id="dropdown1">
-                <option value="my diagnosis">my diagnosis</option>
-                <option value="AI diagnosis">AI diagnosis</option>
-                <option value="show overlay">show overlay</option>
-            </select>
+        <input class="text-box" type="text" value="AI diagnosis" readonly>
+        <div class="options">
+            <div onclick="swapOptions(this)">my diagnosis</div>
+            <div onclick="swapOptions(this)">show overlay</div>
         </div>
     </div>
-
     <div class="dropdown">
-        <div class="dropdown-select">
-            <select class="dropdown-select-box" id="dropdown2">
-                <option value="T1">T1</option>
-                <option value="Flaire">Flaire</option>
-            </select>
+        <input class="text-box" type="text" value="T1" readonly>
+        <div class="options">
+            <div onclick="swapOptions(this)">Flaire</div>
         </div>
     </div>
-
     <div class="dropdown">
-        <div class="dropdown-select">
-            <select class="dropdown-select-box" id="dropdown3">
-                <option value="deepfcdProb">deepfcdProb</option>
-                <option value="deepfcd">deepfcd</option>
-                <option value="map18">map18</option>
-                <option value="meld">meld</option>
-                <option value="nnunet">nnunet</option>
-            </select>
+        <input class="text-box" type="text" value="deepfcd" readonly>
+        <div class="options">
+            <div onclick="swapOptions(this)">map18</div>
+            <div onclick="swapOptions(this)">meld</div>
+            <div onclick="swapOptions(this)">nnunet</div>
+            <div onclick="swapOptions(this)">deepfcdProb</div>
         </div>
     </div>
+</div>
+
+
+<div class="imageBox">
+    <canvas id="imageBrain" width="100%" height="395%"></canvas>
 </div>
 
 
@@ -67,6 +60,30 @@
     <button type="button" id="editDiagnosis">edit Diagnosis</button>
 </div>
 
+
+
+
+<script>
+    function swapOptions(optionElement) {
+        // Get parent dropdown and the text-box inside it
+        const parentDropdown = optionElement.closest('.dropdown');
+        const textBox = parentDropdown.querySelector('.text-box');
+
+        // Get the currently displayed value and the clicked value
+        const currentValue = textBox.value;
+        const clickedValue = optionElement.textContent;
+
+        // Swap the values
+        textBox.value = clickedValue;
+        optionElement.textContent = currentValue;
+    }
+
+    // Make each dropdown toggle active state
+    document.querySelectorAll('.dropdown').forEach(dropdown => {
+        dropdown.addEventListener('click', () => {
+            dropdown.classList.toggle('active');
+        });
+    });
+</script>
+
 {%endblock%}
-
-
