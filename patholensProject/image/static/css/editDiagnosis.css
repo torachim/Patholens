@@ -96,28 +96,22 @@ body {
 }
 
 
-/* container for the radio boxes */
-.container {
-    display: flex;
-    justify-content: center; 
-    align-items: center; 
-    position: absolute;
-    bottom: 80px; 
-    width: 100%;
-}
 
 .imageBox {
     width: 100%;  /* Container auf 100% der Breite */
     height: 350px; /* Beispielhöhe für den Container */
     background-color: aliceblue; /* Hintergrundfarbe für die Container-Fläche */
-    margin-top: 40px;
+    margin-top: 50px;
 }
 
 .dropdown-container {
     display: flex;
-    justify-content: center; /* Zentriert die Dropdowns */
-    gap: 40px; /* Abstand zwischen den Dropdowns */
+    flex-direction: column; /* Dropdowns vertikal anordnen */
+    justify-content: flex-start; /* Dropdowns oben ausrichten */
+    gap: 10px; /* Abstand zwischen den Dropdowns */
     margin-top: 20px;
+    margin-right: 900px;
+    align-items: center; /* Horizontale Zentrierung */
 }
 *{
     margin: 0;
@@ -155,6 +149,7 @@ body {
     border-top: 8px solid white; /* Farbe des Dreiecks */
     transform: rotate(0deg); /* Kann angepasst werden, z. B. für nach unten gerichteten Pfeil */
     pointer-events: none;
+    z-index: 0;
 }
 
 .dropdown.active::before {
@@ -179,6 +174,7 @@ body {
     border-radius: 8px;
     font-family: Calibri, Arial, sans-serif;
     display: flex;
+    z-index: -1;
     
 }
 .dropdown.active input{
@@ -196,6 +192,7 @@ body {
     border-radius: 0 0 8px 8px;
     overflow: hidden;
     display: none;
+    z-index: 1;
 }
 
 .dropdown.active .options {

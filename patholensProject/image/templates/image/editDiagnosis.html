@@ -41,20 +41,9 @@
     <canvas id="imageBrain" width="100%" height="395%"></canvas>
 </div>
 
+
 <div class="dropdown-container">
-    <div class="dropdown">
-        <input class="text-box" type="text" value="AI diagnosis" readonly>
-        <div class="options">
-            <div onclick="swapOptions(this)">my diagnosis</div>
-            <div onclick="swapOptions(this)">show overlay</div>
-        </div>
-    </div>
-    <div class="dropdown">
-        <input class="text-box" type="text" value="T1" readonly>
-        <div class="options">
-            <div onclick="swapOptions(this)">Flaire</div>
-        </div>
-    </div>
+
     <div class="dropdown">
         <input class="text-box" type="text" value="deepfcd" readonly>
         <div class="options">
@@ -64,6 +53,20 @@
             <div onclick="swapOptions(this)">deepfcdProb</div>
         </div>
     </div>
+    <div class="dropdown">
+        <input class="text-box" type="text" value="AI diagnosis" readonly>
+        <div class="options">
+            <div onclick="swapOptions(this)">my diagnosis</div>
+            <div onclick="swapOptions(this)">show overlay</div>
+        </div>
+    </div>
+    
+    
+    <div class="dropdown">
+        <input class="text-box" type="text" value="T1" readonly>
+        <div class="options">
+            <div onclick="swapOptions(this)">Flaire</div>
+        </div>
 </div>
 
 
@@ -73,5 +76,27 @@
 
 
 
+<script>
+    function swapOptions(optionElement) {
+        // Get parent dropdown and the text-box inside it
+        const parentDropdown = optionElement.closest('.dropdown');
+        const textBox = parentDropdown.querySelector('.text-box');
+
+        // Get the currently displayed value and the clicked value
+        const currentValue = textBox.value;
+        const clickedValue = optionElement.textContent;
+
+        // Swap the values
+        textBox.value = clickedValue;
+        optionElement.textContent = currentValue;
+    }
+
+    // Make each dropdown toggle active state
+    document.querySelectorAll('.dropdown').forEach(dropdown => {
+        dropdown.addEventListener('click', () => {
+            dropdown.classList.toggle('active');
+        });
+    });
+</script>
 {% endblock %}
 
