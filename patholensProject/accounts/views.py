@@ -6,6 +6,8 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth import authenticate, login
 from django.shortcuts import redirect
 from image.mediaHandler import addMedia
+from django.http import JsonResponse
+from .diagnosisManager import getURL
 
 # the python file which handles the creation of Doctor DB
 from . import doctorManager
@@ -160,3 +162,16 @@ def logoutView(request, calledFrom):
 
     logout(request)
     return redirect("/")  # redirects to the login screen
+
+
+
+def getURLApi(request, diagID):
+    try:
+        # call `getURL`-function
+        url = getURL(diagID)
+        if url:
+            return JsonResponse({"url": url}, status=200)
+        else:
+            return JsonResponse({"error": "Diagnosis not found"}, status=404)
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
