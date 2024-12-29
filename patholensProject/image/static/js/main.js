@@ -211,7 +211,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
 
-    // get the image URL with getURL function from diagnosisManager
+    // get the image diagID with getURL function from diagnosisManager
     async function fetchImageURL(diagID) {
         try {
             const response = await fetch(`/getURL/${diagID}/`, {
@@ -238,25 +238,26 @@ document.addEventListener('DOMContentLoaded', function() {
     // Save the edited image
     async function saveEditedImage() {
         try {
-            // Wait for URL from fetchImageURL
-            const url = await fetchImageURL(diagnosisID);
+            // Wait for diagID from fetchImageURL
+            const diagID = await fetchImageURL(diagnosisID);
     
-            if (!url) {
-                console.error("Image URL could not be retrieved.");
+            if (!diagID) {
+                console.error("Image diagID could not be retrieved.");
                 return;
             }
     
-            const filename = `edited_image_${url}.nii.gz`; // Dynamic filename
+            const filename = `edited_image_${diagID}.nii.gz`; // Dynamic filename
     
             // Create the blob object for the image
             const imageBlob = nv.saveImage({
                 isSaveDrawing: true,
                 volumeByIndex: 0,
             });
-    
+            
             // Create a FormData object
             const formData = new FormData();
             formData.append("filename", filename);
+            formData.append("diagnosisID", diagID)
             formData.append("imageFile", new Blob([imageBlob], { type: "application/octet-stream" }));
     
             // Send the data to the API

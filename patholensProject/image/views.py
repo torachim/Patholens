@@ -27,19 +27,32 @@ def saveImage(request):
             # Extract file and file name from the request
             image_file = request.FILES.get("imageFile")
             filename = request.POST.get("filename")
+            diagnosisID = request.POST.get("diagnosisID") # get the diagnosis ID from the request
 
-            if not image_file or not filename:
+            if not image_file or not filename or not diagnosisID:
                 return JsonResponse({"error": "Invalid data"}, status=400)
 
-            # storage path in the media folder
-            filepath = os.path.join(settings.MEDIA_ROOT, filename)
+            # Define the directory structure: media/website_data/derivatives/diagnosis/sub-{diagnosis_id}
+            sub_folder = os.path.join(
+                settings.MEDIA_ROOT,
+                "website_data",
+                "derivatives",
+                "diagnosis",
+                f"sub-{diagnosisID}"
+            )
+
+            # Ensure the directory exists
+            os.makedirs(sub_folder, exist_ok=True)
+
+            # Full file path
+            filepath = os.path.join(sub_folder, filename)
 
             # Save the file
             with open(filepath, "wb") as f:
                 for chunk in image_file.chunks():
                     f.write(chunk)
 
-            return JsonResponse({"message": "Image saved successfully", "path": filepath})
+            return JsonResponse({"message": "Image saved successfully"})
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=400)
     else:
