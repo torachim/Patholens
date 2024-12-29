@@ -211,10 +211,10 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
 
-    
-    async function fetchImageURL(diagnosisID) {
+    // get the image URL with getURL function from diagnosisManager
+    async function fetchImageURL(diagID) {
         try {
-            const response = await fetch(`/getURL/${diagnosisID}/`, {
+            const response = await fetch(`/getURL/${diagID}/`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -235,43 +235,49 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-
     // Save the edited image
-    function saveEditedImage() {
-        const filename = `edited_image_${diagnosisID}.nii.gz`; // dynamic filename
+    async function saveEditedImage() {
+        try {
+            // Wait for URL from fetchImageURL
+            const url = await fetchImageURL(diagnosisID);
     
-        // Generate the blob of the image
-        const imageBlob = nv.saveImage({
-            isSaveDrawing: true,
-            volumeByIndex: 0,
-        });
+            if (!url) {
+                console.error("Image URL could not be retrieved.");
+                return;
+            }
     
-        // Create a FormData object
-        const formData = new FormData();
-        formData.append("filename", filename);
-        formData.append("imageFile", new Blob([imageBlob], { type: "application/octet-stream" }));
+            const filename = `edited_image_${url}.nii.gz`; // Dynamic filename
     
-        fetch("/image/saveImage/", {
-            method: "POST",
-            headers: {
-                "X-CSRFToken": getCookie("csrftoken"), // CSRF-Security
-            },
-            body: formData, // FormData is sent
-        })
-            .then((response) => {
-                if (response.ok) {
-                    return response.json();
-                } else {
-                    throw new Error("Failed to save the image");
-                }
-            })
-            .then((data) => {
-                console.log("Image saved successfully!");
-            })
-            .catch((error) => {
-                console.error("Error during save operation:", error);
+            // Create the blob object for the image
+            const imageBlob = nv.saveImage({
+                isSaveDrawing: true,
+                volumeByIndex: 0,
             });
+    
+            // Create a FormData object
+            const formData = new FormData();
+            formData.append("filename", filename);
+            formData.append("imageFile", new Blob([imageBlob], { type: "application/octet-stream" }));
+    
+            // Send the data to the API
+            const response = await fetch("/image/saveImage/", {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": getCookie("csrftoken"), // CSRF-Security
+                },
+                body: formData,
+            });
+    
+            if (response.ok) {
+                console.log("Image saved successfully!");
+            } else {
+                console.error("Failed to save the image:", response.statusText);
+            }
+        } catch (error) {
+            console.error("Error during save operation:", error);
+        }
     }
+    
     
     
     // Retrieve CSRF token
