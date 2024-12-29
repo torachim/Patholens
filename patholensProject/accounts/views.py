@@ -8,6 +8,7 @@ from django.shortcuts import redirect
 from image.mediaHandler import addMedia
 from django.http import JsonResponse
 from .diagnosisManager import getURL
+from .doctorManager import getDocID
 
 # the python file which handles the creation of Doctor DB
 from . import doctorManager
@@ -173,5 +174,18 @@ def getURLApi(request, diagID):
             return JsonResponse({"url": url}, status=200)
         else:
             return JsonResponse({"error": "Diagnosis not found"}, status=404)
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
+    
+    
+
+def getDocID(request):
+    try:
+        # call `getDocID`-function
+        docID = request.user.id
+        if docID:
+            return JsonResponse({"docID": docID}, status=200)
+        else:
+            return JsonResponse({"error": "Doctor not found"}, status=404)
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)
