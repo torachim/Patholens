@@ -211,7 +211,32 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
 
+    
+    async function fetchImageURL(diagnosisID) {
+        try {
+            const response = await fetch(`/getURL/${diagnosisID}/`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+    
+            if (response.ok) {
+                const data = await response.json();
+                console.log("Image URL:", data.url);
+                return data.url;
+            } else {
+                console.error("Failed to fetch the URL:", response.status);
+                return null;
+            }
+        } catch (error) {
+            console.error("Error fetching the URL:", error);
+            return null;
+        }
+    }
 
+
+    // Save the edited image
     function saveEditedImage() {
         const filename = `edited_image_${diagnosisID}.nii.gz`; // dynamic filename
     
