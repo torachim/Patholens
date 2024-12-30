@@ -473,10 +473,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // save image if the confirm button is clicked
-    document.getElementById("confirmButton").addEventListener("click", saveEditedImage);
+    document.getElementById("popupConfirm").addEventListener("click", saveEditedImage);
     
     // save image if logged out
     document.getElementById("logoutButton").addEventListener("click", saveEditedImage);
 });
-
-//Test 1
