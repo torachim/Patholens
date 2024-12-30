@@ -2,7 +2,7 @@ from image.models import UseTime
 from image.models import Diagnosis
 from rest_framework.exceptions import ValidationError
 from django.db import transaction
-from .serializer import useTimeSerialize
+from .serializer import useTimeSerializer
 
 def createUseTime(diagObjesct: Diagnosis):
     """
@@ -56,7 +56,7 @@ def setUseTime(diagID: str, action: str, duration: float):
                 newKey = int(lastKey) + 1
                 useTimeAction[newKey] = newActionTime
     
-            serializer = useTimeSerialize(
+            serializer = useTimeSerializer(
                 instance = useTimeInstance,
                 data = {"diag": diagnosis,
                         "actionTime": useTimeAction
