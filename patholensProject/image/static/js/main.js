@@ -280,6 +280,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const confidenceValue = confidenceSlider.value;
         
         sendData(confidenceValue);
+        saveEditedImage();
     });
 
     // Send the confidence to the backend
@@ -361,7 +362,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // get the image diagID with getURL function from diagnosisManager
     async function fetchImageURL(diagID) {
         try {
-            const response = await fetch(`/getURL/${diagID}/`, {
+            const response = await fetch(`/api/getURL/${diagID}/`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -370,7 +371,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
             if (response.ok) {
                 const data = await response.json();
-                console.log("Image URL:", data.url);
                 return data.url;
             } else {
                 console.error("Failed to fetch the URL:", response.status);
@@ -385,7 +385,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // get the doctorID from accounts
     async function fetchDoctorID() {
         try {
-            const response = await fetch(`/getDoctorID/`, {
+            const response = await fetch(`/api/getDoctorID/`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -394,7 +394,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
             if (response.ok) {
                 const data = await response.json();
-                console.log("Doctor ID:", data.docID);
                 return data.docID;
             } else {
                 console.error("Failed to fetch the Doctor ID:", response.status);
@@ -412,16 +411,16 @@ document.addEventListener('DOMContentLoaded', function() {
     // Save the edited image
     async function saveEditedImage() {
         try {
-            // Wait for diagID from fetchImageURL
-            const diagID = await fetchImageURL(diagnosisID);
+            // Wait for imageID from fetchImageURL
+            const imageID = await fetchImageURL(diagnosisID);
             const docID = await fetchDoctorID();
     
-            if (!diagID) {
-                console.error("Image diagID could not be retrieved.");
+            if (!imageID) {
+                console.error("Image imageID could not be retrieved.");
                 return;
             }
     
-            const filename = `sub-${diagID}_acq-${docID}_space-edited-image.nii.gz`; // Dynamic filename
+            const filename = `sub-${imageID}_acq-${docID}_space-edited-image.nii.gz`; // Dynamic filename
     
             // Create the blob object for the image
             const imageBlob = nv.saveImage({
@@ -432,11 +431,11 @@ document.addEventListener('DOMContentLoaded', function() {
             // Create a FormData object
             const formData = new FormData();
             formData.append("filename", filename);
-            formData.append("diagnosisID", diagID)
+            formData.append("imageID", imageID)
             formData.append("imageFile", new Blob([imageBlob], { type: "application/octet-stream" }));
     
             // Send the data to the API
-            const response = await fetch("/image/saveImage/", {
+            const response = await fetch("/image/api/saveImage/", {
                 method: "POST",
                 headers: {
                     "X-CSRFToken": getCookie("csrftoken"), // CSRF-Security
@@ -471,10 +470,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         return cookieValue;
     }
-    
-    // save image if the confirm button is clicked
-    document.getElementById("popupConfirm").addEventListener("click", saveEditedImage);
-    
+     
     // save image if logged out
     document.getElementById("logoutButton").addEventListener("click", saveEditedImage);
 });

@@ -30,5 +30,5 @@ urlpatterns = [
     path('api/setUseTime/', SetUseTimeAPIView.as_view(), name='setUseTime'),
     path('newDiagnosis/<str:diagnosisID>/', views.newDiagnosis, name='newDiagnosis'),
     
-    path("saveImage/", views.saveImage, name="saveImage"),
+    path("api/saveImage/", views.saveImage, name="saveImage"),
 ]

@@ -23,7 +23,7 @@ urlpatterns = [
     path('signup/', views.signupView, name='patholensSignUp'),
     path('logout/<str:calledFrom>/', views.logoutView, name = 'patholensLogout'),
 
-    path('getURL/<str:diagID>/', views.getURLApi, name='getUrlApi'),
-    path('getDoctorID/', views.getDocID, name='getDocID'),
+    path('api/getURL/<str:diagID>/', views.getURLApi, name='getUrlApi'),
+    path('api/getDoctorID/', views.getDocID, name='getDocID'),
 
 ]

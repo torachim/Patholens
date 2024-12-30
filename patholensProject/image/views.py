@@ -20,18 +20,18 @@ def saveImage(request):
             # Extract file and file name from the request
             image_file = request.FILES.get("imageFile")
             filename = request.POST.get("filename")
-            diagnosisID = request.POST.get("diagnosisID") # get the diagnosis ID from the request
+            imageID = request.POST.get("imageID") # get the diagnosis ID from the request
 
-            if not image_file or not filename or not diagnosisID:
+            if not image_file or not filename or not imageID:
                 return JsonResponse({"error": "Invalid data"}, status=400)
 
-            # Define the directory structure: media/website_data/derivatives/diagnosis/sub-{diagnosis_id}
+            # Define the directory structure: media/website_data/derivatives/diagnosis/sub-{imageID}
             sub_folder = os.path.join(
                 settings.MEDIA_ROOT,
                 "website_data",
                 "derivatives",
                 "diagnosis",
-                f"sub-{diagnosisID}"
+                f"sub-{imageID}"
             )
 
             # Ensure the directory exists
