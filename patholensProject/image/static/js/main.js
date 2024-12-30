@@ -235,7 +235,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-
+    // get the doctorID from accounts
     async function fetchDoctorID() {
         try {
             const response = await fetch(`/getDoctorID/`, {
@@ -247,8 +247,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
             if (response.ok) {
                 const data = await response.json();
-                console.log("Doctor ID:", data.doctorID);
-                return data.doctorID;
+                console.log("Doctor ID:", data.docID);
+                return data.docID;
             } else {
                 console.error("Failed to fetch the Doctor ID:", response.status);
                 return null;
@@ -267,14 +267,14 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             // Wait for diagID from fetchImageURL
             const diagID = await fetchImageURL(diagnosisID);
-            const doctorID = await fetchDoctorID();
+            const docID = await fetchDoctorID();
     
             if (!diagID) {
                 console.error("Image diagID could not be retrieved.");
                 return;
             }
     
-            const filename = `${doctorID}_edited_image_${diagID}.nii.gz`; // Dynamic filename
+            const filename = `sub-${diagID}_acq-${docID}_space-edited-image.nii.gz`; // Dynamic filename
     
             // Create the blob object for the image
             const imageBlob = nv.saveImage({
