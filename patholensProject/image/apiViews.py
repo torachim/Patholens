@@ -7,6 +7,7 @@ from .models import Diagnosis
 import os
 from accounts.diagnosisManager import getURL
 from .timeHandler import setUseTime
+from .serializer import diagnosisSerializer
 
 from image.models import Diagnosis
 
@@ -131,10 +132,12 @@ class SaveConfidenceAPIView(APIView):
                     status=status.HTTP_404_NOT_FOUND
                 )
             diag = Diagnosis.objects.get(diagID=diagID)
+            serializer = diagnosisSerializer(diag, data, partial = True)
             # store confidence value
-            diag.confidence = int(confidence)
-            diag.save()
-
-            return Response({'message': 'Confidence value saved successfully via API!'}, status=status.HTTP_200_OK)
+            #diag.confidence = int(confidence)
+            #diag.save()
+            if serializer.is_valid():
+                serializer.save()
+                return Response({'message': 'Confidence value saved successfully via API!'}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({'error': f'An unexpected error occurred: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
