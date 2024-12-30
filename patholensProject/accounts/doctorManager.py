@@ -69,11 +69,11 @@ def getRandomURL(docID: str, datasetName: str):
             - "message" (str, optional): A message explaining the status.
     """
     # Check if the doctor exists in the database
-    if not Doctors.objects.filter(doctorID=docID).exists():
-        return {"status": "error", "message": "Doctor not found"}
-
-    doctor = Doctors.objects.get(doctorID=docID)
+    doctor = getDoctorObject(docID)
     
+    if doctor == False:
+        return {"status": "error", "message": "Doctor not found"}
+     
     urls = getPatientURLs(datasetName)
     if not urls:
         return {"status": "error", "message": "No URLs available for the dataset"}
@@ -151,3 +151,39 @@ def addFinishedPatient(docID: str, datasetName: str, url: str, uuid: str):
     doctor.save()
     
     return True
+
+
+def finishedDatasets(docID: str):
+    """
+    Identifies datasets where all patients have been marked as finished.
+    
+    This function retrieves the datasets associated with a specific doctor and checks 
+    if all patients within each dataset have been completed. A dataset is considered 
+    finished if the number of patients marked as completed matches the total number 
+    of patients in the dataset.
+
+    Args:
+        docID (str): The ID for the doctor.
+
+    Returns:
+        list: A list of dataset names where all patients have been completed.
+    """
+    
+    
+    docObject = getDoctorObject(docID)
+
+    datasetNamesAndURL = docObject.finishedPatients
+    startedDatasets = list(datasetNamesAndURL.keys())
+    
+    finishedDatasets = []
+    
+    for dataset in startedDatasets:
+        # the patients that the doctor finished to edit
+        finishedPatientULRs = list(datasetNamesAndURL[dataset])
+        # all patients in the dataset 
+        allPatientURLS = getPatientURLs(dataset)
+
+        if len(finishedPatientULRs) == len(allPatientURLS):
+            finishedDatasets.append(dataset)
+            
+    return finishedDatasets

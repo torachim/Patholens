@@ -33,5 +33,7 @@ urlpatterns = [
 
 
     path('AIpage/<str:diagnosisID>/', views.AIPage, name='AIpage'),
-    path('api/getImageAndMask/<str:diagnosisID>/', GetImageAndMaskAPIView.as_view(), name='getImageAndMask')
+    path('api/getImageAndMask/<str:diagnosisID>/', GetImageAndMaskAPIView.as_view(), name='getImageAndMask'),
+    
+    path("api/saveImage/", views.saveImage, name="saveImage"),
 ]

@@ -1,14 +1,23 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
-from django.contrib.auth import login, logout
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import redirect
 from image.mediaHandler import addMedia
+from django.http import JsonResponse
+from .diagnosisManager import getURL
 
 # the python file which handles the creation of Doctor DB
 from . import doctorManager
+
+
+def customLogin(request, user):
+    # Call the default login function
+    login(request, user)
+    
+    # if their are any new folders in the media folder the ulrs will be added to the db or a new entry will be added
+    addMedia()
 
 
 def signupView(request):
@@ -92,13 +101,9 @@ def signupView(request):
         doctorManager.createDoctor(user)
 
         # login of user
-        login(request, user)
-        addMedia()
+        customLogin(request, user)
         
         return redirect("StartingPage")
-
-    else:
-        print("Error: POST was not used")
 
     return render(request, "accounts/signup.html", {"information": information})
 
@@ -138,16 +143,13 @@ def loginView(request):
 
         # login was successful
         if user is not None:
-            login(request, user)
-            addMedia()
+            customLogin(request, user)
             return redirect("StartingPage")
 
         # password is incorrect
         else:
             information["password"] = False
 
-    else:
-        print("Error as POST was not used")
 
     return render(request, "accounts/login.html", {"information": information})
 
@@ -160,3 +162,29 @@ def logoutView(request, calledFrom):
 
     logout(request)
     return redirect("/")  # redirects to the login screen
+
+
+
+def getURLApi(request, diagID):
+    try:
+        # call `getURL`-function
+        url = getURL(diagID)
+        if url:
+            return JsonResponse({"url": url}, status=200)
+        else:
+            return JsonResponse({"error": "Diagnosis not found"}, status=404)
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
+    
+    
+
+def getDocID(request):
+    try:
+        # call `getDocID`-function
+        docID = request.user.id
+        if docID:
+            return JsonResponse({"docID": docID}, status=200)
+        else:
+            return JsonResponse({"error": "Doctor not found"}, status=404)
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
