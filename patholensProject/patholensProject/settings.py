@@ -54,9 +54,9 @@ REST_FRAMEWORK = {
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Patholens API',
-    'DESCRIPTION' : 'API to access the brainscan data in .nii.gz format',
-    'VERSION' : '1.0.0',
-    'SERVE_INCLUDE_SCHEMA' : False,
+    'DESCRIPTION': 'API to access the brainscan data in .nii.gz format',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
 }
 
 MIDDLEWARE = [
@@ -113,7 +113,7 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
         # min length for a password is 8 characters
         'OPTIONS' : {
-            'min_length' : 8,
+            'min_length': 8,
         },
     },
     {
@@ -143,7 +143,7 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static') 
+    os.path.join(BASE_DIR, 'static')
 ]
 
 # Default primary key field type

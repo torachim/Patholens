@@ -53,7 +53,7 @@ def getURL(diagID: str):
     Returns:
         str: The url to the image of the patient (the patient number)
     """
-    if Diagnosis.objects.filter(diagID=diagID).exists() == False:
+    if not Diagnosis.objects.filter(diagID=diagID).exists():
         return None
 
     diagObject = Diagnosis.objects.get(diagID=diagID)
