@@ -24,5 +24,6 @@ urlpatterns = [
     path('logout/<str:calledFrom>/', views.logoutView, name = 'patholensLogout'),
 
     path('getURL/<str:diagID>/', views.getURLApi, name='getUrlApi'),
+    path('getDoctorID/', views.getDocID, name='getDocID'),
 
 ]

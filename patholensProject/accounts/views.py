@@ -8,7 +8,6 @@ from django.shortcuts import redirect
 from image.mediaHandler import addMedia
 from django.http import JsonResponse
 from .diagnosisManager import getURL
-from .doctorManager import getDocID
 
 # the python file which handles the creation of Doctor DB
 from . import doctorManager

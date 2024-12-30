@@ -235,18 +235,46 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+
+    async function fetchDoctorID() {
+        try {
+            const response = await fetch(`/getDoctorID/`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+    
+            if (response.ok) {
+                const data = await response.json();
+                console.log("Doctor ID:", data.doctorID);
+                return data.doctorID;
+            } else {
+                console.error("Failed to fetch the Doctor ID:", response.status);
+                return null;
+            }
+        }
+        catch (error) {
+            console.error("Error fetching the Doctor ID:", error);
+            return null;
+        }
+    }
+
+
+
     // Save the edited image
     async function saveEditedImage() {
         try {
             // Wait for diagID from fetchImageURL
             const diagID = await fetchImageURL(diagnosisID);
+            const doctorID = await fetchDoctorID();
     
             if (!diagID) {
                 console.error("Image diagID could not be retrieved.");
                 return;
             }
     
-            const filename = `edited_image_${diagID}.nii.gz`; // Dynamic filename
+            const filename = `${doctorID}_edited_image_${diagID}.nii.gz`; // Dynamic filename
     
             // Create the blob object for the image
             const imageBlob = nv.saveImage({
