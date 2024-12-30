@@ -1,14 +1,21 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
-from django.contrib.auth import login, logout
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import redirect
 from image.mediaHandler import addMedia
 
 # the python file which handles the creation of Doctor DB
 from . import doctorManager
+
+
+def customLogin(request, user):
+    # Call the default login function
+    login(request, user)
+    
+    # if their are any new folders in the media folder the ulrs will be added to the db or a new entry will be added
+    addMedia()
 
 
 def signupView(request):
@@ -92,13 +99,9 @@ def signupView(request):
         doctorManager.createDoctor(user)
 
         # login of user
-        login(request, user)
-        addMedia()
+        customLogin(request, user)
         
         return redirect("StartingPage")
-
-    else:
-        print("Error: POST was not used")
 
     return render(request, "accounts/signup.html", {"information": information})
 
@@ -130,7 +133,7 @@ def loginView(request):
         userExistent = User.objects.filter(username=email).exists()
 
         # user is not existent
-        if userExistent == False:
+        if not userExistent:
             information["username"] = False
             return render(request, "accounts/login.html", {"information": information})
 
@@ -138,16 +141,13 @@ def loginView(request):
 
         # login was successful
         if user is not None:
-            login(request, user)
-            addMedia()
+            customLogin(request, user)
             return redirect("StartingPage")
 
         # password is incorrect
         else:
             information["password"] = False
 
-    else:
-        print("Error as POST was not used")
 
     return render(request, "accounts/login.html", {"information": information})
 

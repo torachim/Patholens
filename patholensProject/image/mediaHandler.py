@@ -13,13 +13,13 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "patholensProject.settings")
 # Check if Django is already initialized
 if not apps.ready:
     django.setup()
-    
+   
 
 # Specifies the base directory of the project (the directory that contains manage.py),
 BASEDIR = Path(__file__).resolve().parent.parent
 DATASETPATH = os.path.join(BASEDIR, "media")
 
-from image.dataHandler import * 
+from image.dataHandler import *
 
 
 def addMedia():
@@ -33,7 +33,7 @@ def addMedia():
         - `True`if the function successfully processes all datasets, updates existing ones, and creates new entries as needed.
         - `False`if their are no datasets in the directory.
     """
-    allDatasets = getDataSetNames()
+    allDatasets = getNamesFromMediaFolder()
     
     if allDatasets == []:
         return False
@@ -42,9 +42,9 @@ def addMedia():
         
         url = getPatientURLsFromFolder(datasetName)
         
-        # dataset exists in the media db 
+        # dataset exists in the media db
         if Media.objects.filter(name=datasetName).exists():
-            media = Media.objects.get(name=datasetName)    
+            media = Media.objects.get(name=datasetName) 
             
             savedURLAsString = media.url
             # convert the string to a list by splitting the string at ','
@@ -61,13 +61,12 @@ def addMedia():
                 media.url = savedURLAsList
                 media.save()
         
-        # dataset needs to be added to the media db     
+        # dataset needs to be added to the media db
         else:
             url = str(url).replace("[", "").replace("]", "").replace("'", "")
             Media.objects.create(name=datasetName, url=url)
     
     return True
-
 
 def getPatientURLs(datasetName: str):
     savedURLAsList = []
@@ -80,3 +79,8 @@ def getPatientURLs(datasetName: str):
         savedURLAsList = [s.strip() for s in savedURLAsString.split(",")]
 
     return savedURLAsList 
+
+def getAllDatasetNames():
+    mediaObjects = [m.name.upper() for m in Media.objects.all()]
+    
+    return mediaObjects

@@ -24,7 +24,7 @@ DATASETPATH = os.path.join(BASEDIR, "media")
 from image.models import Media
 
 
-def getDataSetNames():
+def getNamesFromMediaFolder():
     """
     Retrieves all datasets from the specified directory.
 
@@ -40,7 +40,9 @@ def getDataSetNames():
 
     if pathExists and pathIsDirectory:
         for dir in os.listdir(DATASETPATH):
-            allDataSets.append(dir)
+            # folders which are starting with . are system folders and should not be added 
+            if not dir.startswith("."):
+                allDataSets.append(dir.upper())
 
     return allDataSets
 
@@ -85,4 +87,3 @@ def shuffleList(aList: list):
     # shuffles the list random
     newList = np.random.permutation(aList)
     return list(newList)
-
