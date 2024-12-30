@@ -299,7 +299,7 @@ document.addEventListener('DOMContentLoaded', function() {
          })
          .then(response => {
              if (response.ok) {
-                 alert('Confidence updated successfully!');
+                 console.log('Confidence updated successfully!');
                  return response.json();
              } else {
                  throw new Error('Failed to save confidence value');
@@ -411,16 +411,16 @@ document.addEventListener('DOMContentLoaded', function() {
     // Save the edited image
     async function saveEditedImage() {
         try {
-            // Wait for imageID from fetchImageURL
-            const imageID = await fetchImageURL(diagnosisID);
+            // Wait for subID from fetchImageURL
+            const subID = await fetchImageURL(diagnosisID);
             const docID = await fetchDoctorID();
     
-            if (!imageID) {
-                console.error("Image imageID could not be retrieved.");
+            if (!subID) {
+                console.error("Image subID could not be retrieved.");
                 return;
             }
     
-            const filename = `sub-${imageID}_acq-${docID}_space-edited-image.nii.gz`; // Dynamic filename
+            const filename = `sub-${subID}_acq-${docID}_space-edited-image.nii.gz`; // Dynamic filename
     
             // Create the blob object for the image
             const imageBlob = nv.saveImage({
@@ -431,7 +431,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Create a FormData object
             const formData = new FormData();
             formData.append("filename", filename);
-            formData.append("imageID", imageID)
+            formData.append("subID", subID)
             formData.append("imageFile", new Blob([imageBlob], { type: "application/octet-stream" }));
     
             // Send the data to the API
