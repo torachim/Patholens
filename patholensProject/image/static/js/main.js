@@ -280,6 +280,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const confidenceValue = confidenceSlider.value;
         
         sendData(confidenceValue);
+        saveEditedImage();
     });
 
     // Send the confidence to the backend
@@ -298,7 +299,7 @@ document.addEventListener('DOMContentLoaded', function() {
          })
          .then(response => {
              if (response.ok) {
-                 alert('Confidence updated successfully!');
+                 console.log('Confidence updated successfully!');
                  return response.json();
              } else {
                  throw new Error('Failed to save confidence value');
@@ -357,4 +358,119 @@ document.addEventListener('DOMContentLoaded', function() {
         nv.drawUndo();
     })
 
-})
+
+    // get the image diagID with getURL function from diagnosisManager
+    async function fetchImageURL(diagID) {
+        try {
+            const response = await fetch(`/api/getURL/${diagID}/`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+    
+            if (response.ok) {
+                const data = await response.json();
+                return data.url;
+            } else {
+                console.error("Failed to fetch the URL:", response.status);
+                return null;
+            }
+        } catch (error) {
+            console.error("Error fetching the URL:", error);
+            return null;
+        }
+    }
+
+    // get the doctorID from accounts
+    async function fetchDoctorID() {
+        try {
+            const response = await fetch(`/api/getDoctorID/`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+    
+            if (response.ok) {
+                const data = await response.json();
+                return data.docID;
+            } else {
+                console.error("Failed to fetch the Doctor ID:", response.status);
+                return null;
+            }
+        }
+        catch (error) {
+            console.error("Error fetching the Doctor ID:", error);
+            return null;
+        }
+    }
+
+
+
+    // Save the edited image
+    async function saveEditedImage() {
+        try {
+            // Wait for subID from fetchImageURL
+            const subID = await fetchImageURL(diagnosisID);
+            const docID = await fetchDoctorID();
+    
+            if (!subID) {
+                console.error("Image subID could not be retrieved.");
+                return;
+            }
+    
+            const filename = `sub-${subID}_acq-${docID}_space-edited-image.nii.gz`; // Dynamic filename
+    
+            // Create the blob object for the image
+            const imageBlob = nv.saveImage({
+                isSaveDrawing: true,
+                volumeByIndex: 0,
+            });
+            
+            // Create a FormData object
+            const formData = new FormData();
+            formData.append("filename", filename);
+            formData.append("subID", subID)
+            formData.append("imageFile", new Blob([imageBlob], { type: "application/octet-stream" }));
+    
+            // Send the data to the API
+            const response = await fetch("/image/api/saveImage/", {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": getCookie("csrftoken"), // CSRF-Security
+                },
+                body: formData,
+            });
+    
+            if (response.ok) {
+                console.log("Image saved successfully!");
+            } else {
+                console.error("Failed to save the image:", response.statusText);
+            }
+        } catch (error) {
+            console.error("Error during save operation:", error);
+        }
+    }
+    
+    
+    
+    // Retrieve CSRF token
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== "") {
+            const cookies = document.cookie.split(";");
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === `${name}=`) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+     
+    // save image if logged out
+    document.getElementById("logoutButton").addEventListener("click", saveEditedImage);
+});
