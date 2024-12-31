@@ -96,7 +96,7 @@ body{
 .dropdown .options div {
     padding: 6px 14px;
     cursor: pointer;
-    border-bottom: 2px solid #005E7A /* strich zwiscehn den Einträgen*/
+    border-bottom: 2px solid #005E7A 
     
 }
 
@@ -106,7 +106,6 @@ body{
     
 }
 
-/* container for the canvas */
 .imageBox{
     margin-top: 60px;
     background-color: aliceblue;
@@ -141,26 +140,22 @@ body{
     background-color: #00afb9;
 }
 
-/* Button hover effect */
 .nextButton button:hover {
     background-color:#01b963; 
     transform: scale(1.025); 
     box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3); 
 }
 
-/* Button pressed effect */
 .nextButton button:active {
     background-color: #028246; 
     transform: scale(0.95); 
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4); 
 }
 
-/* Hover effects for edit diagnosis button */
 #editDiagnosis:hover {
     background-color: #01c5cf;; 
 }
 
-/* Pressed effects for edit diagnosis button */
 #editDiagnosis:active {
     background-color:#008f97; 
 }
