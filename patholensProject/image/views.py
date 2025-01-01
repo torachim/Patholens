@@ -4,6 +4,8 @@ from django.contrib.auth.decorators import login_required
 import os
 import base64
 from django.conf import settings
+from accounts.doctorManager import *
+from accounts.diagnosisManager import *
 
 @login_required
 def newDiagnosis(request, diagnosisID):
@@ -21,9 +23,14 @@ def saveImage(request):
             image_file = request.FILES.get("imageFile")
             filename = request.POST.get("filename")
             subID = request.POST.get("subID") # get the subID from the request
+            docID = request.POST.get("docID") # get the docID from the request
 
             if not image_file or not filename or not subID:
                 return JsonResponse({"error": "Invalid data"}, status=400)
+            
+            setContinueDiag(docID, subID)
+
+            print(docID, subID)
 
             # Define the directory structure: media/website_data/derivatives/diagnosis/sub-{subID}
             sub_folder = os.path.join(

@@ -17,7 +17,7 @@ django.setup()
 
 from image.mediaHandler import *
 from accounts.models import Doctors
-import diagnosisManager
+from accounts.diagnosisManager import *
 
 
 def createDoctor(user: django.contrib.auth.models.User):

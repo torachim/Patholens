@@ -431,8 +431,9 @@ document.addEventListener('DOMContentLoaded', function() {
             // Create a FormData object
             const formData = new FormData();
             formData.append("filename", filename);
-            formData.append("subID", subID)
+            formData.append("subID", subID);
             formData.append("imageFile", new Blob([imageBlob], { type: "application/octet-stream" }));
+            formData.append("docID", docID);
     
             // Send the data to the API
             const response = await fetch("/image/api/saveImage/", {
@@ -470,6 +471,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         return cookieValue;
     }
+
      
     // save image if logged out
     document.getElementById("logoutButton").addEventListener("click", saveEditedImage);

@@ -1,8 +1,6 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
-from accounts.doctorManager import getRandomURL
-from accounts.diagnosisManager import createDiagnosis
 from accounts.diagnosisManager import *
 from image.timeHandler import *
 
@@ -77,6 +75,7 @@ def continueDiagnosis(request): # TODO: finish this function
     """
     
     id = "e4411d06-51e9-4003-bd87-025f9f744bd3"     # placeholder
+    
 
     return redirect("newDiagnosis", diagnosisID=id)
 
