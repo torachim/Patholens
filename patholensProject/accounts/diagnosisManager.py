@@ -60,3 +60,28 @@ def getURL(diagID: str):
     url = diagObject.imageUrl
 
     return url
+
+
+def getDiagnosisObject(diagID: str):
+    """
+    Retrieves the Diagnosis object associated with the given diagID.
+
+    This function checks if a diagnosis with the specified diagID exists in the database.
+    If the diagnosis exists, the corresponding Diagnosis object is returned.
+    If no diagnosis with the given diagID exists, the function returns False.
+
+    Args:
+        diagID (str): The ID of the diagnosis to retrieve.
+
+    Returns:
+        Diagnosis or bool: The Diagnosis object if it exists, False if no diagnosis is found.
+    """
+    
+    # Check i the diagnosis exists in the database
+    if not Diagnosis.objects.filter(diagID=diagID).exists():
+        return False
+
+    diag = Diagnosis.objects.get(diagID=diagID)
+    return diag
+
+    
