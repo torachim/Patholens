@@ -204,7 +204,7 @@ def getContinueDiag(docID: str) -> dict:
         - "reason" (str): The reason for failure or empty if successful.
         - "message" (str): The message associated with the status.
     """
-    returnDict = {"status": None, "reason": None, "message": None}
+    returnDict = {"status": None, "reason": None, "message": None, "object" : None}
 
     # Define the reasons for failure cases. (constant)
     DOC_REASON = "Doctorobject" # Doc does not exists
@@ -220,7 +220,7 @@ def getContinueDiag(docID: str) -> dict:
         returnDict.update ({"status": False, "reason": DIAG_REASON ,"message": "Their is no unfinished Diagnosis"})
         return returnDict
     
-    returnDict.update({"status": True})
+    returnDict.update({"status": True, "object": toBeContinuedDiagnosis})
     return returnDict
 
 def setContinueDiag(docID: str, diagID: str) -> dict:
