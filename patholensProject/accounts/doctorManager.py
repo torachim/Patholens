@@ -112,7 +112,7 @@ def getDoctorObject(docID: str):
         docID (str): The ID of the doctor
 
     Returns:
-        Doctor: Returns the object of the Doctor
+        Doctor: Returns the object of the Doctor & False if the doctor is not existent.
     """
 
     # Check if the doctor exists in the database
@@ -187,3 +187,41 @@ def finishedDatasets(docID: str):
             finishedDatasets.append(dataset)
             
     return finishedDatasets
+
+
+def getContinueDiag(docID: str) -> dict:
+    """
+    Retrieves the status of the doctor's ongoing diagnosis. Checks if the doctor exists
+    and if there is an unfinished diagnosis to continue. Returns a dictionary with status, 
+    reason, and message to indicate the result of the query.
+
+    Args:
+    docID (str): The ID of the doctor to check for an ongoing diagnosis.
+
+    Returns:
+    dict: A dictionary containing:
+        - "status" (bool): Indicates success or failure.
+        - "reason" (str): The reason for failure or empty if successful.
+        - "message" (str): The message associated with the status.
+    """
+    returnDict = {"status": None, "reason": None, "message": None}
+
+    # Define the reasons for failure cases. (constant)
+    DOC_REASON = "Doctorobject"
+    DIAG_REASON = "Diganosisobject"
+    
+    docObject = getDoctorObject(docID=docID)
+    if not docObject:
+        returnDict.update ({"status" : False, "reason" : DOC_REASON ,"message" : "The doctor is not existent"})
+        return returnDict
+    
+    toBeContinuedDiagnosis = docObject.continueDiag
+    if not toBeContinuedDiagnosis:
+        returnDict.update ({"status" : False, "reason" : DIAG_REASON ,"message" : "Their is no unfinished Diagnosis"})
+        return returnDict
+    
+    returnDict.update({"status": True})
+    return returnDict
+
+    
+    
