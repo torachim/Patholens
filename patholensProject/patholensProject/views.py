@@ -59,6 +59,26 @@ def forwardingInformation(request, datasetName):
         return redirect("newDiagnosis", diagnosisID=uuid)
 
 
+@login_required 
+def continueDiagnosis(request, diagnosisID): # TODO: finish this function
+    """
+    Continues the diagnosis process.
+    
+    This function:
+    - Retrieves the diagnosis object from the database.
+    - Redirects the user to the diagnosis page.
+    
+    Args:
+    - request: The HTTP request object, used to fetch the logged-in user's data.
+    - diagnosisID (str): The UUID of the diagnosis.
+    
+    Returns:
+    - Redirect: The user to the diagnosis page.
+    """
+    
+    return redirect("newDiagnosis", diagnosisID=diagnosisID)
+
+
 @login_required
 def homeWindow(request):
     return render(request, 'homeWindow.html')
