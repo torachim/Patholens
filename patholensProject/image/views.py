@@ -26,20 +26,13 @@ def saveImage(request):
             # Extract file and file name from the request
             image_file = request.FILES.get("imageFile")
             filename = request.POST.get("filename")
-            subID = request.POST.get("subID")  # get the subID from the request
-            docID = request.POST.get("docID")  # get the docID from the request
-            diagnosisID = request.POST.get("diagnosisID")  # get the diagnosisID from the request
+            diagnosisID = request.POST.get("diagnosisID")  # get the subID from the request
 
-            if not image_file or not filename or not subID or not docID:
+            if not image_file or not filename or not diagnosisID:
                 return JsonResponse({"error": "Invalid data"}, status=400)
 
-            # Call setContinueDiag only if the user is authenticated and valid
-            if request.user.is_authenticated:
-                response = setContinueDiag(docID, diagnosisID)
-                if not response.get("status"):
-                    print(f"Error in setContinueDiag: {response.get('message')}")
-            else:
-                print("User is not authenticated. Skipping setContinueDiag.")
+            docID = request.user.id
+            subID = getURL(diagnosisID)
 
             # Define the directory structure: media/website_data/derivatives/diagnosis/sub-{subID}
             sub_folder = os.path.join(
@@ -60,6 +53,9 @@ def saveImage(request):
             with open(filepath, "wb") as f:
                 for chunk in image_file.chunks():
                     f.write(chunk)
+
+
+            setContinueDiag(docID, diagnosisID)
 
             return JsonResponse({"message": "Image saved successfully"})
         except Exception as e:

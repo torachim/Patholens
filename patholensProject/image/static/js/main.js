@@ -419,7 +419,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.error("Image subID could not be retrieved.");
                 return;
             }
-    
             const filename = `sub-${subID}_acq-${docID}_space-edited-image.nii.gz`; // Dynamic filename
     
             // Create the blob object for the image
@@ -431,10 +430,8 @@ document.addEventListener('DOMContentLoaded', function() {
             // Create a FormData object
             const formData = new FormData();
             formData.append("filename", filename);
-            formData.append("subID", subID);
-            formData.append("imageFile", new Blob([imageBlob], { type: "application/octet-stream" }));
-            formData.append("docID", docID);
             formData.append("diagnosisID", diagnosisID);
+            formData.append("imageFile", new Blob([imageBlob], { type: "application/octet-stream" }));
     
             // Send the data to the API
             const response = await fetch("/image/api/saveImage/", {
@@ -477,3 +474,4 @@ document.addEventListener('DOMContentLoaded', function() {
     // save image if logged out
     document.getElementById("logoutButton").addEventListener("click", saveEditedImage);
 });
+//Test 3
