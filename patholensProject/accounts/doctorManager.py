@@ -17,6 +17,7 @@ django.setup()
 
 from image.mediaHandler import *
 from accounts.models import Doctors
+import diagnosisManager
 
 
 def createDoctor(user: django.contrib.auth.models.User):
@@ -198,8 +199,7 @@ def getContinueDiag(docID: str) -> dict:
     Args:
     docID (str): The ID of the doctor to check for an ongoing diagnosis.
 
-    Returns:
-    dict: A dictionary containing:
+    Returns (dict): A dictionary containing:
         - "status" (bool): Indicates success or failure.
         - "reason" (str): The reason for failure or empty if successful.
         - "message" (str): The message associated with the status.
@@ -207,21 +207,60 @@ def getContinueDiag(docID: str) -> dict:
     returnDict = {"status": None, "reason": None, "message": None}
 
     # Define the reasons for failure cases. (constant)
-    DOC_REASON = "Doctorobject"
-    DIAG_REASON = "Diganosisobject"
+    DOC_REASON = "Doctorobject" # Doc does not exists
+    DIAG_REASON = "Diganosisobject" # Diag is NULL
     
     docObject = getDoctorObject(docID=docID)
     if not docObject:
-        returnDict.update ({"status" : False, "reason" : DOC_REASON ,"message" : "The doctor is not existent"})
+        returnDict.update ({"status": False, "reason": DOC_REASON ,"message": "The doctor does not exist."})
         return returnDict
     
     toBeContinuedDiagnosis = docObject.continueDiag
     if not toBeContinuedDiagnosis:
-        returnDict.update ({"status" : False, "reason" : DIAG_REASON ,"message" : "Their is no unfinished Diagnosis"})
+        returnDict.update ({"status": False, "reason": DIAG_REASON ,"message": "Their is no unfinished Diagnosis"})
         return returnDict
     
     returnDict.update({"status": True})
     return returnDict
 
+def setContinueDiag(docID: str, diagID: str) -> dict:
+    """
+    Associates an ongoing diagnosis with a doctor based on their respective IDs.
+
+    This function checks if both the doctor and the diagnosis exist in the database. If either
+    of them does not exist, a failure message with an appropriate reason is returned. If both exist,
+    the diagnosis is assigned to the doctor's 'continueDiag' field, and the status is updated to success.
+
+    Args:
+        docID (str): The ID of the doctor to associate the diagnosis with.
+        diagID (str): The ID of the diagnosis to assign to the doctor.
+
+    Returns (dict): A dictionary containing:
+        - "status" (bool): True if the operation was successful, False otherwise.
+        - "reason" (str): A string providing the reason for failure, or empty if successful.
+        - "message" (str): A detailed message explaining the result of the operation.
+    """
+    
+    returnDict = {"status": None, "reason": None, "message": None}
+
+    # Define the reasons for failure cases. (constant)
+    DOC_REASON = "Doctorobject" # Doc does not exists
+    DIAG_REASON = "Diganosisobject" # Diag does not exists
+    
+    docObject = getDoctorObject(docID=docID)
+    if not docObject:
+        returnDict.update ({"status": False, "reason": DOC_REASON ,"message": "The doctor does not exist."})
+        return returnDict
+    
+    diagObject =  diagnosisManager.getDiagnosisObject(diagID=diagID)
+    if not diagObject:
+        returnDict.update({"status": False, "reason": DIAG_REASON, "message": "The diagnosis does not exist."})
+        return returnDict
+    
+    docObject.continueDiag = diagObject
+    docObject.save()
+    
+    returnDict.update({"status": True})
+    
     
     
