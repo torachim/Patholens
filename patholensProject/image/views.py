@@ -16,21 +16,30 @@ def testRenderImageView(request, imageID):
     return render(request, 'image/diagnosisPage.html', {'imageID': imageID})
 
 
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+
+@login_required
 def saveImage(request):
     if request.method == "POST":
         try:
             # Extract file and file name from the request
             image_file = request.FILES.get("imageFile")
             filename = request.POST.get("filename")
-            subID = request.POST.get("subID") # get the subID from the request
-            docID = request.POST.get("docID") # get the docID from the request
+            subID = request.POST.get("subID")  # get the subID from the request
+            docID = request.POST.get("docID")  # get the docID from the request
+            diagnosisID = request.POST.get("diagnosisID")  # get the diagnosisID from the request
 
-            if not image_file or not filename or not subID:
+            if not image_file or not filename or not subID or not docID:
                 return JsonResponse({"error": "Invalid data"}, status=400)
-            
-            setContinueDiag(docID, subID)
 
-            print(docID, subID)
+            # Call setContinueDiag only if the user is authenticated and valid
+            if request.user.is_authenticated:
+                response = setContinueDiag(docID, diagnosisID)
+                if not response.get("status"):
+                    print(f"Error in setContinueDiag: {response.get('message')}")
+            else:
+                print("User is not authenticated. Skipping setContinueDiag.")
 
             # Define the directory structure: media/website_data/derivatives/diagnosis/sub-{subID}
             sub_folder = os.path.join(

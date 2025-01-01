@@ -434,6 +434,7 @@ document.addEventListener('DOMContentLoaded', function() {
             formData.append("subID", subID);
             formData.append("imageFile", new Blob([imageBlob], { type: "application/octet-stream" }));
             formData.append("docID", docID);
+            formData.append("diagnosisID", diagnosisID);
     
             // Send the data to the API
             const response = await fetch("/image/api/saveImage/", {

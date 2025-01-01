@@ -252,7 +252,7 @@ def setContinueDiag(docID: str, diagID: str) -> dict:
         returnDict.update ({"status": False, "reason": DOC_REASON ,"message": "The doctor does not exist."})
         return returnDict
     
-    diagObject =  diagnosisManager.getDiagnosisObject(diagID=diagID)
+    diagObject = getDiagnosisObject(diagID=diagID)
     if not diagObject:
         returnDict.update({"status": False, "reason": DIAG_REASON, "message": "The diagnosis does not exist."})
         return returnDict
