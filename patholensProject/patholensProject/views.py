@@ -60,7 +60,7 @@ def forwardingInformation(request, datasetName):
 
 
 @login_required 
-def continueDiagnosis(request, diagnosisID): # TODO: finish this function
+def continueDiagnosis(request): # TODO: finish this function
     """
     Continues the diagnosis process.
     
@@ -76,7 +76,9 @@ def continueDiagnosis(request, diagnosisID): # TODO: finish this function
     - Redirect: The user to the diagnosis page.
     """
     
-    return redirect("newDiagnosis", diagnosisID=diagnosisID)
+    id = "e4411d06-51e9-4003-bd87-025f9f744bd3"     # placeholder
+
+    return redirect("newDiagnosis", diagnosisID=id)
 
 
 @login_required
