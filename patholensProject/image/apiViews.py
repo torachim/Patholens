@@ -247,7 +247,7 @@ class GetDiagnosis(APIView):
 
             return Response(
                     {"status": "success",
-                     "Path": relativePath,
+                     "path": relativePath,
                     },
                     status=status.HTTP_200_OK
             )

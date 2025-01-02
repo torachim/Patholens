@@ -22,12 +22,16 @@ document.addEventListener('DOMContentLoaded', function () {
     nv.attachToCanvas(canvas);
     adjustCanvasForDPI(canvas);
     nv.setMultiplanarPadPixels(60);
-    
 
-    // Base API URL
-    const baseApiURL = `/image/api/getImageAndMask/${diagnosisID}`;
+    // Base API URLs
+    const getIMbaseApiURL = `/image/api/getImageAndMask/${diagnosisID}`;
+    const getDApiURL = `/image/api/getDiagnosis/${diagnosisID}`;
+    const getIbaseApiURL = `/image/api/getImage/${diagnosisID}`;
+
+    //default formats
     let selectedFormatMask = "DEEPFCD";
     let selectedFormatMri = "FLAIR"
+    let selectedDisplay = "AIDiagnosis"
 
     // Load default image and mask
     loadImageWithMask(selectedFormatMask, selectedFormatMri);
@@ -45,15 +49,72 @@ document.addEventListener('DOMContentLoaded', function () {
         loadImageWithMask(selectedFormatMask, selectedFormatMri);
     });
 
-    function loadImageWithMask(formatMask, formatMri) {
+   const displayDropdown = document.getElementById('displayDropdown')
+    displayDropdown.addEventListener('change', (event) => {
+        selectedDisplay= event.target.value
+        if(selectedDisplay == "AIDiagnosis"){
+            loadImageWithMask(selectedFormatMask, selectedFormatMri)
+        }
+        else if(selectedDisplay == "myDiagnosis"){
+            loadImageWithDiagnosis(selectedFormatMri)
+        }
+    })
 
+
+    async function loadImageWithDiagnosis(formatMri) {
+        const imageApiURL = `${getIbaseApiURL}/?format =${formatMri}`;
+        let volumes = []
+
+        await fetch(imageApiURL)
+            .then(response => {
+                console.log(imageApiURL);
+                if(!response.ok){
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json()
+            })
+            .then(data => {
+                const imageURL = `http://127.0.0.1:8000${data.path}`
+                console.log(imageURL)
+
+                volumes.push({url: imageURL,
+                            schema: "nifti",
+                });
+            })
+            .catch(err => {
+                console.error("Error loading Nifti Files", err);
+            });
+
+        await fetch(getDApiURL)
+            .then(response => {
+                if(!response.ok){
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                const URL = data.path;
+                const diagURL = `http://127.0.0.1:8000/${URL}`
+                console.log(diagURL);
+                volumes.push({url: diagURL,
+                              schema: "nifti",
+                });
+            })
+            .catch(err => {
+                console.error("Error loading Nifti Files", err);
+            });
+        
+        nv.loadVolumes(volumes)
+    }
+    
+    function loadImageWithMask(formatMask, formatMri) {
         // Parameters which get send to the backend -> the requested formats
         const params = new URLSearchParams({
             mask: formatMask,
             mri: formatMri,
         });
 
-        const apiURL = `${baseApiURL}/?${params.toString()}`; // Combined API URL
+        const apiURL = `${getIMbaseApiURL}/?${params.toString()}`; // Combined API URL
 
         // Fetch combined MRI and Mask URLs
         fetch(apiURL)
@@ -70,19 +131,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.log("MRI URL:", mriURL);
                 console.log("Mask URL:", maskURL);
 
+                let volumes = [                    {
+                    url: mriURL,
+                    schema: "nifti",
+                },
+                {
+                    url: maskURL,
+                    schema: "nifti",
+                    colorMap: "red", // Distinct color for the mask
+                    opacity: 0.9,    // Adjust transparency of the mask
+                },]
+
                 // Load MRI and mask
-                nv.loadVolumes([
-                    {
-                        url: mriURL,
-                        schema: "nifti",
-                    },
-                    {
-                        url: maskURL,
-                        schema: "nifti",
-                        colorMap: "red", // Distinct color for the mask
-                        opacity: 0.9,    // Adjust transparency of the mask
-                    },
-                ]);
+                nv.loadVolumes(volumes);
             })
             .catch(err => {
                 console.error("Error loading NIfTI files:", err);
