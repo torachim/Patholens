@@ -33,8 +33,6 @@ urlpatterns = [
 
     path('editDiagnosis/', views.editDiagnosis, name='editDiagnosis'),
 
-    
-
     path('AIpage/', views.AIPage, name='AIpage'),
 
 

@@ -62,7 +62,6 @@ body{
     font-size: 1.1em;
     border: 2px solid #005E7A;
     outline: none;
-   
     padding: 12px 12px;
     border-radius: 8px;
     font-family: Calibri, Arial, sans-serif;
@@ -89,15 +88,13 @@ body{
 }
 
 .dropdown.active .options {
-    display: block;
-    
+    display: block;  
 }
 
 .dropdown .options div {
     padding: 6px 14px;
     cursor: pointer;
-    border-bottom: 2px solid #005E7A 
-    
+    border-bottom: 2px solid #005E7A    
 }
 
 .dropdown .options div:hover {
