@@ -14,7 +14,7 @@ class Diagnosis(models.Model):
     # media folder to imageURL
     mediaFolder = models.ForeignKey("image.Media", on_delete=models.SET_NULL, null=True, default=None)
     
-
+    
     def __str__(self):
         return str(self.diagID)
 
@@ -37,6 +37,17 @@ class Media(models.Model):
     # uniquqe of the dataset
     mediaID = models.AutoField(primary_key=True)
     # name of the dataset
-    name = models.CharField(blank=False, max_length=100)
+    name = models.CharField(blank=False, max_length=100, unique=True)
     # all the URLs linked to the patients in the dataset
     url = models.TextField(blank=False)
+
+    def save(self, *args, **kwargs):
+        # makes name str to upper case
+        if self.name:
+            self.name = self.name.upper()
+        
+        # calls original save() logic
+        super().save(*args, **kwargs)
+    
+    def __str__(self):
+        return self.name
