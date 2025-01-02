@@ -51,7 +51,7 @@ def forwardingInformation(request, datasetName):
         
         uuid = createUUIDs(1)[0]
         
-        # will alwys be a obj beacuse if not the status must be error
+        # This will always be an object because if it is not, the status must be "error".
         mediaFolderObject = Media.objects.get(name=datasetName)
         
         diag = createDiagnosis(uuid, docObject, pictureURL, mediaFolderObject)

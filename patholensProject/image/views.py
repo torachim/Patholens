@@ -2,8 +2,9 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 import os
-import base64
 from django.conf import settings
+from image.mediaHandler import *
+from accounts.doctorManager import *
 
 @login_required
 def newDiagnosis(request, diagnosisID):
@@ -48,4 +49,12 @@ def saveImage(request):
 
 @login_required
 def transitionPage(request):
+    
+    finishedDatasets = finishedDatasets(request.user.id)
+    finishedTitle = [item.title() for item in finishedDatasets]
+    
+    #if (len(finishedDatasets)) > 0
+
+    
+    
     return render (request, "image/transitionPage.html")
