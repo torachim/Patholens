@@ -10,7 +10,10 @@ class Diagnosis(models.Model):
     confidence = models.PositiveSmallIntegerField(null=True, blank=True)
     editedDiagConfidence = models.PositiveSmallIntegerField(null=True, blank=True)
     # contains the number of the patient and the name of the data set
-    imageUrl = models.CharField(null=False, max_length=20, default="Unknown")
+    imageURL = models.CharField(null=False, max_length=20, default="Unknown")
+    # media folder to imageURL
+    mediaFolder = models.ForeignKey("image.Media", on_delete=models.SET_NULL, null=True, default=None)
+    
 
     def __str__(self):
         return str(self.diagID)
