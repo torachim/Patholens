@@ -1,28 +1,33 @@
-{% load static %}
+{% extends 'base.html' %} 
+{% load static %} 
+{% block extraCSS %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate" />
-    <meta http-equiv="pragma" content="no-cache" />
-    <meta http-equiv="expires" content="0" />
-    <link rel="stylesheet" href="{% static 'css/transitionPage.css' %}">
-    <title>Tranistion</title>
-</head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="pragma" content="no-cache" />
+<meta http-equiv="expires" content="0" />
+<link rel="stylesheet" href="{% static 'css/transitionPage.css'%}?v=1">
+<title> Transition </title>
 
-<body>
+{% endblock %} 
+
+{%block content%}
+
+<div class="mainContent">
     <div class="contentBox">
         <div class="contentTitle">
-            <h2>Do you want to continue ? </h2>
+            <h1>Do you want to continue ? </h1>
         </div>
         
-            <div class="decisionButtons">
-                <div class="homeButton">
-                    <button> Homepage </button>
-                </div>
-            </div>
-    </div>   
+        <div class="decisionButtons">
+                <button class="continueButton"> Yes, continue </button>
+                <button class="homeButton"> No, return to homepage </button>        
+            </div>            
+        </div>
+    
+    </div> 
+</div>
 </body>
-</html>
+
+{% endblock %} 
