@@ -9,11 +9,6 @@ from django.conf import settings
 def newDiagnosis(request, diagnosisID):
     return render(request, "image/diagnosisPage.html", {"diagnosisID": diagnosisID})
 
-
-def testRenderImageView(request, imageID):
-    return render(request, 'image/diagnosisPage.html', {'imageID': imageID})
-
-
 def saveImage(request):
     if request.method == "POST":
         try:
@@ -50,3 +45,7 @@ def saveImage(request):
             return JsonResponse({"error": str(e)}, status=400)
     else:
         return JsonResponse({"error": "Invalid request method"}, status=405)
+
+@login_required
+def transitionPage(request):
+    return render (request, "image/transitionPage.html")

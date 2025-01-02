@@ -31,4 +31,6 @@ urlpatterns = [
     path('newDiagnosis/<str:diagnosisID>/', views.newDiagnosis, name='newDiagnosis'),
     
     path("api/saveImage/", views.saveImage, name="saveImage"),
+    
+    path("transitionPage/", views.transitionPage, name="transitionPage"),
 ]
