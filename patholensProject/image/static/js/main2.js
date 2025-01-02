@@ -98,6 +98,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.log(diagURL);
                 volumes.push({url: diagURL,
                               schema: "nifti",
+                              colorMap: "blue"
                 });
             })
             .catch(err => {
