@@ -34,39 +34,47 @@ document.addEventListener('DOMContentLoaded', function () {
     let selectedDisplay = "AIDiagnosis"
 
     // Load default image and mask
-    loadImageWithMask(selectedFormatMask, selectedFormatMri);
+    loadImages();
 
-    // Dropdown change listener
+    // Dropdown change listener for the AI Mask
     const aiDropdown = document.getElementById('AIdropdown');
     aiDropdown.addEventListener('change', (event) => {
         selectedFormatMask = event.target.value;
-        loadImageWithMask(selectedFormatMask, selectedFormatMri);
+        loadImages();
     });
 
+    // Dropdown change listender for format of the pictures
     const formatDropdown = document.getElementById('formatDropdown');
     formatDropdown.addEventListener('change', (event) => {
         selectedFormatMri = event.target.value;
-        loadImageWithMask(selectedFormatMask, selectedFormatMri);
+        loadImages();
     });
 
-   const displayDropdown = document.getElementById('displayDropdown')
+    // Dropdown change listender for the Overlay structure
+    const displayDropdown = document.getElementById('displayDropdown')
     displayDropdown.addEventListener('change', (event) => {
         selectedDisplay= event.target.value
-        loadImages(selectedFormatMask, selectedFormatMri, selectedDisplay);
+        loadImages();
     });
 
-    async function loadImages(selectedFormatMask, selectedFormatMRI, selectedDisplay){
+    // function to load the images in the correct overlay
+    async function loadImages(){
         if(selectedDisplay == "AIDiagnosis"){
-            const volumes = await loadImageWithMask(selectedFormatMask, selectedFormatMRI);
+            const volumes = await loadImageWithMask(selectedFormatMask, selectedFormatMri);
             console.log("b",volumes);
             nv.loadVolumes(volumes);
         }
         else if(selectedDisplay == "myDiagnosis"){
-            const volumes = await loadImageWithDiagnosis(selectedFormatMRI);
+            const volumes = await loadImageWithDiagnosis(selectedFormatMri);
             console.log("b",volumes);
             nv.loadVolumes(volumes);
         }
-        
+        else if(selectedDisplay == "showOverlay"){
+            const volumes = await loadOverlayDAI(selectedFormatMask, selectedFormatMri);
+            console.log(volumes)
+            nv.loadVolumes(volumes);
+        }
+    
     };
 
 
@@ -178,6 +186,40 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
         
         return volumes;
+    }
+
+    async function loadOverlayDAI(formatMask, formatMri) {
+        
+        let volumes = [];
+        //let volumesDiag = [];
+        
+        volumes = await loadImageWithMask(formatMask, formatMri);
+
+        await fetch(getDApiURL)
+        .then(response => {
+            if(!response.ok){
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            const URL = data.path;
+            const diagURL = `http://127.0.0.1:8000/${URL}`
+            console.log(diagURL);
+            volumes.push({url: diagURL,
+                          schema: "nifti",
+                          colorMap: "blue",
+                          opacity: 1.0
+            });
+            console.log("a",volumes);
+        })
+        .catch(err => {
+            console.error("Error loading Nifti Files", err);
+        });
+    
+    console.log(volumes);
+    return volumes;
+        
     }
 
 });
