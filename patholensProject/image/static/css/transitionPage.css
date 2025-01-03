@@ -21,15 +21,15 @@ html, body {
     text-align: center;
     width: 600px;
     height: 300px;
-    border-radius: 8px;
+    border-radius: 10px;
     padding-top: 20px;
 
 }
 .contentTitle h1{
     color: white;
     font-weight: bold;
-    margin-top: 65px;
-    font-size: 35px;
+    margin-top: 80px;
+    font-size: 33px;
     font-family: Calibri, Arial, sans-serif;
 
 }
@@ -38,24 +38,33 @@ html, body {
     display: flex; 
     gap: 40px; 
     justify-content: center; 
-    margin-top: 40px;
+    margin-top: 30px;
 }
 
 .decisionButtons button {
     background-color:#00afb9;
     color: white;
-    font-size: 15px;
+    font-size: 16px;
     font-family: Calibri;
     font-weight: bold;
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
     width: 190px;
     height: 45px;
     margin-top: 10px;
     cursor: pointer;
-    box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.2);
+    box-shadow: 1px 3px 3px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease; 
 }
 
 .decisionButtons button:hover {
-    background-color: #028f97;
+    background-color:#17c7d1; 
+    transform: scale(1.025); 
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3); 
+}
+
+.decisionButtons button:active {
+    background-color: #048087; 
+    transform: scale(0.95); 
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4); 
 }
