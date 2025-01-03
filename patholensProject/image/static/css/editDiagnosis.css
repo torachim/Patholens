@@ -392,3 +392,22 @@ body.scrollable {
     white-space: nowrap;
     
 }  
+
+/* comparison images at the bottom of the page */
+#comparisonContainer{
+    position: absolute;
+    left: 25%;
+    top: 72%;
+    width: 50%;
+    height: 25%;
+    background-color: #434343;
+}
+
+#zoomButton{
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    width: 40px;
+    height: 34px;
+
+}
