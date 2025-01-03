@@ -19,7 +19,8 @@
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     {% block extraCSS %}{% endblock %}
     <script src="https://kit.fontawesome.com/179535dd9d.js" crossorigin="anonymous"></script>
-    <title>{% block title %}Website{% endblock %}</title>
+    <title>{% block title %}PathoLens{% endblock %}</title>
+    <link rel="icon" href="{% static 'images/icons8-experiment-versuch-ios-17-glyph-96 copy.png' %}" type="image/x-icon" />
 </head>
 <body>
     
@@ -137,10 +138,12 @@
         const openHelpWindow = document.getElementById("openHelp");
         const closeHelpWindow = document.getElementById("helpClose");
 
+        // opens the helpslider
         openHelpWindow.addEventListener("click", () => {
             helpWindow.style.right = 0;
         });
 
+        // closes the helpslider
         closeHelpWindow.addEventListener("click", () => {
             helpWindow.style.right = "-600px";
         });

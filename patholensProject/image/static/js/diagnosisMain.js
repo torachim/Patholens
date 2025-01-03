@@ -312,6 +312,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const finishButton = document.getElementById("finishButton");
     const popupOverlay = document.getElementById("popupOverlay");
     const closePopup = document.getElementById("closePopup");
+    const popupFrame = document.getElementById("popupFrame");
 
     popupOverlay.style.display = "none";
 
@@ -319,6 +320,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Function to show the confidence window
     finishButton.addEventListener("click", () => {
         popupOverlay.style.display = "flex";
+        popupFrame.style.display = "block";
         startTimer();
     });
 
