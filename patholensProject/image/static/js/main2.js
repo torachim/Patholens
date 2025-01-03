@@ -71,7 +71,6 @@ document.addEventListener('DOMContentLoaded', function () {
             const volumes = await loadOverlayDAI(selectedFormatMask, selectedFormatMri);
             nv.loadVolumes(volumes);
         }
-    
     };
 
     /**

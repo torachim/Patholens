@@ -428,6 +428,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const imageBlob = nv.saveImage({
                 isSaveDrawing: true,
                 filename: filename,
+                volumeByIndex: 0,
             });
             
             // Create a FormData object
