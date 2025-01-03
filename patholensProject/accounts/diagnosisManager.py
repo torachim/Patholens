@@ -60,3 +60,22 @@ def getURL(diagID: str):
     url = diagObject.imageURL
 
     return url
+
+
+def getDiagnosisObject(diagID: str):
+    """
+    Returns the object to the linked diagnosis.
+
+    Args:
+        diagID (str): The ID of the diagnosis.
+
+    Returns:
+        Diagnosis: Returns the object of the Diagnosis if the ID is linked to a object.
+    """
+
+    # Check if the Diagnosis exists in the database
+    if not Diagnosis.objects.filter(diagID=diagID).exists():
+        return False
+
+    diagnosis = Diagnosis.objects.get(diagID=diagID)
+    return diagnosis
