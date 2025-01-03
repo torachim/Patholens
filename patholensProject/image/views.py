@@ -5,6 +5,7 @@ import os
 from django.conf import settings
 from image.mediaHandler import *
 from accounts.doctorManager import *
+from accounts.diagnosisManager import *
 
 @login_required
 def newDiagnosis(request, diagnosisID):
@@ -48,13 +49,25 @@ def saveImage(request):
         return JsonResponse({"error": "Invalid request method"}, status=405)
 
 @login_required
-def transitionPage(request):
+def transitionPage(request, diagnosisID):
     
-    #finishedDatasets = finishedDatasets(request.user.id)
+    
+    diagObject = getDiagnosisObject(diagnosisID)
+
+    dataset = finishedDatasets(str(request.user.id))
+    
+    for set in dataset:
+        ...
+    
+    
+
     #finishedTitle = [item.title() for item in finishedDatasets]
     
     #if (len(finishedDatasets)) > 0
 
-    
+    # TODO: man muss wissen, was für eine diagnose es war damit man dann eine weitere diagnose dem patienten geben kann
+    # wenn er auf "yes, continue" drückt
+    # wenn aber der datensatz fertig bearbeitet wurde, muss bei "yes, continue" so etwas stehen wie
+    # "You finsihed all ..." und dann nach kann man etweder nur zur hompage ODER man kann direkt zu datasets wechseln ? 
     
     return render (request, "image/transitionPage.html")
