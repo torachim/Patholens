@@ -196,8 +196,29 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.error("Error loading NIfTI file:", err);
             });
 
+        // Api call to fetch the diagnosis
+        await fetch(getDApiURL)
+            .then(response => {
+                if(!response.ok){
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                const URL = data.path;
+                const diagURL = `http://127.0.0.1:8000/${URL}`
+                console.log(diagURL);
+                volumes.push({url: diagURL,
+                              schema: "nifti",
+                              colorMap: "green",
+                              opacity: 1.0
+                            });
+            })
+            .catch(err => {
+                console.error("Error loading Nifti Files", err);
+            });
+        return volumes;
     }
-
 
 
     // Drawing functions from here on
