@@ -1,27 +1,10 @@
 import { Niivue } from "./index.js";
+import { niivueCanvas } from "./niivueCanvas.js";
 
 document.addEventListener('DOMContentLoaded', function () {
-    // Initialize Niivue instance
-    const nv = new Niivue({});
+
     const canvas = document.getElementById("imageBrain");
-
-    // Adjust canvas for DPI
-    function adjustCanvasForDPI(canvas) {
-        const dpi = window.devicePixelRatio || 1;
-
-        // Get size from CSS
-        const computedStyle = getComputedStyle(canvas);
-        const width = parseInt(computedStyle.getPropertyValue('width'), 10);
-        const height = parseInt(computedStyle.getPropertyValue('height'), 10);
-
-        // Set new width and height
-        canvas.width = width * dpi;
-        canvas.height = height * dpi;
-    }
-
-    nv.attachToCanvas(canvas);
-    adjustCanvasForDPI(canvas);
-    nv.setMultiplanarPadPixels(60);
+    const nv = niivueCanvas({}, canvas);
 
     // Base API URLs
     const getIMbaseApiURL = `/image/api/getImageAndMask/${diagnosisID}`;
@@ -43,14 +26,14 @@ document.addEventListener('DOMContentLoaded', function () {
         loadImages();
     });
 
-    // Dropdown change listender for format of the pictures
+    // Dropdown change listener for format of the pictures
     const formatDropdown = document.getElementById('formatDropdown');
     formatDropdown.addEventListener('change', (event) => {
         selectedFormatMri = event.target.value;
         loadImages();
     });
 
-    // Dropdown change listender for the Overlay structure
+    // Dropdown change listener for the Overlay structure
     const displayDropdown = document.getElementById('displayDropdown')
     displayDropdown.addEventListener('change', (event) => {
         selectedDisplay= event.target.value
@@ -74,15 +57,15 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     /**
-     * Returns two volumes one with the main Mri image and the other one with the doctors diagnosis for the current case
-     * @param formatMri The requested Format for the Mri Picture (T1 or Flair)
+     * Returns two volumes one with the main MRI image and the other one with the doctor's diagnosis for the current case
+     * @param formatMri The requested Format for the MRI Picture (T1 or Flair)
      * @returns Array with the volumes
      */
     async function loadImageWithDiagnosis(formatMri) {
         const imageApiURL = `${getIbaseApiURL}/?format =${formatMri}`;
         let volumes = [];
 
-        // Api call to fetch the imageURL in the requested format (T1 or Flair)
+        // API call to fetch the imageURL in the requested format (T1 or Flair)
         await fetch(imageApiURL)
             .then(response => {
                 console.log(imageApiURL);
@@ -103,7 +86,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.error("Error loading Nifti Files", err);
             });
 
-        // Api call to fetch the diagnosis
+        // API call to fetch the diagnosis
         await fetch(getDApiURL)
             .then(response => {
                 if(!response.ok){
@@ -129,9 +112,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     
     /**
-     * Returns two volumes the first is the normal Mri image and the second is the AI Diagnosis
+     * Returns two volumes the first is the normal MRI image and the second is the AI Diagnosis
      * @param  formatMask The requested AI Mask (DEEPFCD, map18, meld, nnunet)
-     * @param  formatMri The requestet Mri format (T1, Flair)
+     * @param  formatMri The requested MRI format (T1, Flair)
      * @returns Array with 2 volumes
      */
     async function loadImageWithMask(formatMask, formatMri) {
@@ -156,8 +139,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     const URLs = data.data;
                     const mriURL = `http://127.0.0.1:8000${URLs.mriPath}`;
                     const maskURL = `http://127.0.0.1:8000${URLs.maskPath}`;
-                    console.log("MRI URL:", mriURL);
-                    console.log("Mask URL:", maskURL);
 
                     volumes.push({
                         url: mriURL,
@@ -200,7 +181,6 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(data => {
             const URL = data.path;
             const diagURL = `http://127.0.0.1:8000/${URL}`
-            console.log(diagURL);
             volumes.push({url: diagURL,
                           schema: "nifti",
                           colorMap: "blue",

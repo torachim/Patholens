@@ -1,4 +1,6 @@
 import { Niivue, DRAG_MODE } from "./index.js";
+import { niivueCanvas } from "./niivueCanvas.js";
+
 
 document.addEventListener('DOMContentLoaded', function() {
 
@@ -67,37 +69,16 @@ document.addEventListener('DOMContentLoaded', function() {
             nv.setDrawingEnabled(false); //drawingEnabled equals false so you have to click the button again to draw another rechtangle
         }
     }
-        
-    // init niivue instance
-    const nv = new Niivue({
-        onDragRelease: onDragRelease,
-        dragMode: DRAG_MODE.callbackOnly,
-        penSize: 3,
-        maxDrawUndoBitmaps: 200,     // max 200 undos possible
-    });
-        
+
     const canvas = document.getElementById("imageBrain");
 
-    //function to resize the canvas field in dependency of the device
-    function adjustCanvasForDPI(canvas) {
-        const dpi = window.devicePixelRatio || 1;
-    
-        // Get the size from the canvas element from the css
-        const computedStyle = getComputedStyle(canvas);
-        const width = parseInt(computedStyle.getPropertyValue('width'), 10);
-        const height = parseInt(computedStyle.getPropertyValue('height'), 10);
-    
-        // set the new width and height 
-        canvas.width = width * dpi;
-        canvas.height = height * dpi;
-    }
-    
-    nv.attachToCanvas(canvas);
-
-    adjustCanvasForDPI(canvas);
-
-    nv.setMultiplanarPadPixels(60);
-
+    const nv = niivueCanvas({
+               onDragRelease: onDragRelease,
+               dragMode: DRAG_MODE.callbackOnly,
+               penSize: 3,
+               maxDrawUndoBitmaps: 200,     // max 200 undos possible
+               }, 
+               canvas)
 
     const baseApiURL = `/image/api/getImage/${diagnosisID}`;
 

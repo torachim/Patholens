@@ -32,18 +32,18 @@ body{
     text-align: center;
 }
 
-/* Stil für das Dropdown (select) */
-.dropdown-select {
-    display: none; /* Versteckt das Dropdown-Menü */
+/* Style for the dropdown select (select) */
+.dropdownSelect {
+    display: none; /* Hide the dropdown */
 }
 
-/* Benutzersichtbarkeit des Dropdowns über das Label */
+/* Show dropdown is used */
 .dropdown select:focus + label,
 .dropdown select {
-    display: block; /* Dropdown anzeigen */
+    display: block; /* show dropdown */
 }
 
-/* Label als Button */
+/* Lable as Button */
 label {
     background-color: #3498db;
     color: white;
@@ -54,7 +54,7 @@ label {
     text-align: center;
 }
 
-/* Optional: Dropdown-Optionen-Stile anpassen */
+/* optional dropdown options */
 .dropdown option {
     background-color: #f9f9f9;
     padding: 10px;
