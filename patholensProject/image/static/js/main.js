@@ -107,7 +107,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Load default FLAIR image and edited image
     let selectedFormat = "FLAIR";
 
-    loadImage();
+    loadImages();
 
     // Function to handle changes in the format selection
     const radioButtons = document.querySelectorAll('input[name="option"]');
@@ -118,6 +118,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+
+    async function loadImages(){
+        const volumes = await loadImageAndDiagnosis(selectedFormat);
+        nv.loadVolumes(volumes);
+    }
 
 
     function loadImage(format) {
@@ -155,6 +160,42 @@ document.addEventListener('DOMContentLoaded', function() {
             .catch(err => {
                 console.error("Error loading NIfTI file:", err);
             });
+    }
+
+
+    async function loadImageAndDiagnosis(format) {
+        //get the apiURL to fetch the path to the requested image
+        const apiURL = `${baseApiURL}/?format =${format}`;
+        console.log(`API URL: ${apiURL}`);
+        let volumes = [];
+
+        //fetch the data from the given apiURL
+        await fetch(apiURL)
+            .then(response => {
+                console.log("Response status:", response.status);
+                //if response not ok throw the error
+                if(!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                console.log(response)
+                return response.json();
+            })
+            .then(data => {
+                //get the image URL with the data.path from the api
+                const imageURL = `http://127.0.0.1:8000${data.path}`;
+                console.log("Image URL:", imageURL);
+
+                volumes.push({url: imageURL,
+                    schema: "nifti",
+                });
+
+            })
+            //catch the possible error
+            .catch(err => {
+                console.error("Error loading NIfTI file:", err);
+            });
+
     }
 
 
