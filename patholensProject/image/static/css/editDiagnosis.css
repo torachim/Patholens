@@ -402,4 +402,5 @@ body.scrollable {
     right: 5px;
     width: 40px;
     height: 34px;
+    cursor: pointer;
 }
