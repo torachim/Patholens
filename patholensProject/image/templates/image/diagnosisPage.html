@@ -6,7 +6,7 @@
 {% endblock %} 
 
 {% block title %} 
-  Diagnosis Page 
+  PathoLens - Diagnosis Page 
 {% endblock %} 
 
 <!--adds the homebutton-->
@@ -41,7 +41,7 @@
     <canvas id="imageBrain" width="100%" height="376%"></canvas>
 </div>
 
-
+<!--Selection T1 / Flair-->
 <div class="container">
     <form class="radioForm">
         <label>
@@ -54,13 +54,15 @@
         </label>
     </form>
 </div>
+
 <div class="finishDiagnosisButton">
     <button type="button" id="finishButton">Finish Diagnosis</button>
 </div>
 
 
+<!--Confidence Meter-->
 <div class="popupOverlay" id="popupOverlay">
-    <div class="popupFrame">
+    <div class="popupFrame" id="popupFrame">
         
         <button class="popupClose" id="closePopup">&times;</button>
         
