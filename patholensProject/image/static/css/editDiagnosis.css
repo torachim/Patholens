@@ -7,12 +7,20 @@ body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    overflow-y: hidden; /* Verhindert das Scrollen der gesamten Seite */
+    overflow-y: hidden; 
 }
 
-body.scrollable {
-    overflow-y: auto; /* Ermöglicht Scrollen der Seite, wenn nötig */
+/*design for alle objects*/
+*{
+    box-sizing: border-box;
+    font-family: 'Cabin', sans-serif;
 }
+
+/*enables scrolling on the page if needed*/
+body.scrollable {
+    overflow-y: auto; 
+}
+
 
 .homeButton {
     margin-right: 10px;
@@ -42,8 +50,8 @@ body.scrollable {
     padding: 10px 20px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
     gap: 55px;
-    width: 370px;
-    height: 40px;
+    width: 390px;
+    height: 55px;
     margin: 20px auto; 
     margin-top: 20px; 
     margin-bottom: -30px;
@@ -102,23 +110,18 @@ body.scrollable {
 
 
 .imageBox {
-    background-color: aliceblue; /* Hintergrundfarbe für die Container-Fläche */
+    background-color: aliceblue; 
     margin-top: 50px;
 }
 
-
+/*dropdown styling*/
 .dropdown-container {
     display: flex;
     flex-direction: column; 
     gap: 10px; 
-    margin-top: 2%;
-    margin-right: 80%;
+    margin-top: 1%;
+    margin-right: 85%;
     align-items: center; 
-}
-
-*{
-    box-sizing: border-box;
-    font-family: 'Cabin', sans-serif;
 }
 
 .container {
@@ -134,6 +137,7 @@ body.scrollable {
     box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
 }
 
+/*arrow styling*/
 .dropdown::before {
     content: "";
     position: absolute;
@@ -150,6 +154,7 @@ body.scrollable {
     z-index: 0;
 }
 
+/*arrow transition*/
 .dropdown.active::before {
     top: 12px;
     transform: rotate(-180deg);
@@ -157,7 +162,6 @@ body.scrollable {
 
 .dropdown input {
     position: absolute;
-   
     width: 100%;
     height: 100%;
     cursor: pointer;
@@ -173,10 +177,12 @@ body.scrollable {
     z-index: -1;
     
 }
+
 .dropdown.active input{
     border-radius: 8px 8px 0 0;
 }
 
+/*list of entries of the dropdown*/
 .dropdown .options {
     position: absolute;
     top:30px;
@@ -192,41 +198,41 @@ body.scrollable {
     z-index: 1;
 }
 
+/*enables scrollling in the list of entries*/
 .dropdown .options::-webkit-scrollbar {
-    width: 8px; /* Breite der Scrollbar */
-    height: 8px; /* Höhe der horizontalen Scrollbar */
+    width: 8px; 
+    height: 8px; 
 }
 
-/* Scrollbar-Schieber (der bewegliche Teil) */
+/*scrollable slider */
 .dropdown .options::-webkit-scrollbar-thumb {
-    background-color: #005E7A; /* Farbe des Schiebers */
-    border-radius: 10px; /* Abgerundete Ecken */
+    background-color: #005E7A; 
+    border-radius: 10px; 
 }
 
-/* Hover-Effekt für den Scrollbar-Schieber */
+/*hover effect for slider*/
 .dropdown .options::-webkit-scrollbar-thumb:hover {
-    background-color:#047a9f; /* Farbe des Schiebers im Hover-Zustand */
+    background-color:#047a9f; 
 }
+
 .dropdown.active .options {
-    display: block;
-    
+    display: block; 
 }
 
 .dropdown .options div {
     padding: 6px 14px;
     cursor: pointer;
-    border-bottom: 2px solid #005E7A /* strich zwiscehn den Einträgen*/
-    
+    border-bottom: 2px solid #005E7A /*line between the entries*/ 
 }
 
+/*hover effect for entries*/
 .dropdown .options div:hover {
     background:  #00242F;
-    color: #fff;
-    
+    color: #fff;  
 }
 
 
-/* finnish diagnosis button */
+/*finnish diagnosis button*/
 .finishDiagnosisButton {
     position: fixed; 
     bottom: 30px; 
@@ -263,11 +269,8 @@ body.scrollable {
 }
 
 
-
-
 /* Pop up for the confidence */
 .popupOverlay {
-    
     position: fixed;
     top: 0;
     left: 0;
@@ -281,7 +284,6 @@ body.scrollable {
     align-items: center;
 }
 
-
 .popupFrame {
     position: relative;
     background: #005E7A;
@@ -291,8 +293,7 @@ body.scrollable {
     height: 275px;
     text-align: center;
     align-items: center;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
-    
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);  
 }
 
 .popupFrame p {
@@ -300,11 +301,9 @@ body.scrollable {
     color: white;
     font-size: 20px;
     margin-top: 50px;
-
 }
 
 .popupClose {
-  
     position: absolute; 
     top: 10px;
     right: 10px;
@@ -337,8 +336,7 @@ body.scrollable {
 }
 
 .popupConfirm:hover {
-    background-color: #008a91; 
-    
+    background-color: #008a91;  
 }
 
 /* Confidence meter to enter your confidence */
@@ -348,10 +346,7 @@ body.scrollable {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    
-
 }
-
 
 .confidenceMeter {
     width: 100%;
@@ -373,8 +368,7 @@ body.scrollable {
     background: #D9D9D9;
     border: none;
     cursor: pointer;
-    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
-    
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3); 
 }
 
 /* Value of the confidence */
@@ -389,8 +383,7 @@ body.scrollable {
     padding: 5px;
     border-radius: 5px;
     visibility: hidden; 
-    white-space: nowrap;
-    
+    white-space: nowrap;  
 }  
 
 /* comparison images at the bottom of the page */
@@ -409,5 +402,4 @@ body.scrollable {
     right: 5px;
     width: 40px;
     height: 34px;
-
 }
