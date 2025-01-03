@@ -133,7 +133,6 @@ body.scrollable {
     height: 30px;
     box-shadow: 1px 5px 5px rgba(0, 0, 0, 0.1);
     cursor: pointer;
-    font-size: 15px;
 }
 
 /*arrow styling*/
