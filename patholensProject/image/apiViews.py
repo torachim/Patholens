@@ -70,6 +70,55 @@ class GetImageAPIView(APIView):
             )
 
 
+class GetDiagnosis(APIView):
+
+    def get(self, request, diagnosisID):
+        """
+        Function to get the diagnosis Mask for a spicific diagnosisID
+
+        Args:
+            diagnosisID (string): a diagnosisID 
+
+        Returns:
+            Path to the Diagnosis Image
+        """
+        try:
+            if not diagnosisID:
+                return Response({"error": "DiagnosisID required"},
+                                 status=status.HTTP_400_BAD_REQUEST
+                                )
+            
+            subID = getURL(diagnosisID)
+            docID = request.user.id
+
+            diagnosisPath = os.path.join(
+                        settings.MEDIA_ROOT,
+                        f"website_data/derivatives/diagnosis/sub-{subID}/sub-{subID}_acq-{docID}_space-edited-image.nii.gz"
+            )
+            
+            if not os.path.exists(diagnosisPath):
+                return Response(
+                    {"error": f"Diagnosis File {diagnosisPath} not found"},
+                    status=status.HTTP_404_NOT_FOUND
+                )
+            
+            relativePath = f"media/website_data/derivatives/diagnosis/sub-{subID}/sub-{subID}_acq-{docID}_space-edited-image.nii.gz"
+
+            return Response(
+                    {"status": "success",
+                     "path": relativePath,
+                    },
+                    status=status.HTTP_200_OK
+            )
+        
+        except Exception as e:
+            return Response(
+                    {"error": str(e)},
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+
+
 
 class SetUseTimeAPIView(APIView):
 
