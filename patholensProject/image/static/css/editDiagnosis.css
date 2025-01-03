@@ -6,6 +6,8 @@ body {
     flex-direction: column;
     box-sizing: border-box;
     overflow-y: hidden; 
+    margin: 0;
+    padding: 0;
 }
 
 /*design for all objects*/
@@ -116,7 +118,7 @@ body.scrollable {
     display: flex;
     flex-direction: column; 
     gap: 10px; 
-    margin-top: 1%;
+    margin-bottom: 5px;
     margin-right: 85%;
     align-items: center; 
 }
