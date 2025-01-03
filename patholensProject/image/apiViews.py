@@ -31,9 +31,9 @@ class GetImageAPIView(APIView):
         Returns:
             Path: The path to find the requested image
         """
-
         try:
-            imageFormat = request.GET.get("format ")
+            imageFormat = request.GET.get("format")
+            print("Received format parameter:", imageFormat)  # Debugging
             if not imageFormat:
                 imageFormat = "FLAIR"
 
@@ -44,13 +44,14 @@ class GetImageAPIView(APIView):
 
             # get the path to the image of a given diagnosis
             imageID = getURL(diagnosisID)
+            print("Image ID:", imageID)  # Debugging
             
             fileSuffix = settings.SUPPORTED_IMAGE_FORMATS[imageFormat]
-
             imagePath = os.path.join(
                 settings.MEDIA_ROOT,
                 f"website_data/sub-{imageID}/anat/sub-{imageID}{fileSuffix}",
             )
+            print("Generated image path:", imagePath)  # Debugging
             if not os.path.exists(imagePath):
                 return Response(
                     {"error": "Image not found"}, status=status.HTTP_404_NOT_FOUND
@@ -63,9 +64,12 @@ class GetImageAPIView(APIView):
             return Response({"path": relativePath}, status=status.HTTP_200_OK)
 
         except Exception as e:
+            print("Error in GetImageAPIView:", str(e))  # Debugging
             return Response(
                 {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
+
 
 class SetUseTimeAPIView(APIView):
 

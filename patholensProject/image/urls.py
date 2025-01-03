@@ -20,6 +20,7 @@ from . import views
 from .apiViews import SetUseTimeAPIView
 from .apiViews import GetImageAPIView
 from .apiViews import SaveConfidenceAPIView
+from .apiViews import GetDiagnosis
 
 urlpatterns = [
     
@@ -31,4 +32,6 @@ urlpatterns = [
     path('newDiagnosis/<str:diagnosisID>/', views.newDiagnosis, name='newDiagnosis'),
     
     path("api/saveImage/", views.saveImage, name="saveImage"),
+
+    path('api/getDiagnosis/<str:diagnosisID>/', GetDiagnosis.as_view(), name='getDiagnosis'),
 ]

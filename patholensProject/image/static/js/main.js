@@ -99,14 +99,17 @@ document.addEventListener('DOMContentLoaded', function() {
     nv.setMultiplanarPadPixels(60);
 
 
+    // API URLs
     const baseApiURL = `/image/api/getImage/${diagnosisID}`;
+    const getDApiURL = `/image/api/getDiagnosis/${diagnosisID}`;
 
 
-    // Load FLAIR default
+    // Load default FLAIR image and edited image
     let selectedFormat = "FLAIR";
-    loadImage(selectedFormat);
 
-    //function to change the picture format if the buttons are clicked
+    loadImage();
+
+    // Function to handle changes in the format selection
     const radioButtons = document.querySelectorAll('input[name="option"]');
     radioButtons.forEach(radio => {
         radio.addEventListener('change', (event) => {
@@ -115,7 +118,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    
+
+
     function loadImage(format) {
         //get the apiURL to fetch the path to the requested image
         const apiURL = `${baseApiURL}/?format =${format}`;
@@ -424,7 +428,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Create the blob object for the image
             const imageBlob = nv.saveImage({
                 isSaveDrawing: true,
-                volumeByIndex: 0,
+                filename: filename,
             });
             
             // Create a FormData object
@@ -474,4 +478,4 @@ document.addEventListener('DOMContentLoaded', function() {
     // save image if logged out
     document.getElementById("logoutButton").addEventListener("click", saveEditedImage);
 });
-//Test 3
+//Test 4
