@@ -61,27 +61,29 @@ document.addEventListener('DOMContentLoaded', function () {
     async function loadImages(){
         if(selectedDisplay == "AIDiagnosis"){
             const volumes = await loadImageWithMask(selectedFormatMask, selectedFormatMri);
-            console.log("b",volumes);
             nv.loadVolumes(volumes);
         }
         else if(selectedDisplay == "myDiagnosis"){
             const volumes = await loadImageWithDiagnosis(selectedFormatMri);
-            console.log("b",volumes);
             nv.loadVolumes(volumes);
         }
         else if(selectedDisplay == "showOverlay"){
             const volumes = await loadOverlayDAI(selectedFormatMask, selectedFormatMri);
-            console.log(volumes)
             nv.loadVolumes(volumes);
         }
     
     };
 
-
+    /**
+     * Returns two volumes one with the main Mri image and the other one with the doctors diagnosis for the current case
+     * @param formatMri The requested Format for the Mri Picture (T1 or Flair)
+     * @returns Array with the volumes
+     */
     async function loadImageWithDiagnosis(formatMri) {
         const imageApiURL = `${getIbaseApiURL}/?format =${formatMri}`;
         let volumes = [];
 
+        // Api call to fetch the imageURL in the requested format (T1 or Flair)
         await fetch(imageApiURL)
             .then(response => {
                 console.log(imageApiURL);
@@ -102,6 +104,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.error("Error loading Nifti Files", err);
             });
 
+        // Api call to fetch the diagnosis
         await fetch(getDApiURL)
             .then(response => {
                 if(!response.ok){
@@ -118,16 +121,20 @@ document.addEventListener('DOMContentLoaded', function () {
                               colorMap: "blue",
                               opacity: 1.0
                 });
-                console.log("a",volumes);
             })
             .catch(err => {
                 console.error("Error loading Nifti Files", err);
             });
         
-        //nv.loadVolumes(volumes)
         return volumes;
     }
     
+    /**
+     * Returns two volumes the first is the normal Mri image and the second is the AI Diagnosis
+     * @param  formatMask The requested AI Mask (DEEPFCD, map18, meld, nnunet)
+     * @param  formatMri The requestet Mri format (T1, Flair)
+     * @returns Array with 2 volumes
+     */
     async function loadImageWithMask(formatMask, formatMri) {
         // Parameters which get send to the backend -> the requested formats
         const params = new URLSearchParams({
@@ -164,22 +171,6 @@ document.addEventListener('DOMContentLoaded', function () {
                         colorMap: "red", // Distinct color for the mask
                         opacity: 0.9,    // Adjust transparency of the mask
                     });
-
-                    console.log("a",volumes);
-
-                    /*let volumes = [{
-                        url: mriURL,
-                        schema: "nifti",
-                    },
-                    {
-                        url: maskURL,
-                        schema: "nifti",
-                        colorMap: "red", // Distinct color for the mask
-                        opacity: 0.9,    // Adjust transparency of the mask
-                    },]*/
-
-                    // Load MRI and mask
-                    //nv.loadVolumes(volumes);
                 })
                 .catch(err => {
                     console.error("Error loading NIfTI files:", err);
@@ -188,10 +179,15 @@ document.addEventListener('DOMContentLoaded', function () {
         return volumes;
     }
 
+    /**
+     * Returns 3 volumes. The first is the normal Mri Image. The second is the AI Mask and the third is the diagnosis
+     * @param  formatMask The requested AI Mask (DEEPFCD, map18, meld, nnunet)
+     * @param  formatMri The requestet Mri format (T1, Flair)
+     * @returns Array with 3 Volumes
+     */
     async function loadOverlayDAI(formatMask, formatMri) {
         
         let volumes = [];
-        //let volumesDiag = [];
         
         volumes = await loadImageWithMask(formatMask, formatMri);
 
@@ -209,17 +205,13 @@ document.addEventListener('DOMContentLoaded', function () {
             volumes.push({url: diagURL,
                           schema: "nifti",
                           colorMap: "blue",
-                          opacity: 1.0
+                          opacity: 1.0,
             });
-            console.log("a",volumes);
         })
         .catch(err => {
             console.error("Error loading Nifti Files", err);
         });
     
-    console.log(volumes);
-    return volumes;
-        
+    return volumes;        
     }
-
 });
