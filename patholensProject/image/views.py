@@ -50,8 +50,8 @@ def saveImage(request):
 @login_required
 def transitionPage(request):
     
-    finishedDatasets = finishedDatasets(request.user.id)
-    finishedTitle = [item.title() for item in finishedDatasets]
+    #finishedDatasets = finishedDatasets(request.user.id)
+    #finishedTitle = [item.title() for item in finishedDatasets]
     
     #if (len(finishedDatasets)) > 0
 
