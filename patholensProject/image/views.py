@@ -14,6 +14,11 @@ def testRenderImageView(request, imageID):
     return render(request, 'image/diagnosisPage.html', {'imageID': imageID})
 
 
+@login_required
+def AIPage(request, diagnosisID):
+    return render(request, "image/AIPage.html", {"diagnosisID": diagnosisID})
+
+
 def saveImage(request):
     if request.method == "POST":
         try:

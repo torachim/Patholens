@@ -20,6 +20,8 @@ from . import views
 from .apiViews import SetUseTimeAPIView
 from .apiViews import GetImageAPIView
 from .apiViews import SaveConfidenceAPIView
+from .apiViews import GetImageAndMaskAPIView
+from .apiViews import GetDiagnosis
 
 urlpatterns = [
     
@@ -29,6 +31,10 @@ urlpatterns = [
     path('api/getImage/<str:diagnosisID>/', GetImageAPIView.as_view(), name='getImage'),
     path('api/setUseTime/', SetUseTimeAPIView.as_view(), name='setUseTime'),
     path('newDiagnosis/<str:diagnosisID>/', views.newDiagnosis, name='newDiagnosis'),
-    
+
+
+    path('AIpage/<str:diagnosisID>/', views.AIPage, name='AIpage'),
+    path('api/getImageAndMask/<str:diagnosisID>/', GetImageAndMaskAPIView.as_view(), name='getImageAndMask'),
     path("api/saveImage/", views.saveImage, name="saveImage"),
+    path('api/getDiagnosis/<str:diagnosisID>/', GetDiagnosis.as_view(), name='getDiagnosis'),
 ]

@@ -138,10 +138,12 @@
         const openHelpWindow = document.getElementById("openHelp");
         const closeHelpWindow = document.getElementById("helpClose");
 
+        // opens the helpslider
         openHelpWindow.addEventListener("click", () => {
             helpWindow.style.right = 0;
         });
 
+        // closes the helpslider
         closeHelpWindow.addEventListener("click", () => {
             helpWindow.style.right = "-600px";
         });
