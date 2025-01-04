@@ -6,11 +6,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const canvas = document.getElementById("imageBrain");
     const nv = niivueCanvas({}, canvas);
 
-    // Base API URLs
-    const getIMbaseApiURL = `/image/api/getImageAndMask/${diagnosisID}`;
-    const getDApiURL = `/image/api/getDiagnosis/${diagnosisID}`;
-    const getIbaseApiURL = `/image/api/getImage/${diagnosisID}`;
-
     //default formats
     let selectedFormatMask = "DEEPFCD";
     let selectedFormatMri = "FLAIR"
