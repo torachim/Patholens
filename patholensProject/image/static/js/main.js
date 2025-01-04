@@ -103,20 +103,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const baseApiURL = `/image/api/getImage/${diagnosisID}`;
     const getDApiURL = `/image/api/getDiagnosis/${diagnosisID}`;
 
-
-    // Load default FLAIR image and edited image
+    // Initialize variables
     let selectedFormat = "FLAIR";
 
-    loadImages();
 
-    // Function to handle changes in the format selection
-    const radioButtons = document.querySelectorAll('input[name="option"]');
-    radioButtons.forEach(radio => {
-        radio.addEventListener('change', (event) => {
-            selectedFormat = event.target.value;
-            loadImage(selectedFormat);
-        });
-    });
 
 
     async function loadImages(){

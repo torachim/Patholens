@@ -29,7 +29,7 @@ urlpatterns = [
     
     path('api/getImage/<str:diagnosisID>/', GetImageAPIView.as_view(), name='getImage'),
     path('api/setUseTime/', SetUseTimeAPIView.as_view(), name='setUseTime'),
-    path('newDiagnosis/<str:diagnosisID>/', views.newDiagnosis, name='newDiagnosis'),
+    path('newDiagnosis/<str:diagnosisID>/<str:mode>/', views.newDiagnosis, name='newDiagnosis'),
     
     path("api/saveImage/", views.saveImage, name="saveImage"),
 
