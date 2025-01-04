@@ -5,7 +5,6 @@ import { niivueCanvas, drawRectangleNiivue,loadImageAPI, endTimer, sendConfidenc
 document.addEventListener('DOMContentLoaded', function() {
 
     let startTime;
-
     let drawRectangle = false;
     let erasing = false;
 
@@ -28,9 +27,9 @@ document.addEventListener('DOMContentLoaded', function() {
                dragMode: DRAG_MODE.callbackOnly,
                penSize: 3,
                maxDrawUndoBitmaps: 200,     // max 200 undos possible
+               drawOpacity: 0.65,
                }, 
                canvas)
-
 
     // Load FLAIR default
     let selectedFormat = "FLAIR";
@@ -45,14 +44,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-   async function loadImage() {
+    async function loadImage() {
         const volumes = await loadImageAPI(selectedFormat, diagnosisID);
         nv.loadVolumes(volumes);
-   } 
+    } 
   
-    // Drawing functions from here on
-    nv.setDrawOpacity(0.65);
-
     // Add drawing state to history
     function saveDrawingState() {
         nv.drawAddUndoBitmap();

@@ -128,7 +128,7 @@ export async function loadImageAPI(format, diagnosisID) {
             .catch(err => {
                 console.error("Error loading NIfTI file:", err);
             });
-        return volumes;
+    return volumes;
 }
 
 /**
