@@ -1,6 +1,7 @@
-import Niivue from "./index.js";
+//import {Niivue} from "./index.js";
 
 document.addEventListener('DOMContentLoaded', function() {
+    /*
     // Loading the images
 
     const compareNv = new Niivue();
@@ -9,17 +10,16 @@ document.addEventListener('DOMContentLoaded', function() {
     // Load FLAIR default
     let selectedFormat = "FLAIR";
 
-
+    */
 
 
     // Zoom
 
     const comparisonContainer = document.getElementById("comparisonContainer");
     document.getElementById("zoomButton").addEventListener("click", () =>{
-        comparisonContainer.style.position ="absolute";
-        comparisonContainer.style.left = "20%";
-        comparisonContainer.style.width = "60%";
+        console.log("button pressed")
+        comparisonContainer.style.width = "74%";
         comparisonContainer.style.top = "35%";
-        comparisonContainer.style.height = "50%";
+        comparisonContainer.style.height = "53%";
     });
 });
