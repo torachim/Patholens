@@ -106,7 +106,25 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize variables
     let selectedFormat = "FLAIR";
 
+    // Call the appropriate function based on the mode
+    if (mode === "new") {
+        loadImage(selectedFormat);
+    } else if (mode === "continue") {
+        loadImages(); // Calls loadImageAndDiagnosis internally
+    }
 
+    // Function to handle changes in the format selection
+    const radioButtons = document.querySelectorAll('input[name="option"]');
+    radioButtons.forEach((radio) => {
+        radio.addEventListener('change', (event) => {
+            selectedFormat = event.target.value;
+            if (mode === "new") {
+                loadImage(selectedFormat);
+            } else if (mode === "continue") {
+                loadImages();
+            }
+        });
+    });
 
 
     async function loadImages(){
