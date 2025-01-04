@@ -1,45 +1,45 @@
 {% extends 'base.html' %} 
 {% load static %} 
+{% csrf_token %}
 {% block extraCSS %}
-
 <link rel="stylesheet" href="{% static 'css/diagnosisPage.css' %}?v=1" />
-
-
 {% endblock %} 
 
 {% block title %} 
-  Diagnosis Page 
+  PathoLens - Diagnosis Page 
 {% endblock %} 
 
-
-{% block topbar %}
+<!--adds the homebutton-->
+{% block topBar %}
 <a href="/startingPage" class="homeButton">
-    <i class="fa-solid fa-house" style="color: #ffffff;"></i>
+    <img alt="home" src="{% static 'icons\HomeButton.png' %}" id="homeIcon">
 </a>
-<i class="fa-solid fa-circle-question" style="color: #ffffff;" id="openHelp" data-tooltip="Get Help"></i>
 {% endblock %}
 
 {%block content%}
 
-<div class="toolbar">
+
+<div class="toolbar">    
     <button class="toolButton" id="selectTool">
-        <i class="fa-solid fa-arrow-pointer" ></i>
+        <img alt="freehand drawing" src="{% static 'icons\FreehandDrawingIcon.png' %}" id="freehandDrawingIcon">
     </button>
+
     <button class="toolButton" id="frameTool">
         <div class="outlineSquare"></div>
     </button>
-    
+
     <button class="toolButton" id="eraseTool">
         <i class="fa-solid fa-eraser"></i>
     </button>
-</div>
 
+    <button class="toolButton" id="undoTool">
+        <i class="fa-solid fa-rotate-left"></i>    
+    </button>
+</div>
 
 <div class="imageBox">
-    <canvas id="imageBrain" width="100%" height="395%"></canvas>
+    <canvas id="imageBrain" width="100%" height="376%"></canvas>
 </div>
-
-
 
 
 <div class="container">
@@ -59,11 +59,6 @@
 </div>
 
 
-<div class="patientID">
-    <p>ID: 50044456</p>
-</div>
-
-
 <div class="popupOverlay" id="popupOverlay">
     <div class="popupFrame">
         
@@ -79,40 +74,10 @@
             <div class="tooltip" id="tooltip">50</div>
         </div>
 
-        <button class="popupConfirm">Confirm</button>
+        <button class="popupConfirm" id="popupConfirm">Confirm</button>
     </div>
 </div>
 
-
-<script>
-
-document.addEventListener("DOMContentLoaded", () => {
-    const finishButton = document.getElementById("finishButton");
-    const popupOverlay = document.getElementById("popupOverlay");
-    const closePopup = document.getElementById("closePopup");
-
-    popupOverlay.style.display = "none";
-
-
-
-    finishButton.addEventListener("click", () => {
-        popupOverlay.style.display = "flex";
-    });
-
-    
-    closePopup.addEventListener("click", () => {
-        popupOverlay.style.display = "none";
-    });
-
-    
-    popupOverlay.addEventListener("click", (e) => {
-        if (e.target === popupOverlay) {
-            popupOverlay.style.display = "none";
-        }
-    });
-});
-
-</script>
 
 
 <script>
@@ -146,69 +111,18 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 </script>
 
-<input type="hidden" id="diagID" value="{{ diagID }}">
-<script>
-
-    document.addEventListener('DOMContentLoaded', () => {
-    const confirmButton = document.querySelector('.popupConfirm');
-    const confidenceSlider = document.getElementById('confidenceMeter');
-
-    // Fetch diagID from the hidden input field
-    const diagID = document.getElementById('diagID').value;
-
-    confirmButton.addEventListener('click', () => {
-        const confidenceValue = confidenceSlider.value;
-
-        fetch(`/confidence/${diagID}/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCookie('csrftoken') 
-            },
-            body: JSON.stringify({
-                confidence: confidenceValue
-            })
-        })
-        .then(response => {
-            if (response.ok) {
-                alert('Confidence updated successfully!');
-                return response.json();
-            } else {
-                throw new Error('Failed to save confidence value');
-            }
-        })
-        .catch(error => console.error(error));
-    });
-
-    // Function to retrieve CSRF token
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
-});
-
-
-</script>
-
-
-
+<input type="hidden" id="diagID" value="{{ diagnosisID }}">
 
 
 {%endblock%}
 {% block extraJS %}
 <script>
     const diagnosisID = "{{ diagnosisID }}";
-  </script> 
+</script> 
+{% csrf_token %}
+<script>
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+</script>
 <script type="module" src="{% static 'js/main.js' %}"></script>
 <script type="module" src="{% static 'js/index.js' %}"></script>
 {% endblock %}

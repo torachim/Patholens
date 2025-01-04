@@ -11,8 +11,6 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "patholensProject.settings")
 # Initialize Django
 django.setup()
 
-
-
 from django.test import TestCase
 from image.dataHandler import *
 from image.mediaHandler import addMedia
@@ -24,7 +22,7 @@ class TestDataHandler(unittest.TestCase):
     @unittest.skip  # skip
     def testGetDataSets(self):
         rightOutput = ["websiteData"]
-        self.assertEqual(getDataSetNames(), rightOutput)
+        self.assertEqual(getNamesFromMediaFolder(), rightOutput)
 
     @unittest.skip  # skip
     def testAddAllPatientsToDoctorsDB(self):

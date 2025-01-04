@@ -54,9 +54,9 @@ REST_FRAMEWORK = {
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Patholens API',
-    'DESCRIPTION' : 'API to access the brainscan data in .nii.gz format',
-    'VERSION' : '1.0.0',
-    'SERVE_INCLUDE_SCHEMA' : False,
+    'DESCRIPTION': 'API to access the brainscan data in .nii.gz format',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
 }
 
 MIDDLEWARE = [
@@ -113,7 +113,7 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
         # min length for a password is 8 characters
         'OPTIONS' : {
-            'min_length' : 8,
+            'min_length': 8,
         },
     },
     {
@@ -143,7 +143,7 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static') 
+    os.path.join(BASE_DIR, 'static')
 ]
 
 # Default primary key field type
@@ -166,5 +166,11 @@ SUPPORTED_IMAGE_FORMATS = {
     "T1": "_space-orig_T1w.nii.gz",
 }
 
-X_FRAME_OPTIONS = 'ALLOWALL'  # Um das Einbetten der Seite in einen Iframe zu erlauben
+X_FRAME_OPTIONS = 'ALLOWALL'  # To allow embedding the page in an iframe
 
+
+# Maximum allowed size for upload data in bytes
+DATA_UPLOAD_MAX_MEMORY_SIZE = 209715200  # 200 MB
+
+# Maximum allowed size for file uploads in bytes
+FILE_UPLOAD_MAX_MEMORY_SIZE = 209715200  # 200 MB

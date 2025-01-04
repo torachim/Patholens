@@ -19,19 +19,26 @@
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     {% block extraCSS %}{% endblock %}
     <script src="https://kit.fontawesome.com/179535dd9d.js" crossorigin="anonymous"></script>
-    <title>{% block title %}Website{% endblock %}</title>
+    <title>{% block title %}PathoLens{% endblock %}</title>
+    <link rel="icon" href="{% static 'images/icons8-experiment-versuch-ios-17-glyph-96 copy.png' %}" type="image/x-icon" />
 </head>
 <body>
     
     <div class="topBar">
         <div class="NameIcon">
-            <img alt="icon" src="{% static '/images/icons8-experiment-versuch-ios-17-glyph-96 copy.png' %}">
+            <a href="/startingPage"><img alt="icon" src="{% static '/images/icons8-experiment-versuch-ios-17-glyph-96 copy.png' %}"></a>
             <p>PathoLens</p>
         </div>
         <div class="Buttons">
-            <i class="fa-solid fa-circle-question" style="color: #ffffff;" id="openHelp" data-tooltip="Get Help" onclick="event.stopPropagation();"></i> 
-            <i class="fa-solid fa-right-from-bracket" style="color: #ffffff;" onclick="event.stopPropagation();" ></i>
-
+            {% block topBar %}
+            <!--Additional buttons will go here-->
+            {% endblock topBar %}
+            <i id="openHelp" data-tooltip="Get Help" onclick="event.stopPropagation();">
+                <img alt="helpButton" src="{% static 'images\HelpButton.png' %}" id="helpButton">
+            </i>
+            {% with request.resolver_match.url_name as currentPage %}
+            <a href="/logout/{{ currentPage }}"><img alt="logout" src="{% static 'images\LogoutIcon.png' %}" id="logoutButton"></a>
+            {% endwith %}
         </div>
     </div>
     {% block content %}
@@ -137,7 +144,8 @@
 
         closeHelpWindow.addEventListener("click", () => {
             helpWindow.style.right = "-600px";
-        })
+        });
+
 
     </script>
     

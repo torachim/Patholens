@@ -3,8 +3,12 @@ from django.http import JsonResponse
 from rest_framework.response import Response
 from rest_framework import status
 from django.conf import settings
+from .models import Diagnosis
 import os
 from accounts.diagnosisManager import getURL
+from .timeHandler import setUseTime
+
+from image.models import Diagnosis
 
 
 class GetImageAPIView(APIView):
@@ -31,7 +35,6 @@ class GetImageAPIView(APIView):
         try:
             imageFormat = request.GET.get("format ")
             if not imageFormat:
-                print("Format parameter missing; using default FLAIR.")
                 imageFormat = "FLAIR"
 
             imageFormat = imageFormat.upper()
@@ -41,7 +44,6 @@ class GetImageAPIView(APIView):
 
             # get the path to the image of a given diagnosis
             imageID = getURL(diagnosisID)
-            
             
             fileSuffix = settings.SUPPORTED_IMAGE_FORMATS[imageFormat]
 
@@ -64,3 +66,75 @@ class GetImageAPIView(APIView):
             return Response(
                 {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
+class SetUseTimeAPIView(APIView):
+
+    def post(self, request):
+        """
+        API Endpoint to save the use time from given by the frontend
+
+        Returns:
+            Response: Response if the use time got saved correctly
+        """
+        try:
+            diagnosisID = request.data.get('diagnosisID')
+            action = request.data.get('action')
+            timestamp = request.data.get('absoluteTime')
+
+            if not all([diagnosisID, action, timestamp]):
+                return Response({
+                                 'status': 'error',
+                                 'message': 'Missing required field: Timestamps, action, diagnosisID'},
+                                  status=status.HTTP_400_BAD_REQUEST)
+            
+            result = setUseTime(diagnosisID, action, timestamp)
+
+            return Response({
+                             'status': 'success',
+                             'message': 'Time entry successfully',
+                             'data': result},
+                              status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return Response({
+                            'status': 'error',
+                            'message': f'An unexpected error occurred: {str(e)}'
+                            },
+                            status=status.HTTP_400_BAD_REQUEST)
+
+
+class SaveConfidenceAPIView(APIView):
+
+    def post(self, request, diagID):
+        """
+        This function saves the confidence value of the diganosis in the db
+
+        Args:
+            request (_type_): _description_
+            diagID (string): ID of an diagnosis
+
+        Returns:
+            none
+        """
+
+        try:
+            data = request.data
+            confidence = data.get('confidence')
+
+            # check if it is a valid value
+            if confidence is None or not (0 <= int(confidence) <= 100):
+                return Response({'error': 'Invalid confidence value. It must be between 0 and 100.'}, status=status.HTTP_400_BAD_REQUEST)
+
+            if not Diagnosis.objects.filter(diagID=diagID).exists():
+                return Response(
+                    {'error': f'Diagnosis with diagID {diagID} does not exist.'},
+                    status=status.HTTP_404_NOT_FOUND
+                )
+            diag = Diagnosis.objects.get(diagID=diagID)
+            # store confidence value
+            diag.confidence = int(confidence)
+            diag.save()
+
+            return Response({'message': 'Confidence value saved successfully via API!'}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'error': f'An unexpected error occurred: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
