@@ -51,23 +51,19 @@ def saveImage(request):
 @login_required
 def transitionPage(request, diagnosisID):
     
-    
     diagObject = getDiagnosisObject(diagnosisID)
+    diagMediaFolder = diagObject.mediaFolder
 
     dataset = finishedDatasets(str(request.user.id))
     
-    for set in dataset:
-        ...
-    
-    
+    if diagMediaFolder in dataset:
+        return render (request, "image/transitionPage.html", {"datasetFinished": True})
 
-    #finishedTitle = [item.title() for item in finishedDatasets]
-    
-    #if (len(finishedDatasets)) > 0
+
 
     # TODO: man muss wissen, was für eine diagnose es war damit man dann eine weitere diagnose dem patienten geben kann
     # wenn er auf "yes, continue" drückt
     # wenn aber der datensatz fertig bearbeitet wurde, muss bei "yes, continue" so etwas stehen wie
     # "You finsihed all ..." und dann nach kann man etweder nur zur hompage ODER man kann direkt zu datasets wechseln ? 
     
-    return render (request, "image/transitionPage.html")
+    return render (request, "image/transitionPage.html", {"datasetFinished": False})
