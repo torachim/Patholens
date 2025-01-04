@@ -6,7 +6,7 @@
 {% endblock %} 
 
 {% block title %} 
-  Diagnosis Page 
+  PathoLens - Diagnosis Page 
 {% endblock %} 
 
 <!--adds the homebutton-->
@@ -41,7 +41,7 @@
     <canvas id="imageBrain" width="100%" height="376%"></canvas>
 </div>
 
-
+<!--Selection T1 / Flair-->
 <div class="container">
     <form class="radioForm">
         <label>
@@ -54,18 +54,15 @@
         </label>
     </form>
 </div>
+
 <div class="finishDiagnosisButton">
     <button type="button" id="finishButton">Finish Diagnosis</button>
 </div>
 
 
-<div class="patientID">
-    <p>ID: 50044456</p>
-</div>
-
-
+<!--Confidence Meter-->
 <div class="popupOverlay" id="popupOverlay">
-    <div class="popupFrame">
+    <div class="popupFrame" id="popupFrame">
         
         <button class="popupClose" id="closePopup">&times;</button>
         
@@ -79,7 +76,7 @@
             <div class="tooltip" id="tooltip">50</div>
         </div>
 
-        <button class="popupConfirm">Confirm</button>
+        <button class="popupConfirm" id="popupConfirm">Confirm</button>
     </div>
 </div>
 
@@ -128,6 +125,6 @@
 <script>
     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 </script>
-<script type="module" src="{% static 'js/main.js' %}"></script>
+<script type="module" src="{% static 'js/diagnosisMain.js' %}"></script>
 <script type="module" src="{% static 'js/index.js' %}"></script>
 {% endblock %}

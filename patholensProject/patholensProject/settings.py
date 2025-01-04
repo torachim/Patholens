@@ -164,6 +164,17 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 SUPPORTED_IMAGE_FORMATS = {
     "FLAIR": "_space-orig_FLAIR.nii.gz",
     "T1": "_space-orig_T1w.nii.gz",
+    "DEEPFCD": "_space-orig_acq-deepfcd_mask.nii.gz",
+    "MAP18": "_space-orig_acq-map18_mask.nii.gz",
+    "MELD": "_space-orig_acq-meld_mask.nii.gz",
+    "NNUNET": "_space-orig_acq-nnunet_mask.nii.gz"
 }
 
-X_FRAME_OPTIONS = 'ALLOWALL'  # Um das Einbetten der Seite in einen Iframe zu erlauben
+X_FRAME_OPTIONS = 'ALLOWALL'  # To allow embedding the page in an iframe
+
+
+# Maximum allowed size for upload data in bytes
+DATA_UPLOAD_MAX_MEMORY_SIZE = 209715200  # 200 MB
+
+# Maximum allowed size for file uploads in bytes
+FILE_UPLOAD_MAX_MEMORY_SIZE = 209715200  # 200 MB
