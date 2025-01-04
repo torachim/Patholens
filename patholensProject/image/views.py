@@ -12,13 +12,6 @@ def newDiagnosis(request, diagnosisID, mode):
     return render(request, "image/diagnosisPage.html", {"diagnosisID": diagnosisID, "mode": mode})
 
 
-def testRenderImageView(request, imageID):
-    return render(request, 'image/diagnosisPage.html', {'imageID': imageID})
-
-
-from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
-
 @login_required
 def saveImage(request):
     if request.method == "POST":

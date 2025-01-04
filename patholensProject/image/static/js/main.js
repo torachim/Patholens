@@ -545,7 +545,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
      
-    // save image if logged out
+    // TODO: save image if logged out -> not working anymore
     document.getElementById("logoutButton").addEventListener("click", saveEditedImage);
 });
-//Test 4
