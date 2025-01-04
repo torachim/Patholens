@@ -1,71 +1,22 @@
 import { Niivue, DRAG_MODE } from "./index.js";
-import { niivueCanvas, loadImageAPI } from "./pathoLens.js";
+import { niivueCanvas, drawRectangleNiivue,loadImageAPI, endTimer, sendConfidence, savedEditedImage } from "./pathoLens.js";
 
 
 document.addEventListener('DOMContentLoaded', function() {
 
-    let startTime, endTime;
+    let startTime;
 
     let drawRectangle = false;
     let erasing = false;
+
     //function to drag a rectangle in the niivue 
     // define what happens on dragRelase (right mouse up)
     const onDragRelease = (data) => {
-
         drawRectangle = true;
-
         //if drawing is enabled
         if (nv.opts.drawingEnabled){
-            const value = 3 // blue
-            nv.setPenValue(value) 
-
-            const { voxStart, voxEnd, axCorSag } = data
-            // these rect corners will be set based on the plane the drawing was created in 
-            let topLeft, topRight, bottomLeft, bottomRight
-        
-            if (axCorSag === 0) {
-                // axial view: Z is fixed, vary X and Y
-                const minX = Math.min(voxStart[0], voxEnd[0])
-                const maxX = Math.max(voxStart[0], voxEnd[0])
-                const minY = Math.min(voxStart[1], voxEnd[1])
-                const maxY = Math.max(voxStart[1], voxEnd[1])
-                const fixedZ = voxStart[2]
-                topLeft = [minX, minY, fixedZ]
-                topRight = [maxX, minY, fixedZ]
-                bottomLeft = [minX, maxY, fixedZ]
-                bottomRight = [maxX, maxY, fixedZ]
-            } else if (axCorSag === 1) {
-                // coronal view: Y is fixed, vary X and Z
-                const minX = Math.min(voxStart[0], voxEnd[0])
-                const maxX = Math.max(voxStart[0], voxEnd[0])
-                const minZ = Math.min(voxStart[2], voxEnd[2])
-                const maxZ = Math.max(voxStart[2], voxEnd[2])
-                const fixedY = voxStart[1]
-                topLeft = [minX, fixedY, minZ]
-                topRight = [maxX, fixedY, minZ]
-                bottomLeft = [minX, fixedY, maxZ]
-                bottomRight = [maxX, fixedY, maxZ]
-            } else if (axCorSag === 2) {
-                // sagittal view: X is fixed, vary Y and Z
-                const minY = Math.min(voxStart[1], voxEnd[1])
-                const maxY = Math.max(voxStart[1], voxEnd[1])
-                const minZ = Math.min(voxStart[2], voxEnd[2])
-                const maxZ = Math.max(voxStart[2], voxEnd[2])
-                const fixedX = voxStart[0]
-                topLeft = [fixedX, minY, minZ]
-                topRight = [fixedX, maxY, minZ]
-                bottomLeft = [fixedX, minY, maxZ]
-                bottomRight = [fixedX, maxY, maxZ]
-            }
-
-            // draw the rect lines
-            nv.drawPenLine(topLeft, topRight, value)
-            nv.drawPenLine(topRight, bottomRight, value)
-            nv.drawPenLine(bottomRight, bottomLeft, value)
-            nv.drawPenLine(bottomLeft, topLeft, value)
-            // refresh the drawing
-            nv.refreshDrawing(true) // true will force a redraw of the entire scene (equivalent to calling drawScene() in niivue)
-            endTimer("Rectangle")
+            drawRectangleNiivue(nv, data)
+            endTimer("Rectangle", startTime, diagnosisID, csrfToken)
             nv.setDrawingEnabled(false); //drawingEnabled equals false so you have to click the button again to draw another rechtangle
         }
     }
@@ -97,14 +48,10 @@ document.addEventListener('DOMContentLoaded', function() {
    async function loadImage() {
         const volumes = await loadImageAPI(selectedFormat, diagnosisID);
         nv.loadVolumes(volumes);
-    
    } 
   
-
     // Drawing functions from here on
     nv.setDrawOpacity(0.65);
-
-
 
     // Add drawing state to history
     function saveDrawingState() {
@@ -140,10 +87,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // disables drawing
     function disableDrawing(){
         if(!drawRectangle && !erasing){
-            endTimer('Freehand drawing')
+            endTimer('Freehand drawing', startTime, diagnosisID, csrfToken)
         }
         else if(!drawRectangle && erasing){
-            endTimer('Erasing')
+            endTimer('Erasing', startTime, diagnosisID, csrfToken)
             erasing = false
         }
         nv.setDrawingEnabled(false);
@@ -177,101 +124,21 @@ document.addEventListener('DOMContentLoaded', function() {
         startTime = performance.now();
     }
 
-    // Function to send the timer and give the time to the API
-    function endTimer(action){
-        endTime = performance.now();
-
-        const absoluteTime =  endTime - startTime;
-
-        sendTimeAPI(action, absoluteTime)
-    }
-
-    // Function to send the useTime with the API to the backend
-    function sendTimeAPI(action, absoluteTime){
-        const actionTime = {
-                action: action,
-                absoluteTime: absoluteTime,
-                diagnosisID: diagnosisID,
-        }
-
-        // Fetch the API URL
-        fetch('/image/api/setUseTime/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrfToken,
-            },
-            body: JSON.stringify(actionTime)
-        })
-        .then(response => {
-            if(!response.ok){
-                throw new Error('Error while saving the time!');
-            }
-            return response.json()
-        })
-        .then(data => console.log('Saving Time succesfull', data))
-        .catch(error => console.log('error', error))
-
-    }
-
     // Buttons in the confidence Window
     const confirmButton = document.querySelector('.popupConfirm');
     const confidenceSlider = document.getElementById('confidenceMeter');
 
-    // Fetch diagID from the hidden input field
-    const diagID = document.getElementById('diagID').value;
-
     // Listener for the confirmation button
     confirmButton.addEventListener('click', () => {
-        const confidenceValue = confidenceSlider.value;
-        
-        sendData(confidenceValue);
-        saveEditedImage();
+        const confidenceValue = confidenceSlider.value; 
+        endDiagnosis(confidenceValue);
     });
 
-    // Send the confidence to the backend
-    // Async function to handle an error that sometimes
-    // appeares because of the two fetch calls back to back
-    async function sendData(confidenceValue){
-        await fetch(`/image/api/saveConfidence/${diagID}/`, {
-             method: 'POST',
-             headers: {
-                 'Content-Type': 'application/json',
-                 'X-CSRFToken': getCookie('csrftoken') 
-             },
-             body: JSON.stringify({
-                 confidence: confidenceValue
-             })
-         })
-         .then(response => {
-             if (response.ok) {
-                 console.log('Confidence updated successfully!');
-                 return response.json();
-             } else {
-                 throw new Error('Failed to save confidence value');
-             }
-         })
-         .catch(error => console.error(error));
-
-         endTimer('Confidence confirmed');
-
-         window.location.assign(`/image/AIpage/${diagnosisID}`);
-     }
-
-    // Function to retrieve CSRF token
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
+    async function endDiagnosis(confidenceValue){
+        await sendConfidence(confidenceValue, diagnosisID, csrfToken);
+        await endTimer('Confidence confirmed', startTime, diagnosisID, csrfToken);
+        await savedEditedImage(nv, diagnosisID, csrfToken);
+        window.location.assign(`/image/AIpage/${diagnosisID}`)
     }
 
     const finishButton = document.getElementById("finishButton");
@@ -280,7 +147,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const popupFrame = document.getElementById("popupFrame");
 
     popupOverlay.style.display = "none";
-
 
     // Function to show the confidence window
     finishButton.addEventListener("click", () => {
@@ -292,14 +158,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // Functions to close the confidence window
     closePopup.addEventListener("click", () => {
         popupOverlay.style.display = "none";
-        endTimer('Aborted confidence');
+        endTimer('Aborted confidence', startTime, diagnosisID, csrfToken);
     });
 
-    
     popupOverlay.addEventListener("click", (e) => {
         if (e.target === popupOverlay) {
             popupOverlay.style.display = "none";
-            endTimer('Aborted confidence');
+            endTimer('Aborted confidence', startTime, diagnosisID, csrfToken);
         }
     })
 
@@ -308,120 +173,6 @@ document.addEventListener('DOMContentLoaded', function() {
         nv.drawUndo();
     })
 
-
-    // get the image diagID with getURL function from diagnosisManager
-    async function fetchImageURL(diagID) {
-        try {
-            const response = await fetch(`/api/getURL/${diagID}/`, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            });
-    
-            if (response.ok) {
-                const data = await response.json();
-                return data.url;
-            } else {
-                console.error("Failed to fetch the URL:", response.status);
-                return null;
-            }
-        } catch (error) {
-            console.error("Error fetching the URL:", error);
-            return null;
-        }
-    }
-
-    // get the doctorID from accounts
-    async function fetchDoctorID() {
-        try {
-            const response = await fetch(`/api/getDoctorID/`, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            });
-    
-            if (response.ok) {
-                const data = await response.json();
-                return data.docID;
-            } else {
-                console.error("Failed to fetch the Doctor ID:", response.status);
-                return null;
-            }
-        }
-        catch (error) {
-            console.error("Error fetching the Doctor ID:", error);
-            return null;
-        }
-    }
-
-
-
-    // Save the edited image
-    async function saveEditedImage() {
-        try {
-            // Wait for subID from fetchImageURL
-            const subID = await fetchImageURL(diagnosisID);
-            const docID = await fetchDoctorID();
-    
-            if (!subID) {
-                console.error("Image subID could not be retrieved.");
-                return;
-            }
-    
-            const filename = `sub-${subID}_acq-${docID}_space-edited-image.nii.gz`; // Dynamic filename
-    
-            // Create the blob object for the image
-            const imageBlob = nv.saveImage({
-                isSaveDrawing: true,
-                filename: filename,
-                volumeByIndex: 0,
-            });
-            
-            // Create a FormData object
-            const formData = new FormData();
-            formData.append("filename", filename);
-            formData.append("subID", subID)
-            formData.append("imageFile", new Blob([imageBlob], { type: "application/octet-stream" }));
-    
-            // Send the data to the API
-            const response = await fetch("/image/api/saveImage/", {
-                method: "POST",
-                headers: {
-                    "X-CSRFToken": getCookie("csrftoken"), // CSRF-Security
-                },
-                body: formData,
-            });
-    
-            if (response.ok) {
-                console.log("Image saved successfully!");
-            } else {
-                console.error("Failed to save the image:", response.statusText);
-            }
-        } catch (error) {
-            console.error("Error during save operation:", error);
-        }
-    }
-    
-    
-    
-    // Retrieve CSRF token
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== "") {
-            const cookies = document.cookie.split(";");
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.substring(0, name.length + 1) === `${name}=`) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
-     
     // save image if logged out
-    document.getElementById("logoutButton").addEventListener("click", saveEditedImage);
+    document.getElementById("logoutButton").addEventListener("click", savedEditedImage(nv, diagnosisID, csrfToken));
 });
