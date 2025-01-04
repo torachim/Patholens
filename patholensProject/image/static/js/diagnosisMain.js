@@ -1,5 +1,5 @@
 import { Niivue, DRAG_MODE } from "./index.js";
-import { niivueCanvas } from "./niivueCanvas.js";
+import { niivueCanvas, loadImageAPI } from "./pathoLens.js";
 
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -80,8 +80,6 @@ document.addEventListener('DOMContentLoaded', function() {
                }, 
                canvas)
 
-    const baseApiURL = `/image/api/getImage/${diagnosisID}`;
-
 
     // Load FLAIR default
     let selectedFormat = "FLAIR";
@@ -92,49 +90,16 @@ document.addEventListener('DOMContentLoaded', function() {
     radioButtons.forEach(radio => {
         radio.addEventListener('change', (event) => {
             selectedFormat = event.target.value;
-            loadImage(selectedFormat);
+            loadImage();
         });
     });
 
+   async function loadImage() {
+        const volumes = await loadImageAPI(selectedFormat, diagnosisID);
+        nv.loadVolumes(volumes);
     
-    function loadImage(format) {
-        //get the apiURL to fetch the path to the requested image
-        const apiURL = `${baseApiURL}/?format =${format}`;
-        console.log(`API URL: ${apiURL}`);
-
-        //fetch the data from the given apiURL
-        fetch(apiURL)
-            .then(response => {
-                console.log("Response status:", response.status);
-                //if response not ok throw the error
-                if(!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
-                console.log(response)
-                return response.json();
-            })
-            .then(data => {
-                //get the image URL with the data.path from the api
-                const imageURL = `http://127.0.0.1:8000${data.path}`;
-                console.log("Image URL:", imageURL);
-
-                //load the nifti with the fetched imageURL 
-                nv.loadVolumes([
-                    {
-                        url: imageURL,
-                        schema: "nifti"
-                    },
-                ]);
-
-            })
-            //catch the possible error
-            .catch(err => {
-                console.error("Error loading NIfTI file:", err);
-            });
-    }
-
-
+   } 
+  
 
     // Drawing functions from here on
     nv.setDrawOpacity(0.65);
