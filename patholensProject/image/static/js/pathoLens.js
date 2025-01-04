@@ -197,7 +197,7 @@ export async function sendConfidence(confidenceValue, diagnosisID, csrfToken){
 /**
  * get the Sub number of the image of the current diagnosis
  * @param {string} diagnosisID 
- * @returns sub number
+ * @returns {string} sub number
  */
 async function fetchImageSub(diagnosisID) {
     try {
@@ -309,12 +309,9 @@ export async function savedEditedImage(nv, diagnosisID, csrfToken) {
 export async function loadImageWithDiagnosis(diagnosisID, formatMri) {
         const getDApiURL = `/image/api/getDiagnosis/${diagnosisID}`;
 
-        let volumes = [];
 
         // API call to fetch the imageURL in the requested format (T1 or Flair)
-        let volumeImage = await loadImageAPI(formatMri, diagnosisID)
-
-        volumes.push(volumeImage.pop());
+        let volumes = await loadImageAPI(formatMri, diagnosisID)
 
         // API call to fetch the diagnosis
         await fetch(getDApiURL)
