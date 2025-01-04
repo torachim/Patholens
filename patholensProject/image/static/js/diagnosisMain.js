@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Load FLAIR default
     let selectedFormat = "FLAIR";
-    loadImage(selectedFormat);
+    loadImage();
 
     //function to change the picture format if the buttons are clicked
     const radioButtons = document.querySelectorAll('input[name="option"]');
@@ -57,7 +57,6 @@ document.addEventListener('DOMContentLoaded', function() {
     function saveDrawingState() {
         nv.drawAddUndoBitmap();
     }
-
 
     /**
      * 
