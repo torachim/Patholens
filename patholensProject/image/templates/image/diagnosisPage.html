@@ -112,12 +112,14 @@
 </script>
 
 <input type="hidden" id="diagID" value="{{ diagnosisID }}">
+<input type="hidden" id="mode" value="{{ mode }}">
 
 
 {%endblock%}
 {% block extraJS %}
 <script>
     const diagnosisID = "{{ diagnosisID }}";
+    const mode = "{{ mode }}";
 </script> 
 {% csrf_token %}
 <script>

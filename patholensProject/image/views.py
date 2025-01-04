@@ -8,8 +8,8 @@ from accounts.doctorManager import *
 from accounts.diagnosisManager import *
 
 @login_required
-def newDiagnosis(request, diagnosisID):
-    return render(request, "image/diagnosisPage.html", {"diagnosisID": diagnosisID})
+def newDiagnosis(request, diagnosisID, mode):
+    return render(request, "image/diagnosisPage.html", {"diagnosisID": diagnosisID, "mode": mode})
 
 
 def testRenderImageView(request, imageID):
