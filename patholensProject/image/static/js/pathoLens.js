@@ -39,8 +39,8 @@ export function niivueCanvas(niivueOptions, canvas){
  */
 export function drawRectangleNiivue(nv, data){
 
-    const value = 3 // blue
-    nv.setPenValue(value) 
+    const colourValue = 3 // blue
+    nv.setPenValue(colourValue) 
 
     const { voxStart, voxEnd, axCorSag } = data
     // these rect corners will be set based on the plane the drawing was created in 
