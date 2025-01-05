@@ -2,9 +2,10 @@ import { Niivue } from "./index.js";
 
 /**
  * Create a niivue object and attach it to a given canvas
- * @param {dictionary} niivueOptions - A Dictionary with the Niivue options -> see Niivue documantation
+ * @param {dictionary} niivueOptions - A Dictionary with the Niivue options -> see Niivue documentation
  * @param {*} canvas - A HTML canvas object to which the niivue object got attached to. 
  * @returns Niivue object
+ * @example niivueCanvas({drawOpacity: 0.8}, canvas)
  */
 export function niivueCanvas(niivueOptions, canvas){
     // init niivue instance
@@ -45,39 +46,47 @@ export function drawRectangleNiivue(nv, data){
     // these rect corners will be set based on the plane the drawing was created in 
     let topLeft, topRight, bottomLeft, bottomRight
 
-    if (axCorSag === 0) {
-        // axial view: Z is fixed, vary X and Y
-        const minX = Math.min(voxStart[0], voxEnd[0])
-        const maxX = Math.max(voxStart[0], voxEnd[0])
-        const minY = Math.min(voxStart[1], voxEnd[1])
-        const maxY = Math.max(voxStart[1], voxEnd[1])
-        const fixedZ = voxStart[2]
-        topLeft = [minX, minY, fixedZ]
-        topRight = [maxX, minY, fixedZ]
-        bottomLeft = [minX, maxY, fixedZ]
-        bottomRight = [maxX, maxY, fixedZ]
-    } else if (axCorSag === 1) {
-        // coronal view: Y is fixed, vary X and Z
-        const minX = Math.min(voxStart[0], voxEnd[0])
-        const maxX = Math.max(voxStart[0], voxEnd[0])
-        const minZ = Math.min(voxStart[2], voxEnd[2])
-        const maxZ = Math.max(voxStart[2], voxEnd[2])
-        const fixedY = voxStart[1]
-        topLeft = [minX, fixedY, minZ]
-        topRight = [maxX, fixedY, minZ]
-        bottomLeft = [minX, fixedY, maxZ]
-        bottomRight = [maxX, fixedY, maxZ]
-    } else if (axCorSag === 2) {
-        // sagittal view: X is fixed, vary Y and Z
-        const minY = Math.min(voxStart[1], voxEnd[1])
-        const maxY = Math.max(voxStart[1], voxEnd[1])
-        const minZ = Math.min(voxStart[2], voxEnd[2])
-        const maxZ = Math.max(voxStart[2], voxEnd[2])
-        const fixedX = voxStart[0]
-        topLeft = [fixedX, minY, minZ]
-        topRight = [fixedX, maxY, minZ]
-        bottomLeft = [fixedX, minY, maxZ]
-        bottomRight = [fixedX, maxY, maxZ]
+
+    switch(axCorSag){
+        case(0):{
+            // axial view: Z is fixed, vary X and Y
+            const minX = Math.min(voxStart[0], voxEnd[0])
+            const maxX = Math.max(voxStart[0], voxEnd[0])
+            const minY = Math.min(voxStart[1], voxEnd[1])
+            const maxY = Math.max(voxStart[1], voxEnd[1])
+            const fixedZ = voxStart[2]
+            topLeft = [minX, minY, fixedZ]
+            topRight = [maxX, minY, fixedZ]
+            bottomLeft = [minX, maxY, fixedZ]
+            bottomRight = [maxX, maxY, fixedZ]
+            break;
+        }
+        case (1) :{
+            // coronal view: Y is fixed, vary X and Z
+            const minX = Math.min(voxStart[0], voxEnd[0])
+            const maxX = Math.max(voxStart[0], voxEnd[0])
+            const minZ = Math.min(voxStart[2], voxEnd[2])
+            const maxZ = Math.max(voxStart[2], voxEnd[2])
+            const fixedY = voxStart[1]
+            topLeft = [minX, fixedY, minZ]
+            topRight = [maxX, fixedY, minZ]
+            bottomLeft = [minX, fixedY, maxZ]
+            bottomRight = [maxX, fixedY, maxZ]
+            break;
+        }
+        case(2) :{
+            // sagittal view: X is fixed, vary Y and Z
+            const minY = Math.min(voxStart[1], voxEnd[1])
+            const maxY = Math.max(voxStart[1], voxEnd[1])
+            const minZ = Math.min(voxStart[2], voxEnd[2])
+            const maxZ = Math.max(voxStart[2], voxEnd[2])
+            const fixedX = voxStart[0]
+            topLeft = [fixedX, minY, minZ]
+            topRight = [fixedX, maxY, minZ]
+            bottomLeft = [fixedX, minY, maxZ]
+            bottomRight = [fixedX, maxY, maxZ]
+            break;
+        }
     }
 
     // draw the rect lines
@@ -394,7 +403,7 @@ export async function loadImageWithMask(formatMask, formatMri, diagnosisID) {
  * @param {string} formatMask The requested AI Mask (DEEPFCD, map18, meld, nnunet)
  * @param {string} formatMri The requestet Mri format (T1, Flair)
  * @param {string} diagnosisID The ID of the current diagnosis
- * @returns Array with 3 Volumes
+ * @returns  Array with 3 Volumes
  */
 export async function loadOverlayDAI(formatMask, formatMri, diagnosisID) {
     const getDApiURL = `/image/api/getDiagnosis/${diagnosisID}`;
