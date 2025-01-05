@@ -1,5 +1,5 @@
 import { Niivue } from "./index.js";
-import { niivueCanvas, loadImageWithDiagnosis, loadImageWithMask, loadOverlayDAI } from "./pathoLens.js";
+import { niivueCanvas, loadImageWithDiagnosis, loadImageWithMask, loadOverlayDAI, endTimer } from "./pathoLens.js";
 
 document.addEventListener('DOMContentLoaded', function () {
 
@@ -11,14 +11,22 @@ document.addEventListener('DOMContentLoaded', function () {
     let selectedFormatMri = "FLAIR"
     let selectedDisplay = "AIDiagnosis"
 
+    let startTime;
+
     // Load default image and mask
     loadImages();
+    startTime = performance.now();
 
     // Dropdown change listener for the AI Mask
     const aiDropdown = document.getElementById('AIdropdown');
     aiDropdown.addEventListener('change', (event) => {
-        selectedFormatMask = event.target.value;
-        loadImages();
+        const action = `AI Model ${selectedFormatMask}`;
+        if(selectedDisplay != "myDiagnosis"){
+            endTimer(action, startTime, diagnosisID, csrfToken);
+            selectedFormatMask = event.target.value;
+            startTime = performance.now();
+            loadImages();
+        }
     });
 
     // Dropdown change listener for format of the pictures
@@ -31,6 +39,13 @@ document.addEventListener('DOMContentLoaded', function () {
     // Dropdown change listener for the Overlay structure
     const displayDropdown = document.getElementById('displayDropdown')
     displayDropdown.addEventListener('change', (event) => {
+        if(event.target.value == "myDiagnosis"){
+            const action = `AI Model ${selectedFormatMask}`;
+            endTimer(action, startTime, diagnosisID, csrfToken);
+        }
+        if(selectedDisplay == "myDiagnosis"){
+            startTime = performance.now();
+        }
         selectedDisplay= event.target.value
         loadImages();
     });
