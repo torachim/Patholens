@@ -90,10 +90,10 @@ export function drawRectangleNiivue(nv, data){
     }
 
     // draw the rect lines
-    nv.drawPenLine(topLeft, topRight, value)
-    nv.drawPenLine(topRight, bottomRight, value)
-    nv.drawPenLine(bottomRight, bottomLeft, value)
-    nv.drawPenLine(bottomLeft, topLeft, value)
+    nv.drawPenLine(topLeft, topRight, colourValue)
+    nv.drawPenLine(topRight, bottomRight, colourValue)
+    nv.drawPenLine(bottomRight, bottomLeft, colourValue)
+    nv.drawPenLine(bottomLeft, topLeft, colourValue)
     // refresh the drawing
     nv.refreshDrawing(true) // true will force a redraw of the entire scene (equivalent to calling drawScene() in niivue)
 }
