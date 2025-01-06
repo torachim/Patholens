@@ -138,3 +138,122 @@ class SaveConfidenceAPIView(APIView):
             return Response({'message': 'Confidence value saved successfully via API!'}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({'error': f'An unexpected error occurred: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class GetImageAndMaskAPIView(APIView):
+    """
+    API Class to get both the MRI image and AI mask for a given diagnosisID.
+    """
+
+    def get(self, request, diagnosisID):
+        """
+        API endpoint which returns the URL of the requested AI Mask and the 
+        brain image
+
+        Args:
+            diagnosisID (string): The given diagnosis
+
+        Returns:
+            Response: URls for the requested AI Mask and brain image
+        """
+        try:
+            if not diagnosisID:
+                return Response({"error": "diagnosisID is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+            imageFormatMask = request.GET.get("mask", "DEEPFCD").upper()
+            imageFormatMri = request.GET.get('mri').upper()
+
+            if imageFormatMask not in settings.SUPPORTED_IMAGE_FORMATS or imageFormatMri not in settings.SUPPORTED_IMAGE_FORMATS:
+                return JsonResponse({"error": "Invalid format"}, status=400)
+
+            # Get the MRI image path
+            imageID = getURL(diagnosisID)
+            fileSuffixMri = settings.SUPPORTED_IMAGE_FORMATS[imageFormatMri]  # Default MRI format
+            mriPath = os.path.normpath(
+                os.path.join(
+                    settings.MEDIA_ROOT,
+                    f"website_data/sub-{imageID}/anat/sub-{imageID}{fileSuffixMri}",
+                )
+            )
+
+            # Get the AI mask path
+            fileSuffixMask = settings.SUPPORTED_IMAGE_FORMATS[imageFormatMask]
+            maskPath = os.path.normpath(
+                os.path.join(
+                    settings.MEDIA_ROOT,
+                    f"website_data/derivatives/ai/sub-{imageID}/pred/sub-{imageID}{fileSuffixMask}",
+                )
+            )
+
+            if not os.path.exists(mriPath):
+                return Response(
+                    {"error": f"MRI file not found at {mriPath}"},
+                    status=status.HTTP_404_NOT_FOUND,
+                )
+            if not os.path.exists(maskPath):
+                return Response(
+                    {"error": f"AI mask file not found at {maskPath}"},
+                    status=status.HTTP_404_NOT_FOUND,
+                )
+
+            # Relative paths for the client
+            mriRelativePath = f"/media/website_data/sub-{imageID}/anat/sub-{imageID}{fileSuffixMri}"
+            maskRelativePath = f"/media/website_data/derivatives/ai/sub-{imageID}/pred/sub-{imageID}{fileSuffixMask}"
+
+
+            return Response(
+                {"status": "success", "data": {"mriPath": mriRelativePath, "maskPath": maskRelativePath}},
+                status=status.HTTP_200_OK,
+            )
+
+        except Exception as e:
+            return Response(
+                {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+        
+class GetDiagnosis(APIView):
+
+    def get(self, request, diagnosisID):
+        """
+        Function to get the diagnosis Mask for a specific diagnosisID
+
+        Args:
+            diagnosisID (string): a diagnosisID 
+
+        Returns:
+            Path to the Diagnosis Image
+        """
+        try:
+            if not diagnosisID:
+                return Response({"error": "DiagnosisID required"},
+                                 status=status.HTTP_400_BAD_REQUEST
+                                )
+            
+            subID = getURL(diagnosisID)
+            docID = request.user.id
+
+            diagnosisPath = os.path.join(
+                        settings.MEDIA_ROOT,
+                        f"website_data/derivatives/diagnosis/sub-{subID}/sub-{subID}_acq-{docID}_space-edited-image.nii.gz"
+            )
+            
+            if not os.path.exists(diagnosisPath):
+                return Response(
+                    {"error": f"Diagnosis File {diagnosisPath} not found"},
+                    status=status.HTTP_404_NOT_FOUND
+                )
+            
+            relativePath = f"media/website_data/derivatives/diagnosis/sub-{subID}/sub-{subID}_acq-{docID}_space-edited-image.nii.gz"
+
+            return Response(
+                    {"status": "success",
+                     "path": relativePath,
+                    },
+                    status=status.HTTP_200_OK
+            )
+        
+        except Exception as e:
+            return Response(
+                    {"error": str(e)},
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
