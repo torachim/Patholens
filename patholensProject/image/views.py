@@ -53,11 +53,13 @@ def transitionPage(request, diagnosisID):
     
     diagObject = getDiagnosisObject(diagnosisID)
     diagMediaFolder = diagObject.mediaFolder
-
+    diagMediaFolderTitle = str(diagMediaFolder).title()
+    
     dataset = finishedDatasets(str(request.user.id))
+   
     
     if diagMediaFolder in dataset:
-        return render (request, "image/transitionPage.html", {"datasetFinished": True})
+        return render (request, "image/transitionPage.html", {"datasetFinished": True, "datasetName":diagMediaFolderTitle })
 
 
 
@@ -66,4 +68,4 @@ def transitionPage(request, diagnosisID):
     # wenn aber der datensatz fertig bearbeitet wurde, muss bei "yes, continue" so etwas stehen wie
     # "You finsihed all ..." und dann nach kann man etweder nur zur hompage ODER man kann direkt zu datasets wechseln ? 
     
-    return render (request, "image/transitionPage.html", {"datasetFinished": False})
+    return render (request, "image/transitionPage.html", {"datasetFinished": False, "datasetName":diagMediaFolderTitle })

@@ -7,27 +7,38 @@
 <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate" />
 <meta http-equiv="pragma" content="no-cache" />
 <meta http-equiv="expires" content="0" />
-<link rel="stylesheet" href="{% static 'css/transitionPage.css'%}?v=2">
+<link rel="stylesheet" href="{% static 'css/transitionPage.css'%}?v=1">
 <title> Transition </title>
 
 {% endblock %} 
 
 {%block content%}
 
-<div class="mainContent">
-    <div class="contentBox">
-        <div class="contentTitle">
-            <h1>Do you want to continue ? </h1>
-        </div>
-        
-        <div class="decisionButtons">
-                <button class="continueButton"> Yes, continue </button>
-                <button class="homeButton"> No, return to homepage </button>        
-            </div>            
-        </div>
-    
-    </div> 
-</div>
-</body>
-
+    <div class="mainContent">
+        <div class="contentBox">
+            <div class="contentTitle">
+                <h1>
+                    {% if datasetFinished %}
+                        You finished all patients in <br> {{ datasetName }}
+                    {% else %}
+                        Do you want to continue?
+                    {% endif %}
+                </h1>
+            </div>
+            
+            <div class="decisionButtons">
+                {% if datasetFinished%}
+                    <button id="homeButton" class="homeButton"> Reutrn to the homepage </button> 
+                {% else %}
+                    <button id="continueButton" class="continueButton"> Yes, continue </button>
+                    <button id="homeButton" class="homeButton"> No, return to homepage </button>        
+                {% endif %}
+                </div>            
+            </div>
+        </div> 
+    </div>
 {% endblock %} 
+
+{% block extraJS %}
+<script type="module" src="{% static 'js/transitionPageListener.js' %}"></script>
+{% endblock %}
