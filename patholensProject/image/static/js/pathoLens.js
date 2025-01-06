@@ -94,6 +94,7 @@ export function drawRectangleNiivue(nv, data){
     nv.drawPenLine(topRight, bottomRight, colourValue)
     nv.drawPenLine(bottomRight, bottomLeft, colourValue)
     nv.drawPenLine(bottomLeft, topLeft, colourValue)
+    
     // refresh the drawing
     nv.refreshDrawing(true) // true will force a redraw of the entire scene (equivalent to calling drawScene() in niivue)
 }
