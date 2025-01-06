@@ -101,7 +101,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const baseApiURL = `/image/api/getImage/${diagnosisID}`;
 
-
     // Load FLAIR default
     let selectedFormat = "FLAIR";
     loadImage(selectedFormat);

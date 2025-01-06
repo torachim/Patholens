@@ -40,5 +40,9 @@
 {% endblock %} 
 
 {% block extraJS %}
+<script>
+    // read the datasetName 
+    const datasetName = "{{ datasetName }}"
+</script>
 <script type="module" src="{% static 'js/transitionPageListener.js' %}"></script>
 {% endblock %}
