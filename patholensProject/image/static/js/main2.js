@@ -33,28 +33,45 @@ document.addEventListener('DOMContentLoaded', function () {
     let selectedFormatMri = "FLAIR"
     let selectedDisplay = "AIDiagnosis"
 
+    const aiModelMapping = {
+        "Model A": "DEEPFCD",
+        "Model B": "MAP18",
+        "Model C": "MELD",
+        "Model D": "NNUNET"
+    };
+
     // Load default image and mask
     loadImages();
 
     // Dropdown change listener for the AI Mask
     const aiDropdown = document.getElementById('AIdropdown');
-    aiDropdown.addEventListener('change', (event) => {
-        selectedFormatMask = event.target.value;
-        loadImages();
+    aiDropdown.addEventListener('click', (event) => {
+        if (event.target.classList.contains('option')) {
+            const selectedOption = event.target.textContent;
+            selectedFormatMask = aiModelMapping[selectedOption];
+            
+            loadImages();
+        }
     });
 
-    // Dropdown change listender for format of the pictures
+    // Dropdown change listener for format of the pictures
     const formatDropdown = document.getElementById('formatDropdown');
-    formatDropdown.addEventListener('change', (event) => {
-        selectedFormatMri = event.target.value;
-        loadImages();
+    formatDropdown.addEventListener('click', (event) => {
+        if (event.target.classList.contains('option')) {
+            const selectedOption = event.target.textContent;
+            selectedFormatMri = selectedOption;
+            loadImages();
+        }
     });
 
-    // Dropdown change listender for the Overlay structure
-    const displayDropdown = document.getElementById('displayDropdown')
-    displayDropdown.addEventListener('change', (event) => {
-        selectedDisplay= event.target.value
-        loadImages();
+    // Dropdown change listener for the Overlay structure
+    const displayDropdown = document.getElementById('displayDropdown');
+    displayDropdown.addEventListener('click', (event) => {
+        if (event.target.classList.contains('option')) {
+            const selectedOption = event.target.textContent;
+            selectedDisplay = selectedOption;
+            loadImages();
+        }
     });
 
     // function to load the images in the correct overlay
