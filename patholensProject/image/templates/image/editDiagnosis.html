@@ -41,10 +41,10 @@
 </div>
 
 <div id="compareAndDropdownContainer">
-    <div class="dropdown-container">
+    <div class="dropdownContainer">
 
         <div class="dropdown">
-            <input class="text-box" type="text" value="Model A" readonly>
+            <input class="textbox" type="text" value="Model A" readonly>
             <div class="options">
                 <div onclick="swapOptions(this)">Model B</div>
                 <div onclick="swapOptions(this)">Model C</div>
@@ -53,14 +53,14 @@
             </div>
         </div>
         <div class="dropdown">
-            <input class="text-box" type="text" value="AI diagnosis" readonly>
+            <input class="textbox" type="text" value="AI diagnosis" readonly>
             <div class="options">
                 <div onclick="swapOptions(this)">my diagnosis</div>
                 <div onclick="swapOptions(this)">show overlay</div>
             </div>
         </div> 
         <div class="dropdown">
-            <input class="text-box" type="text" value="FLAIR" readonly>
+            <input class="textbox" type="text" value="FLAIR" readonly>
             <div class="options">
                 <div onclick="swapOptions(this)">T1</div>
             </div>
@@ -85,7 +85,7 @@
     function swapOptions(optionElement) {
         // Get parent dropdown and the text-box inside it
         const parentDropdown = optionElement.closest('.dropdown');
-        const textBox = parentDropdown.querySelector('.text-box');
+        const textBox = parentDropdown.querySelector('.textbox');
 
         // Get the currently displayed value and the clicked value
         const currentValue = textBox.value;

@@ -113,7 +113,7 @@ body {
 }
 
 /*dropdown styling*/
-.dropdown-container {
+.dropdownContainer {
     display: flex;
     flex-direction: column; 
     gap: 10%; 
