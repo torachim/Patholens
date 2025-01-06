@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const comparisonContainer = document.getElementById("comparisonContainer");
     const zoomButton = document.getElementById("zoomButton");
     let zoomed = false;
+    const dropdownMenus = document.querySelectorAll(".dropdown");
 
     function zoomOut(){
         comparisonContainer.style.width = "50%";
@@ -38,15 +39,22 @@ document.addEventListener('DOMContentLoaded', function() {
             comparisonContainer.style.height = "53%";
             zoomButton.src = "/static/icons/editPageZoomOutButton.png";
             zoomed = true;
-            console.log("zoomed in");
         }
     });
 
     document.body.addEventListener("click", (e) =>{
         if(zoomed){
-            if(e.target != comparisonContainer && e.target != zoomButton){
-                zoomOut();
-                console.log("zoomed out");
+            console.log(e.target);
+            if(e.target != comparisonContainer && e.target != zoomButton ){
+                let clickedDropdown = false;
+                dropdownMenus.forEach(dropdown => {
+                    if (dropdown.contains(e.target)){
+                        clickedDropdown = true;
+                    }
+                });
+                if (!clickedDropdown){
+                    zoomOut();
+                }     
             }
         }
     });
