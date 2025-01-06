@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function () {
     //default formats
     let selectedFormatMask = "DEEPFCD";
     let selectedFormatMri = "FLAIR"
-    let selectedDisplay = "AIDiagnosis"
+    let selectedDisplay = "AI diagnosis"
 
     const aiModelMapping = {
         "Model A": "DEEPFCD",
@@ -76,15 +76,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // function to load the images in the correct overlay
     async function loadImages(){
-        if(selectedDisplay == "AIDiagnosis"){
+        if(selectedDisplay == "AI diagnosis"){
             const volumes = await loadImageWithMask(selectedFormatMask, selectedFormatMri);
             nv.loadVolumes(volumes);
         }
-        else if(selectedDisplay == "myDiagnosis"){
+        else if(selectedDisplay == "my diagnosis"){
             const volumes = await loadImageWithDiagnosis(selectedFormatMri);
             nv.loadVolumes(volumes);
         }
-        else if(selectedDisplay == "showOverlay"){
+        else if(selectedDisplay == "show Overlay"){
             const volumes = await loadOverlayDAI(selectedFormatMask, selectedFormatMri);
             nv.loadVolumes(volumes);
         }
