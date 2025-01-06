@@ -56,7 +56,23 @@ def saveImage(request):
 
 @login_required
 def transitionPage(request, diagnosisID):
-    
+    """
+    Handles the transition page view for a specific diagnosis.
+
+    This function determines whether the dataset associated with a diagnosis 
+    has been marked as finished for the current user. Depending on the status, 
+    it renders the appropriate HTML template with the necessary context
+
+    Args:
+        * request (HttpRequest): The HTTP request object containing metadata 
+            about the request and the user making it.
+        
+        * diagnosisID (str): The unique identifier of the diagnosis.
+
+    Returns:
+        * HttpResponse: The HTTP response object rendering the 'transitionPage.html' 
+            template with context data indicating the dataset status.
+    """
     diagObject = getDiagnosisObject(diagnosisID)
     diagMediaFolder = str(diagObject.mediaFolder)
     diagMediaFolderTitle = str(diagMediaFolder).title()

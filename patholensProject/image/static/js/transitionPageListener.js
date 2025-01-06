@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const continueButton = document.getElementById('continueButton');
     if (continueButton) {
         continueButton.addEventListener("click", function () {
-            window.location.href = `/selectDataset/forwarding/${datasetName}`; //Add the datasetname to the url
+            window.location.href = `/selectDataset/forwarding/${datasetName}`;
         });
     }
 });
