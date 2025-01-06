@@ -151,10 +151,10 @@ class GetImageAndMaskAPIView(APIView):
         brain image
 
         Args:
-            diagnosisID (_type_): The given diagnosis
+            diagnosisID (string): The given diagnosis
 
         Returns:
-            _type_: URls for the requested AI Mask and brain image
+            Response: URls for the requested AI Mask and brain image
         """
         try:
             if not diagnosisID:
@@ -215,7 +215,7 @@ class GetDiagnosis(APIView):
 
     def get(self, request, diagnosisID):
         """
-        Function to get the diagnosis Mask for a spicific diagnosisID
+        Function to get the diagnosis Mask for a specific diagnosisID
 
         Args:
             diagnosisID (string): a diagnosisID 
