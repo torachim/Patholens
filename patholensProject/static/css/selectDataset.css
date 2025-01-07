@@ -101,7 +101,11 @@ button {
 #notFinished:hover {
     background-color: #0284ab;
     transform: translateY(-2px);
-    transform: scale(1.01);
+    transform: scale(1.01);   
+}
+
+#notfinished:active { 
+    background-color: #01556e; 
 }
 
 button:active {

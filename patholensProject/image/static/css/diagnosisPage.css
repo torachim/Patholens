@@ -57,11 +57,13 @@ body {
     align-items: center;
     cursor: pointer;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .toolButton:active {
-    transform: translateY(2px);
+    transform: translateY(2px) scale(1.01);
+    background-color: #ffffff;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.4);
 }
 
 #selectTool i {
@@ -190,16 +192,20 @@ input[type="radio"]:checked::before {
     transition: all 0.3s ease; 
 }
 
-
 .finishDiagnosisButton button:hover {
-    background-color: #008a91; 
-
+    background-color:#01c5cf; 
+    transform: scale(1.025); 
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3); 
 }
 
+.finishDiagnosisButton button:active {
+    background-color: #008f97; 
+    transform: scale(0.95); 
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4); 
+}
 
 /* Pop up for the confidence */
 .popupOverlay {
-    
     position: fixed;
     top: 0;
     left: 0;
@@ -265,11 +271,20 @@ input[type="radio"]:checked::before {
     bottom: 60px;
     left: 50%;
     transform: translateX(-50%);
+    transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
+
 .popupConfirm:hover {
-    background-color: #008a91; 
-    
+    background-color:#02bbc5; 
+    transform: translateX(-50%) scale(1.005); 
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3); 
+}
+
+.popupConfirm:active {
+    background-color: #029da5; 
+    transform: translateX(-50%) scale(0.95);
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); 
 }
 
 /* Confidence meter to enter your confidence */
@@ -279,8 +294,6 @@ input[type="radio"]:checked::before {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    
-
 }
 
 
@@ -304,8 +317,7 @@ input[type="radio"]:checked::before {
     background: #D9D9D9;
     border: none;
     cursor: pointer;
-    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
-    
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);   
 }
 
 /* Value of the confidence */
@@ -320,6 +332,5 @@ input[type="radio"]:checked::before {
     padding: 5px;
     border-radius: 5px;
     visibility: hidden; 
-    white-space: nowrap;
-    
+    white-space: nowrap;   
 }  
