@@ -1,5 +1,5 @@
 import { Niivue } from "./index.js";
-import { niivueCanvas, loadImageWithDiagnosis, loadImageWithMask, loadOverlayDAI } from "./pathoLens.js";
+import { niivueCanvas, loadImageWithDiagnosis, loadImageWithMask, loadOverlayDAI, endTimer } from "./pathoLens.js";
 
 document.addEventListener('DOMContentLoaded', function () {
 
@@ -19,16 +19,24 @@ document.addEventListener('DOMContentLoaded', function () {
         "Model D": "NNUNET"
     };
 
+    let startTime;
+
     // Load default image and mask
     loadImages();
+    startTime = performance.now();
 
     // Dropdown change listener for the AI Mask
     const aiDropdown = document.getElementById('AIdropdown');
     aiDropdown.addEventListener('click', (event) => {
+        const action = `AI Model ${selectedFormatMask}`;
         if (event.target.classList.contains('option')) {
+            if(selectedDisplay != "My Diagnosis"){
+                endTimer(action, startTime, diagnosisID, csrfToken);
+                startTime = performance.now();
+            }
             selectedFormatMask = aiModelMapping[event.target.textContent];
             loadImages();
-        }
+        }   
     });
 
     // Dropdown change listener for format of the pictures
@@ -40,14 +48,22 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Dropdown change listener for the Overlay structure
+
     const displayDropdown = document.getElementById('displayDropdown');
     displayDropdown.addEventListener('click', (event) => {
         if (event.target.classList.contains('option')) {
+            if(event.target.textContent == "My Diagnosis"){
+                const action = `AI Model ${selectedFormatMask}`;
+                endTimer(action, startTime, diagnosisID, csrfToken);
+            }
+            if(selectedDisplay == "My Diagnosis"){
+                startTime = performance.now();
+            }
             selectedDisplay = event.target.textContent;
             loadImages();
         }
     });
+
     // function to load the images in the correct overlay
     async function loadImages(){
         let volumes;
