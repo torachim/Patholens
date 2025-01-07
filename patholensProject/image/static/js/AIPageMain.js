@@ -62,7 +62,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         nv.loadVolumes(volumes);
     };
-
     
     function swapOptions(optionElement) {
         const parentDropdown = optionElement.closest('.dropdown');
@@ -83,16 +82,15 @@ document.addEventListener('DOMContentLoaded', function () {
             swapOptions(event.target);
         });
     })
-});
+
 
 
     const editDiagnosisButton = document.getElementById("editDiagnosis");
 
-        editDiagnosisButton.addEventListener("click", () => {
-            endDiagnosis();
-        });
-
-
- async function endDiagnosis(){
+    editDiagnosisButton.addEventListener("click", () => {
         window.location.assign(`/image/editDiagnosis/${diagnosisID}`)
-    }
+    });
+
+});
+
+
