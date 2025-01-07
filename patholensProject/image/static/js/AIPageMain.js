@@ -28,7 +28,6 @@ document.addEventListener('DOMContentLoaded', function () {
         if (event.target.classList.contains('option')) {
             const selectedOption = event.target.textContent;
             selectedFormatMask = aiModelMapping[selectedOption];
-            
             loadImages();
         }
     });
@@ -70,7 +69,7 @@ document.addEventListener('DOMContentLoaded', function () {
     
     function swapOptions(optionElement) {
         const parentDropdown = optionElement.closest('.dropdown');
-        const textBox = parentDropdown.querySelector('.text-box');
+        const textBox = parentDropdown.querySelector('.textBox');
         const clickedValue = optionElement.textContent;
         // Update the text box value
         textBox.value = clickedValue;
