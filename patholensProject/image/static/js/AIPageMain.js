@@ -9,7 +9,15 @@ document.addEventListener('DOMContentLoaded', function () {
     //default formats
     let selectedFormatMask = "DEEPFCD";
     let selectedFormatMri = "FLAIR"
-    let selectedDisplay = "AIDiagnosis"
+    let selectedDisplay = "AI Diagnosis"
+
+
+    const aiModelMapping = {
+        "Model A": "DEEPFCD",
+        "Model B": "MAP18",
+        "Model C": "MELD",
+        "Model D": "NNUNET"
+    };
 
     let startTime;
 
@@ -19,49 +27,76 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Dropdown change listener for the AI Mask
     const aiDropdown = document.getElementById('AIdropdown');
-    aiDropdown.addEventListener('change', (event) => {
+    aiDropdown.addEventListener('click', (event) => {
         const action = `AI Model ${selectedFormatMask}`;
-        if(selectedDisplay != "myDiagnosis"){
-            endTimer(action, startTime, diagnosisID, csrfToken);
-            selectedFormatMask = event.target.value;
-            startTime = performance.now();
+        if (event.target.classList.contains('option')) {
+            if(selectedDisplay != "My Diagnosis"){
+                endTimer(action, startTime, diagnosisID, csrfToken);
+                startTime = performance.now();
+            }
+            selectedFormatMask = aiModelMapping[event.target.textContent];
             loadImages();
-        }
+        }   
     });
 
     // Dropdown change listener for format of the pictures
     const formatDropdown = document.getElementById('formatDropdown');
-    formatDropdown.addEventListener('change', (event) => {
-        selectedFormatMri = event.target.value;
-        loadImages();
+    formatDropdown.addEventListener('click', (event) => {
+        if (event.target.classList.contains('option')) {
+            selectedFormatMri = event.target.textContent;
+            loadImages();
+        }
     });
 
-    // Dropdown change listener for the Overlay structure
-    const displayDropdown = document.getElementById('displayDropdown')
-    displayDropdown.addEventListener('change', (event) => {
-        if(event.target.value == "myDiagnosis"){
-            const action = `AI Model ${selectedFormatMask}`;
-            endTimer(action, startTime, diagnosisID, csrfToken);
+
+    const displayDropdown = document.getElementById('displayDropdown');
+    displayDropdown.addEventListener('click', (event) => {
+        if (event.target.classList.contains('option')) {
+            if(event.target.textContent == "My Diagnosis"){
+                const action = `AI Model ${selectedFormatMask}`;
+                endTimer(action, startTime, diagnosisID, csrfToken);
+            }
+            if(selectedDisplay == "My Diagnosis"){
+                startTime = performance.now();
+            }
+            selectedDisplay = event.target.textContent;
+            loadImages();
         }
-        if(selectedDisplay == "myDiagnosis"){
-            startTime = performance.now();
-        }
-        selectedDisplay= event.target.value
-        loadImages();
     });
 
     // function to load the images in the correct overlay
     async function loadImages(){
         let volumes;
-        if(selectedDisplay == "AIDiagnosis"){
+        if(selectedDisplay == "AI Diagnosis"){
             volumes = await loadImageWithMask(selectedFormatMask, selectedFormatMri, diagnosisID);
         }
-        else if(selectedDisplay == "myDiagnosis"){
+        else if(selectedDisplay == "My Diagnosis"){
             volumes = await loadImageWithDiagnosis(diagnosisID, selectedFormatMri);
         }
-        else if(selectedDisplay == "showOverlay"){
+        else if(selectedDisplay == "Show Overlay"){
             volumes = await loadOverlayDAI(selectedFormatMask, selectedFormatMri, diagnosisID);
         }
         nv.loadVolumes(volumes);
     };
+
+    
+    function swapOptions(optionElement) {
+        const parentDropdown = optionElement.closest('.dropdown');
+        const textBox = parentDropdown.querySelector('.textBox');
+        const clickedValue = optionElement.textContent;
+        // Update the text box value
+        textBox.value = clickedValue;
+    }
+
+    document.querySelectorAll('.dropdown').forEach(dropdown => {
+        dropdown.addEventListener('click', () => {
+            dropdown.classList.toggle('active');
+        });
+    });
+
+    document.querySelectorAll('.dropdown .option').forEach(option => {
+        option.addEventListener('click', (event) => {
+            swapOptions(event.target);
+        });
+    })
 });
