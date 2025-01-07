@@ -14,41 +14,41 @@
 {% endblock %}
 
 
-
 {%block content%}
 
+<!-- Dropdown menus -->
 <div class="dropdown-container">
-  <div class="dropdown" id="formatDropdown">
-      <input class="text-box" type="text" value="FLAIR" readonly>
-      <div class="options">
-          <div class="option">FLAIR</div>
-          <div class="option">T1</div>
-      </div>
-  </div>
-  
-  <div class="dropdown" id="displayDropdown">
-      <input class="text-box" type="text" value="AI diagnosis" readonly>
-      <div class="options">
-          <div class="option">AI diagnosis</div>
-          <div class="option">my diagnosis</div>
-          <div class="option">show Overlay</div>
-      </div>
-  </div>
-  <div class="dropdown" id="AIdropdown">
-    <input class="text-box" type="text" value="Model A" readonly>
-    <div class="options">
-        <div class="option">Model A</div>
-        <div class="option">Model B</div>
-        <div class="option">Model C</div>
-        <div class="option">Model D</div>
+    <div class="dropdown" id="formatDropdown">
+        <input class="text-box" type="text" value="FLAIR" readonly>
+        <div class="options">
+            <div class="option">FLAIR</div>
+            <div class="option">T1</div>
+        </div>
     </div>
-</div>
+    <div class="dropdown" id="displayDropdown">
+        <input class="text-box" type="text" value="AI diagnosis" readonly>
+        <div class="options">
+            <div class="option">AI diagnosis</div>
+            <div class="option">my diagnosis</div>
+            <div class="option">show Overlay</div>
+        </div>
+    </div>
+    <div class="dropdown" id="AIdropdown">
+        <input class="text-box" type="text" value="Model A" readonly>
+        <div class="options">
+            <div class="option">Model A</div>
+            <div class="option">Model B</div>
+            <div class="option">Model C</div>
+            <div class="option">Model D</div>
+        </div>
+    </div>
 </div>
 
 
 <div class="imageBox">
     <canvas id="imageBrain" width="100%" height="395%"></canvas>
 </div>
+
 
 <div class="nextButton">
     <button type="button" id="TakeMyDiagnosis">Take My Diagnosis</button>
@@ -62,9 +62,7 @@
       function swapOptions(optionElement) {
         const parentDropdown = optionElement.closest('.dropdown');
         const textBox = parentDropdown.querySelector('.text-box');
-
         const clickedValue = optionElement.textContent;
-
         // Update the text box value
         textBox.value = clickedValue;
     }

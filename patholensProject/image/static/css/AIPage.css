@@ -32,6 +32,7 @@ body{
     box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
 }
 
+/* arrow design*/
 .dropdown::before {
     content: "";
     position: absolute;
@@ -47,6 +48,7 @@ body{
     pointer-events: none;
 }
 
+/*arrow transition*/
 .dropdown.active::before {
     top: 12px;
     transform: rotate(-180deg);
@@ -62,15 +64,14 @@ body{
     font-size: 1.1em;
     border: 2px solid #005E7A;
     outline: none;
-   
     padding: 12px 12px;
     border-radius: 8px;
     font-family: Calibri, Arial, sans-serif;
     display: flex;
     text-align: left;
-    align-items: center; 
-    
+    align-items: center;  
 }
+
 .dropdown.active input{
     border-radius: 8px 8px 0 0;
 }
@@ -89,34 +90,30 @@ body{
 }
 
 .dropdown.active .options {
-    display: block;
-    
+    display: block;  
 }
 
 .dropdown .options div {
     padding: 6px 14px;
     cursor: pointer;
-    border-bottom: 2px solid #005E7A 
-    
+    border-bottom: 2px solid #005E7A   
 }
 
 .dropdown .options div:hover {
     background:  #00242F;
-    color: #fff;
-    
+    color: #fff;  
 }
+
 
 .imageBox{
     margin-top: 60px;
-    background-color: aliceblue;
 }
 
 
 .nextButton {
     display: flex;            
     gap: 10%;                
-    justify-content: center;  
-     
+    justify-content: center;     
 }
 
 .nextButton button {
@@ -136,6 +133,7 @@ body{
     box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease; 
 }
+
 #editDiagnosis{
     background-color: #00afb9;
 }
