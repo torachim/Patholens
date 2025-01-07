@@ -24,7 +24,7 @@ class TestDiagnosisManager(unittest.TestCase):
 
         diag = createDiagnosis(idDiag, docObject, urlForPicture)
 
-        self.assertEqual(getURL(idDiag), diag.imageUrl)
+        self.assertEqual(getURL(idDiag), diag.imageURL)
 
     # is called last
     def tearDown(self):

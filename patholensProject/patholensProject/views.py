@@ -9,6 +9,7 @@ from image.timeHandler import *
 from image.views import *
 from image.mediaHandler import *
 from accounts.doctorManager import *
+from image.models import Media
 
 @login_required
 def homepage(request):
@@ -33,24 +34,27 @@ def forwardingInformation(request, datasetName):
     """
     
     datasetName = datasetName.upper()
-    message = getRandomURL(request.user.id, datasetName)
+    responseRandomURL = getRandomURL(request.user.id, datasetName)
     
     
-    if message["status"] == "finished":
+    if responseRandomURL["status"] == "finished":
         return render(request, 'finishedMessage.html')
     
-    elif message["status"] == "error":
+    elif responseRandomURL["status"] == "error":
         return redirect("/")
     
     else:
         
-        pictureURL = message["url"]
+        pictureURL = responseRandomURL["url"]
         
         docObject = getDoctorObject(request.user.id)
         
         uuid = createUUIDs(1)[0]
         
-        diag = createDiagnosis(uuid, docObject, pictureURL)
+        # This will always be an object because if it is not, the status must be "error".
+        mediaFolderObject = Media.objects.get(name=datasetName)
+        
+        diag = createDiagnosis(uuid, docObject, pictureURL, mediaFolderObject)
 
         createUseTime(diag)
         

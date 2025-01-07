@@ -1,0 +1,47 @@
+{% extends 'base.html' %} 
+{% load static %} 
+{% block extraCSS %}
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="pragma" content="no-cache" />
+<meta http-equiv="expires" content="0" />
+<link rel="stylesheet" href="{% static 'css/transitionPage.css'%}?v=1">
+<title> Transition </title>
+
+{% endblock %} 
+
+{%block content%}
+
+    <div class="mainContent">
+        <div class="contentBox">
+            <div class="contentTitle">
+                <h1>
+                    {% if datasetFinished %}
+                        You finished all patients in <br> {{ datasetName }}
+                    {% else %}
+                        Do you want to continue?
+                    {% endif %}
+                </h1>
+            </div>
+            
+            <div class="decisionButtons">
+                {% if datasetFinished%}
+                    <button id="homeButton" class="homeButton"> Reutrn to the homepage </button> 
+                {% else %}
+                    <button id="continueButton" class="continueButton"> Yes, continue </button>
+                    <button id="homeButton" class="homeButton"> No, return to homepage </button>        
+                {% endif %}
+                </div>            
+            </div>
+        </div> 
+    </div>
+{% endblock %} 
+
+{% block extraJS %}
+<script>
+    const datasetName = "{{ datasetName }}"
+</script>
+<script type="module" src="{% static 'js/transitionPageListener.js' %}"></script>
+{% endblock %}
