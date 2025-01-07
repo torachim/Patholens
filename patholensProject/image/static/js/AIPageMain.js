@@ -26,8 +26,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const aiDropdown = document.getElementById('AIdropdown');
     aiDropdown.addEventListener('click', (event) => {
         if (event.target.classList.contains('option')) {
-            const selectedOption = event.target.textContent;
-            selectedFormatMask = aiModelMapping[selectedOption];
+            selectedFormatMask = aiModelMapping[event.target.textContent];
             loadImages();
         }
     });
@@ -36,8 +35,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const formatDropdown = document.getElementById('formatDropdown');
     formatDropdown.addEventListener('click', (event) => {
         if (event.target.classList.contains('option')) {
-            const selectedOption = event.target.textContent;
-            selectedFormatMri = selectedOption;
+            selectedFormatMri = event.target.textContent;
             loadImages();
         }
     });
@@ -46,8 +44,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const displayDropdown = document.getElementById('displayDropdown');
     displayDropdown.addEventListener('click', (event) => {
         if (event.target.classList.contains('option')) {
-            const selectedOption = event.target.textContent;
-            selectedDisplay = selectedOption;
+            selectedDisplay = event.target.textContent;
             loadImages();
         }
     });
