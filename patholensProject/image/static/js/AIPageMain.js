@@ -9,46 +9,80 @@ document.addEventListener('DOMContentLoaded', function () {
     //default formats
     let selectedFormatMask = "DEEPFCD";
     let selectedFormatMri = "FLAIR"
-    let selectedDisplay = "AIDiagnosis"
+    let selectedDisplay = "AI Diagnosis"
+
+
+    const aiModelMapping = {
+        "Model A": "DEEPFCD",
+        "Model B": "MAP18",
+        "Model C": "MELD",
+        "Model D": "NNUNET"
+    };
 
     // Load default image and mask
     loadImages();
 
     // Dropdown change listener for the AI Mask
     const aiDropdown = document.getElementById('AIdropdown');
-    aiDropdown.addEventListener('change', (event) => {
-        selectedFormatMask = event.target.value;
-        loadImages();
+    aiDropdown.addEventListener('click', (event) => {
+        if (event.target.classList.contains('option')) {
+            selectedFormatMask = aiModelMapping[event.target.textContent];
+            loadImages();
+        }
     });
 
     // Dropdown change listener for format of the pictures
     const formatDropdown = document.getElementById('formatDropdown');
-    formatDropdown.addEventListener('change', (event) => {
-        selectedFormatMri = event.target.value;
-        loadImages();
+    formatDropdown.addEventListener('click', (event) => {
+        if (event.target.classList.contains('option')) {
+            selectedFormatMri = event.target.textContent;
+            loadImages();
+        }
     });
 
     // Dropdown change listener for the Overlay structure
-    const displayDropdown = document.getElementById('displayDropdown')
-    displayDropdown.addEventListener('change', (event) => {
-        selectedDisplay= event.target.value
-        loadImages();
+    const displayDropdown = document.getElementById('displayDropdown');
+    displayDropdown.addEventListener('click', (event) => {
+        if (event.target.classList.contains('option')) {
+            selectedDisplay = event.target.textContent;
+            loadImages();
+        }
     });
-
     // function to load the images in the correct overlay
     async function loadImages(){
         let volumes;
-        if(selectedDisplay == "AIDiagnosis"){
+        if(selectedDisplay == "AI Diagnosis"){
             volumes = await loadImageWithMask(selectedFormatMask, selectedFormatMri, diagnosisID);
         }
-        else if(selectedDisplay == "myDiagnosis"){
+        else if(selectedDisplay == "My Diagnosis"){
             volumes = await loadImageWithDiagnosis(diagnosisID, selectedFormatMri);
         }
-        else if(selectedDisplay == "showOverlay"){
+        else if(selectedDisplay == "Show Overlay"){
             volumes = await loadOverlayDAI(selectedFormatMask, selectedFormatMri, diagnosisID);
         }
         nv.loadVolumes(volumes);
     };
+
+    
+    function swapOptions(optionElement) {
+        const parentDropdown = optionElement.closest('.dropdown');
+        const textBox = parentDropdown.querySelector('.textBox');
+        const clickedValue = optionElement.textContent;
+        // Update the text box value
+        textBox.value = clickedValue;
+    }
+
+    document.querySelectorAll('.dropdown').forEach(dropdown => {
+        dropdown.addEventListener('click', () => {
+            dropdown.classList.toggle('active');
+        });
+    });
+
+    document.querySelectorAll('.dropdown .option').forEach(option => {
+        option.addEventListener('click', (event) => {
+            swapOptions(event.target);
+        });
+    })
 });
 
 
