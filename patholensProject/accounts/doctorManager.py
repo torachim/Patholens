@@ -113,7 +113,7 @@ def getDoctorObject(docID: str):
         docID (str): The ID of the doctor
 
     Returns:
-        Doctor: Returns the object of the Doctor & False if the doctor is not existent.
+        Doctor: Returns the Doctor object & False if the doctor is not existent.
     """
 
     # Check if the doctor exists in the database
@@ -217,7 +217,7 @@ def getContinueDiag(docID: str) -> dict:
     
     toBeContinuedDiagnosis = docObject.continueDiag
     if not toBeContinuedDiagnosis:
-        returnDict.update ({"status": False, "reason": DIAG_REASON ,"message": "Their is no unfinished Diagnosis"})
+        returnDict.update ({"status": False, "reason": DIAG_REASON ,"message": "There is no unfinished Diagnosis"})
         return returnDict
     
     returnDict.update({"status": True, "object": toBeContinuedDiagnosis})

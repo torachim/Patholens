@@ -33,7 +33,6 @@ class GetImageAPIView(APIView):
         """
         try:
             imageFormat = request.GET.get("format")
-            print("Received format parameter:", imageFormat)  # Debugging
             if not imageFormat:
                 imageFormat = "FLAIR"
 
@@ -44,14 +43,12 @@ class GetImageAPIView(APIView):
 
             # get the path to the image of a given diagnosis
             imageID = getURL(diagnosisID)
-            print("Image ID:", imageID)  # Debugging
             
             fileSuffix = settings.SUPPORTED_IMAGE_FORMATS[imageFormat]
             imagePath = os.path.join(
                 settings.MEDIA_ROOT,
                 f"website_data/sub-{imageID}/anat/sub-{imageID}{fileSuffix}",
             )
-            print("Generated image path:", imagePath)  # Debugging
             if not os.path.exists(imagePath):
                 return Response(
                     {"error": "Image not found"}, status=status.HTTP_404_NOT_FOUND
@@ -64,7 +61,6 @@ class GetImageAPIView(APIView):
             return Response({"path": relativePath}, status=status.HTTP_200_OK)
 
         except Exception as e:
-            print("Error in GetImageAPIView:", str(e))  # Debugging
             return Response(
                 {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
@@ -74,13 +70,13 @@ class GetDiagnosis(APIView):
 
     def get(self, request, diagnosisID):
         """
-        Function to get the diagnosis Mask for a spicific diagnosisID
+        Function to get the diagnosis Mask for a specific diagnosisID
 
         Args:
             diagnosisID (string): a diagnosisID 
 
         Returns:
-            Path to the Diagnosis Image
+            Path to the image of the diagnosis
         """
         try:
             if not diagnosisID:
@@ -98,7 +94,7 @@ class GetDiagnosis(APIView):
             
             if not os.path.exists(diagnosisPath):
                 return Response(
-                    {"error": f"Diagnosis File {diagnosisPath} not found"},
+                    {"error": f"Diagnosis file {diagnosisPath} not found"},
                     status=status.HTTP_404_NOT_FOUND
                 )
             

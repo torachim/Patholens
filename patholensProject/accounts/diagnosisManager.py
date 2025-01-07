@@ -77,7 +77,7 @@ def getDiagnosisObject(diagID: str):
         Diagnosis or bool: The Diagnosis object if it exists, False if no diagnosis is found.
     """
     
-    # Check i the diagnosis exists in the database
+    # Check if the diagnosis exists in the database
     if not Diagnosis.objects.filter(diagID=diagID).exists():
         return False
 
