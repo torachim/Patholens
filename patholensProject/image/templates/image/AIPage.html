@@ -17,24 +17,24 @@
 {%block content%}
 
 <!-- Dropdown menus -->
-<div class="dropdown-container">
+<div class="dropdownContainer">
     <div class="dropdown" id="formatDropdown">
-        <input class="text-box" type="text" value="FLAIR" readonly>
+        <input class="textBox" type="text" value="FLAIR" readonly>
         <div class="options">
             <div class="option">FLAIR</div>
             <div class="option">T1</div>
         </div>
     </div>
     <div class="dropdown" id="displayDropdown">
-        <input class="text-box" type="text" value="AI diagnosis" readonly>
+        <input class="textBox" type="text" value="AI diagnosis" readonly>
         <div class="options">
-            <div class="option">AI diagnosis</div>
-            <div class="option">my diagnosis</div>
-            <div class="option">show Overlay</div>
+            <div class="option">AI Diagnosis</div>
+            <div class="option">My Diagnosis</div>
+            <div class="option">Show Overlay</div>
         </div>
     </div>
     <div class="dropdown" id="AIdropdown">
-        <input class="text-box" type="text" value="Model A" readonly>
+        <input class="textBox" type="text" value="Model A" readonly>
         <div class="options">
             <div class="option">Model A</div>
             <div class="option">Model B</div>
@@ -53,33 +53,9 @@
 <div class="nextButton">
     <button type="button" id="TakeMyDiagnosis">Take My Diagnosis</button>
     <button type="button" id="TakeAIDiagnosis">Take AI Diagnosis</button>
-    <button type="button" id="editDiagnosis">edit Diagnosis</button>
+    <button type="button" id="editDiagnosis">Edit Diagnosis</button>
 </div>
 
-
-<script>
-      
-      function swapOptions(optionElement) {
-        const parentDropdown = optionElement.closest('.dropdown');
-        const textBox = parentDropdown.querySelector('.text-box');
-        const clickedValue = optionElement.textContent;
-        // Update the text box value
-        textBox.value = clickedValue;
-    }
-
-    document.querySelectorAll('.dropdown').forEach(dropdown => {
-        dropdown.addEventListener('click', () => {
-            dropdown.classList.toggle('active');
-        });
-    });
-
-    document.querySelectorAll('.dropdown .option').forEach(option => {
-        option.addEventListener('click', (event) => {
-            swapOptions(event.target);
-        });
-    });
-    
-</script>
 {%endblock%}
 
 {% block extraJS %}

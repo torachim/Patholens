@@ -10,12 +10,6 @@ def newDiagnosis(request, diagnosisID):
     return render(request, "image/diagnosisPage.html", {"diagnosisID": diagnosisID})
 
 
-
-@login_required
-def AIPage(request):
-    return render(request, "image/AIPage.html")
-
-
 def testRenderImageView(request, imageID):
     return render(request, 'image/diagnosisPage.html', {'imageID': imageID})
 

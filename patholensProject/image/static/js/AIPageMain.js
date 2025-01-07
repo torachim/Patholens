@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
     //default formats
     let selectedFormatMask = "DEEPFCD";
     let selectedFormatMri = "FLAIR"
-    let selectedDisplay = "AI diagnosis"
+    let selectedDisplay = "AI Diagnosis"
 
 
     const aiModelMapping = {
@@ -55,15 +55,36 @@ document.addEventListener('DOMContentLoaded', function () {
     // function to load the images in the correct overlay
     async function loadImages(){
         let volumes;
-        if(selectedDisplay == "AI diagnosis"){
+        if(selectedDisplay == "AI Diagnosis"){
             volumes = await loadImageWithMask(selectedFormatMask, selectedFormatMri, diagnosisID);
         }
-        else if(selectedDisplay == "my diagnosis"){
+        else if(selectedDisplay == "My Diagnosis"){
             volumes = await loadImageWithDiagnosis(diagnosisID, selectedFormatMri);
         }
-        else if(selectedDisplay == "show Overlay"){
+        else if(selectedDisplay == "Show Overlay"){
             volumes = await loadOverlayDAI(selectedFormatMask, selectedFormatMri, diagnosisID);
         }
         nv.loadVolumes(volumes);
     };
+
+    
+    function swapOptions(optionElement) {
+        const parentDropdown = optionElement.closest('.dropdown');
+        const textBox = parentDropdown.querySelector('.text-box');
+        const clickedValue = optionElement.textContent;
+        // Update the text box value
+        textBox.value = clickedValue;
+    }
+
+    document.querySelectorAll('.dropdown').forEach(dropdown => {
+        dropdown.addEventListener('click', () => {
+            dropdown.classList.toggle('active');
+        });
+    });
+
+    document.querySelectorAll('.dropdown .option').forEach(option => {
+        option.addEventListener('click', (event) => {
+            swapOptions(event.target);
+        });
+    })
 });
