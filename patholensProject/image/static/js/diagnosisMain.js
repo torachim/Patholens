@@ -184,7 +184,7 @@ document.addEventListener('DOMContentLoaded', function() {
         nv.drawUndo();
     })
 
-    // save image if logged out
-    document.getElementById("logoutButton").addEventListener("click", savedEditedImage(nv, diagnosisID, csrfToken));
+    // save image if logged out        ATTENTION: prevent saving image twice!! It wont work
+    //document.getElementById("logoutButton").addEventListener("click", savedEditedImage(nv, diagnosisID, csrfToken));
 
 });
