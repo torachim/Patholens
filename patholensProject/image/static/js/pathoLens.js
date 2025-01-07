@@ -287,7 +287,7 @@ export async function savedEditedImage(nv, diagnosisID, csrfToken) {
         // Create a FormData object
         const formData = new FormData();
         formData.append("filename", filename);
-        formData.append("diagnosisID", diagnosisID);
+        formData.append("diagnosisID", diagnosisID)
         formData.append("imageFile", new Blob([imageBlob], { type: "application/octet-stream" }));
 
         // Send the data to the API
