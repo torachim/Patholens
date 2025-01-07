@@ -31,9 +31,8 @@ class GetImageAPIView(APIView):
         Returns:
             Path: The path to find the requested image
         """
-
         try:
-            imageFormat = request.GET.get("format ")
+            imageFormat = request.GET.get("format")
             if not imageFormat:
                 imageFormat = "FLAIR"
 
@@ -46,7 +45,6 @@ class GetImageAPIView(APIView):
             imageID = getURL(diagnosisID)
             
             fileSuffix = settings.SUPPORTED_IMAGE_FORMATS[imageFormat]
-
             imagePath = os.path.join(
                 settings.MEDIA_ROOT,
                 f"website_data/sub-{imageID}/anat/sub-{imageID}{fileSuffix}",
@@ -66,6 +64,57 @@ class GetImageAPIView(APIView):
             return Response(
                 {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
+
+class GetDiagnosis(APIView):
+
+    def get(self, request, diagnosisID):
+        """
+        Function to get the diagnosis Mask for a specific diagnosisID
+
+        Args:
+            diagnosisID (string): a diagnosisID 
+
+        Returns:
+            Path to the image of the diagnosis
+        """
+        try:
+            if not diagnosisID:
+                return Response({"error": "DiagnosisID required"},
+                                 status=status.HTTP_400_BAD_REQUEST
+                                )
+            
+            subID = getURL(diagnosisID)
+            docID = request.user.id
+
+            diagnosisPath = os.path.join(
+                        settings.MEDIA_ROOT,
+                        f"website_data/derivatives/diagnosis/sub-{subID}/sub-{subID}_acq-{docID}_space-edited-image.nii.gz"
+            )
+            
+            if not os.path.exists(diagnosisPath):
+                return Response(
+                    {"error": f"Diagnosis file {diagnosisPath} not found"},
+                    status=status.HTTP_404_NOT_FOUND
+                )
+            
+            relativePath = f"media/website_data/derivatives/diagnosis/sub-{subID}/sub-{subID}_acq-{docID}_space-edited-image.nii.gz"
+
+            return Response(
+                    {"status": "success",
+                     "path": relativePath,
+                    },
+                    status=status.HTTP_200_OK
+            )
+        
+        except Exception as e:
+            return Response(
+                    {"error": str(e)},
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+
+
 
 class SetUseTimeAPIView(APIView):
 

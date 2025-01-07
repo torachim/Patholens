@@ -35,7 +35,7 @@
         </div>
       
       <div class="buttons">
-        <button onclick="event.stopPropagation();window.location.href='url.html'">Continue Diagnosis</button>
+        <button onclick="event.stopPropagation();window.location.href={% url 'continueDiagnosis' %}">Continue Diagnosis</button>
         <button onclick="event.stopPropagation();window.open( {% url 'selectDataset' %},'windowFrame')">New Diagnosis</button>                                                                                                        
       </div>
 
