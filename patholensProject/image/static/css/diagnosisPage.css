@@ -56,11 +56,13 @@ body {
     align-items: center;
     cursor: pointer;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .toolButton:active {
-    transform: translateY(2px);
+    transform: translateY(2px) scale(1.01);
+    background-color: #ffffff;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.4);
 }
 
 #selectTool i {
