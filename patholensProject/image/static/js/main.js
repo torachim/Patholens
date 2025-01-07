@@ -1,3 +1,5 @@
+
+/**
 import { Niivue, DRAG_MODE } from "./index.js";
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -239,7 +241,7 @@ document.addEventListener('DOMContentLoaded', function() {
         nv.drawAddUndoBitmap();
     }
 
-
+                                                            
     /**
      * 
      * @param {int} mode
@@ -247,6 +249,8 @@ document.addEventListener('DOMContentLoaded', function() {
      * @param {boolean} filled
      * True => drawn shape will be filled
      */
+
+    /**
     function changeDrawingMode(mode, filled){
         nv.setPenValue(mode, filled);
     }
@@ -548,3 +552,5 @@ document.addEventListener('DOMContentLoaded', function() {
     // TODO: save image if logged out -> not working anymore
     document.getElementById("logoutButton").addEventListener("click", saveEditedImage);
 });
+
+*/

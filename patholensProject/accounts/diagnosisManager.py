@@ -13,18 +13,18 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "patholensProject.settings")
 django.setup()
 
 
-from image.models import Diagnosis
+from image.models import Diagnosis, Media
 from accounts.models import Doctors
 
 
-def createDiagnosis(diagID: str, docObject: int, imageUrl: str):
+def createDiagnosis(diagID: str, docObject: int, imageURL: str, mediaFolderObject: Media):
     """
     Creates a new diagnosis and associates it with a specified doctor and the patient image.
 
     Args:
         diagID (str): The unique identifier for the diagnosis.
         docID (int): The unique identifier of the doctor diagnosing the patient.
-        imageUrl (str): The URL to the image associated with the patient.
+        imageURL (str): The URL to the image associated with the patient.
 
     Returns:
         Diagnosis: A`Diagnosis`object if the creation is successful.
@@ -38,7 +38,7 @@ def createDiagnosis(diagID: str, docObject: int, imageUrl: str):
     ):
         return False
 
-    diag = Diagnosis.objects.create(diagID=diagID, doctor=docObject, imageUrl=imageUrl)
+    diag = Diagnosis.objects.create(diagID=diagID, doctor=docObject, imageURL=imageURL, mediaFolder=mediaFolderObject)
 
     return diag
 
@@ -57,7 +57,7 @@ def getURL(diagID: str):
         return None
 
     diagObject = Diagnosis.objects.get(diagID=diagID)
-    url = diagObject.imageUrl
+    url = diagObject.imageURL
 
     return url
 
@@ -81,7 +81,7 @@ def getDiagnosisObject(diagID: str):
     if not Diagnosis.objects.filter(diagID=diagID).exists():
         return False
 
-    diag = Diagnosis.objects.get(diagID=diagID)
-    return diag
+    diagnosis = Diagnosis.objects.get(diagID=diagID)
+    return diagnosis
 
     
