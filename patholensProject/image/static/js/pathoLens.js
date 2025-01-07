@@ -45,6 +45,7 @@ export function drawRectangleNiivue(nv, data){
     const { voxStart, voxEnd, axCorSag } = data
     // these rect corners will be set based on the plane the drawing was created in 
     let topLeft, topRight, bottomLeft, bottomRight
+    let topLeftO, topRightO, bottomLeftO, bottomRightO
 
 
     switch(axCorSag){
@@ -59,6 +60,11 @@ export function drawRectangleNiivue(nv, data){
             topRight = [maxX, minY, fixedZ]
             bottomLeft = [minX, maxY, fixedZ]
             bottomRight = [maxX, maxY, fixedZ]
+
+            topLeftO = [minX - 1, minY - 1, fixedZ]
+            topRightO = [maxX + 1, minY - 1, fixedZ]
+            bottomLeftO = [minX - 1, maxY + 1, fixedZ]
+            bottomRightO = [maxX + 1, maxY + 1, fixedZ]
             break;
         }
         case (1) :{
@@ -72,6 +78,11 @@ export function drawRectangleNiivue(nv, data){
             topRight = [maxX, fixedY, minZ]
             bottomLeft = [minX, fixedY, maxZ]
             bottomRight = [maxX, fixedY, maxZ]
+
+            topLeftO = [minX - 1, fixedY, minZ - 1]
+            topRightO = [maxX + 1, fixedY, minZ - 1]
+            bottomLeftO = [minX - 1, fixedY, maxZ + 1]
+            bottomRightO = [maxX + 1, fixedY, maxZ + 1]
             break;
         }
         case(2) :{
@@ -85,6 +96,12 @@ export function drawRectangleNiivue(nv, data){
             topRight = [fixedX, maxY, minZ]
             bottomLeft = [fixedX, minY, maxZ]
             bottomRight = [fixedX, maxY, maxZ]
+
+            topLeftO = [fixedX, minY - 1, minZ - 1] 
+            topRightO = [fixedX, maxY + 1, minZ - 1]
+            bottomLeftO = [fixedX, minY - 1, maxZ + 1]
+            bottomRightO = [fixedX, maxY + 1, maxZ + 1]
+
             break;
         }
     }
@@ -94,6 +111,11 @@ export function drawRectangleNiivue(nv, data){
     nv.drawPenLine(topRight, bottomRight, colourValue)
     nv.drawPenLine(bottomRight, bottomLeft, colourValue)
     nv.drawPenLine(bottomLeft, topLeft, colourValue)
+
+    nv.drawPenLine(topLeftO, topRightO, colourValue)
+    nv.drawPenLine(topRightO, bottomRightO, colourValue)
+    nv.drawPenLine(bottomRightO, bottomLeftO, colourValue)
+    nv.drawPenLine(bottomLeftO, topLeftO, colourValue)
     
     // refresh the drawing
     nv.refreshDrawing(true) // true will force a redraw of the entire scene (equivalent to calling drawScene() in niivue)
