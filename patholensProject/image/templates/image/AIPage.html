@@ -1,47 +1,62 @@
-{% extends 'base.html' %}
-{% load static %}
+{% extends 'base.html' %} 
+{% load static %} 
 {% block extraCSS %}
-  <link rel="stylesheet" href="{% static 'css/AIPage.css' %}?v=2" />
-{% endblock %}
+
+<link rel="stylesheet" href="{% static 'css/AIPage.css' %}?v=1" />
+{% endblock %} 
+
 
 {% block topbar %}
-  <a href="/startingPage" class="homeButton"><i class="fa-solid fa-house" style="color: #ffffff;"></i></a>
-  <i class="fa-solid fa-circle-question" style="color: #ffffff;" id="openHelp" data-tooltip="Get Help"></i>
+<a href="/startingPage" class="homeButton">
+    <i class="fa-solid fa-house" style="color: #ffffff;"></i>
+</a>
+<i class="fa-solid fa-circle-question" style="color: #ffffff;" id="openHelp" data-tooltip="Get Help"></i>
 {% endblock %}
 
-{% block content %}
-  <div class="imageBox">
+
+{%block content%}
+
+<!-- Dropdown menus -->
+<div class="dropdownContainer">
+    <div class="dropdown" id="formatDropdown">
+        <input class="textBox" type="text" value="FLAIR" readonly>
+        <div class="options">
+            <div class="option">FLAIR</div>
+            <div class="option">T1</div>
+        </div>
+    </div>
+    <div class="dropdown" id="displayDropdown">
+        <input class="textBox" type="text" value="AI diagnosis" readonly>
+        <div class="options">
+            <div class="option">AI Diagnosis</div>
+            <div class="option">My Diagnosis</div>
+            <div class="option">Show Overlay</div>
+        </div>
+    </div>
+    <div class="dropdown" id="AIdropdown">
+        <input class="textBox" type="text" value="Model A" readonly>
+        <div class="options">
+            <div class="option">Model A</div>
+            <div class="option">Model B</div>
+            <div class="option">Model C</div>
+            <div class="option">Model D</div>
+        </div>
+    </div>
+</div>
+
+
+<div class="imageBox">
     <canvas id="imageBrain" width="100%" height="395%"></canvas>
-  </div>
+</div>
 
-  <div class="dropdown">
-    <select id="displayDropdown" class="dropdownSelect">
-      <option value="myDiagnosis">My Diagnosis</option>
-      <option value="AIDiagnosis" selected>AI Diagnosis</option>
-      <option value="showOverlay">Show Overlay</option>
-    </select>
-  </div>
-  <div class="dropdown">
-    <select id="formatDropdown" class="dropdownSelect">
-      <option value="T1">T1</option>
-      <option value="Flair" selected>FLAIR</option>
-    </select>
-  </div>
-  <div class="dropdown">
-    <select id="AIdropdown" class="dropdownSelect">
-      <option value="DEEPFCD" selected>Model A</option>
-      <option value="MAP18">Model B</option>
-      <option value="MELD">Model C</option>
-      <option value="NNUNET">Model D</option>
-    </select>
-  </div>
 
-  <div class="nextButton">
+<div class="nextButton">
     <button type="button" id="TakeMyDiagnosis">Take My Diagnosis</button>
     <button type="button" id="TakeAIDiagnosis">Take AI Diagnosis</button>
     <button type="button" id="editDiagnosis">Edit Diagnosis</button>
-  </div>
-{% endblock %}
+</div>
+<script></script>
+{%endblock%}
 
 {% block extraJS %}
   <script>

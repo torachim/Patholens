@@ -54,6 +54,7 @@ def saveImage(request):
     else:
         return JsonResponse({"error": "Invalid request method"}, status=405)
 
+
 @login_required
 def transitionPage(request, diagnosisID):
     """
