@@ -7,7 +7,6 @@ from .models import Diagnosis
 import os
 from accounts.diagnosisManager import getURL
 from .timeHandler import setUseTime
-
 from image.models import Diagnosis
 
 
@@ -114,8 +113,6 @@ class GetDiagnosis(APIView):
             )
 
 
-
-
 class SetUseTimeAPIView(APIView):
 
     def post(self, request):
@@ -159,7 +156,7 @@ class SaveConfidenceAPIView(APIView):
         This function saves the confidence value of the diganosis in the db
 
         Args:
-            request (_type_): _description_
+            request (HttpRequest): The HTTP request object, which contains metadata and parameters.
             diagID (string): ID of an diagnosis
 
         Returns:
@@ -171,8 +168,8 @@ class SaveConfidenceAPIView(APIView):
             confidence = data.get('confidence')
 
             # check if it is a valid value
-            if confidence is None or not (0 <= int(confidence) <= 100):
-                return Response({'error': 'Invalid confidence value. It must be between 0 and 100.'}, status=status.HTTP_400_BAD_REQUEST)
+            if confidence is None or not (0 <= int(confidence) <= 10):
+                return Response({'error': 'Invalid confidence value. It must be between 0 and 10.'}, status=status.HTTP_400_BAD_REQUEST)
 
             if not Diagnosis.objects.filter(diagID=diagID).exists():
                 return Response(
@@ -259,6 +256,7 @@ class GetImageAndMaskAPIView(APIView):
             return Response(
                 {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+     
         
 class GetDiagnosis(APIView):
 
@@ -306,3 +304,4 @@ class GetDiagnosis(APIView):
                     {"error": str(e)},
                     status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+            
