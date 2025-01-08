@@ -196,7 +196,49 @@ export function draw3DRectangleNiivue(nv, data, depth = 40) {
     nv.refreshDrawing(true) // true will force a redraw of the entire scene (equivalent to calling drawScene() in niivue)
 }
 
+/**
+ * Draws the edges of a single voxel (3D box) at a given position
+ * @param {Niivue} nv - Niivue instance
+ * @param {array} position - Voxel position [x, y, z]
+ * @param {number} colourValue - Pen value for the edges
+ */
+function drawVoxelEdges(nv, position, colourValue) {
+    const [x, y, z] = position;
 
+    // Define the 8 corners of the voxel
+    const corners = [
+        [x, y, z],
+        [x + 1, y, z],
+        [x, y + 1, z],
+        [x + 1, y + 1, z],
+        [x, y, z + 1],
+        [x + 1, y, z + 1],
+        [x, y + 1, z + 1],
+        [x + 1, y + 1, z + 1]
+    ];
+
+    // Draw edges connecting the corners
+    const edges = [
+        [corners[0], corners[1]],
+        [corners[1], corners[3]],
+        [corners[3], corners[2]],
+        [corners[2], corners[0]],
+
+        [corners[4], corners[5]],
+        [corners[5], corners[7]],
+        [corners[7], corners[6]],
+        [corners[6], corners[4]],
+
+        [corners[0], corners[4]],
+        [corners[1], corners[5]],
+        [corners[2], corners[6]],
+        [corners[3], corners[7]]
+    ];
+
+    for (const [start, end] of edges) {
+        nv.drawPenLine(start, end, colourValue);
+    }
+}
 
 
 
