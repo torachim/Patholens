@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let startTime;
     let drawRectangle = false;
     let erasing = false;
+    let drawCube = false;
 
     //function to drag a rectangle in the niivue 
     // define what happens on dragRelase (right mouse up)
@@ -14,10 +15,15 @@ document.addEventListener('DOMContentLoaded', function() {
         drawRectangle = true;
         //if drawing is enabled
         if (nv.opts.drawingEnabled){
-            drawRectangleNiivue(nv, data)
-            endTimer("Rectangle", startTime, diagnosisID, csrfToken)
-            nv.setDrawingEnabled(false); //drawingEnabled equals false so you have to click the button again to draw another rechtangle
+            if(drawCube){
+                
+            }
+            else{
+                drawCube = drawRectangleNiivue(nv, data);
+                endTimer("Rectangle", startTime, diagnosisID, csrfToken);
+            }
         }
+        nv.setDrawingEnabled(false); //drawingEnabled equals false so you have to click the button again to draw another rechtangle
     }
 
     const canvas = document.getElementById("imageBrain");
