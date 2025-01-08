@@ -1,25 +1,16 @@
 import { Niivue } from "./index.js";
-import { niivueCanvas, loadImageWithDiagnosis, loadImageWithMask, loadOverlayDAI } from "./pathoLens.js";
+import { niivueCanvas,loadImageAPI, loadImageWithDiagnosis, loadImageWithMask, loadOverlayDAI } from "./pathoLens.js";
 
 document.addEventListener('DOMContentLoaded', function() {
-    /*
-    // Loading the images
-
-    const compareNv = new Niivue();
-    const compareCanvas = document.getElementById("comparisonContainer");
-
-    // Load FLAIR default
-    let selectedFormat = "FLAIR";
-
-    */
+    
+    //Loading Images for the zoom Frame
     const canvas = document.getElementById("imageBrain");
     const nv = niivueCanvas({}, canvas);
-
+   
     //default formats
     let selectedFormatMask = "DEEPFCD";
     let selectedFormatMri = "FLAIR"
     let selectedDisplay = "AI Diagnosis"
-
 
     const aiModelMapping = {
         "Model A": "DEEPFCD",
@@ -28,9 +19,8 @@ document.addEventListener('DOMContentLoaded', function() {
         "Model D": "NNUNET"
     };
 
-    // Load default image and mask
     loadImages();
-
+    
     // Dropdown change listener for the AI Mask
     const aiDropdown = document.getElementById('AIdropdown');
     aiDropdown.addEventListener('click', (event) => {
@@ -72,9 +62,21 @@ document.addEventListener('DOMContentLoaded', function() {
         nv.loadVolumes(volumes);
     };
 
+    
+     //loading Images for the main Frame
+    const canvasMain = document.getElementById("imageBrainMain");
+    const nvMain = niivueCanvas({}, canvasMain);
+
+    let selectedFormat = "FLAIR";
+    
+    loadImage();
+    async function loadImage() {
+        const volumes = await loadImageAPI(selectedFormat, diagnosisID);
+        nvMain.loadVolumes(volumes);
+    }
+
 
     // Zoom
-
     const comparisonContainer = document.getElementById("comparisonContainer");
     const zoomButton = document.getElementById("zoomButton");
     let zoomed = false;
