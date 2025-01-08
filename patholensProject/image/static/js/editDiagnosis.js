@@ -3,7 +3,9 @@ import { niivueCanvas,loadImageAPI, loadImageWithDiagnosis, loadImageWithMask, l
 
 document.addEventListener('DOMContentLoaded', function() {
     
+
     //Loading Images for the zoom Frame
+
     const canvas = document.getElementById("imageBrain");
     const nv = niivueCanvas({}, canvas);
    
@@ -64,6 +66,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     
      //loading Images for the main Frame
+
     const canvasMain = document.getElementById("imageBrainMain");
     const nvMain = niivueCanvas({}, canvasMain);
 
@@ -77,6 +80,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     // Zoom
+    
     const comparisonContainer = document.getElementById("comparisonContainer");
     const zoomButton = document.getElementById("zoomButton");
     let zoomed = false;
