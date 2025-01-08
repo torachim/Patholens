@@ -58,5 +58,26 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
+
+    function swapOptions(optionElement) {
+        const parentDropdown = optionElement.closest('.dropdown');
+        const textBox = parentDropdown.querySelector('.textBox');
+        const clickedValue = optionElement.textContent;
+        // Update the text box value
+        textBox.value = clickedValue;
+    }
+
+    document.querySelectorAll('.dropdown').forEach(dropdown => {
+        dropdown.addEventListener('click', () => {
+            dropdown.classList.toggle('active');
+        });
+    });
+
+    document.querySelectorAll('.dropdown .option').forEach(option => {
+        option.addEventListener('click', (event) => {
+            swapOptions(event.target);
+        });
+    })
+
 });
 
