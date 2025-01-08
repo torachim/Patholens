@@ -1,4 +1,5 @@
-//import {Niivue} from "./index.js";
+import { Niivue } from "./index.js";
+import { niivueCanvas, loadImageWithDiagnosis, loadImageWithMask, loadOverlayDAI } from "./pathoLens.js";
 
 document.addEventListener('DOMContentLoaded', function() {
     /*
