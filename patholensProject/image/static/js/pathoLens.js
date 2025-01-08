@@ -122,6 +122,84 @@ export function drawRectangleNiivue(nv, data){
 }
 
 
+
+
+/**
+ * Draws a fully 3D rectangle
+ * @param {Niivue} nv - Niivue instance
+ * @param {*} data - The data from the drag and release
+ * @param {number} depth - The depth of the 3D rectangle (number of layers)
+ */
+export function draw3DRectangleNiivue(nv, data, depth = 40) {
+    const colourValue = 3; // blue
+    nv.setPenValue(colourValue);
+
+    const { voxStart, voxEnd, axCorSag } = data;
+
+    // Define the bounds for the rectangle
+    let minX, maxX, minY, maxY, minZ, maxZ;
+
+    switch (axCorSag) {
+        case 0: // axial view: Z is fixed, vary X and Y
+            minX = Math.min(voxStart[0], voxEnd[0]);
+            maxX = Math.max(voxStart[0], voxEnd[0]);
+            minY = Math.min(voxStart[1], voxEnd[1]);
+            maxY = Math.max(voxStart[1], voxEnd[1]);
+            minZ = voxStart[2] - depth / 2;
+            maxZ = voxStart[2] + depth / 2;
+            break;
+
+        case 1: // coronal view: Y is fixed, vary X and Z
+            minX = Math.min(voxStart[0], voxEnd[0]);
+            maxX = Math.max(voxStart[0], voxEnd[0]);
+            minZ = Math.min(voxStart[2], voxEnd[2]);
+            maxZ = Math.max(voxStart[2], voxEnd[2]);
+            minY = voxStart[1] - depth / 2;
+            maxY = voxStart[1] + depth / 2;
+            break;
+
+        case 2: // sagittal view: X is fixed, vary Y and Z
+            minY = Math.min(voxStart[1], voxEnd[1]);
+            maxY = Math.max(voxStart[1], voxEnd[1]);
+            minZ = Math.min(voxStart[2], voxEnd[2]);
+            maxZ = Math.max(voxStart[2], voxEnd[2]);
+            minX = voxStart[0] - depth / 2;
+            maxX = voxStart[0] + depth / 2;
+            break;
+    }
+
+    // Draw the 3D rectangle layer by layer
+    for (let z = Math.floor(minZ); z <= Math.ceil(maxZ); z++) {
+        for (let y = Math.floor(minY); y <= Math.ceil(maxY); y++) {
+            for (let x = Math.floor(minX); x <= Math.ceil(maxX); x++) {
+                drawVoxelEdges(nv, [x, y, z], colourValue);
+            }
+        }
+    }
+
+    // Refresh the drawing
+    nv.refreshDrawing(true);
+
+    
+    // draw the rect lines
+    nv.drawPenLine(topLeft, topRight, colourValue)
+    nv.drawPenLine(topRight, bottomRight, colourValue)
+    nv.drawPenLine(bottomRight, bottomLeft, colourValue)
+    nv.drawPenLine(bottomLeft, topLeft, colourValue)
+
+    nv.drawPenLine(topLeftO, topRightO, colourValue)
+    nv.drawPenLine(topRightO, bottomRightO, colourValue)
+    nv.drawPenLine(bottomRightO, bottomLeftO, colourValue)
+    nv.drawPenLine(bottomLeftO, topLeftO, colourValue)
+    
+    // refresh the drawing
+    nv.refreshDrawing(true) // true will force a redraw of the entire scene (equivalent to calling drawScene() in niivue)
+}
+
+
+
+
+
 /**
  * API call to get the volumes for the current diagnosis
  * @param {string} format - the format of the MRI image 
