@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddField(
             model_name='diagnosis',
-            name='editedDiagConfidence',
+            name='confidenceOfEditedDiag',
             field=models.PositiveSmallIntegerField(blank=True, null=True),
         ),
     ]
