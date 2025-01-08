@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     // Zoom
-    
+
     const comparisonContainer = document.getElementById("comparisonContainer");
     const zoomButton = document.getElementById("zoomButton");
     let zoomed = false;
@@ -125,6 +125,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+
+    // dropdown function
+    
     function swapOptions(optionElement) {
         const parentDropdown = optionElement.closest('.dropdown');
         const textBox = parentDropdown.querySelector('.textBox');
