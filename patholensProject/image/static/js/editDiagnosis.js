@@ -12,16 +12,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const onDragRelease = (data) => {
         drawRectangle = true;
         //if drawing is enabled
-        if (nv.opts.drawingEnabled){
-            drawRectangleNiivue(nv, data)
+        if (nvMain.opts.drawingEnabled){
+            drawRectangleNiivue(nvMain, data)
             endTimer("Rectangle", startTime, diagnosisID, csrfToken)
-            nv.setDrawingEnabled(false); //drawingEnabled equals false so you have to click the button again to draw another rechtangle
+            nvMain.setDrawingEnabled(false); //drawingEnabled equals false so you have to click the button again to draw another rechtangle
         }
     }
 
     // Add drawing state to history
     function saveDrawingState() {
-        nv.drawAddUndoBitmap();
+        nvMain.drawAddUndoBitmap();
     }
 
     /**
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
      * True => drawn shape will be filled
      */
     function changeDrawingMode(mode, filled){
-        nv.setPenValue(mode, filled);
+        nvMain.setPenValue(mode, filled);
     }
 
     // Pixel
@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
         erasing = false;
         startTimer()
         saveDrawingState();
-        nv.setDrawingEnabled(true);  
+        nvMain.setDrawingEnabled(true);  
         changeDrawingMode(6, false);
     });
         
@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 endTimer('Erasing', startTime, diagnosisID, csrfToken)
                 erasing = false
             }
-            nv.setDrawingEnabled(false);
+            nvMain.setDrawingEnabled(false);
         } 
     
      // disables drawing after a Pixel is marked
@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', function() {
         drawRectangle = false;
         startTimer();
         saveDrawingState();
-        nv.setDrawingEnabled(true);
+        nvMain.setDrawingEnabled(true);
         // 0 = Eraser and true => eraser ist filled so a whole area can be erased
         changeDrawingMode(0, true);
        
@@ -91,14 +91,14 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById("frameTool").addEventListener("click", function () {
         startTimer()
         saveDrawingState();
-        nv.setDrawingEnabled(true);
-        nv.opts.dragMode = DRAG_MODE.callbackOnly;  // Draw rectangle only when dragging
+        nvMain.setDrawingEnabled(true);
+        nvMain.opts.dragMode = DRAG_MODE.callbackOnly;  // Draw rectangle only when dragging
         nv.opts.onDragRelease = onDragRelease;      // Set callback for rectangle drawing
     });
 
     // Undo the drawing/erasing
     document.getElementById("undoTool").addEventListener("click", function (e) {
-        nv.drawUndo();
+        nvMain.drawUndo();
     })
     
     // Function to start the timer 
@@ -307,3 +307,4 @@ document.addEventListener('DOMContentLoaded', function() {
      document.getElementById("logoutButton").addEventListener("click", savedEditedImage(nv, diagnosisID, csrfToken));
 });
 
+//Test 2
