@@ -12,6 +12,65 @@ document.addEventListener('DOMContentLoaded', function() {
     let selectedFormat = "FLAIR";
 
     */
+    const canvas = document.getElementById("imageBrain");
+    const nv = niivueCanvas({}, canvas);
+
+    //default formats
+    let selectedFormatMask = "DEEPFCD";
+    let selectedFormatMri = "FLAIR"
+    let selectedDisplay = "AI Diagnosis"
+
+
+    const aiModelMapping = {
+        "Model A": "DEEPFCD",
+        "Model B": "MAP18",
+        "Model C": "MELD",
+        "Model D": "NNUNET"
+    };
+
+    // Load default image and mask
+    loadImages();
+
+    // Dropdown change listener for the AI Mask
+    const aiDropdown = document.getElementById('AIdropdown');
+    aiDropdown.addEventListener('click', (event) => {
+        if (event.target.classList.contains('option')) {
+            selectedFormatMask = aiModelMapping[event.target.textContent];
+            loadImages();
+        }
+    });
+
+    // Dropdown change listener for format of the pictures
+    const formatDropdown = document.getElementById('formatDropdown');
+    formatDropdown.addEventListener('click', (event) => {
+        if (event.target.classList.contains('option')) {
+            selectedFormatMri = event.target.textContent;
+            loadImages();
+        }
+    });
+
+    // Dropdown change listener for the Overlay structure
+    const displayDropdown = document.getElementById('displayDropdown');
+    displayDropdown.addEventListener('click', (event) => {
+        if (event.target.classList.contains('option')) {
+            selectedDisplay = event.target.textContent;
+            loadImages();
+        }
+    });
+    // function to load the images in the correct overlay
+    async function loadImages(){
+        let volumes;
+        if(selectedDisplay == "AI Diagnosis"){
+            volumes = await loadImageWithMask(selectedFormatMask, selectedFormatMri, diagnosisID);
+        }
+        else if(selectedDisplay == "My Diagnosis"){
+            volumes = await loadImageWithDiagnosis(diagnosisID, selectedFormatMri);
+        }
+        else if(selectedDisplay == "Show Overlay"){
+            volumes = await loadOverlayDAI(selectedFormatMask, selectedFormatMri, diagnosisID);
+        }
+        nv.loadVolumes(volumes);
+    };
 
 
     // Zoom
