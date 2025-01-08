@@ -141,5 +141,50 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     })
 
+
+    //confidence meter window 
+    
+    const confirmButton = document.querySelector('.popupConfirm');
+    const confidenceSlider = document.getElementById('confidenceMeter');
+
+    // Listener for the confirmation button
+    confirmButton.addEventListener('click', () => {
+        const confidenceValue = confidenceSlider.value; 
+        endDiagnosis(confidenceValue);
+    });
+
+    async function endDiagnosis(confidenceValue){
+        await sendConfidence(confidenceValue, diagnosisID, csrfToken);
+        await endTimer('Confidence confirmed', startTime, diagnosisID, csrfToken);
+        await savedEditedImage(nv, diagnosisID, csrfToken);
+        window.location.assign(`/image/AIpage/${diagnosisID}`)
+    }
+
+    const finishButton = document.getElementById("finishButton");
+    const popupOverlay = document.getElementById("popupOverlay");
+    const closePopup = document.getElementById("closePopup");
+    const popupFrame = document.getElementById("popupFrame");
+
+    popupOverlay.style.display = "none";
+
+    // Function to show the confidence window
+    finishButton.addEventListener("click", () => {
+        popupOverlay.style.display = "flex";
+        popupFrame.style.display = "block";
+        startTimer();
+    });
+
+    // Functions to close the confidence window
+    closePopup.addEventListener("click", () => {
+        popupOverlay.style.display = "none";
+        endTimer('Aborted confidence', startTime, diagnosisID, csrfToken);
+    });
+
+    popupOverlay.addEventListener("click", (e) => {
+        if (e.target === popupOverlay) {
+            popupOverlay.style.display = "none";
+            endTimer('Aborted confidence', startTime, diagnosisID, csrfToken);
+        }
+    })
 });
 

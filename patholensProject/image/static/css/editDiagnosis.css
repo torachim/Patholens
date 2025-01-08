@@ -71,7 +71,9 @@ body {
 }
 
 .toolButton:active {
-    transform: translateY(2px);
+    transform: translateY(2px) scale(1.01);
+    background-color: #ffffff;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.4);
 }
 
 #selectTool i {
@@ -169,7 +171,6 @@ body {
     
 }
 
-
 /*list of entries of the dropdown*/
 .dropdown .options {
     position: absolute;
@@ -224,7 +225,6 @@ body {
     color: #fff;  
 }
 
-
 /*finnish diagnosis button*/
 .finishDiagnosisButton {
     position: fixed; 
@@ -261,6 +261,31 @@ body {
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4); 
 }
 
+/* comparison images at the bottom of the page */
+#comparisonContainer{
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);    
+    width: 50%;
+    height: 24%;
+    background-color: #434343;
+}
+
+#zoomButton{
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    width: 40px;
+    height: 34px;
+    cursor: pointer;
+}
+
+#compareAndDropdownContainer{
+    margin-top: 2%;
+    display: flex;
+    flex-direction: row;
+    height: 25%;
+}
 
 /* Pop up for the confidence */
 .popupOverlay {
@@ -271,11 +296,10 @@ body {
     height: 100%;
     background: rgba(0, 0, 0, 0.7); 
     backdrop-filter: blur(8px); 
-    display: none;
-    display: flex;
     justify-content: center;
     align-items: center;
 }
+
 
 .popupFrame {
     position: relative;
@@ -286,7 +310,9 @@ body {
     height: 275px;
     text-align: center;
     align-items: center;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);  
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+    display: none;
+    
 }
 
 .popupFrame p {
@@ -294,9 +320,11 @@ body {
     color: white;
     font-size: 20px;
     margin-top: 50px;
+
 }
 
 .popupClose {
+  
     position: absolute; 
     top: 10px;
     right: 10px;
@@ -326,10 +354,20 @@ body {
     bottom: 60px;
     left: 50%;
     transform: translateX(-50%);
+    transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
+
 .popupConfirm:hover {
-    background-color: #008a91;  
+    background-color:#02bbc5; 
+    transform: translateX(-50%) scale(1.005); 
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3); 
+}
+
+.popupConfirm:active {
+    background-color: #029da5; 
+    transform: translateX(-50%) scale(0.95);
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); 
 }
 
 /* Confidence meter to enter your confidence */
@@ -340,6 +378,7 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
 }
+
 
 .confidenceMeter {
     width: 100%;
@@ -361,7 +400,7 @@ body {
     background: #D9D9D9;
     border: none;
     cursor: pointer;
-    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3); 
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);   
 }
 
 /* Value of the confidence */
@@ -376,31 +415,5 @@ body {
     padding: 5px;
     border-radius: 5px;
     visibility: hidden; 
-    white-space: nowrap;  
+    white-space: nowrap;   
 }  
-
-/* comparison images at the bottom of the page */
-#comparisonContainer{
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);    
-    width: 50%;
-    height: 24%;
-    background-color: #434343;
-}
-
-#zoomButton{
-    position: absolute;
-    bottom: 5px;
-    right: 5px;
-    width: 40px;
-    height: 34px;
-    cursor: pointer;
-}
-
-#compareAndDropdownContainer{
-    margin-top: 2%;
-    display: flex;
-    flex-direction: row;
-    height: 25%;
-}

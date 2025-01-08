@@ -81,7 +81,28 @@
     <button type="button" id="finishButton">Finish Diagnosis</button>
 </div>
 
+<div class="popupOverlay" id="popupOverlay">
+    <div class="popupFrame" id="popupFrame">
+        
+        <button class="popupClose" id="closePopup">&times;</button>
+        
+        <p>Please state your confidence</p>
 
+        <div class="confidenceMeterContainer">
+            
+            <input type="range" class="confidenceMeter" min="0" max="100" value="50" id="confidenceMeter">
+  
+
+            <div class="tooltip" id="tooltip">50</div>
+        </div>
+
+        <button class="popupConfirm" id="popupConfirm">Confirm</button>
+    </div>
+</div>
+
+<script>
+    
+</script>
 <script>
     const diagnosisID = '{{ diagnosisID }}'
   </script>
