@@ -93,14 +93,35 @@ def setConfidence(diagID: str, confidenceType: ConfidenceType, keyValues: list[d
     
     diagObj = getDiagnosisObject(diagID)
     if not diagObj:
-        returnValue.update({"status": "Error", "message": "Diagnosis not found."})
-
-    # Converts the confidenceType.value (string) to a attribute from Diagnosis
-    # None if a matching attribute is not found
-    attribute = getattr(Diagnosis, confidenceType.value, None)
-    if not attribute:
-        returnValue.update({"status": "Error", "message": "Confidencetype was not found."})
+        returnValue.update({"status": False, "message": "Diagnosis not found."})
+        return returnValue
     
+    if type(confidenceType) != ConfidenceType:
+        returnValue.update({"status": False, "message": "Not confidence Typ"})
+        return returnValue 
+    
+    # One of the confidence attributes in Diagnosis
+    attribute = confidenceType.value
+    
+    # If the value of attribute is not a attribute in Diagnosis
+    if not hasattr(Diagnosis, attribute):
+        returnValue.update({"status": False, "message": "Confidencetype was not found."})
+        return returnValue
+    
+    
+    alreadySavedConfidences = getattr(diagObj, attribute, None)
+    alreadySavedConfidences = alreadySavedConfidences if alreadySavedConfidences else {}
+    
+    for lesions in keyValues:
+        alreadySavedConfidences.update(lesions)
+    
+    # Dynamically set the attribute of diagObj to updated savedValues 
+    setattr(diagObj, attribute, alreadySavedConfidences)
+    diagObj.save()
+
+    returnValue.update({"status": True, "message": "New Values where saved."})
+    return returnValue
+
     
     
     

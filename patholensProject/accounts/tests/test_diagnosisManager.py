@@ -40,7 +40,15 @@ class TestDiagnosisManager(unittest.TestCase):
 
     def testSetConfidence(self):
         
-        setConfidence(self.diag.diagID, ConfidenceType.firstConfidence, [{}])
+        self.diag.confidence = {"Lesion0": 1}
+        self.diag.save()        
+        
+        returnValue = setConfidence(self.diag.diagID, ConfidenceType.editedConfidence, [{"Lesion2": 10}, {"Lesion1": 9}])
+        
+        print(returnValue["status"])
+        print(returnValue["message"])
+        diag = getDiagnosisObject(self.diag.diagID)
+        print(diag.confidenceOfEditedDiag)
             
     # is called last
     def tearDown(self):
