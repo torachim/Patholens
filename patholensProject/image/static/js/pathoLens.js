@@ -136,8 +136,6 @@ export function drawRectangleNiivue(nv, data){
     rectangleTL = topLeft;
     rectangleTR = topRight;
 
-    console.log(rectangleBL)
-
     corAx = newAxCor;
     
     // refresh the drawing
@@ -162,8 +160,6 @@ export function drawCubeNV(nv, data){
     let voxStartUpEdge, voxStartDownEdge, voxEndUpEdge, voxEndDownEdge;
     let topLeftD, topRightD, bottomLeftD, bottomRightD;
 
-    console.log(rectangleBL)
-
     topLeftD = { ...rectangleTL };
     topRightD = { ...rectangleTR };
     bottomLeftD = { ...rectangleBL };
@@ -175,8 +171,6 @@ export function drawCubeNV(nv, data){
     voxStartDownEdge = (comparePoints(voxStart, rectangleBL, axCorSag) || comparePoints(voxStart, rectangleBR, axCorSag));
     voxEndUpEdge = (comparePoints(voxEnd, rectangleTL, axCorSag) || comparePoints(voxEnd, rectangleTR, axCorSag));
     voxEndDownEdge = (comparePoints(voxEnd, rectangleBL, axCorSag) || comparePoints(voxEnd, rectangleBR, axCorSag));
-
-    console.log(voxEndDownEdge, voxEndUpEdge, voxStartDownEdge, voxStartUpEdge);
 
     if(voxStartUpEdge || voxStartDownEdge || voxEndUpEdge || voxEndDownEdge){
 
@@ -231,6 +225,8 @@ export function drawCubeNV(nv, data){
         nv.drawPenLine(topLeftD, bottomLeftD, colourValue);
         nv.drawPenLine(bottomLeftD, bottomRightD, colourValue);
 
+        nv.refreshDrawing(true);
+
         fillRectangle(nv, rectangleBL, rectangleBR, bottomLeftD, bottomRightD);
         fillRectangle(nv, rectangleTL, rectangleTR, topLeftD, topRightD);
         fillRectangle(nv, rectangleBL, rectangleTL, bottomLeftD, topLeftD);
@@ -270,9 +266,6 @@ function comparePoints(ptA, ptB, corAx){
 
     switch(corAx){
         case(0): {
-            console.log(xA - 4, xB, xA + 4)
-            console.log(yA-4, yB, yA + 4)
-            console.log(((xA - 4 <= xB) && (xB <= xA + 4))&&((yA -4 <= yB) && (yB <= yA + 4)));
             if(((xA - 4 <= xB) && (xB <= xA + 4))&&((yA -4 <= yB) && (yB <= yA + 4))){
                 isNear = true;
             }
@@ -282,9 +275,6 @@ function comparePoints(ptA, ptB, corAx){
             break
         }
         case(1): {
-            console.log(xA - 4, xB, xA + 4)
-            console.log(zA-4, zB, zA + 4)
-            console.log((xA - 4 <= xB) && ((xB<= xA + 4))&&((zA - 4 <= zB) && (zB <= zA + 4)));
             if((xA - 4 <= xB) && ((xB<= xA + 4))&&((zA - 4 <= zB) && (zB <= zA + 4))){
                 isNear = true;
             }
@@ -294,9 +284,6 @@ function comparePoints(ptA, ptB, corAx){
             break
         }
         case(2): {
-            console.log(zA - 4, zB, zA + 4)
-            console.log(yA-4, yB, yA + 4)
-            console.log(((yA - 4 <= yB) && (yB <= yA + 4))&&((zA - 4 <= zB) && (zB <= zA + 4)));
             if(((yA - 4 <= yB) && (yB <= yA + 4))&&((zA - 4 <= zB) && (zB <= zA + 4))){
                 isNear = true
             }
@@ -309,10 +296,16 @@ function comparePoints(ptA, ptB, corAx){
     return isNear;
 }
 
-
+/**
+ * Fill a rectangle in 3D volume
+ * @param {Niivue} nv - Niivue instance
+ * @param {Array} PtBL - Bottom-Left point of a rectangle [x, y, z]
+ * @param {Array} PtBR - Bottom-Right point of a rectangle [x, y, z]
+ * @param {Array} PtTL  - Top-Left point of a rectangle [x, y, z]
+ * @param {Array} PtTR  - Top-Right point of a rectangle [x, y, z]
+ */
 function fillRectangle(nv, PtBL, PtBR, PtTL, PtTR){
     const colourValue = 3;
-    console.log(PtBL, PtBR, PtTL, PtTR)
     nv.setPenValue(colourValue);
 
     const xMin = Math.min(PtBL[0], PtBR[0], PtTR[0], PtTL[0]);
@@ -323,8 +316,6 @@ function fillRectangle(nv, PtBL, PtBR, PtTL, PtTR){
     const zMax = Math.max(PtBL[2], PtBR[2], PtTR[2], PtTL[2]);
 
     if(PtBL[0] == PtTR[0]){
-        console.log(0)
-
         for(let i = yMin; i < yMax; i++){
             for(let j = zMin; j < zMax; j++){
                 nv.drawPt(PtBL[0], i, j, colourValue);
@@ -332,8 +323,6 @@ function fillRectangle(nv, PtBL, PtBR, PtTL, PtTR){
         }
     }
     else if(PtBL[1] == PtTR[1]){
-        console.log(1);
-        console.log(PtBL[0], PtBR[0], PtBL[2], PtTL[2]);
         for(let i = xMin; i < xMax; i++){
             for(let j = zMin; j < zMax; j++){
                 nv.drawPt(i, PtBL[1], j, colourValue);
@@ -341,8 +330,6 @@ function fillRectangle(nv, PtBL, PtBR, PtTL, PtTR){
         }
     }
     else{
-        console.log(2);
-        console.log(PtBL[0], PtBR[0], PtBL[1], PtTL[1])
         for(let i = xMin + 1; i < xMax; i++){
             for(let j = yMin; j < yMax; j++){
                 console.log("hallo")
