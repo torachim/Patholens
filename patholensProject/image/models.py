@@ -12,7 +12,7 @@ class Diagnosis(models.Model):
     # media folder to imageURL
     mediaFolder = models.ForeignKey("image.Media", on_delete=models.SET_NULL, null=True, default=None, verbose_name="Dataset")
     
-    # contains the number of the patient and the name of the data set
+    # unique int form the namen of the sub
     imageURL = models.CharField(null=False, max_length=20, default="Unknown", verbose_name="Url to the picture")
     
     confidence = models.JSONField(null=True, verbose_name="Confidence for the marked lesions")

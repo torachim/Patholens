@@ -2,7 +2,7 @@ import os
 import sys
 import django
 from pathlib import Path
-
+from enum import Enum, unique
 # Add project path (root directory where manage.py is located)
 sys.path.append(str(Path(__file__).resolve().parent.parent))
 
@@ -16,6 +16,12 @@ django.setup()
 from image.models import Diagnosis, Media
 from accounts.models import Doctors
 
+@unique
+class ConfidenceType(Enum):
+    firstConfidence = "confidence"
+    editedConfidence = "confidenceOfEditedDiag"
+    aiConfidence = "confidenceOfAIdiag"
+    
 
 def createDiagnosis(diagID: str, docObject: int, imageURL: str, mediaFolderObject: Media):
     """
@@ -42,7 +48,6 @@ def createDiagnosis(diagID: str, docObject: int, imageURL: str, mediaFolderObjec
 
     return diag
 
-
 def getURL(diagID: str):
     """
     Returns the url from the diagnosis.
@@ -60,7 +65,6 @@ def getURL(diagID: str):
     url = diagObject.imageURL
 
     return url
-
 
 def getDiagnosisObject(diagID: str):
     """
@@ -84,4 +88,21 @@ def getDiagnosisObject(diagID: str):
     diagnosis = Diagnosis.objects.get(diagID=diagID)
     return diagnosis
 
+def setConfidence(diagID: str, confidenceType: ConfidenceType, keyValues: list[dict]) -> dict:
+    returnValue = {"status": None, "message": None}
     
+    diagObj = getDiagnosisObject(diagID)
+    if not diagObj:
+        returnValue.update({"status": "Error", "message": "Diagnosis not found."})
+
+    # Converts the confidenceType.value (string) to a attribute from Diagnosis
+    # None if a matching attribute is not found
+    attribute = getattr(Diagnosis, confidenceType.value, None)
+    if not attribute:
+        returnValue.update({"status": "Error", "message": "Confidencetype was not found."})
+    
+    
+    
+    
+
+
