@@ -54,8 +54,7 @@ export function drawRectangleNiivue(nv, data){
     // these rect corners will be set based on the plane the drawing was created in 
     let topLeft, topRight, bottomLeft, bottomRight
     let topLeftO, topRightO, bottomLeftO, bottomRightO
-
-
+    let newAxCor;
 
     switch(axCorSag){
         case(0):{
@@ -75,7 +74,8 @@ export function drawRectangleNiivue(nv, data){
             bottomLeftO = [minX - 1, maxY + 1, fixedZ]
             bottomRightO = [maxX + 1, maxY + 1, fixedZ]
 
-            newCorAx = 0;
+            newAxCor = 0;
+
             break;
         }
         case (1) :{
@@ -95,7 +95,8 @@ export function drawRectangleNiivue(nv, data){
             bottomLeftO = [minX - 1, fixedY, maxZ + 1]
             bottomRightO = [maxX + 1, fixedY, maxZ + 1]
 
-            newCorAx = 1;
+            newAxCor = 1;
+
             break;
         }
         case(2) :{
@@ -115,7 +116,8 @@ export function drawRectangleNiivue(nv, data){
             bottomLeftO = [fixedX, minY - 1, maxZ + 1]
             bottomRightO = [fixedX, maxY + 1, maxZ + 1]
 
-            newCorAx = 2;
+            newAxCor = 2;
+
             break;
         }
     }
@@ -136,7 +138,9 @@ export function drawRectangleNiivue(nv, data){
     rectangleTL = topLeftO;
     rectangleTR = topRightO;
 
-    corAx = newCorAx;
+    console.log(rectangleBL)
+
+    corAx = newAxCor;
     
     // refresh the drawing
     nv.refreshDrawing(true) // true will force a redraw of the entire scene (equivalent to calling drawScene() in niivue)
@@ -144,88 +148,100 @@ export function drawRectangleNiivue(nv, data){
     return true;
 }
 
-export function drawCube(nv, data){
-    const colourValue = 3 // blue
-    nv.setPenValue(colourValue) 
 
-    const { voxStart, voxEnd, axCorSag } = data
-    // these rect corners will be set based on the plane the drawing was created in 
-    let topLeft, topRight, bottomLeft, bottomRight
-    let topLeftO, topRightO, bottomLeftO, bottomRightO
-    let enableCubic;
-    let newCorAx
+export function drawCubeNV(nv, data){
 
-    switch(axCorSag){
-        case(0):{
-            // axial view: Z is fixed, vary X and Y
-            const minX = Math.min(voxStart[0], voxEnd[0])
-            const maxX = Math.max(voxStart[0], voxEnd[0])
-            const minY = Math.min(voxStart[1], voxEnd[1])
-            const maxY = Math.max(voxStart[1], voxEnd[1])
-            const fixedZ = voxStart[2]
-            topLeft = [minX, minY, fixedZ]
-            topRight = [maxX, minY, fixedZ]
-            bottomLeft = [minX, maxY, fixedZ]
-            bottomRight = [maxX, maxY, fixedZ]
+    const colourValue = 3;
+    nv.setPenValue(colourValue);
 
-            topLeftO = [minX - 1, minY - 1, fixedZ]
-            topRightO = [maxX + 1, minY - 1, fixedZ]
-            bottomLeftO = [minX - 1, maxY + 1, fixedZ]
-            bottomRightO = [maxX + 1, maxY + 1, fixedZ]
+    const { voxStart, voxEnd, axCorSag } = data;
 
+    let voxStartUpEdge, voxStartDownEdge, voxEndUpEdge, voxEndDownEdge;
+    let topLeftD, topRightD, bottomLeftD, bottomRightD;
 
+    console.log(rectangleBL)
 
-            newCorAx = 0;
+    topLeftD = { ...rectangleTL };
+    topRightD = { ...rectangleTR };
+    bottomLeftD = { ...rectangleBL };
+    bottomRightD = { ...rectangleBR};
 
-            break;
-        }
-        case (1) :{
-            // coronal view: Y is fixed, vary X and Z
-            const minX = Math.min(voxStart[0], voxEnd[0])
-            const maxX = Math.max(voxStart[0], voxEnd[0])
-            const minZ = Math.min(voxStart[2], voxEnd[2])
-            const maxZ = Math.max(voxStart[2], voxEnd[2])
-            const fixedY = voxStart[1]
-            topLeft = [minX, fixedY, minZ]
-            topRight = [maxX, fixedY, minZ]
-            bottomLeft = [minX, fixedY, maxZ]
-            bottomRight = [maxX, fixedY, maxZ]
+    let depth;
 
-            topLeftO = [minX - 1, fixedY, minZ - 1]
-            topRightO = [maxX + 1, fixedY, minZ - 1]
-            bottomLeftO = [minX - 1, fixedY, maxZ + 1]
-            bottomRightO = [maxX + 1, fixedY, maxZ + 1]
+    voxStartUpEdge = (comparePoints(voxStart, rectangleTL, axCorSag) || comparePoints(voxStart, rectangleTR, axCorSag));
+    voxStartDownEdge = (comparePoints(voxStart, rectangleBL, axCorSag) || comparePoints(voxStart, rectangleBR, axCorSag));
+    voxEndUpEdge = (comparePoints(voxEnd, rectangleTL, axCorSag) || comparePoints(voxEnd, rectangleTR, axCorSag));
+    voxEndDownEdge = (comparePoints(voxEnd, rectangleBL, axCorSag) || comparePoints(voxEnd, rectangleBR, axCorSag));
 
-            newCorAx = 1;
+    if(voxStartUpEdge || voxStartDownEdge || voxEndUpEdge || voxEndDownEdge){
 
-            break;
-        }
-        case(2) :{
-            // sagittal view: X is fixed, vary Y and Z
-            const minY = Math.min(voxStart[1], voxEnd[1])
-            const maxY = Math.max(voxStart[1], voxEnd[1])
-            const minZ = Math.min(voxStart[2], voxEnd[2])
-            const maxZ = Math.max(voxStart[2], voxEnd[2])
-            const fixedX = voxStart[0]
-            topLeft = [fixedX, minY, minZ]
-            topRight = [fixedX, maxY, minZ]
-            bottomLeft = [fixedX, minY, maxZ]
-            bottomRight = [fixedX, maxY, maxZ]
-
-            topLeftO = [fixedX, minY - 1, minZ - 1] 
-            topRightO = [fixedX, maxY + 1, minZ - 1]
-            bottomLeftO = [fixedX, minY - 1, maxZ + 1]
-            bottomRightO = [fixedX, maxY + 1, maxZ + 1]
-
-            enableCubic = (comparePoints(topLeftO, rectangleTL, axCorSag) || comparePoints(topRightO, rectangleTR, axCorSag) || comparePoints(bottomLeftO, rectangleBL, axCorSag) || comparePoints(bottomRightO, rectangleBR, axCorSag));
-            newCorAx = 2;
-
-            break;
+        switch(corAx){
+            case(0):{
+                if(Math.abs(voxStart[2] - rectangleTR[2]) < Math.abs(voxEnd[2] - rectangleTR[2])){
+                    depth = voxEnd[2] - voxStart[2];
+                }
+                else{
+                    depth = voxStart[2] - voxEnd[2];
+                }
+                topLeftD[2] = topLeftD[2] + depth;
+                topRightD[2] = topRightD[2] + depth;
+                bottomLeftD[2] = bottomLeftD[2] + depth;
+                bottomRightD[2] = bottomRightD[2] + depth;
+                break;
+            }
+            case(1):{
+                if(Math.abs(voxStart[1] - rectangleTR[1]) < Math.abs(voxEnd[1] - rectangleTR[1])){
+                    depth = voxEnd[1] - voxStart[1];
+                }
+                else{
+                    depth = voxStart[1] - voxEnd[1];
+                }
+                topLeftD[1] = topLeftD[1] + depth;
+                topRightD[1] = topRightD[1] + depth;
+                bottomLeftD[1] = bottomLeftD[1] + depth;
+                bottomRightD[1] = bottomRightD[1] + depth;
+                break;
+            }
+            case(2):{
+                if(Math.abs(voxStart[0] - rectangleTR[0]) < Math.abs(voxEnd[0] - rectangleTR[0])){
+                    depth = voxEnd[0] - voxStart[0];
+                }
+                else{
+                    depth = voxStart[0] - voxEnd[0];
+                }
+                topLeftD[0] = topLeftD[0] + depth;
+                topRightD[0] = topRightD[0] + depth;
+                bottomLeftD[0] = bottomLeftD[0] + depth;
+                bottomRightD[0] = bottomRightD[0] + depth;
+                break;
+            }
         }
 
+        console.log(rectangleBL)
+        console.log(rectangleBR)
+        console.log(rectangleTL)
+        console.log(rectangleTR)
+        console.log(bottomLeftD)
+        console.log(bottomRightD)
+        console.log(topLeftD)
+        console.log(topRightD)
 
+        nv.drawPenLine(rectangleTL, topLeftD, colourValue);
+        nv.drawPenLine(rectangleTR, topRightD, colourValue);
+        nv.drawPenLine(rectangleBL, bottomLeftD, colourValue);
+        nv.drawPenLine(rectangleBR, bottomRightD, colourValue);
+        nv.drawPenLine(topLeftD, topRightD, colourValue);
+        nv.drawPenLine(topRightD, bottomRightD, colourValue);
+        nv.drawPenLine(topLeftD, bottomLeftD, colourValue);
+        nv.drawPenLine(bottomLeftD, bottomRightD, colourValue);
+
+        nv.refreshDrawing(true);
+
+        return true;
     }
-    
+    else{
+        return false;
+    }
 }
 
 

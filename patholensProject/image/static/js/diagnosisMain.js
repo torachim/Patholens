@@ -1,5 +1,5 @@
 import { Niivue, DRAG_MODE } from "./index.js";
-import { niivueCanvas, drawRectangleNiivue,loadImageAPI, endTimer, sendConfidence, savedEditedImage, loadImageWithDiagnosis } from "./pathoLens.js";
+import { niivueCanvas, drawRectangleNiivue,loadImageAPI, endTimer, sendConfidence, savedEditedImage, loadImageWithDiagnosis, drawCubeNV } from "./pathoLens.js";
 
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -16,7 +16,11 @@ document.addEventListener('DOMContentLoaded', function() {
         //if drawing is enabled
         if (nv.opts.drawingEnabled){
             if(drawCube){
-                
+                let finishedCube;
+                finishedCube = drawCubeNV(nv, data);
+                if(!finishedCube){
+                    console.log("Huso");
+                }
             }
             else{
                 drawCube = drawRectangleNiivue(nv, data);
