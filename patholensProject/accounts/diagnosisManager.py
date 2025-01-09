@@ -105,15 +105,15 @@ def setConfidence(diagID: str, confidenceType: ConfidenceType, keyValues: list[d
         return returnValue
     
     if not isinstance(confidenceType, ConfidenceType):
-        returnValue.update({"status": False, "message": "Not confidence Typ"})
+        returnValue.update({"status": False, "message": "Not confidence type"})
         return returnValue 
     
     # One of the confidence attributes in Diagnosis
     attribute: str = confidenceType.value
     
-    # If the value of attribute is not a attribute in Diagnosis
+    # If the value of attribute is not an attribute in Diagnosis
     if not hasattr(Diagnosis, attribute):
-        returnValue.update({"status": False, "message": "Confidencetype was not found."})
+        returnValue.update({"status": False, "message": "Confidence type was not found."})
         return returnValue
     
     

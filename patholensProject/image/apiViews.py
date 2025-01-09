@@ -172,7 +172,7 @@ class SaveConfidenceAPIView(APIView):
 
             """
             # TODO: Get the name for the lesions 
-            # TODO: Know which confidence u want to save: First confidence, AI confidence, Editet confidence
+            # TODO: Know which confidence you want to save: First confidence, AI confidence, edited confidence
             """
             
             keyValue = [{"allLesions": confidence}]
@@ -182,7 +182,7 @@ class SaveConfidenceAPIView(APIView):
             if returnValue["status"]:
                 return Response({'message': 'Confidence value saved successfully via API!'}, status=status.HTTP_200_OK)
             
-            # Their was a problem
+            # There was a problem
             else:
                 return Response({'message': returnValue["message"]},status=status.HTTP_400_BAD_REQUEST)
 
