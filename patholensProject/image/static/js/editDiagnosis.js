@@ -19,97 +19,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Add drawing state to history
-    function saveDrawingState() {
-        nvMain.drawAddUndoBitmap();
-    }
 
-    /**
-     * 
-     * @param {int} mode
-     * - 0 = Eraser, 4 = yellow, 6 = purple
-     * @param {boolean} filled
-     * True => drawn shape will be filled
-     */
-    function changeDrawingMode(mode, filled){
-        nvMain.setPenValue(mode, filled);
-    }
-
-    // Pixel
-    document.getElementById("selectTool").addEventListener("click", function(e){
-        drawRectangle = false;
-        erasing = false;
-        startTimer()
-        saveDrawingState();
-        nvMain.setDrawingEnabled(true);  
-        changeDrawingMode(6, false);
-    });
-        
-  // disables drawing after a Pixel is marked
-        document.getElementById("imageBrain").addEventListener("mouseup", disableDrawing)
-    
-        // disables drawing
-        function disableDrawing(){
-            if(!drawRectangle && !erasing){
-                endTimer('Freehand drawing', startTime, diagnosisID, csrfToken)
-            }
-            else if(!drawRectangle && erasing){
-                endTimer('Erasing', startTime, diagnosisID, csrfToken)
-                erasing = false
-            }
-            nvMain.setDrawingEnabled(false);
-        } 
-    
-     // disables drawing after a Pixel is marked
-     document.getElementById("imageBrain").addEventListener("mouseup", disableDrawing)
-    
-     // disables drawing
-     function disableDrawing(){
-         if(!drawRectangle && !erasing){
-             endTimer('Freehand drawing', startTime, diagnosisID, csrfToken)
-         }
-         else if(!drawRectangle && erasing){
-             endTimer('Erasing', startTime, diagnosisID, csrfToken)
-             erasing = false
-         }
-         nv.setDrawingEnabled(false);
-     } 
-        
-        // enables erasing the drawing by clicking on eraser
-    document.getElementById("eraseTool").addEventListener("click", function(e){
-        erasing = true;
-        drawRectangle = false;
-        startTimer();
-        saveDrawingState();
-        nvMain.setDrawingEnabled(true);
-        // 0 = Eraser and true => eraser ist filled so a whole area can be erased
-        changeDrawingMode(0, true);
-       
-    });
-
-    // enable rectangle drawing when the corresponding button in html is clicked
-    document.getElementById("frameTool").addEventListener("click", function () {
-        startTimer()
-        saveDrawingState();
-        nvMain.setDrawingEnabled(true);
-        nvMain.opts.dragMode = DRAG_MODE.callbackOnly;  // Draw rectangle only when dragging
-        nv.opts.onDragRelease = onDragRelease;      // Set callback for rectangle drawing
-    });
-
-    // Undo the drawing/erasing
-    document.getElementById("undoTool").addEventListener("click", function (e) {
-        nvMain.drawUndo();
-    })
-    
-    // Function to start the timer 
-    function startTimer(){
-        startTime = performance.now();
-    }
 
     //Loading Images for the zoom Frame
 
     const canvas = document.getElementById("imageBrain");
     const nv = niivueCanvas({}, canvas);
+
     const canvasMain = document.getElementById("imageBrainMain");
     const nvMain = niivueCanvas({
         onDragRelease: onDragRelease,
@@ -124,6 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let selectedFormatMask = "DEEPFCD";
     let selectedFormatMri = "FLAIR"
     let selectedDisplay = "AI Diagnosis"
+    let selectedFormat = "FLAIR";
 
     const aiModelMapping = {
         "Model A": "DEEPFCD",
@@ -133,7 +50,8 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     loadImages();
-    
+    loadImage();
+
     // Dropdown change listener for the AI Mask
     const aiDropdown = document.getElementById('AIdropdown');
     aiDropdown.addEventListener('click', (event) => {
@@ -178,13 +96,80 @@ document.addEventListener('DOMContentLoaded', function() {
     
      //loading Images for the main Frame
 
-    let selectedFormat = "FLAIR";
-    
-    loadImage();
     async function loadImage() {
         const volumes = await loadImageAPI(selectedFormat, diagnosisID);
         nvMain.loadVolumes(volumes);
     }
+
+
+     // Add drawing state to history
+     function saveDrawingState() {
+        nvMain.drawAddUndoBitmap();
+    }
+
+    /**
+     * 
+     * @param {int} mode
+     * - 0 = Eraser, 4 = yellow, 6 = purple
+     * @param {boolean} filled
+     * True => drawn shape will be filled
+     */
+    function changeDrawingMode(mode, filled){
+        nvMain.setPenValue(mode, filled);
+    }
+
+    // Pixel
+    document.getElementById("selectTool").addEventListener("click", function(e){
+        drawRectangle = false;
+        erasing = false;
+        startTimer()
+        saveDrawingState();
+        nvMain.setDrawingEnabled(true);  
+        changeDrawingMode(6, false);
+    });
+        
+  // disables drawing after a Pixel is marked
+    document.getElementById("imageBrainMain").addEventListener("mouseup", disableDrawing)
+       
+    // disables drawing
+    function disableDrawing(){
+        if(!drawRectangle && !erasing){
+            endTimer('Freehand drawing', startTime, diagnosisID, csrfToken)
+        }
+        else if(!drawRectangle && erasing){
+            endTimer('Erasing', startTime, diagnosisID, csrfToken)
+            erasing = false
+        }
+        nvMain.setDrawingEnabled(false);
+    } 
+        
+        
+        // enables erasing the drawing by clicking on eraser
+    document.getElementById("eraseTool").addEventListener("click", function(e){
+        erasing = true;
+        drawRectangle = false;
+        startTimer();
+        saveDrawingState();
+        nvMain.setDrawingEnabled(true);
+        // 0 = Eraser and true => eraser ist filled so a whole area can be erased
+        changeDrawingMode(0, true);
+       
+    });
+
+    // enable rectangle drawing when the corresponding button in html is clicked
+    document.getElementById("frameTool").addEventListener("click", function () {
+        startTimer()
+        saveDrawingState();
+        nvMain.setDrawingEnabled(true);
+        nvMain.opts.dragMode = DRAG_MODE.callbackOnly;  // Draw rectangle only when dragging
+        nvMain.opts.onDragRelease = onDragRelease;      // Set callback for rectangle drawing
+    });
+
+    // Function to start the timer 
+    function startTimer(){
+        startTime = performance.now();
+    }
+    
 
 
     // Zoom
@@ -302,9 +287,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     })
 
+    // Undo the drawing/erasing
+    document.getElementById("undoTool").addEventListener("click", function (e) {
+        nvMain.drawUndo();
+    })
     
      // save image if logged out
      document.getElementById("logoutButton").addEventListener("click", savedEditedImage(nv, diagnosisID, csrfToken));
 });
 
-//Test 2
+//Test 7
