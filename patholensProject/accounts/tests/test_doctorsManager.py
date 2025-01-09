@@ -3,27 +3,33 @@ from doctorManager import *
 from diagnosisManager import *
 import unittest
 from django.contrib.auth.models import User
-
+import uuid
 
 class TestDoctorsManager(unittest.TestCase):
 
     # is called first
     def setUp(self):
+        
+        generatedUsername = f"lukaTest_{uuid.uuid4().hex}ATgmailPOINTcom"
+        generateEmail = generatedUsername.replace("AT", "@").replace("POINT", ".")
+        firstName = f"FirstName{uuid.uuid4().hex}"
+        secondName = f"SeconName{uuid.uuid4().hex}"
+        
         # Create a test user
         self.testUser = User.objects.create_user(
-            username="luka364sTestffeATgmailPOINTcom",
-            email="lukas364Testeff@gmail.com",
-            first_name="NameVomLeefuggasZTEftw",
-            last_name="GehtDichNefefichtsAndedfdef",
-            password="Ultimatives5HeadPasfefeswordChristophMagEsNicht",
+            username=generatedUsername,
+            email=generateEmail,
+            first_name=firstName,
+            last_name=secondName,
+            password="Hallo1234",
         )
         self.doc = createDoctor(self.testUser)
 
     @unittest.skip
-    def testCreateDoctor(self):
+    def test_CreateDoctor(self):
         self.doc = createDoctor(self.testUser)
 
-    def testRandomPicture(self):
+    def test_RandomPicture(self):
         idFromTestUser = self.doc.doctorID
         print(getRandomURL(idFromTestUser, "websiteData"))
 
