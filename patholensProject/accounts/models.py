@@ -9,8 +9,6 @@ class Doctors(models.Model):
     doctorID = models.OneToOneField(
         settings.AUTH_USER_MODEL, primary_key=True, on_delete=models.CASCADE
     )
-    # will get the id of the diagnosis
-    activePatient = models.CharField(null=True, max_length=50)
 
     finishedPatients = models.JSONField(null=True)
     

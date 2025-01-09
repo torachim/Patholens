@@ -3,11 +3,9 @@ from django.http import JsonResponse
 from rest_framework.response import Response
 from rest_framework import status
 from django.conf import settings
-from .models import Diagnosis
 import os
-from accounts.diagnosisManager import getURL
+from accounts.diagnosisManager import getURL, ConfidenceType, setConfidence
 from .timeHandler import setUseTime
-from image.models import Diagnosis
 
 
 class GetImageAPIView(APIView):
@@ -31,7 +29,7 @@ class GetImageAPIView(APIView):
             Path: The path to find the requested image
         """
         try:
-            imageFormat = request.GET.get("format")
+            imageFormat = request.GET.get("format ")
             if not imageFormat:
                 imageFormat = "FLAIR"
 
@@ -171,17 +169,22 @@ class SaveConfidenceAPIView(APIView):
             if confidence is None or not (0 <= int(confidence) <= 10):
                 return Response({'error': 'Invalid confidence value. It must be between 0 and 10.'}, status=status.HTTP_400_BAD_REQUEST)
 
-            if not Diagnosis.objects.filter(diagID=diagID).exists():
-                return Response(
-                    {'error': f'Diagnosis with diagID {diagID} does not exist.'},
-                    status=status.HTTP_404_NOT_FOUND
-                )
-            diag = Diagnosis.objects.get(diagID=diagID)
-            # store confidence value
-            diag.confidence = int(confidence)
-            diag.save()
+            """
+            # TODO: Get the name for the lesions 
+            # TODO: Know which confidence u want to save: First confidence, AI confidence, Editet confidence
+            """
+            
+            keyValue = [{"allLesions": confidence}]
+            returnValue = setConfidence(diagID, ConfidenceType.firstConfidence,keyValue)
+    
+            # Successfully
+            if returnValue["status"]:
+                return Response({'message': 'Confidence value saved successfully via API!'}, status=status.HTTP_200_OK)
+            
+            # Their was a problem
+            else:
+                return Response({'message': returnValue["message"]},status=status.HTTP_400_BAD_REQUEST)
 
-            return Response({'message': 'Confidence value saved successfully via API!'}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({'error': f'An unexpected error occurred: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 

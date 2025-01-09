@@ -170,7 +170,6 @@ def finishedDatasets(docID: str):
         list: A list of dataset names where all patients have been completed.
     """
     
-    
     docObject = getDoctorObject(docID)
 
     datasetNamesAndURL = docObject.finishedPatients

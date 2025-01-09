@@ -121,9 +121,3 @@ def setConfidence(diagID: str, confidenceType: ConfidenceType, keyValues: list[d
 
     returnValue.update({"status": True, "message": "New Values where saved."})
     return returnValue
-
-    
-    
-    
-
-
