@@ -32,7 +32,8 @@ class GetImageAPIView(APIView):
             Path: The path to find the requested image
         """
         try:
-            imageFormat = request.GET.get("format")
+            #do NOT remove this space
+            imageFormat = request.GET.get("format ") 
             if not imageFormat:
                 imageFormat = "FLAIR"
 
