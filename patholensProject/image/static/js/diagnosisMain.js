@@ -19,11 +19,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 let finishedCube;
                 finishedCube = drawCubeNV(nv, data);
                 if(!finishedCube){
-                    console.log("Huso");
+                    alert("Please finish your cuboid first");
+                }
+                else{
+                    endTimer("Cuboid", startTime, diagnosisID, csrfToken);
+                    drawCube = false;
                 }
             }
             else{
-                drawCube = drawRectangleNiivue(nv, data);
+                drawRectangleNiivue(nv, data);
+                drawCube = true;
                 endTimer("Rectangle", startTime, diagnosisID, csrfToken);
             }
         }

@@ -37,7 +37,6 @@ let rectangleTR = [-10, -10, -10];
 let rectangleTL = [-10, -10, -10];
 let rectangleBR = [-10, -10, -10];
 let rectangleBL = [-10, -10, -10];
-let drawCubic;
 let corAx;
 
 /**
@@ -144,11 +143,14 @@ export function drawRectangleNiivue(nv, data){
     
     // refresh the drawing
     nv.refreshDrawing(true) // true will force a redraw of the entire scene (equivalent to calling drawScene() in niivue)
-
-    return true;
 }
 
-
+/**
+ * Draw a cube when a scond rectangle is connected to the first
+ * @param {Niivue} nv - Niivue instance
+ * @param {dict} data - The data created by the drag release
+ * @returns bool
+ */
 export function drawCubeNV(nv, data){
 
     const colourValue = 3;
@@ -172,6 +174,8 @@ export function drawCubeNV(nv, data){
     voxStartDownEdge = (comparePoints(voxStart, rectangleBL, axCorSag) || comparePoints(voxStart, rectangleBR, axCorSag));
     voxEndUpEdge = (comparePoints(voxEnd, rectangleTL, axCorSag) || comparePoints(voxEnd, rectangleTR, axCorSag));
     voxEndDownEdge = (comparePoints(voxEnd, rectangleBL, axCorSag) || comparePoints(voxEnd, rectangleBR, axCorSag));
+
+    console.log(voxEndDownEdge, voxEndUpEdge, voxStartDownEdge, voxStartUpEdge);
 
     if(voxStartUpEdge || voxStartDownEdge || voxEndUpEdge || voxEndDownEdge){
 
@@ -217,15 +221,6 @@ export function drawCubeNV(nv, data){
             }
         }
 
-        console.log(rectangleBL)
-        console.log(rectangleBR)
-        console.log(rectangleTL)
-        console.log(rectangleTR)
-        console.log(bottomLeftD)
-        console.log(bottomRightD)
-        console.log(topLeftD)
-        console.log(topRightD)
-
         nv.drawPenLine(rectangleTL, topLeftD, colourValue);
         nv.drawPenLine(rectangleTR, topRightD, colourValue);
         nv.drawPenLine(rectangleBL, bottomLeftD, colourValue);
@@ -257,28 +252,40 @@ function comparePoints(ptA, ptB, corAx){
 
     switch(corAx){
         case(0): {
-            if((xA - 4 <= xB <= xA + 4)&&(yA -4 <= yB <= yA + 4)){
+            console.log(xA - 4, xB, xA + 4)
+            console.log(yA-4, yB, yA + 4)
+            console.log(((xA - 4 <= xB) && (xB <= xA + 4))&&((yA -4 <= yB) && (yB <= yA + 4)));
+            if(((xA - 4 <= xB) && (xB <= xA + 4))&&((yA -4 <= yB) && (yB <= yA + 4))){
                 isNear = true;
             }
             else{
                 isNear = false;
             }
+            break
         }
         case(1): {
-            if((xA - 4 <= xB <= xA + 4)&&(zA - 4 <= zB <= zA + 4)){
+            console.log(xA - 4, xB, xA + 4)
+            console.log(zA-4, zB, zA + 4)
+            console.log((xA - 4 <= xB) && ((xB<= xA + 4))&&((zA - 4 <= zB) && (zB <= zA + 4)));
+            if((xA - 4 <= xB) && ((xB<= xA + 4))&&((zA - 4 <= zB) && (zB <= zA + 4))){
                 isNear = true;
             }
             else{
                 isNear = false;
             }
+            break
         }
         case(2): {
-            if((yA - 4 <= yB <= yB + 4)&&(zA - 4 <= zB <= zA + 4)){
+            console.log(zA - 4, zB, zA + 4)
+            console.log(yA-4, yB, yA + 4)
+            console.log(((yA - 4 <= yB) && (yB <= yA + 4))&&((zA - 4 <= zB) && (zB <= zA + 4)));
+            if(((yA - 4 <= yB) && (yB <= yA + 4))&&((zA - 4 <= zB) && (zB <= zA + 4))){
                 isNear = true
             }
             else{
                 isNear = false;
             }
+            break 
         }
     }
     return isNear;
