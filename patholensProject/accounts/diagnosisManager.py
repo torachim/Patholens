@@ -18,25 +18,26 @@ from accounts.models import Doctors
 
 @unique
 class ConfidenceType(Enum):
-    firstConfidence = "confidence"
-    editedConfidence = "confidenceOfEditedDiag"
-    aiConfidence = "confidenceOfAIdiag"
+    FIRST_EDIT = "confidence"
+    SECOND_EDIT = "confidenceOfEditedDiag"
+    AI = "confidenceOfAIdiag"
     
 
-def createDiagnosis(diagID: str, docObject: int, imageURL: str, mediaFolderObject: Media):
+def createDiagnosis(diagID: str, docObject: int, imageURL: str, mediaFolderObject: Media) -> Diagnosis | bool:
     """
     Creates a new diagnosis and associates it with a specified doctor and the patient image.
 
     Args:
-        diagID (str): The unique identifier for the diagnosis.
-        docID (int): The unique identifier of the doctor diagnosing the patient.
-        imageURL (str): The URL to the image associated with the patient.
+        * diagID (str): The unique diagnosis ID.
+        * docObject (int): The unique identifier of the doctor making the diagnosis.
+        * imageURL (str): The URL to the image related to the diagnosis.
+        * mediaFolderObject (Media): The media folder object associated with the diagnosis..
+        * imageURL (str): The URL to the image associated with the patient.
 
     Returns:
-        Diagnosis: A`Diagnosis`object if the creation is successful.
-        bool: `False` if the doctor does not exist or the diagnosis ID is already taken.
+        * Diagnosis: A`Diagnosis`object if the creation is successful.
+        * bool: `False` if the doctor does not exist or the diagnosis ID is already taken.
     """
-
     # Check if the doctor exists in the database or if a diagnosis with the ID already exists
     if (
         not Doctors.objects.filter(doctorID=docObject).exists()
@@ -44,64 +45,71 @@ def createDiagnosis(diagID: str, docObject: int, imageURL: str, mediaFolderObjec
     ):
         return False
 
-    diag = Diagnosis.objects.create(diagID=diagID, doctor=docObject, imageURL=imageURL, mediaFolder=mediaFolderObject)
+    diag: Diagnosis = Diagnosis.objects.create(diagID=diagID, doctor=docObject, imageURL=imageURL, mediaFolder=mediaFolderObject)
 
     return diag
 
-def getURL(diagID: str):
+def getURL(diagID: str) -> str | None:
     """
     Returns the url from the diagnosis.
 
     Args:
-        diagID (str): Diagnosis ID
+        * diagID (str): Diagnosis ID
 
     Returns:
-        str: The url to the image of the patient (the patient number)
+        * str: The url to the image of the patient (the patient number)
     """
     if not Diagnosis.objects.filter(diagID=diagID).exists():
         return None
 
-    diagObject = Diagnosis.objects.get(diagID=diagID)
-    url = diagObject.imageURL
+    diagObject: Diagnosis = Diagnosis.objects.get(diagID=diagID)
+    url: str = diagObject.imageURL
 
     return url
 
-def getDiagnosisObject(diagID: str):
+def getDiagnosisObject(diagID: str) -> Diagnosis | bool:
     """
-    Retrieves the Diagnosis object associated with the given diagID.
-
-    This function checks if a diagnosis with the specified diagID exists in the database.
-    If the diagnosis exists, the corresponding Diagnosis object is returned.
-    If no diagnosis with the given diagID exists, the function returns False.
+    Retrieves a `Diagnosis` object based on the provided diagnosis ID.
 
     Args:
-        diagID (str): The ID of the diagnosis to retrieve.
+        * diagID (str): The unique ID of the diagnosis.
 
     Returns:
-        Diagnosis or bool: The Diagnosis object if it exists, False if no diagnosis is found.
+        * Diagnosis: The Diagnosis object if it exists.
+        * bool: False if no diagnosis is found.
     """
-    
     # Check if the diagnosis exists in the database
     if not Diagnosis.objects.filter(diagID=diagID).exists():
         return False
 
-    diagnosis = Diagnosis.objects.get(diagID=diagID)
+    diagnosis: Diagnosis = Diagnosis.objects.get(diagID=diagID)
     return diagnosis
 
 def setConfidence(diagID: str, confidenceType: ConfidenceType, keyValues: list[dict]) -> dict:
-    returnValue = {"status": None, "message": None}
+    """
+    Updates the confidence values for a specific diagnosis.
+
+    Args:
+        * diagID (str): The ID of the diagnosis to update.
+        * confidenceType (ConfidenceType): The type of confidence being updated (e.g., ai, first edit, second edit).
+        * keyValues (list[dict]): A list of key-value pairs representing the confidence values to add.
+
+    Returns:
+        * dict: A dictionary with the status of the update and a message indicating success or failure.
+    """
+    returnValue: dict = {"status": None, "message": None}
     
-    diagObj = getDiagnosisObject(diagID)
+    diagObj: Diagnosis = getDiagnosisObject(diagID)
     if not diagObj:
         returnValue.update({"status": False, "message": "Diagnosis not found."})
         return returnValue
     
-    if type(confidenceType) != ConfidenceType:
+    if not isinstance(confidenceType, ConfidenceType):
         returnValue.update({"status": False, "message": "Not confidence Typ"})
         return returnValue 
     
     # One of the confidence attributes in Diagnosis
-    attribute = confidenceType.value
+    attribute: str = confidenceType.value
     
     # If the value of attribute is not a attribute in Diagnosis
     if not hasattr(Diagnosis, attribute):
@@ -109,8 +117,8 @@ def setConfidence(diagID: str, confidenceType: ConfidenceType, keyValues: list[d
         return returnValue
     
     
-    alreadySavedConfidences = getattr(diagObj, attribute, None)
-    alreadySavedConfidences = alreadySavedConfidences if alreadySavedConfidences else {}
+    alreadySavedConfidences: dict | None = getattr(diagObj, attribute, None)
+    alreadySavedConfidences: dict = alreadySavedConfidences if alreadySavedConfidences else {}
     
     for lesions in keyValues:
         alreadySavedConfidences.update(lesions)

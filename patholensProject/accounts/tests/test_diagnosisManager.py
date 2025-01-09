@@ -43,7 +43,7 @@ class TestDiagnosisManager(unittest.TestCase):
         self.diag.confidence = {"Lesion0": 1}
         self.diag.save()        
         
-        returnValue = setConfidence(self.diag.diagID, ConfidenceType.editedConfidence, [{"Lesion2": 10}, {"Lesion1": 9}])
+        returnValue = setConfidence(self.diag.diagID, ConfidenceType.SECOND_EDIT, [{"Lesion2": 10}, {"Lesion1": 9}])
         
         print(returnValue["status"])
         print(returnValue["message"])

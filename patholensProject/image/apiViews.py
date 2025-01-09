@@ -175,7 +175,7 @@ class SaveConfidenceAPIView(APIView):
             """
             
             keyValue = [{"allLesions": confidence}]
-            returnValue = setConfidence(diagID, ConfidenceType.firstConfidence,keyValue)
+            returnValue = setConfidence(diagID, ConfidenceType.FIRST_EDIT,keyValue)
     
             # Successfully
             if returnValue["status"]:
