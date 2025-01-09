@@ -46,6 +46,7 @@ let corAx;
  */
 export function drawRectangleNiivue(nv, data){
 
+    nv.setDrawOpacity(0.5);
     const colourValue = 3 // blue
     nv.setPenValue(colourValue) 
 
@@ -121,21 +122,19 @@ export function drawRectangleNiivue(nv, data){
         }
     }
 
+    fillRectangle(nv, bottomLeft, bottomRight, topLeft, topRight);
+
     // draw the rect lines
     nv.drawPenLine(topLeft, topRight, colourValue);
     nv.drawPenLine(topRight, bottomRight, colourValue);
     nv.drawPenLine(bottomRight, bottomLeft, colourValue);
     nv.drawPenLine(bottomLeft, topLeft, colourValue);
 
-    nv.drawPenLine(topLeftO, topRightO, colourValue);
-    nv.drawPenLine(topRightO, bottomRightO, colourValue);
-    nv.drawPenLine(bottomRightO, bottomLeftO, colourValue);
-    nv.drawPenLine(bottomLeftO, topLeftO, colourValue);
 
-    rectangleBL = bottomLeftO;
-    rectangleBR = bottomRightO;
-    rectangleTL = topLeftO;
-    rectangleTR = topRightO;
+    rectangleBL = bottomLeft;
+    rectangleBR = bottomRight;
+    rectangleTL = topLeft;
+    rectangleTR = topRight;
 
     console.log(rectangleBL)
 
@@ -143,6 +142,8 @@ export function drawRectangleNiivue(nv, data){
     
     // refresh the drawing
     nv.refreshDrawing(true) // true will force a redraw of the entire scene (equivalent to calling drawScene() in niivue)
+
+    
 }
 
 /**
@@ -230,6 +231,12 @@ export function drawCubeNV(nv, data){
         nv.drawPenLine(topLeftD, bottomLeftD, colourValue);
         nv.drawPenLine(bottomLeftD, bottomRightD, colourValue);
 
+        fillRectangle(nv, rectangleBL, rectangleBR, bottomLeftD, bottomRightD);
+        fillRectangle(nv, rectangleTL, rectangleTR, topLeftD, topRightD);
+        fillRectangle(nv, rectangleBL, rectangleTL, bottomLeftD, topLeftD);
+        fillRectangle(nv, rectangleBR, rectangleTR, bottomRightD, topRightD);
+        fillRectangle(nv, bottomLeftD, bottomRightD, topLeftD, topRightD);
+
         nv.refreshDrawing(true);
 
         rectangleBL = [-10, -10, -10];
@@ -244,7 +251,13 @@ export function drawCubeNV(nv, data){
     }
 }
 
-
+/**
+ * Returns if a Point B lays in a certain nighbourhood around a Point A
+ * @param {Array} ptA - Point A in a 3D room
+ * @param {Array} ptB - Point B in a 3D room
+ * @param {Int} corAx - The Axis where Point A lays.
+ * @returns {bool} 
+ */
 function comparePoints(ptA, ptB, corAx){
     var xA = ptA[0];
     var xB = ptB[0];
@@ -294,6 +307,50 @@ function comparePoints(ptA, ptB, corAx){
         }
     }
     return isNear;
+}
+
+
+function fillRectangle(nv, PtBL, PtBR, PtTL, PtTR){
+    const colourValue = 3;
+    console.log(PtBL, PtBR, PtTL, PtTR)
+    nv.setPenValue(colourValue);
+
+    const xMin = Math.min(PtBL[0], PtBR[0], PtTR[0], PtTL[0]);
+    const xMax = Math.max(PtBL[0], PtBR[0], PtTR[0], PtTL[0]);
+    const yMin = Math.min(PtBL[1], PtBR[1], PtTR[1], PtTL[1]);
+    const yMax = Math.max(PtBL[1], PtBR[1], PtTR[1], PtTL[1]);
+    const zMin = Math.min(PtBL[2], PtBR[2], PtTR[2], PtTL[2]);
+    const zMax = Math.max(PtBL[2], PtBR[2], PtTR[2], PtTL[2]);
+
+    if(PtBL[0] == PtTR[0]){
+        console.log(0)
+
+        for(let i = yMin; i < yMax; i++){
+            for(let j = zMin; j < zMax; j++){
+                nv.drawPt(PtBL[0], i, j, colourValue);
+            }
+        }
+    }
+    else if(PtBL[1] == PtTR[1]){
+        console.log(1);
+        console.log(PtBL[0], PtBR[0], PtBL[2], PtTL[2]);
+        for(let i = xMin; i < xMax; i++){
+            for(let j = zMin; j < zMax; j++){
+                nv.drawPt(i, PtBL[1], j, colourValue);
+            }
+        }
+    }
+    else{
+        console.log(2);
+        console.log(PtBL[0], PtBR[0], PtBL[1], PtTL[1])
+        for(let i = xMin + 1; i < xMax; i++){
+            for(let j = yMin; j < yMax; j++){
+                console.log("hallo")
+                nv.drawPt(i, j, PtBL[2], colourValue);
+            }
+        }
+    }
+    nv.refreshDrawing(true);
 }
 
 
