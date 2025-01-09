@@ -232,6 +232,11 @@ export function drawCubeNV(nv, data){
 
         nv.refreshDrawing(true);
 
+        rectangleBL = [-10, -10, -10];
+        rectangleTL = [-10, -10, -10];
+        rectangleBR = [-10, -10, -10];
+        rectangleTR = [-10, -10, -10];
+
         return true;
     }
     else{
@@ -290,126 +295,6 @@ function comparePoints(ptA, ptB, corAx){
     }
     return isNear;
 }
-
-
-/**
- * Draws a fully 3D rectangle
- * @param {Niivue} nv - Niivue instance
- * @param {*} data - The data from the drag and release
- * @param {number} depth - The depth of the 3D rectangle (number of layers)
- */
-/*
-export function draw3DRectangleNiivue(nv, data, depth = 40) {
-    const colourValue = 3; // blue
-    nv.setPenValue(colourValue);
-
-    const { voxStart, voxEnd, axCorSag } = data;
-
-    // Define the bounds for the rectangle
-    let minX, maxX, minY, maxY, minZ, maxZ;
-
-    switch (axCorSag) {
-        case 0: // axial view: Z is fixed, vary X and Y
-            minX = Math.min(voxStart[0], voxEnd[0]);
-            maxX = Math.max(voxStart[0], voxEnd[0]);
-            minY = Math.min(voxStart[1], voxEnd[1]);
-            maxY = Math.max(voxStart[1], voxEnd[1]);
-            minZ = voxStart[2] - depth / 2;
-            maxZ = voxStart[2] + depth / 2;
-            break;
-
-        case 1: // coronal view: Y is fixed, vary X and Z
-            minX = Math.min(voxStart[0], voxEnd[0]);
-            maxX = Math.max(voxStart[0], voxEnd[0]);
-            minZ = Math.min(voxStart[2], voxEnd[2]);
-            maxZ = Math.max(voxStart[2], voxEnd[2]);
-            minY = voxStart[1] - depth / 2;
-            maxY = voxStart[1] + depth / 2;
-            break;
-
-        case 2: // sagittal view: X is fixed, vary Y and Z
-            minY = Math.min(voxStart[1], voxEnd[1]);
-            maxY = Math.max(voxStart[1], voxEnd[1]);
-            minZ = Math.min(voxStart[2], voxEnd[2]);
-            maxZ = Math.max(voxStart[2], voxEnd[2]);
-            minX = voxStart[0] - depth / 2;
-            maxX = voxStart[0] + depth / 2;
-            break;
-    }
-
-    // Draw the 3D rectangle layer by layer
-    for (let z = Math.floor(minZ); z <= Math.ceil(maxZ); z++) {
-        for (let y = Math.floor(minY); y <= Math.ceil(maxY); y++) {
-            for (let x = Math.floor(minX); x <= Math.ceil(maxX); x++) {
-                drawVoxelEdges(nv, [x, y, z], colourValue);
-            }
-        }
-    }
-
-    // Refresh the drawing
-    nv.refreshDrawing(true);
- 
-    // draw the rect lines
-    nv.drawPenLine(topLeft, topRight, colourValue)
-    nv.drawPenLine(topRight, bottomRight, colourValue)
-    nv.drawPenLine(bottomRight, bottomLeft, colourValue)
-    nv.drawPenLine(bottomLeft, topLeft, colourValue)
-
-    nv.drawPenLine(topLeftO, topRightO, colourValue)
-    nv.drawPenLine(topRightO, bottomRightO, colourValue)
-    nv.drawPenLine(bottomRightO, bottomLeftO, colourValue)
-    nv.drawPenLine(bottomLeftO, topLeftO, colourValue)
-    
-    // refresh the drawing
-    nv.refreshDrawing(true) // true will force a redraw of the entire scene (equivalent to calling drawScene() in niivue)
-}
-    */
-
-/**
- * Draws the edges of a single voxel (3D box) at a given position
- * @param {Niivue} nv - Niivue instance
- * @param {array} position - Voxel position [x, y, z]
- * @param {number} colourValue - Pen value for the edges
- */
-/*function drawVoxelEdges(nv, position, colourValue) {
-    const [x, y, z] = position;
-
-    // Define the 8 corners of the voxel
-    const corners = [
-        [x, y, z],
-        [x + 1, y, z],
-        [x, y + 1, z],
-        [x + 1, y + 1, z],
-        [x, y, z + 1],
-        [x + 1, y, z + 1],
-        [x, y + 1, z + 1],
-        [x + 1, y + 1, z + 1]
-    ];
-
-    // Draw edges connecting the corners
-    const edges = [
-        [corners[0], corners[1]],
-        [corners[1], corners[3]],
-        [corners[3], corners[2]],
-        [corners[2], corners[0]],
-
-        [corners[4], corners[5]],
-        [corners[5], corners[7]],
-        [corners[7], corners[6]],
-        [corners[6], corners[4]],
-
-        [corners[0], corners[4]],
-        [corners[1], corners[5]],
-        [corners[2], corners[6]],
-        [corners[3], corners[7]]
-    ];
-
-    for (const [start, end] of edges) {
-        nv.drawPenLine(start, end, colourValue);
-    }
-}
-    */
-
 
 
 /**
