@@ -2,7 +2,7 @@
 {% load static %} 
 {% csrf_token %}
 {% block extraCSS %}
-<link rel="stylesheet" href="{% static 'css/editDiagnosis.css' %}?v=1" />
+<link rel="stylesheet" href="{% static 'css/editDiagnosis.css' %}?v=2" />
 {% endblock %} 
 
 {% block title %} 
@@ -37,27 +37,12 @@
 </div>
 
 <div class="imageBox">
-    <canvas id="imageBrainMain" width="100%" height="376%"></canvas>
+    <canvas id="imageBrain" width="100%" height="376%"></canvas>
 </div>
 
 <div id="compareAndDropdownContainer">
     <div class="dropdownContainer">
 
-        <div class="dropdown" id="formatDropdown">
-            <input class="textBox" type="text" value="FLAIR" readonly>
-            <div class="options">
-                <div class="option">FLAIR</div>
-                <div class="option">T1</div>
-            </div>
-        </div>
-        <div class="dropdown" id="displayDropdown">
-            <input class="textBox" type="text" value="AI diagnosis" readonly>
-            <div class="options">
-                <div class="option">AI Diagnosis</div>
-                <div class="option">My Diagnosis</div>
-                <div class="option">Show Overlay</div>
-            </div>
-        </div>
         <div class="dropdown" id="AIdropdown">
             <input class="textBox" type="text" value="Model A" readonly>
             <div class="options">
@@ -67,13 +52,33 @@
                 <div class="option">Model D</div>
             </div>
         </div>
+        
+        <div class="dropdown" id="displayDropdown">
+            <input class="textBox" type="text" value="AI diagnosis" readonly>
+            <div class="options">
+                <div class="option">AI Diagnosis</div>
+                <div class="option">My Diagnosis</div>
+                <div class="option">Show Overlay</div>
+            </div>
+        </div>
+        
+        <div class="dropdown" id="formatDropdown">
+            <input class="textBox" type="text" value="FLAIR" readonly>
+            <div class="options">
+                <div class="option">FLAIR</div>
+                <div class="option">T1</div>
+            </div>
+        </div>
 
     </div>
+
+    <div class="overlay" id="overlay"></div>
 
     <div id="comparisonContainer">
-       <canvas id="imageBrain" width="100%" height="376%"></canvas>
+    <canvas id="imageBrainZoom" width="100%" height="376%"></canvas>
         <img alt="zoom button" src="{% static 'icons\editPageZoomButton.png' %}" id="zoomButton">
     </div>
+    
 
 </div>
 

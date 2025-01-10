@@ -12,29 +12,28 @@ document.addEventListener('DOMContentLoaded', function() {
     const onDragRelease = (data) => {
         drawRectangle = true;
         //if drawing is enabled
-        if (nvMain.opts.drawingEnabled){
-            drawRectangleNiivue(nvMain, data)
+        if (nv.opts.drawingEnabled){
+            drawRectangleNiivue(nv, data)
             endTimer("Rectangle", startTime, diagnosisID, csrfToken)
-            nvMain.setDrawingEnabled(false); //drawingEnabled equals false so you have to click the button again to draw another rechtangle
+            nv.setDrawingEnabled(false); //drawingEnabled equals false so you have to click the button again to draw another rechtangle
         }
     }
 
 
-
     //Loading Images for the zoom Frame
 
-    const canvas = document.getElementById("imageBrain");
-    const nv = niivueCanvas({}, canvas);
+    const canvasZoom = document.getElementById("imageBrainZoom");
+    const nvZoom = niivueCanvas({}, canvasZoom);
 
-    const canvasMain = document.getElementById("imageBrainMain");
-    const nvMain = niivueCanvas({
+    const canvas = document.getElementById("imageBrain");
+    const nv = niivueCanvas({
         onDragRelease: onDragRelease,
         dragMode: DRAG_MODE.callbackOnly,
         penSize: 3,
         maxDrawUndoBitmaps: 200,     // max 200 undos possible
         drawOpacity: 0.65,
         }, 
-        canvasMain)
+        canvas)
    
     //default formats
     let selectedFormatMask = "DEEPFCD";
@@ -90,7 +89,7 @@ document.addEventListener('DOMContentLoaded', function() {
         else if(selectedDisplay == "Show Overlay"){
             volumes = await loadOverlayDAI(selectedFormatMask, selectedFormatMri, diagnosisID);
         }
-        nv.loadVolumes(volumes);
+        nvZoom.loadVolumes(volumes);
     };
 
     
@@ -98,13 +97,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function loadImage() {
         const volumes = await loadImageAPI(selectedFormat, diagnosisID);
-        nvMain.loadVolumes(volumes);
+        nv.loadVolumes(volumes);
     }
 
 
      // Add drawing state to history
      function saveDrawingState() {
-        nvMain.drawAddUndoBitmap();
+        nv.drawAddUndoBitmap();
     }
 
     /**
@@ -115,7 +114,7 @@ document.addEventListener('DOMContentLoaded', function() {
      * True => drawn shape will be filled
      */
     function changeDrawingMode(mode, filled){
-        nvMain.setPenValue(mode, filled);
+        nv.setPenValue(mode, filled);
     }
 
     // Pixel
@@ -124,13 +123,13 @@ document.addEventListener('DOMContentLoaded', function() {
         erasing = false;
         startTimer()
         saveDrawingState();
-        nvMain.setDrawingEnabled(true);  
+        nv.setDrawingEnabled(true);  
         changeDrawingMode(6, false);
     });
         
   // disables drawing after a Pixel is marked
-    document.getElementById("imageBrainMain").addEventListener("mouseup", disableDrawing)
-       
+    document.getElementById("imageBrain").addEventListener("mouseup", disableDrawing)
+     
     // disables drawing
     function disableDrawing(){
         if(!drawRectangle && !erasing){
@@ -140,9 +139,10 @@ document.addEventListener('DOMContentLoaded', function() {
             endTimer('Erasing', startTime, diagnosisID, csrfToken)
             erasing = false
         }
-        nvMain.setDrawingEnabled(false);
+        nv.setDrawingEnabled(false);
     } 
         
+    
         
         // enables erasing the drawing by clicking on eraser
     document.getElementById("eraseTool").addEventListener("click", function(e){
@@ -150,7 +150,7 @@ document.addEventListener('DOMContentLoaded', function() {
         drawRectangle = false;
         startTimer();
         saveDrawingState();
-        nvMain.setDrawingEnabled(true);
+        nv.setDrawingEnabled(true);
         // 0 = Eraser and true => eraser ist filled so a whole area can be erased
         changeDrawingMode(0, true);
        
@@ -160,9 +160,9 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById("frameTool").addEventListener("click", function () {
         startTimer()
         saveDrawingState();
-        nvMain.setDrawingEnabled(true);
-        nvMain.opts.dragMode = DRAG_MODE.callbackOnly;  // Draw rectangle only when dragging
-        nvMain.opts.onDragRelease = onDragRelease;      // Set callback for rectangle drawing
+        nv.setDrawingEnabled(true);
+        nv.opts.dragMode = DRAG_MODE.callbackOnly;  // Draw rectangle only when dragging
+        nv.opts.onDragRelease = onDragRelease;      // Set callback for rectangle drawing
     });
 
     // Function to start the timer 
@@ -174,10 +174,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Zoom
 
-    const comparisonContainer = document.getElementById("comparisonContainer");
+    let comparisonContainer = document.getElementById("comparisonContainer");
     const zoomButton = document.getElementById("zoomButton");
     let zoomed = false;
     const dropdownMenus = document.querySelectorAll(".dropdown");
+    const overlay = document.getElementById("overlay");
 
     function zoomOut(){
         comparisonContainer.style.width = "50%";
@@ -185,6 +186,7 @@ document.addEventListener('DOMContentLoaded', function() {
         comparisonContainer.style.height = "24%";
         zoomButton.src = "/static/icons/editPageZoomButton.png";
         zoomed = false;
+        overlay.style.display = "none";
     }
 
     zoomButton.addEventListener("click", () =>{
@@ -193,9 +195,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         else{
-            comparisonContainer.style.width = "74%";
-            comparisonContainer.style.top = "35%";
-            comparisonContainer.style.height = "53%";
+            comparisonContainer.style.width = "81%";
+            comparisonContainer.style.top = "25%";
+            comparisonContainer.style.height = "60%";
+            overlay.style.display = "flex";
             zoomButton.src = "/static/icons/editPageZoomOutButton.png";
             zoomed = true;
         }
@@ -218,6 +221,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    
 
     // dropdown function
 
@@ -289,11 +293,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Undo the drawing/erasing
     document.getElementById("undoTool").addEventListener("click", function (e) {
-        nvMain.drawUndo();
+        nv.drawUndo();
     })
     
      // save image if logged out
      document.getElementById("logoutButton").addEventListener("click", savedEditedImage(nv, diagnosisID, csrfToken));
 });
 
-//Test 7
+//Test 1
