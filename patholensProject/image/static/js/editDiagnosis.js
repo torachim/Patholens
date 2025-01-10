@@ -300,4 +300,4 @@ document.addEventListener('DOMContentLoaded', function() {
      document.getElementById("logoutButton").addEventListener("click", savedEditedImage(nv, diagnosisID, csrfToken));
 });
 
-//Test 2
+//Test 10
