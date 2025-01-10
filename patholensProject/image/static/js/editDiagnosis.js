@@ -257,9 +257,11 @@ document.addEventListener('DOMContentLoaded', function() {
         endDiagnosis(confidenceValue);
     });
 
-    async function endDiagnosis(confidenceValue){
-        
-        window.location.assign(`/image/transitionPage/${diagnosisID}`)
+    async function endDiagnosis(){
+        await sendConfidence(confidenceValue, diagnosisID, csrfToken);
+        await endTimer('Confidence confirmed', startTime, diagnosisID, csrfToken);
+        await savedEditedImage(nv, diagnosisID, csrfToken);
+        window.location.assign(`/image/newDiagnosis/${diagnosisID}/transitionPage/`)
     }
 
     const finishButton = document.getElementById("finishButton");
@@ -298,4 +300,4 @@ document.addEventListener('DOMContentLoaded', function() {
      document.getElementById("logoutButton").addEventListener("click", savedEditedImage(nv, diagnosisID, csrfToken));
 });
 
-//Test 4
+//Test 2
