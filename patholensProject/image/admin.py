@@ -1,9 +1,8 @@
 from django.contrib import admin
 from .models import UseTime, Diagnosis, Media
 from django.contrib import messages
-
-admin.site.register(UseTime)
-admin.site.register(Diagnosis)
+from import_export import resources
+from import_export.admin import ExportMixin
 
 
 class MediaAdmin(admin.ModelAdmin):
@@ -13,11 +12,30 @@ class MediaAdmin(admin.ModelAdmin):
         try:
             from image.mediaHandler import addMedia
             addMedia()
-        except Exception as e:
             self.message_user(request, "The new datasets where added to the Media Database", messages.SUCCESS)
+
+        except Exception as e:
             self.message_user(request, f"Their was a error when running 'addMedia': {str(e)}", messages.ERROR)
 
-    addMedia.short_description = "Calls the function addMedia which adds all the datasets in the /media folder to the Media DB"
-    
+    addMedia.short_description = "All data sets in the /media folder will be added to the Database"
+
+
+class DiagnosisResource(resources.ModelResource):
+    class Meta:
+        model = Diagnosis
+        # to be exported fields
+        fields = ('diagID', 'doctor', 'mediaFolder', 'imageURL', 'confidence', 'confidenceOfEditedDiag', 'confidenceOfAIdiag')
+
+
+@admin.register(Diagnosis)
+class DiagnosisAdmin(ExportMixin, admin.ModelAdmin):
+    # links the custom resource
+    resource_class = DiagnosisResource
+    # attributes which should be showed
+    list_display = ('diagID', 'doctor')
+    # adds a filter options
+    list_filter = ('doctor', 'mediaFolder')
+
 
 admin.site.register(Media, MediaAdmin)
+admin.site.register(UseTime)
