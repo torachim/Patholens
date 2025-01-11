@@ -10,10 +10,12 @@ class Doctors(models.Model):
         settings.AUTH_USER_MODEL, primary_key=True, on_delete=models.CASCADE
     )
 
-    finishedPatients = models.JSONField(null=True)
-    
     # references to the diagnosis. When deleted it will be set to NULL
     continueDiag = models.OneToOneField("image.Diagnosis", on_delete=models.SET_NULL, null=True, default=None)
     
+    finishedPatients = models.JSONField(null=True)
+    
+   
     def __str__(self):
-        return str(self.doctorID)
+        # the shown name in the admin panel is the name of the doctotrs
+        return f"{self.doctorID.first_name} {self.doctorID.last_name}"
