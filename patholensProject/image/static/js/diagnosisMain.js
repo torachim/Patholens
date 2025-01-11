@@ -1,5 +1,5 @@
 import { Niivue, DRAG_MODE } from "./index.js";
-import { niivueCanvas, drawRectangleNiivue,loadImageAPI, endTimer, sendConfidence, savedEditedImage, loadImageWithDiagnosis, drawCubeNV } from "./pathoLens.js";
+import { niivueCanvas, drawRectangleNiivue,loadImageAPI, endTimer, sendConfidence, savedEditedImage, loadImageWithDiagnosis, drawCubeNV, jumpRectangle } from "./pathoLens.js";
 
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -8,6 +8,12 @@ document.addEventListener('DOMContentLoaded', function() {
     let drawRectangle = false;
     let erasing = false;
     let drawCube = false;
+
+    const canvas = document.getElementById("imageBrain");
+    const jumpRect = document.getElementById("jumpRect");
+
+    // Load FLAIR default
+    let selectedFormat = "FLAIR";
 
     //function to drag a rectangle in the niivue 
     // define what happens on dragRelase (right mouse up)
@@ -23,19 +29,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 else{
                     endTimer("Cuboid", startTime, diagnosisID, csrfToken);
+                    saveDrawingState();
                     drawCube = false;
+                    jumpRect.style.display = "none"
                 }
             }
             else{
                 drawRectangleNiivue(nv, data);
                 drawCube = true;
+                saveDrawingState();
+                jumpRect.style.display = "flex"
                 endTimer("Rectangle", startTime, diagnosisID, csrfToken);
             }
         }
-        nv.setDrawingEnabled(false); //drawingEnabled equals false so you have to click the button again to draw another rechtangle
+        nv.setDrawingEnabled(false); //drawingEnabled equals false so you have to click the button again to draw another rechtangle  
     }
-
-    const canvas = document.getElementById("imageBrain");
 
     const nv = niivueCanvas({
                onDragRelease: onDragRelease,
@@ -46,8 +54,6 @@ document.addEventListener('DOMContentLoaded', function() {
                }, 
                canvas)
 
-    // Load FLAIR default
-    let selectedFormat = "FLAIR";
 
     // Function to handle changes in the format selection
     const radioButtons = document.querySelectorAll('input[name="option"]');
@@ -85,6 +91,12 @@ document.addEventListener('DOMContentLoaded', function() {
         nv.drawAddUndoBitmap();
     }
 
+    // Jump to the bottom left corner of the drawn rectangle
+    jumpRect.addEventListener("click", () => {
+        jumpRectangle(nv);
+    })
+
+
     /**
      * 
      * @param {int} mode
@@ -98,12 +110,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Pixel
     document.getElementById("selectTool").addEventListener("click", function(e){
-        drawRectangle = false;
-        erasing = false;
-        startTimer()
-        saveDrawingState();
-        nv.setDrawingEnabled(true);  
-        changeDrawingMode(6, false);
+        if(!drawCube){
+            drawRectangle = false;
+            erasing = false;
+            startTimer()
+            saveDrawingState();
+            nv.setDrawingEnabled(true);  
+            changeDrawingMode(6, false);
+        }
+        else{
+            alert("Please finish your cuboid first!");
+        }
     });
     
 
@@ -114,25 +131,30 @@ document.addEventListener('DOMContentLoaded', function() {
     function disableDrawing(){
         if(!drawRectangle && !erasing){
             endTimer('Freehand drawing', startTime, diagnosisID, csrfToken)
+            nv.setDrawingEnabled(false);
         }
         else if(!drawRectangle && erasing){
             endTimer('Erasing', startTime, diagnosisID, csrfToken)
             erasing = false
-        }
-        nv.setDrawingEnabled(false);
+            nv.setDrawingEnabled(false);
+        }   
     }  
 
     
     // enables erasing the drawing by clicking on eraser
     document.getElementById("eraseTool").addEventListener("click", function(e){
-        erasing = true;
-        drawRectangle = false;
-        startTimer();
-        saveDrawingState();
-        nv.setDrawingEnabled(true);
-        // 0 = Eraser and true => eraser ist filled so a whole area can be erased
-        changeDrawingMode(0, true);
-       
+        if(!drawCube){
+            erasing = true;
+            drawRectangle = false;
+            startTimer();
+            saveDrawingState();
+            nv.setDrawingEnabled(true);
+            // 0 = Eraser and true => eraser ist filled so a whole area can be erased
+            changeDrawingMode(0, true);
+        }
+        else{
+            alert("Please finish your cuboid first!")
+        }
     });
 
     // INFO: You need to right click and drag to draw rectangle
@@ -176,9 +198,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Function to show the confidence window
     finishButton.addEventListener("click", () => {
-        popupOverlay.style.display = "flex";
-        popupFrame.style.display = "block";
-        startTimer();
+        if(!drawCube){
+            popupOverlay.style.display = "flex";
+            popupFrame.style.display = "block";
+            startTimer();
+        }
+        else{
+            alert("Please finish your cuboid first");
+        }
     });
 
     // Functions to close the confidence window
@@ -195,8 +222,13 @@ document.addEventListener('DOMContentLoaded', function() {
     })
 
     // Undo the drawing/erasing
-    document.getElementById("undoTool").addEventListener("click", function (e) {
-        nv.drawUndo();
+    document.getElementById("undoTool").addEventListener("click", () => {
+        if(!drawCube){
+            nv.drawUndo();
+        }
+        else{
+            alert("Please finish your cuboid first!")
+        }
     })
 
     // save image if logged out        ATTENTION: prevent saving image twice!! It wont work

@@ -332,4 +332,8 @@ input[type="radio"]:checked::before {
     border-radius: 5px;
     visibility: hidden; 
     white-space: nowrap;   
-}  
+}
+
+.jumpRect{
+    display: none;
+}

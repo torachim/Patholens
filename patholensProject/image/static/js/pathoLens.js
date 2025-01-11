@@ -135,13 +135,20 @@ export function drawRectangleNiivue(nv, data){
     rectangleBR = bottomRight;
     rectangleTL = topLeft;
     rectangleTR = topRight;
+    console.log(bottomLeft);
 
     corAx = newAxCor;
     
     // refresh the drawing
-    nv.refreshDrawing(true) // true will force a redraw of the entire scene (equivalent to calling drawScene() in niivue)
+    nv.refreshDrawing(true) // true will force a redraw of the entire scene (equivalent to calling drawScene() in niivue)  
+}
 
-    
+export function jumpRectangle(nv){
+    nv.moveCrosshairInVox(-207, -319, -319);
+    const positionX = rectangleTL[0];
+    const positionY = rectangleTL[1];
+    const positionZ = rectangleTL[2];
+    nv.moveCrosshairInVox(positionX, positionY, positionZ)
 }
 
 /**
@@ -264,34 +271,11 @@ function comparePoints(ptA, ptB, corAx){
 
     let isNear;
 
-    switch(corAx){
-        case(0): {
-            if(((xA - 4 <= xB) && (xB <= xA + 4))&&((yA -4 <= yB) && (yB <= yA + 4))){
-                isNear = true;
-            }
-            else{
-                isNear = false;
-            }
-            break
-        }
-        case(1): {
-            if((xA - 4 <= xB) && ((xB<= xA + 4))&&((zA - 4 <= zB) && (zB <= zA + 4))){
-                isNear = true;
-            }
-            else{
-                isNear = false;
-            }
-            break
-        }
-        case(2): {
-            if(((yA - 4 <= yB) && (yB <= yA + 4))&&((zA - 4 <= zB) && (zB <= zA + 4))){
-                isNear = true
-            }
-            else{
-                isNear = false;
-            }
-            break 
-        }
+    if(((xA - 8 <= xB) && (xB <= xA + 8))&&((yA - 8 <= yB) && (yB <= yA + 8)) && ((zA - 8 <= zB) && (zB <= zA + 8))){
+        isNear = true;
+    }
+    else{
+        isNear = false;
     }
     return isNear;
 }
@@ -316,23 +300,22 @@ function fillRectangle(nv, PtBL, PtBR, PtTL, PtTR){
     const zMax = Math.max(PtBL[2], PtBR[2], PtTR[2], PtTL[2]);
 
     if(PtBL[0] == PtTR[0]){
-        for(let i = yMin; i < yMax; i++){
-            for(let j = zMin; j < zMax; j++){
+        for(let i = yMin; i <= yMax; i++){
+            for(let j = zMin; j <= zMax; j++){
                 nv.drawPt(PtBL[0], i, j, colourValue);
             }
         }
     }
     else if(PtBL[1] == PtTR[1]){
-        for(let i = xMin; i < xMax; i++){
-            for(let j = zMin; j < zMax; j++){
+        for(let i = xMin; i <= xMax; i++){
+            for(let j = zMin; j <= zMax; j++){
                 nv.drawPt(i, PtBL[1], j, colourValue);
             }
         }
     }
     else{
-        for(let i = xMin + 1; i < xMax; i++){
-            for(let j = yMin; j < yMax; j++){
-                console.log("hallo")
+        for(let i = xMin + 1; i <= xMax; i++){
+            for(let j = yMin; j <= yMax; j++){
                 nv.drawPt(i, j, PtBL[2], colourValue);
             }
         }
