@@ -1,11 +1,9 @@
 @import url('https://fonts.googleapis.com/css?family=Cabin');
 
 body {
-    background-color:  #24617B;
     color: #ffffff;
     display: flex; 
     flex-direction: column;
-    height: 100vh;
 }
 
 
@@ -15,7 +13,7 @@ body {
     flex-direction: row;
     align-items: center;
     flex: 1; 
-    height: calc(100vh - 100px);
+    height: 90%;
     overflow: hidden; 
 }
 
