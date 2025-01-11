@@ -3,7 +3,6 @@ import { niivueCanvas,drawRectangleNiivue,loadImageAPI, loadImageWithDiagnosis, 
 
 document.addEventListener('DOMContentLoaded', function() {
     
-    // tool bar functions 
     let startTime;
     let drawRectangle = false;
     let erasing = false;
@@ -20,8 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
 
-    //Loading Images for the zoom Frame
-
+    //Loading Images 
     const canvasZoom = document.getElementById("imageBrainZoom");
     const nvZoom = niivueCanvas({}, canvasZoom);
 
@@ -48,8 +46,8 @@ document.addEventListener('DOMContentLoaded', function() {
         "Model D": "NNUNET"
     };
 
-    loadImages();
-    loadImage();
+    loadImages(); //loading zoomable Images 
+    loadImage(); //loading main Image
 
     // Dropdown change listener for the AI Mask
     const aiDropdown = document.getElementById('AIdropdown');
@@ -92,9 +90,7 @@ document.addEventListener('DOMContentLoaded', function() {
         nvZoom.loadVolumes(volumes);
     };
 
-    
      //loading Images for the main Frame
-
     async function loadImage() {
         const volumes = await loadImageAPI(selectedFormat, diagnosisID);
         nv.loadVolumes(volumes);
@@ -127,7 +123,7 @@ document.addEventListener('DOMContentLoaded', function() {
         changeDrawingMode(6, false);
     });
         
-  // disables drawing after a Pixel is marked
+     // disables drawing after a Pixel is marked
     document.getElementById("imageBrain").addEventListener("mouseup", disableDrawing)
      
     // disables drawing
@@ -142,9 +138,7 @@ document.addEventListener('DOMContentLoaded', function() {
         nv.setDrawingEnabled(false);
     } 
         
-    
-        
-        // enables erasing the drawing by clicking on eraser
+    // enables erasing the drawing by clicking on eraser
     document.getElementById("eraseTool").addEventListener("click", function(e){
         erasing = true;
         drawRectangle = false;
@@ -171,15 +165,14 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
 
-
-    // Zoom
-
+    // Zoom functionality
     let comparisonContainer = document.getElementById("comparisonContainer");
     const zoomButton = document.getElementById("zoomButton");
     let zoomed = false;
     const dropdownMenus = document.querySelectorAll(".dropdown");
     const overlay = document.getElementById("overlay");
 
+    //Image while zoomed out
     function zoomOut(){
         comparisonContainer.style.width = "50%";
         comparisonContainer.style.top = "";
@@ -194,6 +187,7 @@ document.addEventListener('DOMContentLoaded', function() {
             zoomOut();
         }
 
+        //Image while zoomed in
         else{
             comparisonContainer.style.width = "81%";
             comparisonContainer.style.top = "25%";
@@ -222,9 +216,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     
-
-    // dropdown function
-
+    // dropdown functionality
     function swapOptions(optionElement) {
         const parentDropdown = optionElement.closest('.dropdown');
         const textBox = parentDropdown.querySelector('.textBox');

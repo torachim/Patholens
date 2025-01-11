@@ -4,16 +4,20 @@ from accounts.models import Doctors
 
 # diagnosis class for linkage between the different db entries that "participate" in a certain diagnosis
 class Diagnosis(models.Model):
-    diagID = models.CharField(primary_key=True, max_length=100)
-    # If the referenced doctor is deleted, the diagnosis will be deleted as well
-    doctor = models.ForeignKey(Doctors, on_delete=models.CASCADE)
-    confidence = models.PositiveSmallIntegerField(null=True, blank=True)
-    editedDiagConfidence = models.PositiveSmallIntegerField(null=True, blank=True)
-    # contains the number of the patient and the name of the data set
-    imageURL = models.CharField(null=False, max_length=20, default="Unknown")
-    # media folder to imageURL
-    mediaFolder = models.ForeignKey("image.Media", on_delete=models.SET_NULL, null=True, default=None)
+    diagID = models.CharField(primary_key=True, max_length=100, verbose_name="Diagnosis ID")
     
+    # diagnosis will be deleted, when doctor is deleted
+    doctor = models.ForeignKey(Doctors, on_delete=models.CASCADE, verbose_name="Diagnosing doctor") 
+    
+    # media folder to imageURL
+    mediaFolder = models.ForeignKey("image.Media", on_delete=models.SET_NULL, null=True, default=None, verbose_name="Dataset")
+    
+    # unique int form the namen of the sub
+    imageURL = models.CharField(null=False, max_length=20, default="Unknown", verbose_name="Url to the picture")
+    
+    confidence = models.JSONField(null=True, verbose_name="Confidence for the marked lesions")
+    confidenceOfEditedDiag = models.JSONField(null=True, verbose_name="Confidence for the lessions after seeing AI Diagnosis")
+    confidenceOfAIdiag = models.JSONField(null=True, verbose_name="Confidence to take the AI Diagnosis")
     
     def __str__(self):
         return str(self.diagID)

@@ -18,6 +18,7 @@
 
 {%block content%}
 
+
 <div class="toolbar">    
     <button class="toolButton" id="selectTool">
         <img alt="freehand drawing" src="{% static 'icons\FreehandDrawingIcon.png' %}" id="freehandDrawingIcon">
@@ -36,6 +37,7 @@
     </button>
 </div>
 
+<!--Container for image loading-->
 <div class="imageBox">
     <canvas id="imageBrain" width="100%" height="376%"></canvas>
 </div>
@@ -43,6 +45,7 @@
 <div id="compareAndDropdownContainer">
     <div class="dropdownContainer">
 
+        <!--dropdown functions-->
         <div class="dropdown" id="AIdropdown">
             <input class="textBox" type="text" value="Model A" readonly>
             <div class="options">
@@ -72,8 +75,10 @@
 
     </div>
 
+    <!--blur overlay-->
     <div class="overlay" id="overlay"></div>
 
+    <!--Zoomable image-->
     <div id="comparisonContainer">
     <canvas id="imageBrainZoom" width="100%" height="376%"></canvas>
         <img alt="zoom button" src="{% static 'icons\editPageZoomButton.png' %}" id="zoomButton">
@@ -82,32 +87,23 @@
 
 </div>
 
+
 <div class="finishDiagnosisButton">
     <button type="button" id="finishButton">Finish Diagnosis</button>
 </div>
 
 <div class="popupOverlay" id="popupOverlay">
     <div class="popupFrame" id="popupFrame">
-        
         <button class="popupClose" id="closePopup">&times;</button>
-        
         <p>Please state your confidence</p>
-
         <div class="confidenceMeterContainer">
-            
             <input type="range" class="confidenceMeter" min="0" max="100" value="50" id="confidenceMeter">
-  
-
             <div class="tooltip" id="tooltip">50</div>
         </div>
-
         <button class="popupConfirm" id="popupConfirm">Confirm</button>
     </div>
 </div>
 
-<script>
-    
-</script>
 <script>
     const diagnosisID = '{{ diagnosisID }}'
 </script>

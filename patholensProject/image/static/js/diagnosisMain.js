@@ -1,5 +1,5 @@
 import { Niivue, DRAG_MODE } from "./index.js";
-import { niivueCanvas, drawRectangleNiivue,loadImageAPI, endTimer, sendConfidence, savedEditedImage } from "./pathoLens.js";
+import { niivueCanvas, drawRectangleNiivue,loadImageAPI, endTimer, sendConfidence, savedEditedImage, loadImageWithDiagnosis } from "./pathoLens.js";
 
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -33,16 +33,32 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Load FLAIR default
     let selectedFormat = "FLAIR";
-    loadImage();
 
-    //function to change the picture format if the buttons are clicked
+    // Function to handle changes in the format selection
     const radioButtons = document.querySelectorAll('input[name="option"]');
-    radioButtons.forEach(radio => {
+    radioButtons.forEach((radio) => {
         radio.addEventListener('change', (event) => {
             selectedFormat = event.target.value;
-            loadImage();
+            if (mode === "new") {
+                loadImage(selectedFormat);
+            } else if (mode === "continue") {
+                loadImageAndEdited();
+            }
         });
     });
+
+    // Call the appropriate function based on the mode
+    if (mode === "new") {
+        loadImage();
+    } else if (mode === "continue") {
+        loadImageAndEdited(); // Calls loadImageAndDiagnosis internally
+    }
+
+
+    async function loadImageAndEdited() {
+        const volumes = await loadImageWithDiagnosis(diagnosisID, selectedFormat);
+        nv.loadVolumes(volumes);
+    } 
 
     async function loadImage() {
         const volumes = await loadImageAPI(selectedFormat, diagnosisID);
@@ -168,6 +184,7 @@ document.addEventListener('DOMContentLoaded', function() {
         nv.drawUndo();
     })
 
-    // save image if logged out
-    document.getElementById("logoutButton").addEventListener("click", savedEditedImage(nv, diagnosisID, csrfToken));
+    // save image if logged out        ATTENTION: prevent saving image twice!! It wont work
+    //document.getElementById("logoutButton").addEventListener("click", savedEditedImage(nv, diagnosisID, csrfToken));
+
 });
