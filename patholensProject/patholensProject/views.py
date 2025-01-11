@@ -1,14 +1,13 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
-from accounts.doctorManager import getRandomURL
-from accounts.diagnosisManager import createDiagnosis
 from accounts.diagnosisManager import *
 from image.timeHandler import *
 
 from image.views import *
 from image.mediaHandler import *
 from accounts.doctorManager import *
+from image.models import Media
 
 @login_required
 def homepage(request):
@@ -33,30 +32,55 @@ def forwardingInformation(request, datasetName):
     """
     
     datasetName = datasetName.upper()
-    message = getRandomURL(request.user.id, datasetName)
+
+    mode = "new"
+    responseRandomURL = getRandomURL(request.user.id, datasetName)
     
     
-    if message["status"] == "finished":
+    if responseRandomURL["status"] == "finished":
         return render(request, 'finishedMessage.html')
     
-    elif message["status"] == "error":
+    elif responseRandomURL["status"] == "error":
         return redirect("/")
     
     else:
         
-        pictureURL = message["url"]
+        pictureURL = responseRandomURL["url"]
         
         docObject = getDoctorObject(request.user.id)
         
         uuid = createUUIDs(1)[0]
         
-        diag = createDiagnosis(uuid, docObject, pictureURL)
+        # This will always be an object because if it is not, the status must be "error".
+        mediaFolderObject = Media.objects.get(name=datasetName)
+        
+        diag = createDiagnosis(uuid, docObject, pictureURL, mediaFolderObject)
 
         createUseTime(diag)
         
         addFinishedPatient(request.user.id, datasetName, pictureURL, uuid)
 
-        return redirect("newDiagnosis", diagnosisID=uuid)
+        return redirect("newDiagnosis", diagnosisID=uuid, mode=mode)
+
+
+@login_required 
+def continueDiagnosis(request):
+    """
+    Continues the diagnosis process.
+    
+    Retrieves the diagnosis object for the logged-in user and redirects to the diagnosis page.
+    """
+    diagnosisData = getContinueDiag(request.user.id)
+
+    mode = "continue"
+    
+    # Check if a valid diagnosis was returned
+    if diagnosisData.get("status") and diagnosisData.get("object"):
+        diagID = diagnosisData["object"].diagID
+        return redirect("newDiagnosis", diagnosisID=diagID, mode=mode)
+    else:
+        # If no diagnosis is found, redirect to home page
+        return render(request, "home.html")
 
 
 @login_required
