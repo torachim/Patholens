@@ -53,7 +53,6 @@ export function drawRectangleNiivue(nv, data){
     const { voxStart, voxEnd, axCorSag } = data
     // these rect corners will be set based on the plane the drawing was created in 
     let topLeft, topRight, bottomLeft, bottomRight
-    let topLeftO, topRightO, bottomLeftO, bottomRightO
     let newAxCor;
 
     switch(axCorSag){
@@ -68,11 +67,6 @@ export function drawRectangleNiivue(nv, data){
             topRight = [maxX, minY, fixedZ]
             bottomLeft = [minX, maxY, fixedZ]
             bottomRight = [maxX, maxY, fixedZ]
-
-            topLeftO = [minX - 1, minY - 1, fixedZ]
-            topRightO = [maxX + 1, minY - 1, fixedZ]
-            bottomLeftO = [minX - 1, maxY + 1, fixedZ]
-            bottomRightO = [maxX + 1, maxY + 1, fixedZ]
 
             newAxCor = 0;
 
@@ -90,11 +84,6 @@ export function drawRectangleNiivue(nv, data){
             bottomLeft = [minX, fixedY, maxZ]
             bottomRight = [maxX, fixedY, maxZ]
 
-            topLeftO = [minX - 1, fixedY, minZ - 1]
-            topRightO = [maxX + 1, fixedY, minZ - 1]
-            bottomLeftO = [minX - 1, fixedY, maxZ + 1]
-            bottomRightO = [maxX + 1, fixedY, maxZ + 1]
-
             newAxCor = 1;
 
             break;
@@ -110,11 +99,6 @@ export function drawRectangleNiivue(nv, data){
             topRight = [fixedX, maxY, minZ]
             bottomLeft = [fixedX, minY, maxZ]
             bottomRight = [fixedX, maxY, maxZ]
-
-            topLeftO = [fixedX, minY - 1, minZ - 1] 
-            topRightO = [fixedX, maxY + 1, minZ - 1]
-            bottomLeftO = [fixedX, minY - 1, maxZ + 1]
-            bottomRightO = [fixedX, maxY + 1, maxZ + 1]
 
             newAxCor = 2;
 
@@ -135,7 +119,6 @@ export function drawRectangleNiivue(nv, data){
     rectangleBR = bottomRight;
     rectangleTL = topLeft;
     rectangleTR = topRight;
-    console.log(bottomLeft);
 
     corAx = newAxCor;
     
@@ -143,6 +126,10 @@ export function drawRectangleNiivue(nv, data){
     nv.refreshDrawing(true) // true will force a redraw of the entire scene (equivalent to calling drawScene() in niivue)  
 }
 
+/**
+ * Jumps to the bottom Left corner (viewer perspective) of the drawn rectangle 
+ * @param {Niivue} nv - Niivue instance
+ */
 export function jumpRectangle(nv){
     nv.moveCrosshairInVox(-207, -319, -319);
     const positionX = rectangleTL[0];
@@ -164,7 +151,7 @@ export function drawCubeNV(nv, data){
 
     const { voxStart, voxEnd, axCorSag } = data;
 
-    let voxStartUpEdge, voxStartDownEdge, voxEndUpEdge, voxEndDownEdge;
+    let nearUpEdge, nearRightEdge, nearBottomEdge, nearLeftEdge;
     let topLeftD, topRightD, bottomLeftD, bottomRightD;
 
     topLeftD = { ...rectangleTL };
@@ -174,12 +161,14 @@ export function drawCubeNV(nv, data){
 
     let depth;
 
-    voxStartUpEdge = (comparePoints(voxStart, rectangleTL, axCorSag) || comparePoints(voxStart, rectangleTR, axCorSag));
-    voxStartDownEdge = (comparePoints(voxStart, rectangleBL, axCorSag) || comparePoints(voxStart, rectangleBR, axCorSag));
-    voxEndUpEdge = (comparePoints(voxEnd, rectangleTL, axCorSag) || comparePoints(voxEnd, rectangleTR, axCorSag));
-    voxEndDownEdge = (comparePoints(voxEnd, rectangleBL, axCorSag) || comparePoints(voxEnd, rectangleBR, axCorSag));
+    nearUpEdge = (comparePointToEdge(voxStart, rectangleTL, rectangleTR) || comparePoints(voxEnd, rectangleTL, rectangleTR));
+    nearRightEdge = (comparePointToEdge(voxStart, rectangleTR, rectangleBR) || comparePointToEdge(voxEnd, rectangleTR, rectangleBR));
+    nearBottomEdge = (comparePointToEdge(voxStart, rectangleBL, rectangleBR) || comparePointToEdge(voxEnd, rectangleBL, rectangleBR));
+    nearLeftEdge = (comparePointToEdge(voxStart, rectangleBL, rectangleTL) || comparePointToEdge(voxEnd, rectangleBL, rectangleTL));
 
-    if(voxStartUpEdge || voxStartDownEdge || voxEndUpEdge || voxEndDownEdge){
+    console.log(nearBottomEdge, nearRightEdge, nearUpEdge, nearLeftEdge);
+
+    if(nearUpEdge || nearRightEdge || nearBottomEdge || nearLeftEdge){
 
         switch(corAx){
             case(0):{
@@ -261,7 +250,7 @@ export function drawCubeNV(nv, data){
  * @param {Int} corAx - The Axis where Point A lays.
  * @returns {bool} 
  */
-function comparePoints(ptA, ptB, corAx){
+function comparePoints(ptA, ptB){
     var xA = ptA[0];
     var xB = ptB[0];
     var yA = ptA[1];
@@ -279,6 +268,57 @@ function comparePoints(ptA, ptB, corAx){
     }
     return isNear;
 }
+
+/**
+ * Returns if a Point is near a edge of a rectangle
+ * @param {Array} pt 
+ * @param {Arry} edgePtA 
+ * @param {Arry} edgePtB 
+ * @returns {bool}
+ */
+function comparePointToEdge(pt, edgePtA, edgePtB){
+    let isNear;
+    const xVal = edgePtA[0] - edgePtB[0];
+    const yVal = edgePtA[1] - edgePtB[1];
+    const zVal = edgePtA[2] - edgePtB[2];
+   
+    if(xVal != 0){
+        const xMin = Math.min(edgePtA[0], edgePtB[0]);
+        const xMax = Math.max(edgePtA[0], edgePtB[0]);
+
+        for(let i = xMin; i <= xMax; i++){
+            isNear = comparePoints([i, edgePtA[1], edgePtA[2]], pt);
+            console.log([i, edgePtA[1], edgePtA[2]])
+            if(isNear){
+                break;
+            };
+        }
+    }
+    else if(yVal != 0){
+        const yMin = Math.min(edgePtA[1], edgePtB[1]);
+        const yMax = Math.max(edgePtA[1], edgePtB[1]);
+
+        for(let i = yMin; i <= yMax; i++){
+            isNear = comparePoints([edgePtA[0], i, edgePtA[2]], pt);
+            if(isNear){
+                break;
+            };
+        }
+    }
+    else if(zVal != 0){
+        const zMin = Math.min(edgePtA[2], edgePtB[2]);
+        const zMax = Math.max(edgePtA[2], edgePtB[2]);
+
+        for(let i = zMin; i <= zMax; i++){
+            isNear = comparePoints([edgePtA[0], edgePtA[1], i], pt);
+            if(isNear){
+                break;
+            };
+        }
+    }
+    return isNear;
+}
+
 
 /**
  * Fill a rectangle in 3D volume
