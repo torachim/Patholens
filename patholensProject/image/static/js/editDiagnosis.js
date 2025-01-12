@@ -289,6 +289,6 @@ document.addEventListener('DOMContentLoaded', function() {
     })
     
      // save image if logged out
-     document.getElementById("logoutButton").addEventListener("click", savedEditedImage(nv, diagnosisID, csrfToken));
+     //document.getElementById("logoutButton").addEventListener("click", savedEditedImage(nv, diagnosisID, csrfToken));
 });
 
