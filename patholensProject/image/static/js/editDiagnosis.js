@@ -253,7 +253,7 @@ document.addEventListener('DOMContentLoaded', function() {
         await sendConfidence(confidenceValue, diagnosisID, csrfToken);
         await endTimer('Confidence confirmed', startTime, diagnosisID, csrfToken);
         await savedEditedImage(nv, diagnosisID, csrfToken);
-        window.location.assign(`/image/newDiagnosis/${diagnosisID}/transitionPage/`)
+        window.location.assign(`/image/editDiagnosis/${diagnosisID}/transitionPage/`)
     }
 
     const finishButton = document.getElementById("finishButton");
