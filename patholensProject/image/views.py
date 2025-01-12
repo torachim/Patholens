@@ -64,7 +64,7 @@ def saveImage(request):
 
 
 @login_required
-def transitionPage(request, diagnosisID):
+def transitionPage(request, diagnosisID, mode):
     """
     Handles the transition page view for a specific diagnosis.
 
