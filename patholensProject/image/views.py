@@ -12,6 +12,15 @@ def newDiagnosis(request, diagnosisID, mode):
     return render(request, "image/diagnosisPage.html", {"diagnosisID": diagnosisID, "mode": mode})
 
 
+
+def testRenderImageView(request, imageID):
+    return render(request, 'image/diagnosisPage.html', {'imageID': imageID})
+
+
+def editDiagnosis(request, diagnosisID):
+    return render(request, 'image/editDiagnosis.html', {"diagnosisID": diagnosisID})
+
+
 @login_required
 def AIPage(request, diagnosisID):
     return render(request, "image/AIPage.html", {"diagnosisID": diagnosisID})
@@ -94,3 +103,4 @@ def transitionPage(request, diagnosisID, mode):
     
     
     return render (request, "image/transitionPage.html", {"datasetFinished": False, "datasetName":diagMediaFolderTitle })
+
