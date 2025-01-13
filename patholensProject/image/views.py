@@ -7,16 +7,13 @@ from image.mediaHandler import *
 from accounts.doctorManager import *
 from accounts.diagnosisManager import *
 
+
 @login_required
 def newDiagnosis(request, diagnosisID, mode):
     return render(request, "image/diagnosisPage.html", {"diagnosisID": diagnosisID, "mode": mode})
 
 
-
-def testRenderImageView(request, imageID):
-    return render(request, 'image/diagnosisPage.html', {'imageID': imageID})
-
-
+@login_required
 def editDiagnosis(request, diagnosisID):
     return render(request, 'image/editDiagnosis.html', {"diagnosisID": diagnosisID})
 
@@ -71,7 +68,6 @@ def saveImage(request):
         return JsonResponse({"error": "Invalid request method"}, status=405)
 
 
-
 @login_required
 def transitionPage(request, diagnosisID, mode=None):
     """
@@ -103,4 +99,3 @@ def transitionPage(request, diagnosisID, mode=None):
     
     
     return render (request, "image/transitionPage.html", {"datasetFinished": False, "datasetName":diagMediaFolderTitle })
-
