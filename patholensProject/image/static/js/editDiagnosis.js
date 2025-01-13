@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
             drawRectangleNiivue(nv, data)
             endTimer("Rectangle", startTime, diagnosisID, csrfToken)
             nv.setDrawingEnabled(false); //drawingEnabled equals false so you have to click the button again to draw another rechtangle
+            deactivateAllButtons(); //deactiviates the active style of button
         }
     }
 
@@ -122,7 +123,7 @@ document.addEventListener('DOMContentLoaded', function() {
         saveDrawingState();
         nv.setDrawingEnabled(true);  
         changeDrawingMode(6, false);
-        activateButton("selectTool");
+        activateButton("selectTool"); //changes button style while selected
     });
         
      // disables drawing after a Pixel is marked
@@ -153,6 +154,7 @@ document.addEventListener('DOMContentLoaded', function() {
        
     });
 
+    // INFO: You need to right click and drag to draw rectangle
     // enable rectangle drawing when the corresponding button in html is clicked
     document.getElementById("frameTool").addEventListener("click", function () {
         startTimer()
@@ -160,28 +162,30 @@ document.addEventListener('DOMContentLoaded', function() {
         nv.setDrawingEnabled(true);
         nv.opts.dragMode = DRAG_MODE.callbackOnly;  // Draw rectangle only when dragging
         nv.opts.onDragRelease = onDragRelease;      // Set callback for rectangle drawing
-        activateButton("frameTool"); 
+        activateButton("frameTool"); //changes button style while drawing rectangle
     });
 
      // Undo the drawing/erasing
      document.getElementById("undoTool").addEventListener("click", function (e) {
         nv.drawUndo();
-        activateButton("undoTool");
+        deactivateAllButtons(); //only changes style after being clicked
     })
 
+    //Removes the style applied when button is active
     function deactivateAllButtons() {
         document.querySelectorAll(".toolButton").forEach(button => {
-            if (!button.id.includes("undoTool")) { // Exclude Undo button
+            if (!button.id.includes("undoTool")) { //Exclude Undo button
                 button.classList.remove("activeButton");
             }
         });
     }
 
+    //applies style when button is active
     function activateButton(buttonId) {
         deactivateAllButtons(); 
         if (buttonId !== "undoTool") {
             const button = document.getElementById(buttonId);
-            button.classList.add("activeButton"); // Visual change only
+            button.classList.add("activeButton"); //only changes style of button
         }
     }
 
@@ -315,4 +319,3 @@ document.addEventListener('DOMContentLoaded', function() {
      //document.getElementById("logoutButton").addEventListener("click", savedEditedImage(nv, diagnosisID, csrfToken));
 });
 
-//test kkk

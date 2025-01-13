@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
             drawRectangleNiivue(nv, data)
             endTimer("Rectangle", startTime, diagnosisID, csrfToken)
             nv.setDrawingEnabled(false); //drawingEnabled equals false so you have to click the button again to draw another rechtangle
+            deactivateAllButtons(); //deactiviates the active style of button
         }
     }
 
@@ -89,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function() {
         saveDrawingState();
         nv.setDrawingEnabled(true);  
         changeDrawingMode(6, false);
-        activateButton("selectTool");
+        activateButton("selectTool"); //changes button style while selected
     });
 
 
@@ -117,7 +118,7 @@ document.addEventListener('DOMContentLoaded', function() {
         nv.setDrawingEnabled(true);
         // 0 = Eraser and true => eraser ist filled so a whole area can be erased
         changeDrawingMode(0, true);
-        activateButton("eraseTool");
+        activateButton("eraseTool"); 
     });
 
 
@@ -129,27 +130,30 @@ document.addEventListener('DOMContentLoaded', function() {
         nv.setDrawingEnabled(true);
         nv.opts.dragMode = DRAG_MODE.callbackOnly;  // Draw rectangle only when dragging
         nv.opts.onDragRelease = onDragRelease;      // Set callback for rectangle drawing
-        activateButton("frameTool");
+        activateButton("frameTool"); //changes button style while drawing rectangle
     });
 
      // Undo the drawing/erasing
      document.getElementById("undoTool").addEventListener("click", function (e) {
         nv.drawUndo();
-        deactivateAllButtons();
+        deactivateAllButtons(); //only changes style after being clicked
     })
+
+    //Removes the style applied when button is active
     function deactivateAllButtons() {
         document.querySelectorAll(".toolButton").forEach(button => {
-            if (!button.id.includes("undoTool")) { // Exclude Undo button
+            if (!button.id.includes("undoTool")) { //Exclude Undo button
                 button.classList.remove("activeButton");
             }
         });
     }
 
+    //applies style when button is active
     function activateButton(buttonId) {
         deactivateAllButtons(); 
         if (buttonId !== "undoTool") {
             const button = document.getElementById(buttonId);
-            button.classList.add("activeButton"); // Visual change only
+            button.classList.add("activeButton"); //only changes style of button
         }
     }
     
@@ -158,6 +162,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function startTimer(){
         startTime = performance.now();
     }
+
 
     // Buttons in the confidence Window
     const confirmButton = document.querySelector('.popupConfirm');
@@ -208,4 +213,3 @@ document.addEventListener('DOMContentLoaded', function() {
 
 });
 
-//test
