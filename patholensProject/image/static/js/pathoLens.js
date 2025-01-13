@@ -114,7 +114,6 @@ export function drawRectangleNiivue(nv, data){
     nv.drawPenLine(bottomRight, bottomLeft, colourValue);
     nv.drawPenLine(bottomLeft, topLeft, colourValue);
 
-
     rectangleBL = bottomLeft;
     rectangleBR = bottomRight;
     rectangleTL = topLeft;
@@ -125,6 +124,7 @@ export function drawRectangleNiivue(nv, data){
     // refresh the drawing
     nv.refreshDrawing(true) // true will force a redraw of the entire scene (equivalent to calling drawScene() in niivue)  
 }
+
 
 /**
  * Jumps to the bottom Left corner (viewer perspective) of the drawn rectangle 
