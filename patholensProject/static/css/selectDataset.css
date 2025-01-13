@@ -1,5 +1,4 @@
 body {
-    font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
     display: flex;
@@ -65,7 +64,7 @@ h1{
     color: #ffffff;
     font-size: 25px;
     font-style: bold;
-    font-family: 'Calibri';
+    font-family: 'Calibri', sans-serif;
     margin-top: 1%;
     margin-bottom: 1%;
 }
@@ -81,7 +80,7 @@ button {
     padding: 10px 15px;
     font-size: 18px;
     font: bold;
-    font-family: 'Calibri';
+    font-family: 'Calibri', sans-serif;
     color: #ffffff;
     border: none;
     border-radius: 8px;
