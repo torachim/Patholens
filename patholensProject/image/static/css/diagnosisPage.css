@@ -35,6 +35,8 @@ body {
     margin: 20px auto; 
     margin-top: 25px; 
     margin-bottom: -30px;
+    transition: margin-left 1.5s ease;
+    transition: margin-right 1.5s ease;
 }
 
 /* Main toolbar styling */
