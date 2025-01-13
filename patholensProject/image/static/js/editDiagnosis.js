@@ -197,6 +197,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
 
     // Zoom functionality
+    
     let comparisonContainer = document.getElementById("comparisonContainer");
     const zoomButton = document.getElementById("zoomButton");
     let zoomed = false;
@@ -248,6 +249,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     
     // dropdown functionality
+
     function swapOptions(optionElement) {
         const parentDropdown = optionElement.closest('.dropdown');
         const textBox = parentDropdown.querySelector('.textBox');
@@ -270,7 +272,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     //confidence meter window 
-    
+
     const confirmButton = document.querySelector('.popupConfirm');
     const confidenceSlider = document.getElementById('confidenceMeter');
 
@@ -314,7 +316,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     })
 
-    
      // save image if logged out
      //document.getElementById("logoutButton").addEventListener("click", savedEditedImage(nv, diagnosisID, csrfToken));
 });

@@ -93,7 +93,6 @@ document.addEventListener('DOMContentLoaded', function() {
         activateButton("selectTool"); //changes button style while selected
     });
 
-
     // disables drawing after a Pixel is marked
     document.getElementById("imageBrain").addEventListener("mouseup", disableDrawing)
 
@@ -120,7 +119,6 @@ document.addEventListener('DOMContentLoaded', function() {
         changeDrawingMode(0, true);
         activateButton("eraseTool"); 
     });
-
 
     // INFO: You need to right click and drag to draw rectangle
     // enable rectangle drawing when the corresponding button in html is clicked
@@ -163,8 +161,7 @@ document.addEventListener('DOMContentLoaded', function() {
         startTime = performance.now();
     }
 
-
-    // Buttons in the confidence Window
+    //confidence meter window 
     const confirmButton = document.querySelector('.popupConfirm');
     const confidenceSlider = document.getElementById('confidenceMeter');
 
@@ -213,3 +210,4 @@ document.addEventListener('DOMContentLoaded', function() {
 
 });
 
+//test 1
