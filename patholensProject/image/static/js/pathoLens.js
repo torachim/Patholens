@@ -602,7 +602,7 @@ export async function loadImageWithDiagnosis(diagnosisID, formatMri) {
                 volumes.push({url: diagURL,
                               schema: "nifti",
                               colorMap: "blue",
-                              opacity: 1.0
+                              opacity: 0.65
                 });
             })
             .catch(err => {
