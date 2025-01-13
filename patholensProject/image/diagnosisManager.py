@@ -16,6 +16,7 @@ django.setup()
 from image.models import Diagnosis, Media
 from accounts.models import Doctors
 
+
 @unique
 class ConfidenceType(Enum):
     FIRST_EDIT = "confidence"

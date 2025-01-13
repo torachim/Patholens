@@ -1,13 +1,13 @@
-from django.shortcuts import render
-from django.shortcuts import redirect
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from image.diagnosisManager import *
-from image.timeHandler import *
 
+from image.timeHandler import *
 from image.views import *
 from image.mediaHandler import *
-from accounts.doctorManager import *
+from image.diagnosisManager import *
 from image.models import Media
+
+from accounts.doctorManager import *
 
 
 @login_required

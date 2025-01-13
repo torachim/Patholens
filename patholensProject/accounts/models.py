@@ -2,7 +2,6 @@ from django.db import models
 from django.conf import settings
 
 
-
 class Doctors(models.Model):
     # 1 to 1 relation between diagnosis and user
     # when user is deleted the doctor is deleted as well

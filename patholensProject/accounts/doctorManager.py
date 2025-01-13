@@ -16,8 +16,8 @@ django.setup()
 
 
 from image.mediaHandler import *
-from accounts.models import Doctors
 from image.diagnosisManager import *
+from accounts.models import Doctors
 
 
 def createDoctor(user: django.contrib.auth.models.User) -> Doctors:
@@ -37,7 +37,6 @@ def createDoctor(user: django.contrib.auth.models.User) -> Doctors:
 
     return doc
 
-
 def createUUIDs(amount: int) -> list[str]:
     """
     Generates a specified number of unique UUIDs (Universally Unique Identifiers).
@@ -53,7 +52,6 @@ def createUUIDs(amount: int) -> list[str]:
         allUUIDs.append(str(uuid.uuid4()))
 
     return allUUIDs
-
 
 def getRandomURL(docID: str, datasetName: str) -> dict:
     """
@@ -107,7 +105,6 @@ def getRandomURL(docID: str, datasetName: str) -> dict:
         index = random.randint(0, len(remaining) - 1)
         return {"status": "success", "url": remaining[index]}
 
-
 def getDoctorObject(docID: str) -> Doctors | bool:
     """
     Returns the object to the linked doctor
@@ -125,7 +122,6 @@ def getDoctorObject(docID: str) -> Doctors | bool:
 
     doctor = Doctors.objects.get(doctorID=docID)
     return doctor
-
 
 def addFinishedPatient(docID: str, datasetName: str, url: str, uuid: str) -> bool:
     """
@@ -157,7 +153,6 @@ def addFinishedPatient(docID: str, datasetName: str, url: str, uuid: str) -> boo
     doctor.save()
     
     return True
-
 
 def finishedDatasets(docID: str) -> list:
     """
@@ -197,7 +192,6 @@ def finishedDatasets(docID: str) -> list:
             
     return finishedDatasets
 
-
 def getContinueDiag(docID: str) -> dict:
     """
     Retrieves the status of the doctor's ongoing diagnosis. Checks if the doctor exists
@@ -230,7 +224,6 @@ def getContinueDiag(docID: str) -> dict:
     
     returnDict.update({"status": True, "object": toBeContinuedDiagnosis})
     return returnDict
-
 
 def setContinueDiag(docID: str, diagID: str) -> dict:
     """
@@ -271,7 +264,7 @@ def setContinueDiag(docID: str, diagID: str) -> dict:
     
     returnDict.update({"status": True})
     return returnDict
-    
+   
 def getAvailableDatasets(docID) -> list:
     """
     Retrieves the list of available datasets associated with the specific doctor.
