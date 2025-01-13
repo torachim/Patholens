@@ -3,6 +3,7 @@ import { niivueCanvas,drawRectangleNiivue,loadImageAPI, loadImageWithDiagnosis, 
 
 document.addEventListener('DOMContentLoaded', function() {
     
+
     let startTime;
     let drawRectangle = false;
     let erasing = false;
@@ -121,6 +122,7 @@ document.addEventListener('DOMContentLoaded', function() {
         saveDrawingState();
         nv.setDrawingEnabled(true);  
         changeDrawingMode(6, false);
+        activateButton("selectTool");
     });
         
      // disables drawing after a Pixel is marked
@@ -147,6 +149,7 @@ document.addEventListener('DOMContentLoaded', function() {
         nv.setDrawingEnabled(true);
         // 0 = Eraser and true => eraser ist filled so a whole area can be erased
         changeDrawingMode(0, true);
+        activateButton("eraseTool");
        
     });
 
@@ -157,8 +160,31 @@ document.addEventListener('DOMContentLoaded', function() {
         nv.setDrawingEnabled(true);
         nv.opts.dragMode = DRAG_MODE.callbackOnly;  // Draw rectangle only when dragging
         nv.opts.onDragRelease = onDragRelease;      // Set callback for rectangle drawing
+        activateButton("frameTool"); 
     });
 
+     // Undo the drawing/erasing
+     document.getElementById("undoTool").addEventListener("click", function (e) {
+        nv.drawUndo();
+        activateButton("undoTool");
+    })
+
+    //style of buttons in active state
+    //puts all buttons in the disabled state
+    function deactivateAllButtons() {
+        document.querySelectorAll(".toolButton").forEach(button => {
+            button.classList.remove("activeButton");
+        });
+    }
+
+    // activates specific button
+    function activateButton(buttonId) {
+        deactivateAllButtons(); 
+        const button = document.getElementById(buttonId);
+        button.classList.add("activeButton"); //changes style of the active button
+    }
+
+    
     // Function to start the timer 
     function startTimer(){
         startTime = performance.now();
@@ -283,10 +309,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     })
 
-    // Undo the drawing/erasing
-    document.getElementById("undoTool").addEventListener("click", function (e) {
-        nv.drawUndo();
-    })
     
      // save image if logged out
      //document.getElementById("logoutButton").addEventListener("click", savedEditedImage(nv, diagnosisID, csrfToken));

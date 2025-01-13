@@ -89,8 +89,9 @@ document.addEventListener('DOMContentLoaded', function() {
         saveDrawingState();
         nv.setDrawingEnabled(true);  
         changeDrawingMode(6, false);
+        activateButton("selectTool");
     });
-    
+
 
     // disables drawing after a Pixel is marked
     document.getElementById("imageBrain").addEventListener("mouseup", disableDrawing)
@@ -106,7 +107,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         nv.setDrawingEnabled(false);
     }  
-
     
     // enables erasing the drawing by clicking on eraser
     document.getElementById("eraseTool").addEventListener("click", function(e){
@@ -117,8 +117,9 @@ document.addEventListener('DOMContentLoaded', function() {
         nv.setDrawingEnabled(true);
         // 0 = Eraser and true => eraser ist filled so a whole area can be erased
         changeDrawingMode(0, true);
-       
+        activateButton("eraseTool");
     });
+
 
     // INFO: You need to right click and drag to draw rectangle
     // enable rectangle drawing when the corresponding button in html is clicked
@@ -128,7 +129,30 @@ document.addEventListener('DOMContentLoaded', function() {
         nv.setDrawingEnabled(true);
         nv.opts.dragMode = DRAG_MODE.callbackOnly;  // Draw rectangle only when dragging
         nv.opts.onDragRelease = onDragRelease;      // Set callback for rectangle drawing
+        activateButton("frameTool");
     });
+
+     // Undo the drawing/erasing
+     document.getElementById("undoTool").addEventListener("click", function (e) {
+        nv.drawUndo();
+        deactivateAllButtons();
+    })
+    function deactivateAllButtons() {
+        document.querySelectorAll(".toolButton").forEach(button => {
+            if (!button.id.includes("undoTool")) { // Exclude Undo button
+                button.classList.remove("activeButton");
+            }
+        });
+    }
+
+    function activateButton(buttonId) {
+        deactivateAllButtons(); 
+        if (buttonId !== "undoTool") {
+            const button = document.getElementById(buttonId);
+            button.classList.add("activeButton"); // Visual change only
+        }
+    }
+    
 
     // Function to start the timer 
     function startTimer(){
@@ -179,12 +203,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     })
 
-    // Undo the drawing/erasing
-    document.getElementById("undoTool").addEventListener("click", function (e) {
-        nv.drawUndo();
-    })
-
     // save image if logged out        ATTENTION: prevent saving image twice!! It wont work
     //document.getElementById("logoutButton").addEventListener("click", savedEditedImage(nv, diagnosisID, csrfToken));
 
 });
+
+//test
