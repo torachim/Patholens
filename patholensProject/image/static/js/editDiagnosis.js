@@ -3,6 +3,7 @@ import { niivueCanvas,drawRectangleNiivue,loadImageAPI, loadImageWithDiagnosis, 
 
 document.addEventListener('DOMContentLoaded', function() {
     
+
     let startTime;
     let drawRectangle = false;
     let erasing = false;
@@ -15,6 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
             drawRectangleNiivue(nv, data)
             endTimer("Rectangle", startTime, diagnosisID, csrfToken)
             nv.setDrawingEnabled(false); //drawingEnabled equals false so you have to click the button again to draw another rechtangle
+            deactivateAllButtons(); //deactiviates the active style of button
         }
     }
 
@@ -121,6 +123,7 @@ document.addEventListener('DOMContentLoaded', function() {
         saveDrawingState();
         nv.setDrawingEnabled(true);  
         changeDrawingMode(6, false);
+        activateButton("selectTool"); //changes button style while selected
     });
         
      // disables drawing after a Pixel is marked
@@ -147,9 +150,11 @@ document.addEventListener('DOMContentLoaded', function() {
         nv.setDrawingEnabled(true);
         // 0 = Eraser and true => eraser ist filled so a whole area can be erased
         changeDrawingMode(0, true);
+        activateButton("eraseTool");
        
     });
 
+    // INFO: You need to right click and drag to draw rectangle
     // enable rectangle drawing when the corresponding button in html is clicked
     document.getElementById("frameTool").addEventListener("click", function () {
         startTimer()
@@ -157,8 +162,34 @@ document.addEventListener('DOMContentLoaded', function() {
         nv.setDrawingEnabled(true);
         nv.opts.dragMode = DRAG_MODE.callbackOnly;  // Draw rectangle only when dragging
         nv.opts.onDragRelease = onDragRelease;      // Set callback for rectangle drawing
+        activateButton("frameTool"); //changes button style while drawing rectangle
     });
 
+     // Undo the drawing/erasing
+     document.getElementById("undoTool").addEventListener("click", function (e) {
+        nv.drawUndo();
+        deactivateAllButtons(); //only changes style after being clicked
+    })
+
+    //Removes the style applied when button is active
+    function deactivateAllButtons() {
+        document.querySelectorAll(".toolButton").forEach(button => {
+            if (!button.id.includes("undoTool")) { //Exclude Undo button
+                button.classList.remove("activeButton");
+            }
+        });
+    }
+
+    //applies style when button is active
+    function activateButton(buttonId) {
+        deactivateAllButtons(); 
+        if (buttonId !== "undoTool") {
+            const button = document.getElementById(buttonId);
+            button.classList.add("activeButton"); //only changes style of button
+        }
+    }
+
+    
     // Function to start the timer 
     function startTimer(){
         startTime = performance.now();
@@ -166,6 +197,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
 
     // Zoom functionality
+    
     let comparisonContainer = document.getElementById("comparisonContainer");
     const zoomButton = document.getElementById("zoomButton");
     let zoomed = false;
@@ -217,6 +249,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     
     // dropdown functionality
+
     function swapOptions(optionElement) {
         const parentDropdown = optionElement.closest('.dropdown');
         const textBox = parentDropdown.querySelector('.textBox');
@@ -239,7 +272,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     //confidence meter window 
-    
+
     const confirmButton = document.querySelector('.popupConfirm');
     const confidenceSlider = document.getElementById('confidenceMeter');
 
@@ -283,11 +316,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     })
 
-    // Undo the drawing/erasing
-    document.getElementById("undoTool").addEventListener("click", function (e) {
-        nv.drawUndo();
-    })
-    
      // save image if logged out
      //document.getElementById("logoutButton").addEventListener("click", savedEditedImage(nv, diagnosisID, csrfToken));
 });
