@@ -7,6 +7,7 @@ from django.shortcuts import redirect
 from image.mediaHandler import addMedia
 from django.http import JsonResponse
 from .diagnosisManager import getURL
+from django.contrib.auth.decorators import login_required
 
 # the python file which handles the creation of Doctor DB
 from . import doctorManager
@@ -153,18 +154,18 @@ def loginView(request):
 
     return render(request, "accounts/login.html", {"information": information})
 
-
+@login_required
 def logoutView(request, calledFrom):
     # if called from one of these pages, the process needs to be saved before logging out
     if calledFrom == "diagnosisPage" or calledFrom == "editPage":
-        # TO-DO: save progress
+        # TODO: save progress
         pass
 
     logout(request)
     return redirect("/")  # redirects to the login screen
 
 
-
+@login_required
 def getURLApi(request, diagID):
     try:
         # call `getURL`-function
@@ -177,7 +178,7 @@ def getURLApi(request, diagID):
         return JsonResponse({"error": str(e)}, status=500)
     
     
-
+@login_required
 def getDocID(request):
     try:
         # call `getDocID`-function

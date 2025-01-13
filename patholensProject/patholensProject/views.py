@@ -9,6 +9,7 @@ from image.mediaHandler import *
 from accounts.doctorManager import *
 from image.models import Media
 
+
 @login_required
 def homepage(request):
     return render(request, "home.html")
