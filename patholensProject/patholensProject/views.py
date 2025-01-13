@@ -90,8 +90,9 @@ def homeWindow(request):
 
 @login_required
 def data(request):
-    mediaNames = getAllDatasetNames()
-    finished = finishedDatasets(request.user.id)
+    docID = request.user.id
+    mediaNames = getAvailableDatasets(docID)
+    finished = finishedDatasets(docID)
     
     notFinished = [media.title() for media in mediaNames if media not in finished]
     finishedTitle = [item.title() for item in finished]

@@ -20,7 +20,7 @@ from accounts.models import Doctors
 from accounts.diagnosisManager import *
 
 
-def createDoctor(user: django.contrib.auth.models.User):
+def createDoctor(user: django.contrib.auth.models.User) -> Doctors:
     """
     Creates a new doctor entry in the database.
 
@@ -38,7 +38,7 @@ def createDoctor(user: django.contrib.auth.models.User):
     return doc
 
 
-def createUUIDs(amount: int):
+def createUUIDs(amount: int) -> list[str]:
     """
     Generates a specified number of unique UUIDs (Universally Unique Identifiers).
 
@@ -48,14 +48,14 @@ def createUUIDs(amount: int):
     Returns:
         list: A list of randomly generated UUIDs in string format.
     """
-    allUUIDs = []
+    allUUIDs:list = []
     for i in range(amount):
         allUUIDs.append(str(uuid.uuid4()))
 
     return allUUIDs
 
 
-def getRandomURL(docID: str, datasetName: str):
+def getRandomURL(docID: str, datasetName: str) -> dict:
     """
     Returns a URL for a patient or a status message depending on the doctor's progress with the dataset.
 
@@ -70,19 +70,19 @@ def getRandomURL(docID: str, datasetName: str):
             - "message" (str, optional): A message explaining the status.
     """
     # Check if the doctor exists in the database
-    doctor = getDoctorObject(docID)
+    doctor: Doctors = getDoctorObject(docID)
     
-    if doctor == False:
+    if not doctor:
         return {"status": "error", "message": "Doctor not found"}
      
-    urls = getPatientURLs(datasetName)
+    urls: list = getPatientURLs(datasetName)
     if not urls:
         return {"status": "error", "message": "No URLs available for the dataset"}
 
 
-    datasetNamesAndURL = doctor.finishedPatients
+    datasetNamesAndURL: dict = doctor.finishedPatients
     
-    finishedDatasets = list(datasetNamesAndURL.keys())
+    finishedDatasets: list = list(datasetNamesAndURL.keys())
 
 
     # doctor is going to use the dataset for the first time
@@ -100,12 +100,12 @@ def getRandomURL(docID: str, datasetName: str):
     
     # get a random url (patient) from the remaining patients of the dataset
     else:
-        remaining = [patient for patient in urls if patient not in finishedPatients]
+        remaining: list = [patient for patient in urls if patient not in finishedPatients]
         index = random.randint(0, len(remaining) - 1)
         return {"status": "success", "url": remaining[index]}
 
 
-def getDoctorObject(docID: str):
+def getDoctorObject(docID: str) -> Doctors | bool:
     """
     Returns the object to the linked doctor
 
@@ -124,7 +124,7 @@ def getDoctorObject(docID: str):
     return doctor
 
 
-def addFinishedPatient(docID: str, datasetName: str, url: str, uuid: str):
+def addFinishedPatient(docID: str, datasetName: str, url: str, uuid: str) -> bool:
     """
     Adds a URL entry to a finished patient dataset for a doctor.
 
@@ -154,7 +154,7 @@ def addFinishedPatient(docID: str, datasetName: str, url: str, uuid: str):
     return True
 
 
-def finishedDatasets(docID: str):
+def finishedDatasets(docID: str) -> list:
     """
     Identifies datasets where all patients have been marked as finished.
     
@@ -170,18 +170,18 @@ def finishedDatasets(docID: str):
         list: A list of dataset names where all patients have been completed.
     """
     
-    docObject = getDoctorObject(docID)
+    docObject: Doctors = getDoctorObject(docID)
 
-    datasetNamesAndURL = docObject.finishedPatients
-    startedDatasets = list(datasetNamesAndURL.keys())
+    datasetNamesAndURL: dict = docObject.finishedPatients
+    startedDatasets: list = list(datasetNamesAndURL.keys())
     
-    finishedDatasets = []
+    finishedDatasets: list = []
     
     for dataset in startedDatasets:
         # the patients that the doctor finished to edit
         finishedPatientULRs = list(datasetNamesAndURL[dataset])
         # all patients in the dataset 
-        allPatientURLS = getPatientURLs(dataset)
+        allPatientURLS: list[str] = getPatientURLs(dataset)
 
         if len(finishedPatientULRs) == len(allPatientURLS):
             finishedDatasets.append(dataset)
@@ -206,21 +206,22 @@ def getContinueDiag(docID: str) -> dict:
     returnDict = {"status": None, "reason": None, "message": None, "object" : None}
 
     # Define the reasons for failure cases. (constant)
-    DOC_REASON = "Doctorobject" # Doc does not exists
-    DIAG_REASON = "Diganosisobject" # Diag is NULL
+    DOC_REASON: str = "Doctorobject" # Doc does not exists
+    DIAG_REASON: str = "Diganosisobject" # Diag is NULL
     
-    docObject = getDoctorObject(docID=docID)
+    docObject: Doctors = getDoctorObject(docID=docID)
     if not docObject:
         returnDict.update ({"status": False, "reason": DOC_REASON ,"message": "The doctor does not exist."})
         return returnDict
     
-    toBeContinuedDiagnosis = docObject.continueDiag
+    toBeContinuedDiagnosis: Diagnosis = docObject.continueDiag
     if not toBeContinuedDiagnosis:
         returnDict.update ({"status": False, "reason": DIAG_REASON ,"message": "There is no unfinished Diagnosis"})
         return returnDict
     
     returnDict.update({"status": True, "object": toBeContinuedDiagnosis})
     return returnDict
+
 
 def setContinueDiag(docID: str, diagID: str) -> dict:
     """
@@ -243,15 +244,15 @@ def setContinueDiag(docID: str, diagID: str) -> dict:
     returnDict = {"status": None, "reason": None, "message": None}
 
     # Define the reasons for failure cases. (constant)
-    DOC_REASON = "Doctorobject" # Doc does not exists
-    DIAG_REASON = "Diganosisobject" # Diag does not exists
+    DOC_REASON: str = "Doctorobject" # Doc does not exists
+    DIAG_REASON: str = "Diganosisobject" # Diag does not exists
     
-    docObject = getDoctorObject(docID=docID)
+    docObject: Doctors = getDoctorObject(docID=docID)
     if not docObject:
         returnDict.update ({"status": False, "reason": DOC_REASON ,"message": "The doctor does not exist."})
         return returnDict
     
-    diagObject = getDiagnosisObject(diagID=diagID)
+    diagObject: Diagnosis = getDiagnosisObject(diagID=diagID)
     if not diagObject:
         returnDict.update({"status": False, "reason": DIAG_REASON, "message": "The diagnosis does not exist."})
         return returnDict
@@ -260,6 +261,27 @@ def setContinueDiag(docID: str, diagID: str) -> dict:
     docObject.save()
     
     returnDict.update({"status": True})
+    return returnDict
     
+def getAvailableDatasets(docID) -> list:
+    """
+    Retrieves the list of available datasets associated with the specific doctor.
+
+    Args:
+        * docID (int): The unique identifier for the doctor.
+
+    Returns:
+        * list: A list of dataset names associated with the doctor. If the doctor does not exist,
+              an empty list is returned.
+    """
+    docObject: Doctors = getDoctorObject(docID)
     
+    datasets: list = []
     
+    if not docObject:
+        return datasets
+    
+    datasets: str = [sets.name for sets in docObject.datasets.all()]
+    
+    return datasets
+           

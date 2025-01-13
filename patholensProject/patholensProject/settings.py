@@ -42,10 +42,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'drf_spectacular'
+    'drf_spectacular',
+    'import_export',
 ]
 
-
+# to use the export module from django
+IMPORT_EXPORT_USE_TRANSACTIONS = True
 
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
