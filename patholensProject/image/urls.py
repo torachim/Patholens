@@ -32,10 +32,12 @@ urlpatterns = [
     path("api/saveImage/", views.saveImage, name="saveImage"),
     path('api/getDiagnosis/<str:diagnosisID>/', GetDiagnosis.as_view(), name='getDiagnosis'),
     path('api/getImageAndMask/<str:diagnosisID>/', GetImageAndMaskAPIView.as_view(), name='getImageAndMask'),
-    path('AIpage/<str:diagnosisID>/', views.AIPage, name='AIpage'),
 
+    path('AIpage/<str:diagnosisID>/', views.AIPage, name='AIpage'),
+    
     path('newDiagnosis/<str:diagnosisID>/', views.newDiagnosis, name='newDiagnosis'),
     path('newDiagnosis/<str:diagnosisID>/<str:mode>/', views.newDiagnosis, name='newDiagnosis'),
+    
     path('editDiagnosis/<str:diagnosisID>/', views.editDiagnosis, name='editDiagnosis'),
     path("editDiagnosis/<str:diagnosisID>/transitionPage/", views.transitionPage, name="transitionPage"),
 ]
