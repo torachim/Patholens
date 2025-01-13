@@ -169,19 +169,20 @@ document.addEventListener('DOMContentLoaded', function() {
         activateButton("undoTool");
     })
 
-    //style of buttons in active state
-    //puts all buttons in the disabled state
     function deactivateAllButtons() {
         document.querySelectorAll(".toolButton").forEach(button => {
-            button.classList.remove("activeButton");
+            if (!button.id.includes("undoTool")) { // Exclude Undo button
+                button.classList.remove("activeButton");
+            }
         });
     }
 
-    // activates specific button
     function activateButton(buttonId) {
         deactivateAllButtons(); 
-        const button = document.getElementById(buttonId);
-        button.classList.add("activeButton"); //changes style of the active button
+        if (buttonId !== "undoTool") {
+            const button = document.getElementById(buttonId);
+            button.classList.add("activeButton"); // Visual change only
+        }
     }
 
     
@@ -314,3 +315,4 @@ document.addEventListener('DOMContentLoaded', function() {
      //document.getElementById("logoutButton").addEventListener("click", savedEditedImage(nv, diagnosisID, csrfToken));
 });
 
+//test kkk
