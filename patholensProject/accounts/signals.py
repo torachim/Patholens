@@ -3,10 +3,10 @@ from django.dispatch import receiver
 from .models import Doctors
 from image.models import Media
 
-# Always triggerd when a doctor is saved
+# Always triggered when a doctor is saved
 @receiver(post_save, sender=Doctors)
 def assign_default_datasets(sender, instance, created, **kwargs):
-    # Only when a doctor is created the code gets triggerd
+    # Only when a doctor is created the code gets triggered
     if created:
         # All existing Media from the database
         all_datasets = Media.objects.all()

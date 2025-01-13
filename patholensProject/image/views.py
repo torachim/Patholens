@@ -5,7 +5,7 @@ import os
 from django.conf import settings
 from image.mediaHandler import *
 from accounts.doctorManager import *
-from accounts.diagnosisManager import *
+from image.diagnosisManager import *
 
 
 @login_required

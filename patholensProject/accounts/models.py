@@ -16,9 +16,9 @@ class Doctors(models.Model):
     # datasets which the Doctor can edit
     datasets = models.ManyToManyField("image.Media", blank=True)
     
-    finishedPatients = models.JSONField(null=True)
+    finishedPatients = models.JSONField(null=True, blank=True)
     
    
     def __str__(self):
-        # the shown name in the admin panel is the name of the doctotrs
+        # the shown name in the admin panel is the name of the doctor
         return f"{self.doctorID.first_name} {self.doctorID.last_name}"

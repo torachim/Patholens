@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import redirect
 from image.mediaHandler import addMedia
 from django.http import JsonResponse
-from .diagnosisManager import getURL
+from image.diagnosisManager import getURL
 from django.contrib.auth.decorators import login_required
 
 # the python file which handles the creation of Doctor DB

@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.conf import settings
 import os
-from accounts.diagnosisManager import getURL, ConfidenceType, setConfidence
+from image.diagnosisManager import getURL, ConfidenceType, setConfidence
 from .timeHandler import setUseTime
 
 
