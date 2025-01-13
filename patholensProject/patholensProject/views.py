@@ -80,7 +80,7 @@ def continueDiagnosis(request):
         return redirect("newDiagnosis", diagnosisID=diagID, mode=mode)
     else:
         # If no diagnosis is found, redirect to home page
-        return render(request, "home.html")
+        return render(request, "noUnfinishedDiagnosis.html")
 
 
 @login_required
