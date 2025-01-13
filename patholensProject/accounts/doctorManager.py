@@ -17,7 +17,7 @@ django.setup()
 
 from image.mediaHandler import *
 from accounts.models import Doctors
-from accounts.diagnosisManager import *
+from image.diagnosisManager import *
 
 
 def createDoctor(user: django.contrib.auth.models.User) -> Doctors:
@@ -32,7 +32,7 @@ def createDoctor(user: django.contrib.auth.models.User) -> Doctors:
     """
 
     doc = Doctors.objects.create(
-        doctorID=user, finishedPatients={}
+        doctorID=user, finishedPatients=None
     )
 
     return doc
@@ -81,6 +81,9 @@ def getRandomURL(docID: str, datasetName: str) -> dict:
 
 
     datasetNamesAndURL: dict = doctor.finishedPatients
+    
+    if not datasetNamesAndURL:
+        datasetNamesAndURL = {}
     
     finishedDatasets: list = list(datasetNamesAndURL.keys())
 
@@ -142,6 +145,8 @@ def addFinishedPatient(docID: str, datasetName: str, url: str, uuid: str) -> boo
 
     doctor = Doctors.objects.get(doctorID=docID)
     finishedPatients = doctor.finishedPatients
+    if not finishedPatients:
+        finishedPatients: dict = {}
     
     if datasetName not in finishedPatients:
         finishedPatients[datasetName] = {}
@@ -169,22 +174,26 @@ def finishedDatasets(docID: str) -> list:
     Returns:
         list: A list of dataset names where all patients have been completed.
     """
+    finishedDatasets: list = []
     
     docObject: Doctors = getDoctorObject(docID)
 
     datasetNamesAndURL: dict = docObject.finishedPatients
-    startedDatasets: list = list(datasetNamesAndURL.keys())
     
-    finishedDatasets: list = []
+    # only if there are values in the dict
+    if datasetNamesAndURL: 
+        startedDatasets: list = list(datasetNamesAndURL.keys())
     
-    for dataset in startedDatasets:
-        # the patients that the doctor finished to edit
-        finishedPatientULRs = list(datasetNamesAndURL[dataset])
-        # all patients in the dataset 
-        allPatientURLS: list[str] = getPatientURLs(dataset)
+        
+        
+        for dataset in startedDatasets:
+            # the patients that the doctor finished to edit
+            finishedPatientULRs = list(datasetNamesAndURL[dataset])
+            # all patients in the dataset 
+            allPatientURLS: list[str] = getPatientURLs(dataset)
 
-        if len(finishedPatientULRs) == len(allPatientURLS):
-            finishedDatasets.append(dataset)
+            if len(finishedPatientULRs) == len(allPatientURLS):
+                finishedDatasets.append(dataset)
             
     return finishedDatasets
 

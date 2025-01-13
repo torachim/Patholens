@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
-from accounts.diagnosisManager import *
+from image.diagnosisManager import *
 from image.timeHandler import *
 
 from image.views import *
@@ -92,11 +92,15 @@ def homeWindow(request):
 @login_required
 def data(request):
     docID = request.user.id
-    mediaNames = getAvailableDatasets(docID)
-    finished = finishedDatasets(docID)
+    mediaNames: list = getAvailableDatasets(docID)
+    finished: list = finishedDatasets(docID)
+
+    finishedTitle = []
+    # if there are values in list, update 
+    if finished:
+        finishedTitle = [item.title() for item in finished]
     
     notFinished = [media.title() for media in mediaNames if media not in finished]
-    finishedTitle = [item.title() for item in finished]
         
     return render(request, 'selectDataset.html', {'allDataSets': notFinished, 'finishedDatasets': finishedTitle})
 
