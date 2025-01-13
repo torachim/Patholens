@@ -38,6 +38,7 @@ def createDoctor(user: django.contrib.auth.models.User) -> Doctors:
     return doc
 
 
+
 def createUUIDs(amount: int) -> list[str]:
     """
     Generates a specified number of unique UUIDs (Universally Unique Identifiers).
@@ -53,6 +54,7 @@ def createUUIDs(amount: int) -> list[str]:
         allUUIDs.append(str(uuid.uuid4()))
 
     return allUUIDs
+
 
 
 def getRandomURL(docID: str, datasetName: str) -> dict:
@@ -105,6 +107,7 @@ def getRandomURL(docID: str, datasetName: str) -> dict:
         return {"status": "success", "url": remaining[index]}
 
 
+
 def getDoctorObject(docID: str) -> Doctors | bool:
     """
     Returns the object to the linked doctor
@@ -122,6 +125,7 @@ def getDoctorObject(docID: str) -> Doctors | bool:
 
     doctor = Doctors.objects.get(doctorID=docID)
     return doctor
+
 
 
 def addFinishedPatient(docID: str, datasetName: str, url: str, uuid: str) -> bool:
@@ -152,6 +156,7 @@ def addFinishedPatient(docID: str, datasetName: str, url: str, uuid: str) -> boo
     doctor.save()
     
     return True
+
 
 
 def finishedDatasets(docID: str) -> list:
@@ -189,6 +194,7 @@ def finishedDatasets(docID: str) -> list:
     return finishedDatasets
 
 
+
 def getContinueDiag(docID: str) -> dict:
     """
     Retrieves the status of the doctor's ongoing diagnosis. Checks if the doctor exists
@@ -221,6 +227,7 @@ def getContinueDiag(docID: str) -> dict:
     
     returnDict.update({"status": True, "object": toBeContinuedDiagnosis})
     return returnDict
+
 
 
 def setContinueDiag(docID: str, diagID: str) -> dict:
@@ -263,6 +270,8 @@ def setContinueDiag(docID: str, diagID: str) -> dict:
     returnDict.update({"status": True})
     return returnDict
     
+
+
 def getAvailableDatasets(docID) -> list:
     """
     Retrieves the list of available datasets associated with the specific doctor.
@@ -285,3 +294,33 @@ def getAvailableDatasets(docID) -> list:
     
     return datasets
            
+
+
+def deleteContinueDiag(docID: str) -> dict:
+    """
+    Deletes the ongoing diagnosis of the doctor.
+
+    Args:
+        docID (str): The ID of the doctor.
+
+    Returns:
+        dict: A dictionary containing:
+            - "status" (bool): True if the operation was successful, False otherwise.
+            - "reason" (str): A string providing the reason for failure, or empty if successful.
+            - "message" (str): A detailed message explaining the result of the operation.
+    """
+    returnDict = {"status": None, "reason": None, "message": None}
+
+    # Define the reasons for failure cases. (constant)
+    DOC_REASON: str = "Doctorobject" # Doc does not exists
+    
+    docObject: Doctors = getDoctorObject(docID=docID)
+    if not docObject:
+        returnDict.update ({"status": False, "reason": DOC_REASON ,"message": "The doctor does not exist."})
+        return returnDict
+    
+    docObject.continueDiag = None
+    docObject.save()
+    
+    returnDict.update({"status": True})
+    return returnDict

@@ -45,6 +45,7 @@ def saveImage(request):
                 "derivatives",
                 "diagnosis",
                 f"sub-{subID}"
+                f"/doc-{docID}"
             )
 
             # Ensure the directory exists
