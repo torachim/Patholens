@@ -11,6 +11,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const canvas = document.getElementById("imageBrain");
     const jumpRect = document.getElementById("jumpRect");
+    const alertMessageBox = document.getElementById("alertMessageBox");
+    const closeAlertWindow = document.getElementById("closeAlertWindow");
 
     // Load FLAIR default
     let selectedFormat = "FLAIR";
@@ -25,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 let finishedCube;
                 finishedCube = drawCubeNV(nv, data);
                 if(!finishedCube){
-                    alert("Please finish your cuboid first");
+                    alertMessageBox.style.display = "flex"
                 }
                 else{
                     endTimer("Cuboid", startTime, diagnosisID, csrfToken);
@@ -119,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function() {
             changeDrawingMode(6, false);
         }
         else{
-            alert("Please finish your cuboid first!");
+            alertMessageBox.style.display = "flex";
         }
     });
     
@@ -153,7 +155,7 @@ document.addEventListener('DOMContentLoaded', function() {
             changeDrawingMode(0, true);
         }
         else{
-            alert("Please finish your cuboid first!")
+            alertMessageBox.style.display = "flex";
         }
     });
 
@@ -204,7 +206,7 @@ document.addEventListener('DOMContentLoaded', function() {
             startTimer();
         }
         else{
-            alert("Please finish your cuboid first");
+            alertMessageBox.style.display = "flex";
         }
     });
 
@@ -219,6 +221,10 @@ document.addEventListener('DOMContentLoaded', function() {
             popupOverlay.style.display = "none";
             endTimer('Aborted confidence', startTime, diagnosisID, csrfToken);
         }
+    })
+
+    closeAlertWindow.addEventListener("click", () => {
+        alertMessageBox.style.display = "none";
     })
 
     // Undo the drawing/erasing
