@@ -285,7 +285,7 @@ class GetDiagnosis(APIView):
 
             diagnosisPath = os.path.join(
                         settings.MEDIA_ROOT,
-                        f"website_data/derivatives/diagnosis/sub-{subID}/sub-{subID}_acq-{docID}_space-edited-image.nii.gz"
+                        f"website_data/derivatives/diagnosis/sub-{subID}/doc-{docID}/sub-{subID}_acq-{docID}_space-edited-image.nii.gz"
             )
             
             if not os.path.exists(diagnosisPath):
@@ -294,7 +294,7 @@ class GetDiagnosis(APIView):
                     status=status.HTTP_404_NOT_FOUND
                 )
             
-            relativePath = f"media/website_data/derivatives/diagnosis/sub-{subID}/sub-{subID}_acq-{docID}_space-edited-image.nii.gz"
+            relativePath = f"media/website_data/derivatives/diagnosis/sub-{subID}/doc-{docID}/sub-{subID}_acq-{docID}_space-edited-image.nii.gz"
 
             return Response(
                     {"status": "success",
