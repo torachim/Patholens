@@ -1,5 +1,5 @@
 import { Niivue } from "./index.js";
-import { niivueCanvas, loadImageWithDiagnosis, loadImageWithMask, loadOverlayDAI, endTimer } from "./pathoLens.js";
+import { niivueCanvas, loadImageWithDiagnosis, loadImageWithMask, loadOverlayDAI, endTimer, deleteContinueDiagnosis } from "./pathoLens.js";
 
 document.addEventListener('DOMContentLoaded', function () {
 
@@ -108,4 +108,9 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
 
+    const TakeMyDiagnosisButton = document.getElementById("TakeMyDiagnosis");
+    TakeMyDiagnosisButton.addEventListener("click", () => {
+        deleteContinueDiagnosis(diagnosisID, csrfToken);
+    });
+    
 });

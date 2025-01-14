@@ -314,17 +314,29 @@ class GetDiagnosis(APIView):
 
 
 class DeleteDiagnosisAPIView(APIView):
-
-    def post(self, request):
+    def delete(self, request, diagnosisID):
         """
         API endpoint to delete a diagnosis from the database
-
-        Returns:
-            Response: Response if the diagnosis got deleted correctly
         """
         try:
-            continueDiag = request.data.get("diagnosisID")
-            deleteContinueDiag(continueDiag)
-            return JsonResponse("Continue DiagnosisID successfully deleted from database")
+            # Get the doctor ID (from the logged-in user)
+            docID = request.user.id
+
+            # Call the function to delete the diagnosis
+            result = deleteContinueDiag(docID)
+
+            if result["status"]:
+                return Response({
+                    'status': 'success',
+                    'message': 'Diagnosis deleted successfully'
+                }, status=status.HTTP_200_OK)
+            else:
+                return Response({
+                    'status': 'error',
+                    'message': result["message"]
+                }, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
-            return JsonResponse({"error": str(e)}, status=400)
+            return Response({
+                'status': 'error',
+                'message': f'An unexpected error occurred: {str(e)}'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
