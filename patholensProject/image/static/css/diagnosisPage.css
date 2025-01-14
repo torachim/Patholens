@@ -374,79 +374,61 @@ input[type="radio"]:checked::before {
 }
 
 .alertMessageBox {
-    display: flex;
-    flex-direction: column; /* Elemente vertikal anordnen */
-    align-items: center; /* Horizontal zentrieren */
-    justify-content: center; /* Vertikal zentrieren */
+    display: none;
+    flex-direction: column; 
+    align-items: center;
+    justify-content: center; 
     background-color: #ffffff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    padding: 7px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
     width: 350px;
-    max-width: 100%;
-
-    height: auto; /* Höhe passt sich an den Inhalt an */
-
-    flex-direction: column;
-    justify-content: space-between;
-    border-radius: 8px;
+    height: auto;
+    border-radius: 10px;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 4;
     font-family: Calibri, Arial, sans-serif;
-    
 }
 
-
 .alertMessageBox h3 {
-    font-size: 30px;
+    font-size: 28px;
     font-weight: bold;
     color: #cc0404;
     text-align: center;
-    margin-top: 20px;
     margin-bottom: 1px;
-    margin-right: 50px;
-    
-}
-
-.alertMessageBox .content-container {
-    display: flex; /* Flexbox für Text und Button */
-    justify-content: space-between; /* Abstand zwischen Text und Button */
-    align-items: center; /* Vertikale Ausrichtung */
-    width: 100%; /* Nimmt die gesamte Breite der Box ein */
+    margin-top: 30px;
 }
 
 .alertMessageBox p {
-   
-    text-align: center;
     font-size: 16px;
     color: #2c2c2c;
-    margin-left: 50px;
-    margin-bottom: 20px;
-
+    text-align: center;
+    margin-bottom: 20px; 
 }
 
 .alertMessageBox button {
-    margin-top: 1px;
-    align-self: flex-end;
-    background-color: #cc0404;
+    background-color: #d60707;
     color: #ffffff;
     border: none;
-    border-radius: 5px;
-    padding: 7px 17px;
-    font-size: 12px;
+    border-radius: 7px;
+    padding: 10px 20px;
+    font-size: 14px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin-left: 20px;
+    transition: all 0.3s ease;
+    margin-top: 10px; 
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .alertMessageBox button:hover {
-    background-color: #000000;
+    background-color: #db0707;  
+    transform: scale(1.05); 
 }
 
 .alertMessageBox button:active {
-    background-color: #666666;
+    background-color: #900303;  
+    transform: scale(0.97); 
 }
 
 .overlay {
@@ -457,8 +439,8 @@ input[type="radio"]:checked::before {
     height: 100%;
     background: rgba(0, 0, 0, 0.7);
     backdrop-filter: blur(8px);
+    display: none;
     justify-content: center;
     align-items: center;
     z-index: 3;
-    display: flex;
 }
