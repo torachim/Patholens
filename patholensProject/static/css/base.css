@@ -27,7 +27,7 @@ body{
 .NameIcon img{
     width: 6vh;
     height: 6vh;
-    margin-top: 35%;
+    margin-top: max(35px, 35%);
     margin-left: 15px;
 }
 
@@ -70,21 +70,22 @@ body{
     transition: right 0.5s ease-in-out;
 }
 
+
+#openHelp, #helpButton, #logoutButton{
+    width: max(40px, 4vh);
+    height: max(40px, 4vh);
+}
+
 #openHelp{
     margin-right: max(1vh, 10px);
-    width: 4vh;
-    height: 4vh;
+   
 }
 
 #helpButton {
-    width: 4vh;
-    height: 4vh;
     margin-right: 10px;
 }
 
 #logoutButton {
-    width: 4vh;
-    height: 4vh;
     margin-right: 2vh;
 }
 
