@@ -112,5 +112,12 @@ document.addEventListener('DOMContentLoaded', function () {
     TakeMyDiagnosisButton.addEventListener("click", () => {
         deleteContinueDiagnosis(diagnosisID, csrfToken);
     });
+
+
+    const TakeAIDiagnosisButton = document.getElementById("TakeAIDiagnosis");
+    TakeAIDiagnosisButton.addEventListener("click", () => {
+        deleteContinueDiagnosis(diagnosisID, csrfToken);
+    });
+
     
 });
