@@ -245,9 +245,8 @@ export function drawCubeNV(nv, data){
 
 /**
  * Returns if a Point B lays in a certain nighbourhood around a Point A
- * @param {Array} ptA - Point A in a 3D room
- * @param {Array} ptB - Point B in a 3D room
- * @param {Int} corAx - The Axis where Point A lays.
+ * @param {Array<int>} ptA - Point A in a 3D room
+ * @param {Array<int>} ptB - Point B in a 3D room
  * @returns {bool} 
  */
 function comparePoints(ptA, ptB){
@@ -271,10 +270,10 @@ function comparePoints(ptA, ptB){
 
 /**
  * Returns if a Point is near a edge of a rectangle
- * @param {Array} pt 
- * @param {Arry} edgePtA 
- * @param {Arry} edgePtB 
- * @returns {bool}
+ * @param {Array<int>} pt - The point which is checked if it's near a edge
+ * @param {Array<int>} edgePtA - Starting point of a edge
+ * @param {Array<int>} edgePtB - Ending point of a edge
+ * @returns {bool} - True -> point is near this edge. False -> point is not near this edge
  */
 function comparePointToEdge(pt, edgePtA, edgePtB){
     let isNear;
@@ -323,10 +322,10 @@ function comparePointToEdge(pt, edgePtA, edgePtB){
 /**
  * Fill a rectangle in 3D volume
  * @param {Niivue} nv - Niivue instance
- * @param {Array} PtBL - Bottom-Left point of a rectangle [x, y, z]
- * @param {Array} PtBR - Bottom-Right point of a rectangle [x, y, z]
- * @param {Array} PtTL  - Top-Left point of a rectangle [x, y, z]
- * @param {Array} PtTR  - Top-Right point of a rectangle [x, y, z]
+ * @param {Array<int>} PtBL - Bottom-Left point of a rectangle [x, y, z]
+ * @param {Array<int>} PtBR - Bottom-Right point of a rectangle [x, y, z]
+ * @param {Array<int>} PtTL  - Top-Left point of a rectangle [x, y, z]
+ * @param {Array<int>} PtTR  - Top-Right point of a rectangle [x, y, z]
  */
 function fillRectangle(nv, PtBL, PtBR, PtTL, PtTR){
     const colourValue = 3;

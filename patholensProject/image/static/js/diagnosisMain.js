@@ -223,12 +223,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Undo the drawing/erasing
     document.getElementById("undoTool").addEventListener("click", () => {
-        if(!drawCube){
-            nv.drawUndo();
+        nv.drawUndo();
+        if(drawCube){
+            drawCube = false;
+            jumpRect.style.display = "none";
         }
-        else{
-            alert("Please finish your cuboid first!")
-        }
+        
     })
 
     // save image if logged out        ATTENTION: prevent saving image twice!! It wont work
