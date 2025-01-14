@@ -107,6 +107,5 @@ document.addEventListener('DOMContentLoaded', function () {
         window.location.assign(`/image/editDiagnosis/${diagnosisID}`)
     });
 
+
 });
-
-

@@ -5,6 +5,7 @@ from rest_framework import status
 from django.conf import settings
 import os
 from accounts.diagnosisManager import getURL, ConfidenceType, setConfidence
+from accounts.doctorManager import deleteContinueDiag
 from .timeHandler import setUseTime
 
 
@@ -309,3 +310,21 @@ class GetDiagnosis(APIView):
                     status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
             
+
+
+
+class DeleteDiagnosisAPIView(APIView):
+
+    def post(self, request):
+        """
+        API endpoint to delete a diagnosis from the database
+
+        Returns:
+            Response: Response if the diagnosis got deleted correctly
+        """
+        try:
+            continueDiag = request.data.get("diagnosisID")
+            deleteContinueDiag(continueDiag)
+            return JsonResponse("Continue DiagnosisID successfully deleted from database")
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=400)

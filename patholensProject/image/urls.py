@@ -22,6 +22,7 @@ from .apiViews import GetImageAPIView
 from .apiViews import SaveConfidenceAPIView
 from .apiViews import GetImageAndMaskAPIView
 from .apiViews import GetDiagnosis
+from .apiViews import DeleteDiagnosisAPIView
 
 urlpatterns = [
     path('', include('accounts.urls')),
@@ -32,6 +33,7 @@ urlpatterns = [
     path("api/saveImage/", views.saveImage, name="saveImage"),
     path('api/getDiagnosis/<str:diagnosisID>/', GetDiagnosis.as_view(), name='getDiagnosis'),
     path('api/getImageAndMask/<str:diagnosisID>/', GetImageAndMaskAPIView.as_view(), name='getImageAndMask'),
+    path('api/deleteDiagnosis/', DeleteDiagnosisAPIView.as_view(), name='deleteDiagnosis'),
 
     path('AIpage/<str:diagnosisID>/', views.AIPage, name='AIpage'),
     
