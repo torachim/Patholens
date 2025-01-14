@@ -1,15 +1,14 @@
 import { Niivue, DRAG_MODE } from "./index.js";
-import { niivueCanvas, drawRectangleNiivue,loadImageAPI, endTimer, sendConfidence, savedEditedImage, loadImageWithDiagnosis } from "./pathoLens.js";
-
+import { niivueCanvas,drawRectangleNiivue,loadImageAPI, loadImageWithDiagnosis, loadImageWithMask, loadOverlayDAI, endTimer, sendConfidence, savedEditedImage } from "./pathoLens.js";
 
 document.addEventListener('DOMContentLoaded', function() {
+    
 
     let startTime;
     let drawRectangle = false;
     let erasing = false;
-
+    
     //function to drag a rectangle in the niivue 
-    // define what happens on dragRelase (right mouse up)
     const onDragRelease = (data) => {
         drawRectangle = true;
         //if drawing is enabled
@@ -21,53 +20,87 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+
+    //Loading Images 
+    const canvasZoom = document.getElementById("imageBrainZoom");
+    const nvZoom = niivueCanvas({}, canvasZoom);
+
     const canvas = document.getElementById("imageBrain");
-
     const nv = niivueCanvas({
-               onDragRelease: onDragRelease,
-               dragMode: DRAG_MODE.callbackOnly,
-               penSize: 3,
-               maxDrawUndoBitmaps: 200,     // max 200 undos possible
-               drawOpacity: 0.65,
-               }, 
-               canvas)
-
-    // Load FLAIR default
+        onDragRelease: onDragRelease,
+        dragMode: DRAG_MODE.callbackOnly,
+        penSize: 3,
+        maxDrawUndoBitmaps: 200,     // max 200 undos possible
+        drawOpacity: 0.65,
+        }, 
+        canvas)
+   
+    //default formats
+    let selectedFormatMask = "DEEPFCD";
+    let selectedFormatMri = "FLAIR"
+    let selectedDisplay = "AI Diagnosis"
     let selectedFormat = "FLAIR";
 
-    // Function to handle changes in the format selection
-    const radioButtons = document.querySelectorAll('input[name="option"]');
-    radioButtons.forEach((radio) => {
-        radio.addEventListener('change', (event) => {
-            selectedFormat = event.target.value;
-            if (mode === "new") {
-                loadImage(selectedFormat);
-            } else if (mode === "continue") {
-                loadImageAndEdited();
-            }
-        });
+    const aiModelMapping = {
+        "Model A": "DEEPFCD",
+        "Model B": "MAP18",
+        "Model C": "MELD",
+        "Model D": "NNUNET"
+    };
+
+    loadImages(); //loading zoomable Images 
+    loadImage(); //loading main Image
+
+    // Dropdown change listener for the AI Mask
+    const aiDropdown = document.getElementById('AIdropdown');
+    aiDropdown.addEventListener('click', (event) => {
+        if (event.target.classList.contains('option')) {
+            selectedFormatMask = aiModelMapping[event.target.textContent];
+            loadImages();
+        }
     });
 
-    // Call the appropriate function based on the mode
-    if (mode === "new") {
-        loadImage();
-    } else if (mode === "continue") {
-        loadImageAndEdited(); // Calls loadImageAndDiagnosis internally
-    }
+    // Dropdown change listener for format of the pictures
+    const formatDropdown = document.getElementById('formatDropdown');
+    formatDropdown.addEventListener('click', (event) => {
+        if (event.target.classList.contains('option')) {
+            selectedFormatMri = event.target.textContent;
+            loadImages();
+        }
+    });
 
+    // Dropdown change listener for the Overlay structure
+    const displayDropdown = document.getElementById('displayDropdown');
+    displayDropdown.addEventListener('click', (event) => {
+        if (event.target.classList.contains('option')) {
+            selectedDisplay = event.target.textContent;
+            loadImages();
+        }
+    });
+    // function to load the images in the correct overlay
+    async function loadImages(){
+        let volumes;
+        if(selectedDisplay == "AI Diagnosis"){
+            volumes = await loadImageWithMask(selectedFormatMask, selectedFormatMri, diagnosisID);
+        }
+        else if(selectedDisplay == "My Diagnosis"){
+            volumes = await loadImageWithDiagnosis(diagnosisID, selectedFormatMri);
+        }
+        else if(selectedDisplay == "Show Overlay"){
+            volumes = await loadOverlayDAI(selectedFormatMask, selectedFormatMri, diagnosisID);
+        }
+        nvZoom.loadVolumes(volumes);
+    };
 
-    async function loadImageAndEdited() {
-        const volumes = await loadImageWithDiagnosis(diagnosisID, selectedFormat);
-        nv.loadVolumes(volumes);
-    } 
-
+     //loading Images for the main Frame
     async function loadImage() {
         const volumes = await loadImageAPI(selectedFormat, diagnosisID);
         nv.loadVolumes(volumes);
-    } 
-  
-    // Add drawing state to history
-    function saveDrawingState() {
+    }
+
+
+     // Add drawing state to history
+     function saveDrawingState() {
         nv.drawAddUndoBitmap();
     }
 
@@ -92,10 +125,10 @@ document.addEventListener('DOMContentLoaded', function() {
         changeDrawingMode(6, false);
         activateButton("selectTool"); //changes button style while selected
     });
-
-    // disables drawing after a Pixel is marked
+        
+     // disables drawing after a Pixel is marked
     document.getElementById("imageBrain").addEventListener("mouseup", disableDrawing)
-
+     
     // disables drawing
     function disableDrawing(){
         if(!drawRectangle && !erasing){
@@ -106,8 +139,8 @@ document.addEventListener('DOMContentLoaded', function() {
             erasing = false
         }
         nv.setDrawingEnabled(false);
-    }  
-    
+    } 
+        
     // enables erasing the drawing by clicking on eraser
     document.getElementById("eraseTool").addEventListener("click", function(e){
         erasing = true;
@@ -117,7 +150,8 @@ document.addEventListener('DOMContentLoaded', function() {
         nv.setDrawingEnabled(true);
         // 0 = Eraser and true => eraser ist filled so a whole area can be erased
         changeDrawingMode(0, true);
-        activateButton("eraseTool"); 
+        activateButton("eraseTool");
+       
     });
 
     // INFO: You need to right click and drag to draw rectangle
@@ -154,14 +188,91 @@ document.addEventListener('DOMContentLoaded', function() {
             button.classList.add("activeButton"); //only changes style of button
         }
     }
-    
 
+    
     // Function to start the timer 
     function startTimer(){
         startTime = performance.now();
     }
+    
+
+    // Zoom functionality
+    
+    let comparisonContainer = document.getElementById("comparisonContainer");
+    const zoomButton = document.getElementById("zoomButton");
+    let zoomed = false;
+    const dropdownMenus = document.querySelectorAll(".dropdown");
+    const overlay = document.getElementById("overlay");
+
+    //Image while zoomed out
+    function zoomOut(){
+        comparisonContainer.style.width = "50%";
+        comparisonContainer.style.top = "";
+        comparisonContainer.style.height = "24%";
+        zoomButton.src = "/static/icons/editPageZoomButton.png";
+        zoomed = false;
+        overlay.style.display = "none";
+    }
+
+    zoomButton.addEventListener("click", () =>{
+        if(zoomed){
+            zoomOut();
+        }
+
+        //Image while zoomed in
+        else{
+            comparisonContainer.style.width = "81%";
+            comparisonContainer.style.top = "25%";
+            comparisonContainer.style.height = "60%";
+            overlay.style.display = "flex";
+            zoomButton.src = "/static/icons/editPageZoomOutButton.png";
+            zoomed = true;
+        }
+    });
+
+    document.body.addEventListener("click", (e) =>{
+        if(zoomed){
+            console.log(e.target);
+            if(e.target != comparisonContainer && e.target != zoomButton ){
+                let clickedDropdown = false;
+                dropdownMenus.forEach(dropdown => {
+                    if (dropdown.contains(e.target)){
+                        clickedDropdown = true;
+                    }
+                });
+                if (!clickedDropdown){
+                    zoomOut();
+                }     
+            }
+        }
+    });
+
+    
+    // dropdown functionality
+
+    function swapOptions(optionElement) {
+        const parentDropdown = optionElement.closest('.dropdown');
+        const textBox = parentDropdown.querySelector('.textBox');
+        const clickedValue = optionElement.textContent;
+        // Update the text box value
+        textBox.value = clickedValue;
+    }
+
+    document.querySelectorAll('.dropdown').forEach(dropdown => {
+        dropdown.addEventListener('click', () => {
+            dropdown.classList.toggle('active');
+        });
+    });
+
+    document.querySelectorAll('.dropdown .option').forEach(option => {
+        option.addEventListener('click', (event) => {
+            swapOptions(event.target);
+        });
+    })
+
 
     //confidence meter window 
+
     const confirmButton = document.querySelector('.popupConfirm');
     const confidenceSlider = document.getElementById('confidenceMeter');
 
@@ -175,7 +286,7 @@ document.addEventListener('DOMContentLoaded', function() {
         await sendConfidence(confidenceValue, diagnosisID, csrfToken);
         await endTimer('Confidence confirmed', startTime, diagnosisID, csrfToken);
         await savedEditedImage(nv, diagnosisID, csrfToken);
-        window.location.assign(`/image/AIpage/${diagnosisID}`)
+        window.location.assign(`/image/editDiagnosis/${diagnosisID}/transitionPage/`)
     }
 
     const finishButton = document.getElementById("finishButton");
@@ -205,9 +316,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     })
 
-    // save image if logged out        ATTENTION: prevent saving image twice!! It wont work
-    //document.getElementById("logoutButton").addEventListener("click", savedEditedImage(nv, diagnosisID, csrfToken));
-
+     // save image if logged out
+     //document.getElementById("logoutButton").addEventListener("click", savedEditedImage(nv, diagnosisID, csrfToken));
 });
-
 

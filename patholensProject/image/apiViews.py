@@ -1,11 +1,14 @@
-from rest_framework.views import APIView
-from django.http import JsonResponse
-from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.views import APIView
+from rest_framework.response import Response
+
+from django.http import JsonResponse
 from django.conf import settings
-import os
-from accounts.diagnosisManager import getURL, ConfidenceType, setConfidence
+
+from image.diagnosisManager import getURL, ConfidenceType, setConfidence
 from .timeHandler import setUseTime
+
+import os
 
 
 class GetImageAPIView(APIView):
@@ -261,7 +264,7 @@ class GetImageAndMaskAPIView(APIView):
                 {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
      
-        
+     
 class GetDiagnosis(APIView):
 
     def get(self, request, diagnosisID):

@@ -42,10 +42,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'drf_spectacular'
+    'drf_spectacular',
+    'import_export',
 ]
 
-
+# to use the export module from django
+IMPORT_EXPORT_USE_TRANSACTIONS = True
 
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
@@ -178,3 +180,11 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 209715200  # 200 MB
 
 # Maximum allowed size for file uploads in bytes
 FILE_UPLOAD_MAX_MEMORY_SIZE = 209715200  # 200 MB
+
+
+# DummyCache deactivates 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+    }
+}

@@ -2,17 +2,19 @@
 {% load static %} 
 {% csrf_token %}
 {% block extraCSS %}
-<link rel="stylesheet" href="{% static 'css/diagnosisPage.css' %}?v=2" />
+<link rel="stylesheet" href="{% static 'css/editDiagnosis.css' %}?v=2" />
 {% endblock %} 
-
 
 {% block title %} 
-  PathoLens - Diagnosis Page 
+  Diagnosis Page 
 {% endblock %} 
 
-
 <!--adds the homebutton-->
-
+{% block topBar %}
+<a href="/startingPage" class="homeButton">
+    <img alt="home" src="{% static 'icons\HomeButton.png' %}" id="homeIcon">
+</a>
+{% endblock %}
 
 {%block content%}
 
@@ -35,50 +37,72 @@
     </button>
 </div>
 
+<!--Container for image loading-->
 <div class="imageBox">
     <canvas id="imageBrain" width="100%" height="376%"></canvas>
 </div>
 
-<!--Selection T1 / Flair-->
-<div class="container">
-    <form class="radioForm">
-        <label>
-            <input type="radio" name="option" value="FLAIR" checked>
-            <p>FLAIR</p>
-        </label>
-        <label>
-            <input type="radio" name="option" value="T1">
-            <p>T1</p>
-        </label>
-    </form>
+<div id="compareAndDropdownContainer">
+    <div class="dropdownContainer">
+
+        <!--dropdown functions-->
+        <div class="dropdown" id="AIdropdown">
+            <input class="textBox" type="text" value="Model A" readonly>
+            <div class="options">
+                <div class="option">Model A</div>
+                <div class="option">Model B</div>
+                <div class="option">Model C</div>
+                <div class="option">Model D</div>
+            </div>
+        </div>
+        
+        <div class="dropdown" id="displayDropdown">
+            <input class="textBox" type="text" value="AI diagnosis" readonly>
+            <div class="options">
+                <div class="option">AI Diagnosis</div>
+                <div class="option">My Diagnosis</div>
+                <div class="option">Show Overlay</div>
+            </div>
+        </div>
+        
+        <div class="dropdown" id="formatDropdown">
+            <input class="textBox" type="text" value="FLAIR" readonly>
+            <div class="options">
+                <div class="option">FLAIR</div>
+                <div class="option">T1</div>
+            </div>
+        </div>
+
+    </div>
+
+    <!--blur overlay-->
+    <div class="overlay" id="overlay"></div>
+
+    <!--Zoomable image-->
+    <div id="comparisonContainer">
+    <canvas id="imageBrainZoom" width="100%" height="376%"></canvas>
+        <img alt="zoom button" src="{% static 'icons\editPageZoomButton.png' %}" id="zoomButton">
+    </div>
+    
+
 </div>
+
 
 <div class="finishDiagnosisButton">
     <button type="button" id="finishButton">Finish Diagnosis</button>
 </div>
 
-
-<!--Confidence Meter-->
 <div class="popupOverlay" id="popupOverlay">
     <div class="popupFrame" id="popupFrame">
-        
         <button class="popupClose" id="closePopup">&times;</button>
-        
         <p>Please state your confidence</p>
-
         <div class="confidenceMeterContainer">
-            
             <input type="range" class="confidenceMeter" min="0" max="10" value="5" id="confidenceMeter">
-  
-
             <div class="tooltip" id="tooltip">5</div>
         </div>
-
         <button class="popupConfirm" id="popupConfirm">Confirm</button>
     </div>
 </div>
-
-
 
 <script>
     const slider = document.getElementById('confidenceMeter');
@@ -110,21 +134,14 @@
         tooltip.style.visibility = 'hidden';
     });
 </script>
-
-<input type="hidden" id="diagID" value="{{ diagnosisID }}">
-<input type="hidden" id="mode" value="{{ mode }}">
-
-
-{%endblock%}
-{% block extraJS %}
 <script>
-    const diagnosisID = "{{ diagnosisID }}";
-    const mode = "{{ mode }}";
-</script> 
+    const diagnosisID = '{{ diagnosisID }}'
+</script>
 {% csrf_token %}
 <script>
     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 </script>
-<script type="module" src="{% static 'js/diagnosisMain.js' %}"></script>
 <script type="module" src="{% static 'js/index.js' %}"></script>
+<script type="module" src="{% static 'js/editDiagnosis.js'%}"></script>
 {% endblock %}
+
