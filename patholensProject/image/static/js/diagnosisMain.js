@@ -43,6 +43,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 jumpRect.style.display = "flex"
                 endTimer("Rectangle", startTime, diagnosisID, csrfToken);
             }
+            deactivateAllButtons(); //deactiviates the active style of button
         }
         nv.setDrawingEnabled(false); //drawingEnabled equals false so you have to click the button again to draw another rechtangle  
     }
@@ -119,12 +120,12 @@ document.addEventListener('DOMContentLoaded', function() {
             saveDrawingState();
             nv.setDrawingEnabled(true);  
             changeDrawingMode(6, false);
+            activateButton("selectTool"); //changes button style while selected
         }
         else{
             showAlertWindow()
         }
     });
-    
 
     // disables drawing after a Pixel is marked
     document.getElementById("imageBrain").addEventListener("mouseup", disableDrawing)
@@ -141,7 +142,6 @@ document.addEventListener('DOMContentLoaded', function() {
             nv.setDrawingEnabled(false);
         }   
     }  
-
     
     // enables erasing the drawing by clicking on eraser
     document.getElementById("eraseTool").addEventListener("click", function(e){
@@ -153,6 +153,7 @@ document.addEventListener('DOMContentLoaded', function() {
             nv.setDrawingEnabled(true);
             // 0 = Eraser and true => eraser ist filled so a whole area can be erased
             changeDrawingMode(0, true);
+            activateButton("eraseTool"); 
         }
         else{
             showAlertWindow()
@@ -167,14 +168,40 @@ document.addEventListener('DOMContentLoaded', function() {
         nv.setDrawingEnabled(true);
         nv.opts.dragMode = DRAG_MODE.callbackOnly;  // Draw rectangle only when dragging
         nv.opts.onDragRelease = onDragRelease;      // Set callback for rectangle drawing
+        activateButton("frameTool"); //changes button style while drawing rectangle
     });
+
+     // Undo the drawing/erasing
+     document.getElementById("undoTool").addEventListener("click", function (e) {
+        nv.drawUndo();
+        deactivateAllButtons(); //only changes style after being clicked
+    })
+
+    //Removes the style applied when button is active
+    function deactivateAllButtons() {
+        document.querySelectorAll(".toolButton").forEach(button => {
+            if (!button.id.includes("undoTool")) { //Exclude Undo button
+                button.classList.remove("activeButton");
+            }
+        });
+    }
+
+    //applies style when button is active
+    function activateButton(buttonId) {
+        deactivateAllButtons(); 
+        if (buttonId !== "undoTool") {
+            const button = document.getElementById(buttonId);
+            button.classList.add("activeButton"); //only changes style of button
+        }
+    }
+    
 
     // Function to start the timer 
     function startTimer(){
         startTime = performance.now();
     }
 
-    // Buttons in the confidence Window
+    //confidence meter window 
     const confirmButton = document.querySelector('.popupConfirm');
     const confidenceSlider = document.getElementById('confidenceMeter');
 
@@ -247,3 +274,5 @@ document.addEventListener('DOMContentLoaded', function() {
     //document.getElementById("logoutButton").addEventListener("click", savedEditedImage(nv, diagnosisID, csrfToken));
 
 });
+
+

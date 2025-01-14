@@ -84,9 +84,6 @@
     box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.2); /* Inner shadow */
 }
 
-
-
-
 .inputBoxFirstname input {
     width: 140px; /* Width of the "Name" input field */
     height: 28px; /* Height of the input field */
@@ -197,10 +194,19 @@ body {
     font-weight: bold; /* Font weight */
     cursor: pointer; /* Pointer cursor on hover */
     box-shadow: 5px 5px rgba(0, 0, 0, 0.2); /* Shadow for the button */
+    transition: all 0.3s ease; 
 }
 
-.signupButton Button:hover {
-    background-color: #028f97; /* Button background color on hover */
+.signupButton Button:hover{
+    background-color: #0ac1ca; 
+    transform: scale(1.025); 
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3); 
+}
+
+.signupButton Button:active {
+    background-color:  #009198; 
+    transform: scale(0.95); 
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4); 
 }
 
 .signupBoxLinks p {
@@ -214,3 +220,12 @@ body {
 .signupBoxLinks a {
     color: #00afb9; /* Link color */
 }
+
+.signupBoxLinks a:hover{
+    color: #10cbd5;
+} 
+
+.signupBoxLinks a:active{
+    color: #028f97;
+} 
+

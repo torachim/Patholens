@@ -1,4 +1,5 @@
 Django == 5.1.3
 djangorestframework
-drf-spectacular 
+drf-spectacular
 numpy
+django-import-export

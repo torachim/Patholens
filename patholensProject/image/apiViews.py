@@ -1,14 +1,14 @@
-from rest_framework.views import APIView
-from django.http import JsonResponse
-from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.views import APIView
+from rest_framework.response import Response
+
+from django.http import JsonResponse
 from django.conf import settings
-from .models import Diagnosis
-import os
-from accounts.diagnosisManager import getURL
+
+from image.diagnosisManager import getURL, ConfidenceType, setConfidence
 from .timeHandler import setUseTime
 
-from image.models import Diagnosis
+import os
 
 
 class GetImageAPIView(APIView):
@@ -32,8 +32,8 @@ class GetImageAPIView(APIView):
             Path: The path to find the requested image
         """
         try:
-            imageFormat = request.GET.get("format ")
-            print(imageFormat)
+            #do NOT remove this space
+            imageFormat = request.GET.get("format ") 
             if not imageFormat:
                 imageFormat = "FLAIR"
 
@@ -115,8 +115,6 @@ class GetDiagnosis(APIView):
             )
 
 
-
-
 class SetUseTimeAPIView(APIView):
 
     def post(self, request):
@@ -160,7 +158,7 @@ class SaveConfidenceAPIView(APIView):
         This function saves the confidence value of the diganosis in the db
 
         Args:
-            request (_type_): _description_
+            request (HttpRequest): The HTTP request object, which contains metadata and parameters.
             diagID (string): ID of an diagnosis
 
         Returns:
@@ -172,20 +170,25 @@ class SaveConfidenceAPIView(APIView):
             confidence = data.get('confidence')
 
             # check if it is a valid value
-            if confidence is None or not (0 <= int(confidence) <= 100):
-                return Response({'error': 'Invalid confidence value. It must be between 0 and 100.'}, status=status.HTTP_400_BAD_REQUEST)
+            if confidence is None or not (0 <= int(confidence) <= 10):
+                return Response({'error': 'Invalid confidence value. It must be between 0 and 10.'}, status=status.HTTP_400_BAD_REQUEST)
 
-            if not Diagnosis.objects.filter(diagID=diagID).exists():
-                return Response(
-                    {'error': f'Diagnosis with diagID {diagID} does not exist.'},
-                    status=status.HTTP_404_NOT_FOUND
-                )
-            diag = Diagnosis.objects.get(diagID=diagID)
-            # store confidence value
-            diag.confidence = int(confidence)
-            diag.save()
+            """
+            # TODO: Get the name for the lesions 
+            # TODO: Know which confidence you want to save: First confidence, AI confidence, edited confidence
+            """
+            
+            keyValue = [{"allLesions": confidence}]
+            returnValue = setConfidence(diagID, ConfidenceType.FIRST_EDIT,keyValue)
+    
+            # Successfully
+            if returnValue["status"]:
+                return Response({'message': 'Confidence value saved successfully via API!'}, status=status.HTTP_200_OK)
+            
+            # There was a problem
+            else:
+                return Response({'message': returnValue["message"]},status=status.HTTP_400_BAD_REQUEST)
 
-            return Response({'message': 'Confidence value saved successfully via API!'}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({'error': f'An unexpected error occurred: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -260,7 +263,8 @@ class GetImageAndMaskAPIView(APIView):
             return Response(
                 {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
-        
+     
+     
 class GetDiagnosis(APIView):
 
     def get(self, request, diagnosisID):
@@ -307,3 +311,4 @@ class GetDiagnosis(APIView):
                     {"error": str(e)},
                     status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+            

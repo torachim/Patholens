@@ -1,14 +1,14 @@
-from django.shortcuts import render
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
-from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import redirect
-from image.mediaHandler import addMedia
 from django.http import JsonResponse
-from .diagnosisManager import getURL
+from django.shortcuts import render
 
-# the python file which handles the creation of Doctor DB
+from image.mediaHandler import addMedia
+from image.diagnosisManager import getURL
 from . import doctorManager
 
 
@@ -18,7 +18,6 @@ def customLogin(request, user):
     
     # if their are any new folders in the media folder the ulrs will be added to the db or a new entry will be added
     addMedia()
-
 
 def signupView(request):
 
@@ -107,11 +106,9 @@ def signupView(request):
 
     return render(request, "accounts/signup.html", {"information": information})
 
-
 def termination(request, information):
     logout(request)
     return render(request, "accounts/signup.html", {"information": information})
-
 
 def loginView(request):
 
@@ -153,18 +150,17 @@ def loginView(request):
 
     return render(request, "accounts/login.html", {"information": information})
 
-
+@login_required
 def logoutView(request, calledFrom):
     # if called from one of these pages, the process needs to be saved before logging out
     if calledFrom == "diagnosisPage" or calledFrom == "editPage":
-        # TO-DO: save progress
+        # TODO: save progress
         pass
 
     logout(request)
     return redirect("/")  # redirects to the login screen
 
-
-
+@login_required
 def getURLApi(request, diagID):
     try:
         # call `getURL`-function
@@ -175,9 +171,8 @@ def getURLApi(request, diagID):
             return JsonResponse({"error": "Diagnosis not found"}, status=404)
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)
-    
-    
-
+        
+@login_required
 def getDocID(request):
     try:
         # call `getDocID`-function

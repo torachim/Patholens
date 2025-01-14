@@ -1,21 +1,26 @@
 from django.http import JsonResponse
 from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
-import os
 from django.conf import settings
-from image.mediaHandler import *
+from django.contrib.auth.decorators import login_required
+
 from accounts.doctorManager import *
-from accounts.diagnosisManager import *
+from image.mediaHandler import *
+from image.diagnosisManager import *
+
+import os
+
 
 @login_required
 def newDiagnosis(request, diagnosisID, mode):
     return render(request, "image/diagnosisPage.html", {"diagnosisID": diagnosisID, "mode": mode})
 
+@login_required
+def editDiagnosis(request, diagnosisID):
+    return render(request, 'image/editDiagnosis.html', {"diagnosisID": diagnosisID})
 
 @login_required
 def AIPage(request, diagnosisID):
     return render(request, "image/AIPage.html", {"diagnosisID": diagnosisID})
-
 
 @login_required
 def saveImage(request):
@@ -61,10 +66,8 @@ def saveImage(request):
     else:
         return JsonResponse({"error": "Invalid request method"}, status=405)
 
-
-
 @login_required
-def transitionPage(request, diagnosisID):
+def transitionPage(request, diagnosisID, mode=None):
     """
     Handles the transition page view for a specific diagnosis.
 
