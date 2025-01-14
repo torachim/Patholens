@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
 
 urlpatterns = [
@@ -6,7 +6,6 @@ urlpatterns = [
     path('signup/', views.signupView, name='patholensSignUp'),
     path('logout/<str:calledFrom>/', views.logoutView, name = 'patholensLogout'),
 
-    path('api/getURL/<str:diagID>/', views.getURLApi, name='getUrlApi'),
-    path('api/getDoctorID/', views.getDocID, name='getDocID'),
+    path('api/', include('accounts.api_urls'))
 
 ]
