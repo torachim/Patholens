@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 let finishedCube;
                 finishedCube = drawCubeNV(nv, data);
                 if(!finishedCube){
-                    alertMessageBox.style.display = "flex"
+                    showAlertWindow()
                 }
                 else{
                     endTimer("Cuboid", startTime, diagnosisID, csrfToken);
@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function() {
             changeDrawingMode(6, false);
         }
         else{
-            alertMessageBox.style.display = "flex";
+            showAlertWindow()
         }
     });
     
@@ -155,7 +155,7 @@ document.addEventListener('DOMContentLoaded', function() {
             changeDrawingMode(0, true);
         }
         else{
-            alertMessageBox.style.display = "flex";
+            showAlertWindow()
         }
     });
 
@@ -206,7 +206,7 @@ document.addEventListener('DOMContentLoaded', function() {
             startTimer();
         }
         else{
-            alertMessageBox.style.display = "flex";
+            showAlertWindow()
         }
     });
 
@@ -225,6 +225,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     closeAlertWindow.addEventListener("click", () => {
         alertMessageBox.style.display = "none";
+        overlay.style.display = "none";
     })
 
     // Undo the drawing/erasing
@@ -236,6 +237,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
     })
+
+    function showAlertWindow(){
+        alertMessageBox.style.display = "flex"
+        overlay.style.display = "flex";
+    }
 
     // save image if logged out        ATTENTION: prevent saving image twice!! It wont work
     //document.getElementById("logoutButton").addEventListener("click", savedEditedImage(nv, diagnosisID, csrfToken));
