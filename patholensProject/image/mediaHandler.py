@@ -1,28 +1,8 @@
-import os
-from pathlib import Path
-import django
-import sys
-from django.apps import apps
-
-# Add project path (root directory where manage.py is located)
-sys.path.append(str(Path(__file__).resolve().parent.parent))
-
-# Define Django settings
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "patholensProject.settings")
-
-# Check if Django is already initialized
-if not apps.ready:
-    django.setup()
-   
-
-# Specifies the base directory of the project (the directory that contains manage.py),
-BASEDIR = Path(__file__).resolve().parent.parent
-DATASETPATH = os.path.join(BASEDIR, "media")
-
 from image.dataHandler import *
+from .models import Media
 
 
-def addMedia():
+def addMedia() -> bool:
     """
     This function processes all datasets in the media directory, checks if they already exist in the Media 
     database, and updates or adds new dataset entries accordingly.
@@ -33,22 +13,22 @@ def addMedia():
         - `True`if the function successfully processes all datasets, updates existing ones, and creates new entries as needed.
         - `False`if their are no datasets in the directory.
     """
-    allDatasets = getNamesFromMediaFolder()
+    allDatasets: list[str] = getNamesFromMediaFolder()
     
     if allDatasets == []:
         return False
 
     for datasetName in allDatasets:
         
-        url = getPatientURLsFromFolder(datasetName)
+        url: list[str] = getPatientURLsFromFolder(datasetName)
         
         # dataset exists in the media db
         if Media.objects.filter(name=datasetName).exists():
-            media = Media.objects.get(name=datasetName) 
+            media: Media = Media.objects.get(name=datasetName) 
             
-            savedURLAsString = media.url
+            savedURLAsString: str = media.url
             # convert the string to a list by splitting the string at ','
-            savedURLAsList = [s.strip() for s in savedURLAsString.split(",")]
+            savedURLAsList: list = [s.strip() for s in savedURLAsString.split(",")]
 
             # if patients where added after creating the dataset in the db: add the missing patients
             if len(savedURLAsList) < len(url):
@@ -68,14 +48,14 @@ def addMedia():
     
     return True
 
-def getPatientURLs(datasetName: str):
+def getPatientURLs(datasetName: str) -> list[str]:
     savedURLAsList = []
     
     if Media.objects.filter(name=datasetName).exists():
-        media = Media.objects.get(name=datasetName)  
-        savedURLAsString = media.url
+        media: Media = Media.objects.get(name=datasetName)  
+        savedURLAsString: str = media.url
         
         # convert the string to a list by splitting the string at ','
-        savedURLAsList = [s.strip() for s in savedURLAsString.split(",")]
+        savedURLAsList: list = [s.strip() for s in savedURLAsString.split(",")]
 
     return savedURLAsList 

@@ -1,26 +1,12 @@
 import uuid
-import os
-import sys
-import django
-from pathlib import Path
 import random
 
-# Add project path (root directory where manage.py is located)
-sys.path.append(str(Path(__file__).resolve().parent.parent))
-
-# Define Django settings
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "patholensProject.settings")
-
-# Initialize Django
-django.setup()
-
-
 from image.mediaHandler import *
+from image.diagnosisManager import *
 from accounts.models import Doctors
-from accounts.diagnosisManager import *
 
 
-def createDoctor(user: django.contrib.auth.models.User) -> Doctors:
+def createDoctor(user) -> Doctors:
     """
     Creates a new doctor entry in the database.
 
@@ -32,11 +18,10 @@ def createDoctor(user: django.contrib.auth.models.User) -> Doctors:
     """
 
     doc = Doctors.objects.create(
-        doctorID=user, finishedPatients={}
+        doctorID=user, finishedPatients=None
     )
 
     return doc
-
 
 def createUUIDs(amount: int) -> list[str]:
     """
@@ -49,11 +34,18 @@ def createUUIDs(amount: int) -> list[str]:
         list: A list of randomly generated UUIDs in string format.
     """
     allUUIDs:list = []
+    easteregg: list = ["rafik", "torge", "christoph", "lukas",  "imad", "imene", "snehpreet"]
     for i in range(amount):
-        allUUIDs.append(str(uuid.uuid4()))
+        
+        uuidStr: str = str(uuid.uuid4())
+        
+        midpoint = len(uuidStr) // 2
+        index = random.randint(0, len(easteregg)-1)
+        newUUID: str = f"{uuidStr[:midpoint]}-{easteregg[index]}{uuidStr[midpoint:]}" 
+        
+        allUUIDs.append(newUUID)
 
     return allUUIDs
-
 
 def getRandomURL(docID: str, datasetName: str) -> dict:
     """
@@ -82,6 +74,9 @@ def getRandomURL(docID: str, datasetName: str) -> dict:
 
     datasetNamesAndURL: dict = doctor.finishedPatients
     
+    if not datasetNamesAndURL:
+        datasetNamesAndURL = {}
+    
     finishedDatasets: list = list(datasetNamesAndURL.keys())
 
 
@@ -104,7 +99,6 @@ def getRandomURL(docID: str, datasetName: str) -> dict:
         index = random.randint(0, len(remaining) - 1)
         return {"status": "success", "url": remaining[index]}
 
-
 def getDoctorObject(docID: str) -> Doctors | bool:
     """
     Returns the object to the linked doctor
@@ -122,7 +116,6 @@ def getDoctorObject(docID: str) -> Doctors | bool:
 
     doctor = Doctors.objects.get(doctorID=docID)
     return doctor
-
 
 def addFinishedPatient(docID: str, datasetName: str, url: str, uuid: str) -> bool:
     """
@@ -142,6 +135,8 @@ def addFinishedPatient(docID: str, datasetName: str, url: str, uuid: str) -> boo
 
     doctor = Doctors.objects.get(doctorID=docID)
     finishedPatients = doctor.finishedPatients
+    if not finishedPatients:
+        finishedPatients: dict = {}
     
     if datasetName not in finishedPatients:
         finishedPatients[datasetName] = {}
@@ -152,7 +147,6 @@ def addFinishedPatient(docID: str, datasetName: str, url: str, uuid: str) -> boo
     doctor.save()
     
     return True
-
 
 def finishedDatasets(docID: str) -> list:
     """
@@ -169,25 +163,28 @@ def finishedDatasets(docID: str) -> list:
     Returns:
         list: A list of dataset names where all patients have been completed.
     """
+    finishedDatasets: list = []
     
     docObject: Doctors = getDoctorObject(docID)
 
     datasetNamesAndURL: dict = docObject.finishedPatients
-    startedDatasets: list = list(datasetNamesAndURL.keys())
     
-    finishedDatasets: list = []
+    # only if there are values in the dict
+    if datasetNamesAndURL: 
+        startedDatasets: list = list(datasetNamesAndURL.keys())
     
-    for dataset in startedDatasets:
-        # the patients that the doctor finished to edit
-        finishedPatientULRs = list(datasetNamesAndURL[dataset])
-        # all patients in the dataset 
-        allPatientURLS: list[str] = getPatientURLs(dataset)
+        
+        
+        for dataset in startedDatasets:
+            # the patients that the doctor finished to edit
+            finishedPatientULRs = list(datasetNamesAndURL[dataset])
+            # all patients in the dataset 
+            allPatientURLS: list[str] = getPatientURLs(dataset)
 
-        if len(finishedPatientULRs) == len(allPatientURLS):
-            finishedDatasets.append(dataset)
+            if len(finishedPatientULRs) == len(allPatientURLS):
+                finishedDatasets.append(dataset)
             
     return finishedDatasets
-
 
 def getContinueDiag(docID: str) -> dict:
     """
@@ -221,7 +218,6 @@ def getContinueDiag(docID: str) -> dict:
     
     returnDict.update({"status": True, "object": toBeContinuedDiagnosis})
     return returnDict
-
 
 def setContinueDiag(docID: str, diagID: str) -> dict:
     """
@@ -262,8 +258,8 @@ def setContinueDiag(docID: str, diagID: str) -> dict:
     
     returnDict.update({"status": True})
     return returnDict
-    
-
+   
+   
 def getAvailableDatasets(docID) -> list:
     """
     Retrieves the list of available datasets associated with the specific doctor.

@@ -1,8 +1,7 @@
-from django.contrib import admin
-from .models import Doctors
 from django import forms
-from image.models import Media
-# Register your models here.
+from django.contrib import admin
+
+from .models import Doctors
 
 
 class DoctorForm(forms.ModelForm):
@@ -18,5 +17,6 @@ class DoctorForm(forms.ModelForm):
 class DoctorAdmin(admin.ModelAdmin):
     form = DoctorForm
     filter_horizontal = ('datasets',)
+
 
 admin.site.register(Doctors, DoctorAdmin)

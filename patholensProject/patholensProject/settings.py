@@ -180,3 +180,11 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 209715200  # 200 MB
 
 # Maximum allowed size for file uploads in bytes
 FILE_UPLOAD_MAX_MEMORY_SIZE = 209715200  # 200 MB
+
+
+# DummyCache deactivates 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+    }
+}

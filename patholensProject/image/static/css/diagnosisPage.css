@@ -9,7 +9,6 @@ body {
     box-sizing: border-box;
 }
 
-
 .homeButton {
     margin-right: 10px;
     text-decoration: none;
@@ -26,7 +25,6 @@ body {
     width: 40px;
     height: 40px;
 }
-
 
 /* Main toolbar styling */
 .toolbar {
@@ -47,7 +45,7 @@ body {
 
 /* Tool button styling */
 .toolButton {
-    background-color: #D9D9D9;
+    background-color: #c6c5c5;
     border: none;
     border-radius: 10px;
     width: 45px;
@@ -57,13 +55,23 @@ body {
     align-items: center;
     cursor: pointer;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
-    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    transition: transform 0.1s ease, box-shadow 0.1s ease, background-color 0.1s ease;
 }
 
+/*applies style while activating the button*/
 .toolButton:active {
-    transform: translateY(2px) scale(1.01);
+    transform: translateY(2px) scale(1.07);
     background-color: #ffffff;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.4);
+    box-shadow: 0px 6px 5px rgba(0, 0, 0, 0.5);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease; 
+}
+
+/*style applied when button is active*/
+.activeButton {
+    transform:  scale(1.07);
+    background-color: #ffffff;
+    box-shadow: 0px 6px 6px rgba(0, 0, 0, 0.5);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
 }
 
 #selectTool i {
@@ -92,12 +100,10 @@ body {
     color: #434343;
 }
 
-
 #undoTool i {
     font-size: 24px;
     color: #434343;
 }
-
 
 /* container for the radio boxes */
 .container {
@@ -114,8 +120,6 @@ body {
     margin-top: 50px;
 }
 
-
-
 /* radio buttons */
 .radioForm {
     display: flex;
@@ -124,8 +128,6 @@ body {
     margin-top: 10px;
     margin-bottom: -40px;
 }
-
-
 
 input[type="radio"] {
     cursor: pointer;
@@ -152,14 +154,11 @@ input[type="radio"]:checked::before {
     transform: translate(-50%, -50%); 
 }
 
-
-
 .radioForm label {
     display: flex;
     align-items: center; 
     gap: 12px; 
 }
-
 
 .radioForm label p {
     margin: 0; 
@@ -168,7 +167,6 @@ input[type="radio"]:checked::before {
     font-family: Calibri, Arial, sans-serif;
     font-weight: bold;
 }
-
 
 /* finnish diagnosis button */
 .finishDiagnosisButton {
@@ -217,7 +215,6 @@ input[type="radio"]:checked::before {
     align-items: center;
 }
 
-
 .popupFrame {
     position: relative;
     background: #005E7A;
@@ -228,8 +225,7 @@ input[type="radio"]:checked::before {
     text-align: center;
     align-items: center;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
-    display: none;
-    
+    display: none;    
 }
 
 .popupFrame p {
@@ -237,11 +233,9 @@ input[type="radio"]:checked::before {
     color: white;
     font-size: 20px;
     margin-top: 50px;
-
 }
 
 .popupClose {
-  
     position: absolute; 
     top: 10px;
     right: 10px;
@@ -274,7 +268,6 @@ input[type="radio"]:checked::before {
     transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-
 .popupConfirm:hover {
     background-color:#02bbc5; 
     transform: translateX(-50%) scale(1.005); 
@@ -295,7 +288,6 @@ input[type="radio"]:checked::before {
     left: 50%;
     transform: translate(-50%, -50%);
 }
-
 
 .confidenceMeter {
     width: 100%;
@@ -334,3 +326,4 @@ input[type="radio"]:checked::before {
     visibility: hidden; 
     white-space: nowrap;   
 }  
+

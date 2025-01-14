@@ -6,5 +6,6 @@ class AccountsConfig(AppConfig):
     name = 'accounts'
     
     def ready(self):
-        # Hier registrieren wir das Signal
+        # register the signal file
         import accounts.signals
+        
