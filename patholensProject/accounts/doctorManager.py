@@ -48,8 +48,16 @@ def createUUIDs(amount: int) -> list[str]:
         list: A list of randomly generated UUIDs in string format.
     """
     allUUIDs:list = []
+    easteregg: list = ["rafik", "torge", "christoph", "lukas",  "imad", "imene", "snehpreet"]
     for i in range(amount):
-        allUUIDs.append(str(uuid.uuid4()))
+        
+        uuidStr: str = str(uuid.uuid4())
+        
+        midpoint = len(uuidStr) // 2
+        index = random.randint(0, len(easteregg)-1)
+        newUUID: str = f"{uuidStr[:midpoint]}-{easteregg[index]}{uuidStr[midpoint:]}" 
+        
+        allUUIDs.append(newUUID)
 
     return allUUIDs
 
