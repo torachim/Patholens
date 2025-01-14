@@ -25,14 +25,14 @@ body{
 }
 
 .NameIcon img{
-    width: 55px;
-    height: 55px;
-    margin-top: 35px;
+    width: 6vh;
+    height: 6vh;
+    margin-top: 35%;
     margin-left: 15px;
 }
 
 .NameIcon p {
-    font-size: 35px;
+    font-size: 4vh;
     margin-left: 15px;
     margin-top: 45px;
     color: #f7f7f7;
@@ -71,21 +71,21 @@ body{
 }
 
 #openHelp{
-    margin-right: 10px;
-    width: 40px;
-    height: 40px;
+    margin-right: max(1vh, 10px);
+    width: 4vh;
+    height: 4vh;
 }
 
 #helpButton {
-    width: 40px;
-    height: 40px;
+    width: 4vh;
+    height: 4vh;
     margin-right: 10px;
 }
 
 #logoutButton {
-    width: 40px;
-    height: 40px;
-    margin-right: 10px;
+    width: 4vh;
+    height: 4vh;
+    margin-right: 2vh;
 }
 
 
