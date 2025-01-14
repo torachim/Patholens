@@ -1,5 +1,8 @@
 from django.contrib import admin
 from django.contrib import messages
+from django.contrib.admin.exceptions import DisallowedModelAdminLookup
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
 
 from import_export import resources, fields
 from import_export.admin import ExportMixin
@@ -100,6 +103,48 @@ class DiagnosisAdmin(ExportMixin, admin.ModelAdmin):
     # adds the information from useTime to the diagnosis
     inlines = [UseTimeInline]
 
+    def get_search_results(self, request, queryset, search_term):
+        """
+        Handles search results in the admin interface, addressing disallowed lookups.
 
+        Catches `DisallowedModelAdminLookup` exceptions and prevents errors when 
+        filtering by restricted fields, such as `doctor__doctorID__exact`.
+
+        Args:
+            request (HttpRequest): The HTTP request object.
+            queryset (QuerySet): The queryset to filter.
+            search_term (str): The search term entered in the admin.
+
+        Returns:
+            tuple: Filtered queryset and a boolean indicating if results are reduced.
+
+        Raises:
+            DisallowedModelAdminLookup: For unsupported lookups not explicitly handled.
+        """
+        try:
+            return super().get_search_results(request, queryset, search_term)
+        except DisallowedModelAdminLookup as e:
+            if "doctor__doctorID__exact" in str(e):
+                # Log or handle the disallowed lookup gracefully
+                self.message_user(request, "Filtering by doctor ID is restricted.", messages.ERROR)
+                return queryset.none(), False
+            raise
+    
+    def lookup_allowed(self, lookup, value):
+        """
+        Allow specific lookups in the admin filter that are otherwise disallowed.
+
+        Parameters:
+            * lookup (str): The lookup string to check.
+            * value (Any): The value associated with the lookup.
+
+        Returns:
+            bool: True if the lookup is allowed, False otherwise.
+        """
+        if lookup == "doctor__doctorID__exact":
+            return True
+        return super().lookup_allowed(lookup, value)
+
+    
 admin.site.register(Media, MediaAdmin)
 admin.site.register(UseTime)
