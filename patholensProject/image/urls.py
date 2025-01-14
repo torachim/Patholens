@@ -4,6 +4,8 @@ from . import views
 
 
 urlpatterns = [
+    
+    path('api/', include('image.api_urls')),
     path('', include('accounts.urls')),
 
     path('AIpage/<str:diagnosisID>/', views.AIPage, name='AIpage'),
@@ -12,7 +14,5 @@ urlpatterns = [
     path('newDiagnosis/<str:diagnosisID>/<str:mode>/', views.newDiagnosis, name='newDiagnosis'),
     
     path('editDiagnosis/<str:diagnosisID>/', views.editDiagnosis, name='editDiagnosis'),
-    path("editDiagnosis/<str:diagnosisID>/transitionPage/", views.transitionPage, name="transitionPage"),
-
-    path('api/', include('image.api_urls'))
+    path("editDiagnosis/<str:diagnosisID>/transitionPage/", views.transitionPage, name="transitionPage")
 ]
