@@ -1,17 +1,4 @@
-import os
-import sys
-import django
-from pathlib import Path
 from enum import Enum, unique
-# Add project path (root directory where manage.py is located)
-sys.path.append(str(Path(__file__).resolve().parent.parent))
-
-# Define Django settings
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "patholensProject.settings")
-
-# Initialize Django
-django.setup()
-
 
 from image.models import Diagnosis, Media
 from accounts.models import Doctors

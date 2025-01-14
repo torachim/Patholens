@@ -8,3 +8,4 @@ class AccountsConfig(AppConfig):
     def ready(self):
         # register the signal file
         import accounts.signals
+        

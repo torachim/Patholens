@@ -1,24 +1,3 @@
-import os
-from pathlib import Path
-import django
-import sys
-from django.apps import apps
-
-# Add project path (root directory where manage.py is located)
-sys.path.append(str(Path(__file__).resolve().parent.parent))
-
-# Define Django settings
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "patholensProject.settings")
-
-# Check if Django is already initialized
-if not apps.ready:
-    django.setup()
-   
-
-# Specifies the base directory of the project (the directory that contains manage.py),
-BASEDIR = Path(__file__).resolve().parent.parent
-DATASETPATH = os.path.join(BASEDIR, "media")
-
 from image.dataHandler import *
 from .models import Media
 

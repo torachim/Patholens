@@ -1,26 +1,12 @@
 import uuid
-import os
-import sys
-import django
-from pathlib import Path
 import random
-
-# Add project path (root directory where manage.py is located)
-sys.path.append(str(Path(__file__).resolve().parent.parent))
-
-# Define Django settings
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "patholensProject.settings")
-
-# Initialize Django
-django.setup()
-
 
 from image.mediaHandler import *
 from image.diagnosisManager import *
 from accounts.models import Doctors
 
 
-def createDoctor(user: django.contrib.auth.models.User) -> Doctors:
+def createDoctor(user) -> Doctors:
     """
     Creates a new doctor entry in the database.
 

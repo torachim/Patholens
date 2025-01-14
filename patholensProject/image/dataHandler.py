@@ -1,20 +1,7 @@
 import os
-import django
-import sys
 import numpy as np
 from pathlib import Path
-from django.apps import apps
 
-
-# Add project path (root directory where manage.py is located)
-sys.path.append(str(Path(__file__).resolve().parent.parent))
-
-# Define Django settings
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "patholensProject.settings")
-
-# Check if Django is already initialized
-if not apps.ready:
-    django.setup()
 
 # Specifies the base directory of the project (the directory that contains manage.py),
 BASEDIR = Path(__file__).resolve().parent.parent
