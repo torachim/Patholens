@@ -1,14 +1,12 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
 from .apiViews import getURLApi
 from .apiViews import getDocID
 
 urlpatterns = [
+    path('api/', include('accounts.apiURLs')),
     path('', views.loginView, name='patholensLogin'),
     path('signup/', views.signupView, name='patholensSignUp'),
-    path('logout/<str:calledFrom>/', views.logoutView, name = 'patholensLogout'),
-
-    path('api/getURL/<str:diagID>/', getURLApi, name='getUrlApi'),
-    path('api/getDoctorID/', getDocID, name='getDocID'),
+    path('logout/<str:calledFrom>/', views.logoutView, name = 'patholensLogout')
 
 ]
