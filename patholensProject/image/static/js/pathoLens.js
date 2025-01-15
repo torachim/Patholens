@@ -139,7 +139,7 @@ export function jumpRectangle(nv){
 }
 
 /**
- * Draw a cube when a scond rectangle is connected to the first
+ * Draw a cube when a second rectangle is connected to the first
  * @param {Niivue} nv - Niivue instance
  * @param {dict} data - The data created by the drag release
  * @returns bool
@@ -149,11 +149,12 @@ export function drawCubeNV(nv, data){
     const colourValue = 3;
     nv.setPenValue(colourValue);
 
+    // Get the data from the drag
     const { voxStart, voxEnd, axCorSag } = data;
 
-    let nearUpEdge, nearRightEdge, nearBottomEdge, nearLeftEdge;
     let topLeftD, topRightD, bottomLeftD, bottomRightD;
 
+    // Copy the variables to move them in the depth
     topLeftD = { ...rectangleTL };
     topRightD = { ...rectangleTR };
     bottomLeftD = { ...rectangleBL };
@@ -161,23 +162,23 @@ export function drawCubeNV(nv, data){
 
     let depth;
 
-    nearUpEdge = (comparePointToEdge(voxStart, rectangleTL, rectangleTR) || comparePoints(voxEnd, rectangleTL, rectangleTR));
-    nearRightEdge = (comparePointToEdge(voxStart, rectangleTR, rectangleBR) || comparePointToEdge(voxEnd, rectangleTR, rectangleBR));
-    nearBottomEdge = (comparePointToEdge(voxStart, rectangleBL, rectangleBR) || comparePointToEdge(voxEnd, rectangleBL, rectangleBR));
-    nearLeftEdge = (comparePointToEdge(voxStart, rectangleBL, rectangleTL) || comparePointToEdge(voxEnd, rectangleBL, rectangleTL));
+    // Check if either voxStart or voxEnd is near an edge of the existing rectangle
+    const voxStartNear = comparePtToRect(voxStart);
+    const voxEndNear = comparePtToRect(voxEnd);
 
-    console.log(nearBottomEdge, nearRightEdge, nearUpEdge, nearLeftEdge);
-
-    if(nearUpEdge || nearRightEdge || nearBottomEdge || nearLeftEdge){
+    // If it is near an edge
+    if(voxStartNear || voxEndNear){
 
         switch(corAx){
             case(0):{
+                // Calculate the depth
                 if(Math.abs(voxStart[2] - rectangleTR[2]) < Math.abs(voxEnd[2] - rectangleTR[2])){
                     depth = voxEnd[2] - voxStart[2];
                 }
                 else{
                     depth = voxStart[2] - voxEnd[2];
                 }
+                // Calculate the missing corners of the cuboid
                 topLeftD[2] = topLeftD[2] + depth;
                 topRightD[2] = topRightD[2] + depth;
                 bottomLeftD[2] = bottomLeftD[2] + depth;
@@ -185,12 +186,14 @@ export function drawCubeNV(nv, data){
                 break;
             }
             case(1):{
+                // Calculate the depth
                 if(Math.abs(voxStart[1] - rectangleTR[1]) < Math.abs(voxEnd[1] - rectangleTR[1])){
                     depth = voxEnd[1] - voxStart[1];
                 }
                 else{
                     depth = voxStart[1] - voxEnd[1];
                 }
+                // Calculate the missing corners of the cuboid
                 topLeftD[1] = topLeftD[1] + depth;
                 topRightD[1] = topRightD[1] + depth;
                 bottomLeftD[1] = bottomLeftD[1] + depth;
@@ -198,12 +201,14 @@ export function drawCubeNV(nv, data){
                 break;
             }
             case(2):{
+                // Calculate the depth
                 if(Math.abs(voxStart[0] - rectangleTR[0]) < Math.abs(voxEnd[0] - rectangleTR[0])){
                     depth = voxEnd[0] - voxStart[0];
                 }
                 else{
                     depth = voxStart[0] - voxEnd[0];
                 }
+                // Calculate the missing corners of the cuboid
                 topLeftD[0] = topLeftD[0] + depth;
                 topRightD[0] = topRightD[0] + depth;
                 bottomLeftD[0] = bottomLeftD[0] + depth;
@@ -212,6 +217,7 @@ export function drawCubeNV(nv, data){
             }
         }
 
+        // Draw the missing edges
         nv.drawPenLine(rectangleTL, topLeftD, colourValue);
         nv.drawPenLine(rectangleTR, topRightD, colourValue);
         nv.drawPenLine(rectangleBL, bottomLeftD, colourValue);
@@ -223,6 +229,7 @@ export function drawCubeNV(nv, data){
 
         nv.refreshDrawing(true);
 
+        // Fill all the faces
         fillRectangle(nv, rectangleBL, rectangleBR, bottomLeftD, bottomRightD);
         fillRectangle(nv, rectangleTL, rectangleTR, topLeftD, topRightD);
         fillRectangle(nv, rectangleBL, rectangleTL, bottomLeftD, topLeftD);
@@ -231,6 +238,7 @@ export function drawCubeNV(nv, data){
 
         nv.refreshDrawing(true);
 
+        // Reset the rectangle to a default value
         rectangleBL = [-10, -10, -10];
         rectangleTL = [-10, -10, -10];
         rectangleBR = [-10, -10, -10];
@@ -244,35 +252,32 @@ export function drawCubeNV(nv, data){
 }
 
 /**
- * Returns if a Point B lays in a certain nighbourhood around a Point A
+ * Returns whether or not a point B is located in a certain neighbourhood around a given point A
  * @param {Array<int>} ptA - Point A in a 3D room
  * @param {Array<int>} ptB - Point B in a 3D room
  * @returns {bool} 
  */
 function comparePoints(ptA, ptB){
-    var xA = ptA[0];
-    var xB = ptB[0];
-    var yA = ptA[1];
-    var yB = ptB[1];
-    var zA = ptA[2];
-    var zB = ptB[2];
 
     let isNear;
 
-    if(((xA - 8 <= xB) && (xB <= xA + 8))&&((yA - 8 <= yB) && (yB <= yA + 8)) && ((zA - 8 <= zB) && (zB <= zA + 8))){
-        isNear = true;
+    for(let i = 0; i <= 2; i++){
+        if((ptA[i] - 8 <= ptB[i]) && (ptB[i] <= ptA[i] + 8)){
+            isNear = true;
+            if(isNear){
+                break;
+            }
+        }
     }
-    else{
-        isNear = false;
-    }
+
     return isNear;
 }
 
 /**
- * Returns if a Point is near a edge of a rectangle
- * @param {Array<int>} pt - The point which is checked if it's near a edge
- * @param {Array<int>} edgePtA - Starting point of a edge
- * @param {Array<int>} edgePtB - Ending point of a edge
+ * Returns if a Point is near a given edge of a rectangle
+ * @param {Array<int>} pt - The point which is checked if it's near the given edge
+ * @param {Array<int>} edgePtA - Starting point of an edge
+ * @param {Array<int>} edgePtB - Ending point of an edge
  * @returns {bool} - True -> point is near this edge. False -> point is not near this edge
  */
 function comparePointToEdge(pt, edgePtA, edgePtB){
@@ -287,7 +292,6 @@ function comparePointToEdge(pt, edgePtA, edgePtB){
 
         for(let i = xMin; i <= xMax; i++){
             isNear = comparePoints([i, edgePtA[1], edgePtA[2]], pt);
-            console.log([i, edgePtA[1], edgePtA[2]])
             if(isNear){
                 break;
             };
@@ -316,6 +320,23 @@ function comparePointToEdge(pt, edgePtA, edgePtB){
         }
     }
     return isNear;
+}
+
+/**
+ * Returns whether or not a point is loacated near to at least one of the edges of the last drawn rectangle
+ * @param {*} pt - The point which ich checked if it is located near the rectangle
+ * @returns {bool} - True -> point is located near an edge of the rectangle
+ */
+function comparePtToRect(pt){
+    const nearTopEdge = comparePointToEdge(pt, rectangleTL, rectangleTR);
+    const nearLeftEdge = comparePointToEdge(pt, rectangleBL, rectangleTL);
+    const nearBottomEdge = comparePointToEdge(pt, rectangleBL, rectangleBR);
+    const nearRightEdge = comparePointToEdge(pt, rectangleBR, rectangleTR);
+
+    if(nearTopEdge || nearLeftEdge || nearBottomEdge || nearRightEdge){
+        return true;
+    }
+    return false;
 }
 
 

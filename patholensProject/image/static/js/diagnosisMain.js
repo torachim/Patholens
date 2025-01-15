@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             deactivateAllButtons(); //deactiviates the active style of button
         }
-        nv.setDrawingEnabled(false); //drawingEnabled equals false so you have to click the button again to draw another rechtangle  
+        nv.setDrawingEnabled(false); //drawingEnabled equals false so you have to click the button again to draw another rectangle  
     }
 
     const nv = niivueCanvas({
@@ -127,7 +127,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // disables drawing after a Pixel is marked
+    // disables drawing after a pixel is marked
     document.getElementById("imageBrain").addEventListener("mouseup", disableDrawing)
 
     // disables drawing
