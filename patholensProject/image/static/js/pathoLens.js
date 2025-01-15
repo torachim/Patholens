@@ -238,12 +238,6 @@ export function drawCubeNV(nv, data){
 
         nv.refreshDrawing(true);
 
-        // Reset the rectangle to a default value
-        rectangleBL = [-10, -10, -10];
-        rectangleTL = [-10, -10, -10];
-        rectangleBR = [-10, -10, -10];
-        rectangleTR = [-10, -10, -10];
-
         return true;
     }
     else{

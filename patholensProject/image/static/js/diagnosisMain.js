@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let drawRectangle = false;
     let erasing = false;
     let drawCube = false;
+    let drawUndoCube = false;
 
     const canvas = document.getElementById("imageBrain");
     const jumpRect = document.getElementById("jumpRect");
@@ -32,6 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 else{
                     endTimer("Cuboid", startTime, diagnosisID, csrfToken);
                     saveDrawingState();
+                    drawUndoCube = true;
                     drawCube = false;
                     jumpRect.style.display = "none"
                 }
@@ -145,6 +147,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // enables erasing the drawing by clicking on eraser
     document.getElementById("eraseTool").addEventListener("click", function(e){
+        console.log(drawCube);
         if(!drawCube){
             erasing = true;
             drawRectangle = false;
@@ -174,6 +177,17 @@ document.addEventListener('DOMContentLoaded', function() {
      // Undo the drawing/erasing
      document.getElementById("undoTool").addEventListener("click", function (e) {
         nv.drawUndo();
+        // If drawCube drawCube is set false so it's no longer activated
+        if(drawCube){
+            drawCube = false;
+            jumpRect.style.display = "none";
+        }
+        // If drawUndoCube drawCube is set to true again so draw cube is enabled
+        else if(drawUndoCube){
+            drawCube = true;
+            drawUndoCube = false;
+            jumpRect.style.display = "flex";
+        }
         deactivateAllButtons(); //only changes style after being clicked
     })
 
@@ -255,16 +269,7 @@ document.addEventListener('DOMContentLoaded', function() {
         overlay.style.display = "none";
     })
 
-    // Undo the drawing/erasing
-    document.getElementById("undoTool").addEventListener("click", () => {
-        nv.drawUndo();
-        if(drawCube){
-            drawCube = false;
-            jumpRect.style.display = "none";
-        }
-        
-    })
-
+ 
     function showAlertWindow(){
         alertMessageBox.style.display = "flex"
         overlay.style.display = "flex";
