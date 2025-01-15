@@ -1,5 +1,5 @@
 import { Niivue, DRAG_MODE } from "./index.js";
-import { niivueCanvas,drawRectangleNiivue,loadImageAPI, loadImageWithDiagnosis, loadImageWithMask, loadOverlayDAI, endTimer, sendConfidence, savedEditedImage, deleteContinueDiagnosis } from "./pathoLens.js";
+import { niivueCanvas,drawRectangleNiivue,loadImageAPI, loadImageWithDiagnosis, loadImageWithMask, loadOverlayDAI, sendTimeStamp, sendConfidence, savedEditedImage, deleteContinueDiagnosis } from "./pathoLens.js";
 
 document.addEventListener('DOMContentLoaded', function() {
     
@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
         //if drawing is enabled
         if (nv.opts.drawingEnabled){
             drawRectangleNiivue(nv, data)
-            endTimer("Rectangle", startTime, diagnosisID, csrfToken)
+            sendTime("Rectangle Edit");
             nv.setDrawingEnabled(false); //drawingEnabled equals false so you have to click the button again to draw another rechtangle
             deactivateAllButtons(); //deactiviates the active style of button
         }
@@ -133,10 +133,10 @@ document.addEventListener('DOMContentLoaded', function() {
     function disableDrawing(){
         deactivateAllButtons();
         if(!drawRectangle && !erasing){
-            endTimer('Freehand drawing', startTime, diagnosisID, csrfToken)
+            sendTime("Freehand Drawing Edit");
         }
         else if(!drawRectangle && erasing){
-            endTimer('Erasing', startTime, diagnosisID, csrfToken)
+            sendTime("Erasing Edit");
             erasing = false
         }
         nv.setDrawingEnabled(false);
@@ -194,6 +194,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // Function to start the timer 
     function startTimer(){
         startTime = performance.now();
+    }
+
+    async function sendTime(action){
+        let utcTime = Date.now();
+        await sendTimeStamp(action, utcTime, diagnosisID, csrfToken);
     }
     
 
@@ -285,7 +290,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function endDiagnosis(confidenceValue){
         await sendConfidence(confidenceValue, diagnosisID, csrfToken);
-        await endTimer('Confidence confirmed', startTime, diagnosisID, csrfToken);
+        await sendTime("Confidence Confirmed Edit");
         await savedEditedImage(nv, diagnosisID, csrfToken);
         await deleteContinueDiagnosis(diagnosisID, csrfToken);
         window.location.assign(`/image/editDiagnosis/${diagnosisID}/transitionPage/`)
@@ -308,13 +313,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // Functions to close the confidence window
     closePopup.addEventListener("click", () => {
         popupOverlay.style.display = "none";
-        endTimer('Aborted confidence', startTime, diagnosisID, csrfToken);
+        sendTime("Aborted Confidence Edit");
     });
 
     popupOverlay.addEventListener("click", (e) => {
         if (e.target === popupOverlay) {
             popupOverlay.style.display = "none";
-            endTimer('Aborted confidence', startTime, diagnosisID, csrfToken);
+            sendTime("Aborted Confidence Edit");
         }
     })
 
