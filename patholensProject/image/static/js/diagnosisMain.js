@@ -1,10 +1,11 @@
 import { Niivue, DRAG_MODE } from "./index.js";
-import { niivueCanvas, drawRectangleNiivue,loadImageAPI, endTimer, sendConfidence, savedEditedImage, loadImageWithDiagnosis, drawCubeNV, jumpRectangle } from "./pathoLens.js";
+import { niivueCanvas, drawRectangleNiivue,loadImageAPI, sendTimeStamp, sendConfidence, savedEditedImage, loadImageWithDiagnosis, drawCubeNV, jumpRectangle } from "./pathoLens.js";
 
 
 document.addEventListener('DOMContentLoaded', function() {
 
-    let startTime;
+    sendTime("Started Diagnosis");
+
     let drawRectangle = false;
     let erasing = false;
     let drawCube = false;
@@ -31,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     showAlertWindow()
                 }
                 else{
-                    endTimer("Cuboid", startTime, diagnosisID, csrfToken);
+                    sendTime("Cuboid")
                     saveDrawingState();
                     drawUndoCube = true;
                     drawCube = false;
@@ -43,7 +44,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 drawCube = true;
                 saveDrawingState();
                 jumpRect.style.display = "flex"
-                endTimer("Rectangle", startTime, diagnosisID, csrfToken);
+                sendTime("Rectangle");
             }
             deactivateAllButtons(); //deactiviates the active style of button
         }
@@ -118,7 +119,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if(!drawCube){
             drawRectangle = false;
             erasing = false;
-            startTimer()
             saveDrawingState();
             nv.setDrawingEnabled(true);  
             changeDrawingMode(6, false);
@@ -136,11 +136,11 @@ document.addEventListener('DOMContentLoaded', function() {
     function disableDrawing(){
         deactivateAllButtons();
         if(!drawRectangle && !erasing){
-            endTimer('Freehand drawing', startTime, diagnosisID, csrfToken)
+            sendTime("Freehand Drawing");
             nv.setDrawingEnabled(false);
         }
         else if(!drawRectangle && erasing){
-            endTimer('Erasing', startTime, diagnosisID, csrfToken)
+            sendTime("Erasing");
             erasing = false
             nv.setDrawingEnabled(false);
         }   
@@ -152,7 +152,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if(!drawCube){
             erasing = true;
             drawRectangle = false;
-            startTimer();
             saveDrawingState();
             nv.setDrawingEnabled(true);
             // 0 = Eraser and true => eraser ist filled so a whole area can be erased
@@ -167,7 +166,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // INFO: You need to right click and drag to draw rectangle
     // enable rectangle drawing when the corresponding button in html is clicked
     document.getElementById("frameTool").addEventListener("click", function () {
-        startTimer()
         saveDrawingState();
         nv.setDrawingEnabled(true);
         nv.opts.dragMode = DRAG_MODE.callbackOnly;  // Draw rectangle only when dragging
@@ -210,12 +208,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-
-    // Function to start the timer 
-    function startTimer(){
-        startTime = performance.now();
-    }
-
     //confidence meter window 
     const confirmButton = document.querySelector('.popupConfirm');
     const confidenceSlider = document.getElementById('confidenceMeter');
@@ -228,7 +220,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function endDiagnosis(confidenceValue){
         await sendConfidence(confidenceValue, diagnosisID, csrfToken);
-        await endTimer('Confidence confirmed', startTime, diagnosisID, csrfToken);
+        await sendTime("Confidence Confirmed");
         await savedEditedImage(nv, diagnosisID, csrfToken);
         window.location.assign(`/image/AIpage/${diagnosisID}`)
     }
@@ -245,7 +237,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if(!drawCube){
             popupOverlay.style.display = "flex";
             popupFrame.style.display = "block";
-            startTimer();
         }
         else{
             showAlertWindow()
@@ -255,13 +246,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // Functions to close the confidence window
     closePopup.addEventListener("click", () => {
         popupOverlay.style.display = "none";
-        endTimer('Aborted confidence', startTime, diagnosisID, csrfToken);
+        sendTime("Aborted Confidence")
     });
 
     popupOverlay.addEventListener("click", (e) => {
         if (e.target === popupOverlay) {
             popupOverlay.style.display = "none";
-            endTimer('Aborted confidence', startTime, diagnosisID, csrfToken);
+            sendTime("Aborted Confidence");
         }
     })
 
@@ -274,6 +265,11 @@ document.addEventListener('DOMContentLoaded', function() {
     function showAlertWindow(){
         alertMessageBox.style.display = "flex"
         overlay.style.display = "flex";
+    }
+
+    async function sendTime(action){
+        let time = performance.now();
+        await sendTimeStamp(action, time, diagnosisID, csrfToken);
     }
 
     // save image if logged out        ATTENTION: prevent saving image twice!! It wont work

@@ -1,5 +1,5 @@
 import { Niivue } from "./index.js";
-import { niivueCanvas, loadImageWithDiagnosis, loadImageWithMask, loadOverlayDAI, endTimer, deleteContinueDiagnosis } from "./pathoLens.js";
+import { niivueCanvas, loadImageWithDiagnosis, loadImageWithMask, loadOverlayDAI, sendTimeStamp, deleteContinueDiagnosis } from "./pathoLens.js";
 
 document.addEventListener('DOMContentLoaded', function () {
 
@@ -31,8 +31,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const action = `AI Model ${selectedFormatMask}`;
         if (event.target.classList.contains('option')) {
             if(selectedDisplay != "My Diagnosis"){
-                endTimer(action, startTime, diagnosisID, csrfToken);
-                startTime = performance.now();
+                sendTime(action);
             }
             selectedFormatMask = aiModelMapping[event.target.textContent];
             loadImages();
@@ -54,15 +53,17 @@ document.addEventListener('DOMContentLoaded', function () {
         if (event.target.classList.contains('option')) {
             if(event.target.textContent == "My Diagnosis"){
                 const action = `AI Model ${selectedFormatMask}`;
-                endTimer(action, startTime, diagnosisID, csrfToken);
-            }
-            if(selectedDisplay == "My Diagnosis"){
-                startTime = performance.now();
+                sendTime(action);
             }
             selectedDisplay = event.target.textContent;
             loadImages();
         }
     });
+
+    async function sendTime(action){
+        let time = performance.now();
+        sendTimeStamp(action, time, diagnosisID, csrfToken);
+    }
 
     // function to load the images in the correct overlay
     async function loadImages(){

@@ -422,16 +422,14 @@ export async function loadImageAPI(format, diagnosisID) {
 /**
  * API call to save the time for a given action in the database
  * @param {string} action - The current action
- * @param {time} absoluteTime  - The time needed for the current action
+ * @param {time} timestamp  - The time needed for the current action
  * @param {string} diagnosisID - The ID of the current diagnosis
  * @param {*} csrfToken - Csrf token for the api call
  */
-export async function endTimer(action, startTime, diagnosisID, csrfToken){
-    let endTime = performance.now();
-    let absoluteTime = endTime - startTime;
+export async function sendTimeStamp(action, timestamp, diagnosisID, csrfToken){
     const actionTime = {
             action: action,
-            absoluteTime: absoluteTime,
+            absoluteTime: timestamp,
             diagnosisID: diagnosisID,
     }
 
