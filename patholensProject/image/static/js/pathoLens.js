@@ -466,7 +466,7 @@ return volumes;
  */
 export async function deleteContinueDiagnosis(diagnosisID, csrfToken) {
     try {
-        const response = await fetch(`/image/api/deleteDiagnosis/${diagnosisID}/`, {
+        const response = await fetch(`/image/api/deleteDiagnosis/`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',

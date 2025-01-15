@@ -317,7 +317,7 @@ class GetDiagnosis(APIView):
 
 
 class DeleteDiagnosisAPIView(APIView):
-    def delete(self, request, diagnosisID):
+    def delete(self, request):
         """
         API endpoint to delete a diagnosis from the database
         """

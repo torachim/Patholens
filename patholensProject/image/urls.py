@@ -4,7 +4,7 @@ from . import views
 
 urlpatterns = [
     
-    path('api/', include('image.apiURLs')),
+    path('api/', include('image.apiUrls')),
     path('', include('accounts.urls')),
 
     path('AIpage/<str:diagnosisID>/', views.AIPage, name='AIpage'),

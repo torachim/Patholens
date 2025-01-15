@@ -9,6 +9,6 @@ urlpatterns = [
     path("saveImage/", views.saveImage, name="saveImage"),
     path('getDiagnosis/<str:diagnosisID>/', GetDiagnosis.as_view(), name='getDiagnosis'),
     path('getImageAndMask/<str:diagnosisID>/', GetImageAndMaskAPIView.as_view(), name='getImageAndMask'),
-    path('api/deleteDiagnosis/<str:diagnosisID>/', DeleteDiagnosisAPIView.as_view(), name='deleteDiagnosis'),
+    path('deleteDiagnosis/', DeleteDiagnosisAPIView.as_view(), name='deleteDiagnosis'),
 
 ]
