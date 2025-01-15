@@ -131,6 +131,7 @@ document.addEventListener('DOMContentLoaded', function() {
      
     // disables drawing
     function disableDrawing(){
+        deactivateAllButtons();
         if(!drawRectangle && !erasing){
             endTimer('Freehand drawing', startTime, diagnosisID, csrfToken)
         }
