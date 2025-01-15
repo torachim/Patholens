@@ -456,3 +456,33 @@ export async function loadOverlayDAI(formatMask, formatMri, diagnosisID) {
 
 return volumes;        
 }
+
+
+/**
+ * Deletes the current diagnosis from the database
+ * @param {string} diagnosisID - The ID of the current diagnosis
+ * @param {string} csrfToken - csrfToken for the API
+ * @returns 
+ */
+export async function deleteContinueDiagnosis(diagnosisID, csrfToken) {
+    try {
+        const response = await fetch(`/image/api/deleteDiagnosis/`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken,
+            },
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            console.error('Error:', error.message || 'Unknown error');
+            throw new Error(error.message || 'Failed to delete the diagnosis');
+        }
+
+        console.log('Diagnosis deleted successfully!');
+        return response.json();
+    } catch (error) {
+        console.error('Error during deletion:', error.message || error);
+    }
+}

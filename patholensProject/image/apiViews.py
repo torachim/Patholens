@@ -4,8 +4,9 @@ from rest_framework.response import Response
 
 from django.http import JsonResponse
 from django.conf import settings
-
+import os
 from image.diagnosisManager import getURL, ConfidenceType, setConfidence
+from accounts.doctorManager import deleteContinueDiag
 from .timeHandler import setUseTime
 
 import os
@@ -288,7 +289,7 @@ class GetDiagnosis(APIView):
 
             diagnosisPath = os.path.join(
                         settings.MEDIA_ROOT,
-                        f"website_data/derivatives/diagnosis/sub-{subID}/sub-{subID}_acq-{docID}_space-edited-image.nii.gz"
+                        f"website_data/derivatives/diagnosis/sub-{subID}/doc-{docID}/sub-{subID}_acq-{docID}_space-edited-image.nii.gz"
             )
             
             if not os.path.exists(diagnosisPath):
@@ -297,7 +298,7 @@ class GetDiagnosis(APIView):
                     status=status.HTTP_404_NOT_FOUND
                 )
             
-            relativePath = f"media/website_data/derivatives/diagnosis/sub-{subID}/sub-{subID}_acq-{docID}_space-edited-image.nii.gz"
+            relativePath = f"media/website_data/derivatives/diagnosis/sub-{subID}/doc-{docID}/sub-{subID}_acq-{docID}_space-edited-image.nii.gz"
 
             return Response(
                     {"status": "success",
@@ -312,3 +313,33 @@ class GetDiagnosis(APIView):
                     status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
             
+
+
+
+class DeleteDiagnosisAPIView(APIView):
+    def delete(self, request):
+        """
+        API endpoint to delete a diagnosis from the database
+        """
+        try:
+            # Get the doctor ID (from the logged-in user)
+            docID = request.user.id
+
+            # Call the function to delete the diagnosis
+            result = deleteContinueDiag(docID)
+
+            if result["status"]:
+                return Response({
+                    'status': 'success',
+                    'message': 'Diagnosis deleted successfully'
+                }, status=status.HTTP_200_OK)
+            else:
+                return Response({
+                    'status': 'error',
+                    'message': result["message"]
+                }, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({
+                'status': 'error',
+                'message': f'An unexpected error occurred: {str(e)}'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

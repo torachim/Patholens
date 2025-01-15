@@ -259,6 +259,7 @@ def setContinueDiag(docID: str, diagID: str) -> dict:
     returnDict.update({"status": True})
     return returnDict
    
+   
 def getAvailableDatasets(docID) -> list:
     """
     Retrieves the list of available datasets associated with the specific doctor.
@@ -281,3 +282,32 @@ def getAvailableDatasets(docID) -> list:
     
     return datasets
            
+
+def deleteContinueDiag(docID: str) -> dict:
+    """
+    Deletes the ongoing diagnosis of the doctor.
+
+    Args:
+        docID (str): The ID of the doctor.
+
+    Returns:
+        dict: A dictionary containing:
+            - "status" (bool): True if the operation was successful, False otherwise.
+            - "reason" (str): A string providing the reason for failure, or empty if successful.
+            - "message" (str): A detailed message explaining the result of the operation.
+    """
+    returnDict = {"status": None, "reason": None, "message": None}
+
+    # Define the reasons for failure cases. (constant)
+    DOC_REASON: str = "Doctorobject" # Doc does not exists
+    
+    docObject: Doctors = getDoctorObject(docID=docID)
+    if not docObject:
+        returnDict.update ({"status": False, "reason": DOC_REASON ,"message": "The doctor does not exist."})
+        return returnDict
+    
+    docObject.continueDiag = None
+    docObject.save()
+    
+    returnDict.update({"status": True})
+    return returnDict
