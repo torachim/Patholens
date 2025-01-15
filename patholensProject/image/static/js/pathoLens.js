@@ -32,6 +32,13 @@ export function niivueCanvas(niivueOptions, canvas){
     return nv;
 }
 
+
+let rectangleTR = [-10, -10, -10];
+let rectangleTL = [-10, -10, -10];
+let rectangleBR = [-10, -10, -10];
+let rectangleBL = [-10, -10, -10];
+let corAx;
+
 /**
  * Draws a rectangle when released
  * @param {Niivue} nv - Niivue instance
@@ -39,14 +46,14 @@ export function niivueCanvas(niivueOptions, canvas){
  */
 export function drawRectangleNiivue(nv, data){
 
+    nv.setDrawOpacity(0.5);
     const colourValue = 3 // blue
     nv.setPenValue(colourValue) 
 
     const { voxStart, voxEnd, axCorSag } = data
     // these rect corners will be set based on the plane the drawing was created in 
     let topLeft, topRight, bottomLeft, bottomRight
-    let topLeftO, topRightO, bottomLeftO, bottomRightO
-
+    let newAxCor;
 
     switch(axCorSag){
         case(0):{
@@ -61,10 +68,8 @@ export function drawRectangleNiivue(nv, data){
             bottomLeft = [minX, maxY, fixedZ]
             bottomRight = [maxX, maxY, fixedZ]
 
-            topLeftO = [minX - 1, minY - 1, fixedZ]
-            topRightO = [maxX + 1, minY - 1, fixedZ]
-            bottomLeftO = [minX - 1, maxY + 1, fixedZ]
-            bottomRightO = [maxX + 1, maxY + 1, fixedZ]
+            newAxCor = 0;
+
             break;
         }
         case (1) :{
@@ -79,10 +84,8 @@ export function drawRectangleNiivue(nv, data){
             bottomLeft = [minX, fixedY, maxZ]
             bottomRight = [maxX, fixedY, maxZ]
 
-            topLeftO = [minX - 1, fixedY, minZ - 1]
-            topRightO = [maxX + 1, fixedY, minZ - 1]
-            bottomLeftO = [minX - 1, fixedY, maxZ + 1]
-            bottomRightO = [maxX + 1, fixedY, maxZ + 1]
+            newAxCor = 1;
+
             break;
         }
         case(2) :{
@@ -97,28 +100,281 @@ export function drawRectangleNiivue(nv, data){
             bottomLeft = [fixedX, minY, maxZ]
             bottomRight = [fixedX, maxY, maxZ]
 
-            topLeftO = [fixedX, minY - 1, minZ - 1] 
-            topRightO = [fixedX, maxY + 1, minZ - 1]
-            bottomLeftO = [fixedX, minY - 1, maxZ + 1]
-            bottomRightO = [fixedX, maxY + 1, maxZ + 1]
+            newAxCor = 2;
 
             break;
         }
     }
 
-    // draw the rect lines
-    nv.drawPenLine(topLeft, topRight, colourValue)
-    nv.drawPenLine(topRight, bottomRight, colourValue)
-    nv.drawPenLine(bottomRight, bottomLeft, colourValue)
-    nv.drawPenLine(bottomLeft, topLeft, colourValue)
+    fillRectangle(nv, bottomLeft, bottomRight, topLeft, topRight);
 
-    nv.drawPenLine(topLeftO, topRightO, colourValue)
-    nv.drawPenLine(topRightO, bottomRightO, colourValue)
-    nv.drawPenLine(bottomRightO, bottomLeftO, colourValue)
-    nv.drawPenLine(bottomLeftO, topLeftO, colourValue)
+    // draw the rect lines
+    nv.drawPenLine(topLeft, topRight, colourValue);
+    nv.drawPenLine(topRight, bottomRight, colourValue);
+    nv.drawPenLine(bottomRight, bottomLeft, colourValue);
+    nv.drawPenLine(bottomLeft, topLeft, colourValue);
+
+    rectangleBL = bottomLeft;
+    rectangleBR = bottomRight;
+    rectangleTL = topLeft;
+    rectangleTR = topRight;
+
+    corAx = newAxCor;
     
     // refresh the drawing
-    nv.refreshDrawing(true) // true will force a redraw of the entire scene (equivalent to calling drawScene() in niivue)
+    nv.refreshDrawing(true) // true will force a redraw of the entire scene (equivalent to calling drawScene() in niivue)  
+}
+
+
+/**
+ * Jumps to the bottom Left corner (viewer perspective) of the drawn rectangle 
+ * @param {Niivue} nv - Niivue instance
+ */
+export function jumpRectangle(nv){
+    nv.moveCrosshairInVox(-207, -319, -319);
+    const positionX = rectangleTL[0];
+    const positionY = rectangleTL[1];
+    const positionZ = rectangleTL[2];
+    nv.moveCrosshairInVox(positionX, positionY, positionZ)
+}
+
+/**
+ * Draw a cube when a second rectangle is connected to the first
+ * @param {Niivue} nv - Niivue instance
+ * @param {dict} data - The data created by the drag release
+ * @returns bool
+ */
+export function drawCubeNV(nv, data){
+
+    const colourValue = 3;
+    nv.setPenValue(colourValue);
+
+    // Get the data from the drag
+    const { voxStart, voxEnd, axCorSag } = data;
+
+    let topLeftD, topRightD, bottomLeftD, bottomRightD;
+
+    // Copy the variables to move them in the depth
+    topLeftD = { ...rectangleTL };
+    topRightD = { ...rectangleTR };
+    bottomLeftD = { ...rectangleBL };
+    bottomRightD = { ...rectangleBR};
+
+    let depth;
+
+    // Check if either voxStart or voxEnd is near an edge of the existing rectangle
+    const voxStartNear = comparePtToRect(voxStart);
+    const voxEndNear = comparePtToRect(voxEnd);
+
+    // If it is near an edge
+    if(voxStartNear || voxEndNear){
+
+        switch(corAx){
+            case(0):{
+                // Calculate the depth
+                if(Math.abs(voxStart[2] - rectangleTR[2]) < Math.abs(voxEnd[2] - rectangleTR[2])){
+                    depth = voxEnd[2] - voxStart[2];
+                }
+                else{
+                    depth = voxStart[2] - voxEnd[2];
+                }
+                // Calculate the missing corners of the cuboid
+                topLeftD[2] = topLeftD[2] + depth;
+                topRightD[2] = topRightD[2] + depth;
+                bottomLeftD[2] = bottomLeftD[2] + depth;
+                bottomRightD[2] = bottomRightD[2] + depth;
+                break;
+            }
+            case(1):{
+                // Calculate the depth
+                if(Math.abs(voxStart[1] - rectangleTR[1]) < Math.abs(voxEnd[1] - rectangleTR[1])){
+                    depth = voxEnd[1] - voxStart[1];
+                }
+                else{
+                    depth = voxStart[1] - voxEnd[1];
+                }
+                // Calculate the missing corners of the cuboid
+                topLeftD[1] = topLeftD[1] + depth;
+                topRightD[1] = topRightD[1] + depth;
+                bottomLeftD[1] = bottomLeftD[1] + depth;
+                bottomRightD[1] = bottomRightD[1] + depth;
+                break;
+            }
+            case(2):{
+                // Calculate the depth
+                if(Math.abs(voxStart[0] - rectangleTR[0]) < Math.abs(voxEnd[0] - rectangleTR[0])){
+                    depth = voxEnd[0] - voxStart[0];
+                }
+                else{
+                    depth = voxStart[0] - voxEnd[0];
+                }
+                // Calculate the missing corners of the cuboid
+                topLeftD[0] = topLeftD[0] + depth;
+                topRightD[0] = topRightD[0] + depth;
+                bottomLeftD[0] = bottomLeftD[0] + depth;
+                bottomRightD[0] = bottomRightD[0] + depth;
+                break;
+            }
+        }
+
+        // Draw the missing edges
+        nv.drawPenLine(rectangleTL, topLeftD, colourValue);
+        nv.drawPenLine(rectangleTR, topRightD, colourValue);
+        nv.drawPenLine(rectangleBL, bottomLeftD, colourValue);
+        nv.drawPenLine(rectangleBR, bottomRightD, colourValue);
+        nv.drawPenLine(topLeftD, topRightD, colourValue);
+        nv.drawPenLine(topRightD, bottomRightD, colourValue);
+        nv.drawPenLine(topLeftD, bottomLeftD, colourValue);
+        nv.drawPenLine(bottomLeftD, bottomRightD, colourValue);
+
+        nv.refreshDrawing(true);
+
+        // Fill all the faces
+        fillRectangle(nv, rectangleBL, rectangleBR, bottomLeftD, bottomRightD);
+        fillRectangle(nv, rectangleTL, rectangleTR, topLeftD, topRightD);
+        fillRectangle(nv, rectangleBL, rectangleTL, bottomLeftD, topLeftD);
+        fillRectangle(nv, rectangleBR, rectangleTR, bottomRightD, topRightD);
+        fillRectangle(nv, bottomLeftD, bottomRightD, topLeftD, topRightD);
+
+        nv.refreshDrawing(true);
+
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
+/**
+ * Returns whether or not a point B is located in a certain neighbourhood around a given point A
+ * @param {Array<int>} ptA - Point A in a 3D room
+ * @param {Array<int>} ptB - Point B in a 3D room
+ * @returns {bool} 
+ */
+function comparePoints(ptA, ptB){
+
+    let isNear;
+
+    for(let i = 0; i <= 2; i++){
+        if((ptA[i] - 8 <= ptB[i]) && (ptB[i] <= ptA[i] + 8)){
+            isNear = true;
+            if(isNear){
+                break;
+            }
+        }
+    }
+
+    return isNear;
+}
+
+/**
+ * Returns if a Point is near a given edge of a rectangle
+ * @param {Array<int>} pt - The point which is checked if it's near the given edge
+ * @param {Array<int>} edgePtA - Starting point of an edge
+ * @param {Array<int>} edgePtB - Ending point of an edge
+ * @returns {bool} - True -> point is near this edge. False -> point is not near this edge
+ */
+function comparePointToEdge(pt, edgePtA, edgePtB){
+    let isNear;
+    const xVal = edgePtA[0] - edgePtB[0];
+    const yVal = edgePtA[1] - edgePtB[1];
+    const zVal = edgePtA[2] - edgePtB[2];
+   
+    if(xVal != 0){
+        const xMin = Math.min(edgePtA[0], edgePtB[0]);
+        const xMax = Math.max(edgePtA[0], edgePtB[0]);
+
+        for(let i = xMin; i <= xMax; i++){
+            isNear = comparePoints([i, edgePtA[1], edgePtA[2]], pt);
+            if(isNear){
+                break;
+            };
+        }
+    }
+    else if(yVal != 0){
+        const yMin = Math.min(edgePtA[1], edgePtB[1]);
+        const yMax = Math.max(edgePtA[1], edgePtB[1]);
+
+        for(let i = yMin; i <= yMax; i++){
+            isNear = comparePoints([edgePtA[0], i, edgePtA[2]], pt);
+            if(isNear){
+                break;
+            };
+        }
+    }
+    else if(zVal != 0){
+        const zMin = Math.min(edgePtA[2], edgePtB[2]);
+        const zMax = Math.max(edgePtA[2], edgePtB[2]);
+
+        for(let i = zMin; i <= zMax; i++){
+            isNear = comparePoints([edgePtA[0], edgePtA[1], i], pt);
+            if(isNear){
+                break;
+            };
+        }
+    }
+    return isNear;
+}
+
+/**
+ * Returns whether or not a point is loacated near to at least one of the edges of the last drawn rectangle
+ * @param {*} pt - The point which ich checked if it is located near the rectangle
+ * @returns {bool} - True -> point is located near an edge of the rectangle
+ */
+function comparePtToRect(pt){
+    const nearTopEdge = comparePointToEdge(pt, rectangleTL, rectangleTR);
+    const nearLeftEdge = comparePointToEdge(pt, rectangleBL, rectangleTL);
+    const nearBottomEdge = comparePointToEdge(pt, rectangleBL, rectangleBR);
+    const nearRightEdge = comparePointToEdge(pt, rectangleBR, rectangleTR);
+
+    if(nearTopEdge || nearLeftEdge || nearBottomEdge || nearRightEdge){
+        return true;
+    }
+    return false;
+}
+
+
+/**
+ * Fill a rectangle in 3D volume
+ * @param {Niivue} nv - Niivue instance
+ * @param {Array<int>} PtBL - Bottom-Left point of a rectangle [x, y, z]
+ * @param {Array<int>} PtBR - Bottom-Right point of a rectangle [x, y, z]
+ * @param {Array<int>} PtTL  - Top-Left point of a rectangle [x, y, z]
+ * @param {Array<int>} PtTR  - Top-Right point of a rectangle [x, y, z]
+ */
+function fillRectangle(nv, PtBL, PtBR, PtTL, PtTR){
+    const colourValue = 3;
+    nv.setPenValue(colourValue);
+
+    const xMin = Math.min(PtBL[0], PtBR[0], PtTR[0], PtTL[0]);
+    const xMax = Math.max(PtBL[0], PtBR[0], PtTR[0], PtTL[0]);
+    const yMin = Math.min(PtBL[1], PtBR[1], PtTR[1], PtTL[1]);
+    const yMax = Math.max(PtBL[1], PtBR[1], PtTR[1], PtTL[1]);
+    const zMin = Math.min(PtBL[2], PtBR[2], PtTR[2], PtTL[2]);
+    const zMax = Math.max(PtBL[2], PtBR[2], PtTR[2], PtTL[2]);
+
+    if(PtBL[0] == PtTR[0]){
+        for(let i = yMin; i <= yMax; i++){
+            for(let j = zMin; j <= zMax; j++){
+                nv.drawPt(PtBL[0], i, j, colourValue);
+            }
+        }
+    }
+    else if(PtBL[1] == PtTR[1]){
+        for(let i = xMin; i <= xMax; i++){
+            for(let j = zMin; j <= zMax; j++){
+                nv.drawPt(i, PtBL[1], j, colourValue);
+            }
+        }
+    }
+    else{
+        for(let i = xMin + 1; i <= xMax; i++){
+            for(let j = yMin; j <= yMax; j++){
+                nv.drawPt(i, j, PtBL[2], colourValue);
+            }
+        }
+    }
+    nv.refreshDrawing(true);
 }
 
 
@@ -360,7 +616,7 @@ export async function loadImageWithDiagnosis(diagnosisID, formatMri) {
                 volumes.push({url: diagURL,
                               schema: "nifti",
                               colorMap: "blue",
-                              opacity: 1.0
+                              opacity: 0.65
                 });
             })
             .catch(err => {
@@ -447,7 +703,7 @@ export async function loadOverlayDAI(formatMask, formatMri, diagnosisID) {
         volumes.push({url: diagURL,
                         schema: "nifti",
                         colorMap: "blue",
-                        opacity: 1.0,
+                        opacity: 0.65,
         });
     })
     .catch(err => {

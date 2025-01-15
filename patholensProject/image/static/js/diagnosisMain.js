@@ -1,5 +1,5 @@
 import { Niivue, DRAG_MODE } from "./index.js";
-import { niivueCanvas, drawRectangleNiivue,loadImageAPI, endTimer, sendConfidence, savedEditedImage, loadImageWithDiagnosis } from "./pathoLens.js";
+import { niivueCanvas, drawRectangleNiivue,loadImageAPI, endTimer, sendConfidence, savedEditedImage, loadImageWithDiagnosis, drawCubeNV, jumpRectangle } from "./pathoLens.js";
 
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -7,6 +7,16 @@ document.addEventListener('DOMContentLoaded', function() {
     let startTime;
     let drawRectangle = false;
     let erasing = false;
+    let drawCube = false;
+    let drawUndoCube = false;
+
+    const canvas = document.getElementById("imageBrain");
+    const jumpRect = document.getElementById("jumpRect");
+    const alertMessageBox = document.getElementById("alertMessageBox");
+    const closeAlertWindow = document.getElementById("closeAlertWindow");
+
+    // Load FLAIR default
+    let selectedFormat = "FLAIR";
 
     //function to drag a rectangle in the niivue 
     // define what happens on dragRelase (right mouse up)
@@ -14,14 +24,31 @@ document.addEventListener('DOMContentLoaded', function() {
         drawRectangle = true;
         //if drawing is enabled
         if (nv.opts.drawingEnabled){
-            drawRectangleNiivue(nv, data)
-            endTimer("Rectangle", startTime, diagnosisID, csrfToken)
-            nv.setDrawingEnabled(false); //drawingEnabled equals false so you have to click the button again to draw another rechtangle
+            if(drawCube){
+                let finishedCube;
+                finishedCube = drawCubeNV(nv, data);
+                if(!finishedCube){
+                    showAlertWindow()
+                }
+                else{
+                    endTimer("Cuboid", startTime, diagnosisID, csrfToken);
+                    saveDrawingState();
+                    drawUndoCube = true;
+                    drawCube = false;
+                    jumpRect.style.display = "none"
+                }
+            }
+            else{
+                drawRectangleNiivue(nv, data);
+                drawCube = true;
+                saveDrawingState();
+                jumpRect.style.display = "flex"
+                endTimer("Rectangle", startTime, diagnosisID, csrfToken);
+            }
             deactivateAllButtons(); //deactiviates the active style of button
         }
+        nv.setDrawingEnabled(false); //drawingEnabled equals false so you have to click the button again to draw another rectangle  
     }
-
-    const canvas = document.getElementById("imageBrain");
 
     const nv = niivueCanvas({
                onDragRelease: onDragRelease,
@@ -32,8 +59,6 @@ document.addEventListener('DOMContentLoaded', function() {
                }, 
                canvas)
 
-    // Load FLAIR default
-    let selectedFormat = "FLAIR";
 
     // Function to handle changes in the format selection
     const radioButtons = document.querySelectorAll('input[name="option"]');
@@ -71,6 +96,12 @@ document.addEventListener('DOMContentLoaded', function() {
         nv.drawAddUndoBitmap();
     }
 
+    // Jump to the bottom left corner of the drawn rectangle
+    jumpRect.addEventListener("click", () => {
+        jumpRectangle(nv);
+    })
+
+
     /**
      * 
      * @param {int} mode
@@ -84,16 +115,21 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Pixel
     document.getElementById("selectTool").addEventListener("click", function(e){
-        drawRectangle = false;
-        erasing = false;
-        startTimer()
-        saveDrawingState();
-        nv.setDrawingEnabled(true);  
-        changeDrawingMode(6, false);
-        activateButton("selectTool"); //changes button style while selected
+        if(!drawCube){
+            drawRectangle = false;
+            erasing = false;
+            startTimer()
+            saveDrawingState();
+            nv.setDrawingEnabled(true);  
+            changeDrawingMode(6, false);
+            activateButton("selectTool"); //changes button style while selected
+        }
+        else{
+            showAlertWindow()
+        }
     });
 
-    // disables drawing after a Pixel is marked
+    // disables drawing after a pixel is marked
     document.getElementById("imageBrain").addEventListener("mouseup", disableDrawing)
 
     // disables drawing
@@ -101,24 +137,31 @@ document.addEventListener('DOMContentLoaded', function() {
         deactivateAllButtons();
         if(!drawRectangle && !erasing){
             endTimer('Freehand drawing', startTime, diagnosisID, csrfToken)
+            nv.setDrawingEnabled(false);
         }
         else if(!drawRectangle && erasing){
             endTimer('Erasing', startTime, diagnosisID, csrfToken)
             erasing = false
-        }
-        nv.setDrawingEnabled(false);
+            nv.setDrawingEnabled(false);
+        }   
     }  
     
     // enables erasing the drawing by clicking on eraser
     document.getElementById("eraseTool").addEventListener("click", function(e){
-        erasing = true;
-        drawRectangle = false;
-        startTimer();
-        saveDrawingState();
-        nv.setDrawingEnabled(true);
-        // 0 = Eraser and true => eraser ist filled so a whole area can be erased
-        changeDrawingMode(0, true);
-        activateButton("eraseTool"); 
+        console.log(drawCube);
+        if(!drawCube){
+            erasing = true;
+            drawRectangle = false;
+            startTimer();
+            saveDrawingState();
+            nv.setDrawingEnabled(true);
+            // 0 = Eraser and true => eraser ist filled so a whole area can be erased
+            changeDrawingMode(0, true);
+            activateButton("eraseTool"); 
+        }
+        else{
+            showAlertWindow()
+        }
     });
 
     // INFO: You need to right click and drag to draw rectangle
@@ -135,6 +178,17 @@ document.addEventListener('DOMContentLoaded', function() {
      // Undo the drawing/erasing
      document.getElementById("undoTool").addEventListener("click", function (e) {
         nv.drawUndo();
+        // If drawCube drawCube is set false so it's no longer activated
+        if(drawCube){
+            drawCube = false;
+            jumpRect.style.display = "none";
+        }
+        // If drawUndoCube drawCube is set to true again so draw cube is enabled
+        else if(drawUndoCube){
+            drawCube = true;
+            drawUndoCube = false;
+            jumpRect.style.display = "flex";
+        }
         deactivateAllButtons(); //only changes style after being clicked
     })
 
@@ -188,9 +242,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Function to show the confidence window
     finishButton.addEventListener("click", () => {
-        popupOverlay.style.display = "flex";
-        popupFrame.style.display = "block";
-        startTimer();
+        if(!drawCube){
+            popupOverlay.style.display = "flex";
+            popupFrame.style.display = "block";
+            startTimer();
+        }
+        else{
+            showAlertWindow()
+        }
     });
 
     // Functions to close the confidence window
@@ -205,6 +264,17 @@ document.addEventListener('DOMContentLoaded', function() {
             endTimer('Aborted confidence', startTime, diagnosisID, csrfToken);
         }
     })
+
+    closeAlertWindow.addEventListener("click", () => {
+        alertMessageBox.style.display = "none";
+        overlay.style.display = "none";
+    })
+
+ 
+    function showAlertWindow(){
+        alertMessageBox.style.display = "flex"
+        overlay.style.display = "flex";
+    }
 
     // save image if logged out        ATTENTION: prevent saving image twice!! It wont work
     //document.getElementById("logoutButton").addEventListener("click", savedEditedImage(nv, diagnosisID, csrfToken));

@@ -4,7 +4,7 @@ import { niivueCanvas, loadImageWithDiagnosis, loadImageWithMask, loadOverlayDAI
 document.addEventListener('DOMContentLoaded', function () {
 
     const canvas = document.getElementById("imageBrain");
-    const nv = niivueCanvas({}, canvas);
+    const nv = niivueCanvas({drawOpacity: 0.5}, canvas);
 
     //default formats
     let selectedFormatMask = "DEEPFCD";
