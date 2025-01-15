@@ -61,8 +61,8 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     async function sendTime(action){
-        let time = performance.now();
-        sendTimeStamp(action, time, diagnosisID, csrfToken);
+        let utcTime = Date.now();
+        sendTimeStamp(action, utcTime, diagnosisID, csrfToken);
     }
 
     // function to load the images in the correct overlay

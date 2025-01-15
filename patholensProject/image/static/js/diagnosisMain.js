@@ -268,8 +268,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     async function sendTime(action){
-        let time = performance.now();
-        await sendTimeStamp(action, time, diagnosisID, csrfToken);
+        let utcTime = Date.now();
+        await sendTimeStamp(action, utcTime, diagnosisID, csrfToken);
     }
 
     // save image if logged out        ATTENTION: prevent saving image twice!! It wont work
