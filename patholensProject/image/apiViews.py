@@ -68,7 +68,7 @@ class GetImageAPIView(APIView):
             )
 
 
-class GetDiagnosis(APIView):
+'''class GetDiagnosis(APIView):
 
     def get(self, request, diagnosisID):
         """
@@ -113,7 +113,7 @@ class GetDiagnosis(APIView):
             return Response(
                     {"error": str(e)},
                     status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+            )'''
 
 
 class SetUseTimeAPIView(APIView):

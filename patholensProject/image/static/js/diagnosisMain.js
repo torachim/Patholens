@@ -188,6 +188,7 @@ document.addEventListener('DOMContentLoaded', function() {
             jumpRect.style.display = "flex";
         }
         deactivateAllButtons(); //only changes style after being clicked
+        sendTime("Undo")
     })
 
     //Removes the style applied when button is active

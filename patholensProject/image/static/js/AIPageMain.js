@@ -105,20 +105,21 @@ document.addEventListener('DOMContentLoaded', function () {
     const editDiagnosisButton = document.getElementById("editDiagnosis");
 
     editDiagnosisButton.addEventListener("click", () => {
+        sendTime("Start Editing");
         window.location.assign(`/image/editDiagnosis/${diagnosisID}`)
     });
 
 
     const TakeMyDiagnosisButton = document.getElementById("TakeMyDiagnosis");
     TakeMyDiagnosisButton.addEventListener("click", () => {
+        sendTime("Finished Diagnosis");
         deleteContinueDiagnosis(diagnosisID, csrfToken);
     });
 
 
     const TakeAIDiagnosisButton = document.getElementById("TakeAIDiagnosis");
     TakeAIDiagnosisButton.addEventListener("click", () => {
+        sendTime("Finished Diagnosis");
         deleteContinueDiagnosis(diagnosisID, csrfToken);
     });
-
-    
 });

@@ -1,10 +1,8 @@
 import { Niivue, DRAG_MODE } from "./index.js";
-import { niivueCanvas,drawRectangleNiivue,loadImageAPI, loadImageWithDiagnosis, loadImageWithMask, loadOverlayDAI, sendTimeStamp, sendConfidence, savedEditedImage, deleteContinueDiagnosis } from "./pathoLens.js";
+import { niivueCanvas,drawRectangleNiivue,loadImageAPI, loadImageWithDiagnosis, loadImageWithMask, loadOverlayDAI, sendTimeStamp, sendConfidence, savedEditedImage, deleteContinueDiagnosis, jumpRectangle, drawCubeNV } from "./pathoLens.js";
 
 document.addEventListener('DOMContentLoaded', function() {
     
-
-    let startTime;
     let drawRectangle = false;
     let erasing = false;
     
@@ -54,7 +52,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // Dropdown change listener for the AI Mask
     const aiDropdown = document.getElementById('AIdropdown');
     aiDropdown.addEventListener('click', (event) => {
+        const action = `AI Model ${selectedFormatMask}`;
         if (event.target.classList.contains('option')) {
+            if(selectedDisplay != "My Diagnosis"){
+                sendTime(action);
+            }
             selectedFormatMask = aiModelMapping[event.target.textContent];
             loadImages();
         }
@@ -73,6 +75,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const displayDropdown = document.getElementById('displayDropdown');
     displayDropdown.addEventListener('click', (event) => {
         if (event.target.classList.contains('option')) {
+            if(event.target.textContent == "My Diagnosis"){
+                const action = `AI Model ${selectedFormatMask}`;
+                sendTime(action);
+            }
             selectedDisplay = event.target.textContent;
             loadImages();
         }
@@ -119,7 +125,6 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById("selectTool").addEventListener("click", function(e){
         drawRectangle = false;
         erasing = false;
-        startTimer()
         saveDrawingState();
         nv.setDrawingEnabled(true);  
         changeDrawingMode(6, false);
@@ -146,7 +151,6 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById("eraseTool").addEventListener("click", function(e){
         erasing = true;
         drawRectangle = false;
-        startTimer();
         saveDrawingState();
         nv.setDrawingEnabled(true);
         // 0 = Eraser and true => eraser ist filled so a whole area can be erased
@@ -158,7 +162,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // INFO: You need to right click and drag to draw rectangle
     // enable rectangle drawing when the corresponding button in html is clicked
     document.getElementById("frameTool").addEventListener("click", function () {
-        startTimer()
         saveDrawingState();
         nv.setDrawingEnabled(true);
         nv.opts.dragMode = DRAG_MODE.callbackOnly;  // Draw rectangle only when dragging
@@ -169,6 +172,7 @@ document.addEventListener('DOMContentLoaded', function() {
      // Undo the drawing/erasing
      document.getElementById("undoTool").addEventListener("click", function (e) {
         nv.drawUndo();
+        sendTime("Undo Edit")
         deactivateAllButtons(); //only changes style after being clicked
     })
 
@@ -188,12 +192,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const button = document.getElementById(buttonId);
             button.classList.add("activeButton"); //only changes style of button
         }
-    }
-
-    
-    // Function to start the timer 
-    function startTimer(){
-        startTime = performance.now();
     }
 
     async function sendTime(action){
@@ -223,6 +221,7 @@ document.addEventListener('DOMContentLoaded', function() {
     zoomButton.addEventListener("click", () =>{
         if(zoomed){
             zoomOut();
+            sendTime("Zoom Out Edit");
         }
 
         //Image while zoomed in
@@ -233,6 +232,7 @@ document.addEventListener('DOMContentLoaded', function() {
             overlay.style.display = "flex";
             zoomButton.src = "/static/icons/editPageZoomOutButton.png";
             zoomed = true;
+            sendTime("Zoom In Edit");
         }
     });
 
@@ -290,7 +290,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function endDiagnosis(confidenceValue){
         await sendConfidence(confidenceValue, diagnosisID, csrfToken);
-        await sendTime("Confidence Confirmed Edit");
+        await sendTime("Finished Diagnosis");
         await savedEditedImage(nv, diagnosisID, csrfToken);
         await deleteContinueDiagnosis(diagnosisID, csrfToken);
         window.location.assign(`/image/editDiagnosis/${diagnosisID}/transitionPage/`)
@@ -307,7 +307,6 @@ document.addEventListener('DOMContentLoaded', function() {
     finishButton.addEventListener("click", () => {
         popupOverlay.style.display = "flex";
         popupFrame.style.display = "block";
-        startTimer();
     });
 
     // Functions to close the confidence window
