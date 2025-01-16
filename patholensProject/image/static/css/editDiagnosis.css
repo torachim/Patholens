@@ -430,7 +430,7 @@ body {
     transform: translateX(-50%);
     background: rgba(0, 0, 0, 0.3);
     color: white;
-    font-family: 'Calibri', sans-serif;
+    font-family: Calibri, Arial, sans-serif;
     padding: 5px;
     border-radius: 5px;
     visibility: hidden; 

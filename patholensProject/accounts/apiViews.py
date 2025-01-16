@@ -4,29 +4,33 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 from django.shortcuts import render
 
+from rest_framework import status
+from rest_framework.views import APIView
+from rest_framework.response import Response
 
 
-@login_required
-def getURLApi(request, diagID):
-    try:
-        # call `getURL`-function
-        url = getURL(diagID)
-        if url:
-            return JsonResponse({"url": url}, status=200)
-        else:
-            return JsonResponse({"error": "Diagnosis not found"}, status=404)
-    except Exception as e:
-        return JsonResponse({"error": str(e)}, status=500)
+
+class getURLAPIView(APIView):
+    def get(self, request, diagID):
+        try:
+            # call `getURL`-function
+            url = getURL(diagID)
+            if url:
+                return Response({"url": url}, status=status.HTTP_200_OK)
+            else:
+                return Response({"error": "Diagnosis not found"}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
-    
-@login_required
-def getDocID(request):
-    try:
-        # call `getDocID`-function
-        docID = request.user.id
-        if docID:
-            return JsonResponse({"docID": docID}, status=200)
-        else:
-            return JsonResponse({"error": "Doctor not found"}, status=404)
-    except Exception as e:
-        return JsonResponse({"error": str(e)}, status=500)
+
+class getDocIDView(APIView):    
+    def get(self, request):
+        try:
+            # call `getDocID`-function
+            docID = request.user.id
+            if docID:
+                return Response({"docID": docID}, status=status.HTTP_200_OK)
+            else:
+                return Response({"error": "Doctor not found"}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

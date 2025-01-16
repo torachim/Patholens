@@ -1,7 +1,6 @@
 from django.urls import path, include
 from . import views
-from .apiViews import getURLApi
-from .apiViews import getDocID
+
 
 urlpatterns = [
     path('api/', include('accounts.apiUrls')),
