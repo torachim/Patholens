@@ -5,17 +5,42 @@ document.addEventListener('DOMContentLoaded', function() {
     
     let drawRectangle = false;
     let erasing = false;
+    let drawCube = false;
+    let drawUndoCube = false;
+
+    const jumpRect = document.getElementById("jumpRect");
+    const alertMessageBox = document.getElementById("alertMessageBox");
+    const closeAlertWindow = document.getElementById("closeAlertWindow");
     
     //function to drag a rectangle in the niivue 
     const onDragRelease = (data) => {
         drawRectangle = true;
         //if drawing is enabled
         if (nv.opts.drawingEnabled){
-            drawRectangleNiivue(nv, data)
-            sendTime("Rectangle Edit");
-            nv.setDrawingEnabled(false); //drawingEnabled equals false so you have to click the button again to draw another rechtangle
+            if(drawCube){
+                let finishedCube;
+                finishedCube = drawCubeNV(nv, data);
+                if(!finishedCube){
+                    showAlertWindow();
+                }
+                else{
+                    sendTime("Cuboid Edit");
+                    saveDrawingState();
+                    drawUndoCube = true;
+                    drawCube = false;
+                    jumpRect.style.display = "none"
+                }
+            }
+            else{
+                drawRectangleNiivue(nv, data)
+                drawCube = true;
+                saveDrawingState();
+                jumpRect.style.display = "flex";
+                sendTime("Rectangle Edit");
+            }
             deactivateAllButtons(); //deactiviates the active style of button
         }
+        nv.setDrawingEnabled(false); //drawingEnabled equals false so you have to click the button again to draw another rechtangle
     }
 
 
@@ -121,14 +146,23 @@ document.addEventListener('DOMContentLoaded', function() {
         nv.setPenValue(mode, filled);
     }
 
+    jumpRect.addEventListener("click", () => {
+        jumpRectangle(nv);
+    })
+
     // Pixel
     document.getElementById("selectTool").addEventListener("click", function(e){
-        drawRectangle = false;
-        erasing = false;
-        saveDrawingState();
-        nv.setDrawingEnabled(true);  
-        changeDrawingMode(6, false);
-        activateButton("selectTool"); //changes button style while selected
+        if(!drawCube){
+            drawRectangle = false;
+            erasing = false;
+            saveDrawingState();
+            nv.setDrawingEnabled(true);  
+            changeDrawingMode(6, false);
+            activateButton("selectTool"); //changes button style while selected
+        }
+        else{
+            showAlertWindow();
+        }
     });
         
      // disables drawing after a Pixel is marked
@@ -149,14 +183,18 @@ document.addEventListener('DOMContentLoaded', function() {
         
     // enables erasing the drawing by clicking on eraser
     document.getElementById("eraseTool").addEventListener("click", function(e){
-        erasing = true;
-        drawRectangle = false;
-        saveDrawingState();
-        nv.setDrawingEnabled(true);
-        // 0 = Eraser and true => eraser ist filled so a whole area can be erased
-        changeDrawingMode(0, true);
-        activateButton("eraseTool");
-       
+        if(!drawCube){
+            erasing = true;
+            drawRectangle = false;
+            saveDrawingState();
+            nv.setDrawingEnabled(true);
+            // 0 = Eraser and true => eraser ist filled so a whole area can be erased
+            changeDrawingMode(0, true);
+            activateButton("eraseTool");
+        }
+        else{
+            showAlertWindow();
+        }
     });
 
     // INFO: You need to right click and drag to draw rectangle
@@ -172,6 +210,15 @@ document.addEventListener('DOMContentLoaded', function() {
      // Undo the drawing/erasing
      document.getElementById("undoTool").addEventListener("click", function (e) {
         nv.drawUndo();
+        if(drawCube){
+            drawCube = false;
+            jumpRect.style.display = "none";
+        }
+        else if(drawUndoCube){
+            drawCube = true;
+            drawUndoCube = false;
+            jumpRect.style.display = "flex";
+        }
         sendTime("Undo Edit")
         deactivateAllButtons(); //only changes style after being clicked
     })
@@ -216,12 +263,12 @@ document.addEventListener('DOMContentLoaded', function() {
         zoomButton.src = "/static/icons/editPageZoomButton.png";
         zoomed = false;
         overlay.style.display = "none";
+        sendTime("Zoom Out Edit");
     }
 
     zoomButton.addEventListener("click", () =>{
         if(zoomed){
             zoomOut();
-            sendTime("Zoom Out Edit");
         }
 
         //Image while zoomed in
@@ -305,8 +352,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Function to show the confidence window
     finishButton.addEventListener("click", () => {
-        popupOverlay.style.display = "flex";
-        popupFrame.style.display = "block";
+        if(!drawCube){
+            popupOverlay.style.display = "flex";
+            popupFrame.style.display = "block";
+        }
+        else{
+            showAlertWindow();
+        }
     });
 
     // Functions to close the confidence window
@@ -321,6 +373,17 @@ document.addEventListener('DOMContentLoaded', function() {
             sendTime("Aborted Confidence Edit");
         }
     })
+
+    closeAlertWindow.addEventListener("click", () => {
+        alertMessageBox.style.display = "none";
+        overlay.style.display = "none";
+    })
+
+ 
+    function showAlertWindow(){
+        alertMessageBox.style.display = "flex"
+        overlay.style.display = "flex";
+    }
 
      // save image if logged out
      //document.getElementById("logoutButton").addEventListener("click", savedEditedImage(nv, diagnosisID, csrfToken));
