@@ -1,7 +1,7 @@
 from django.urls import path
-from . import apiViews
+from .apiViews import getURLAPIView, getDocIDView
 
 urlpatterns = [
-    path('getURL/<str:diagID>/', apiViews.getURLApi, name='getUrlApi'),
-    path('getDoctorID/', apiViews.getDocID, name='getDocID')
+    path('getURL/<str:diagID>/', getURLAPIView.as_view(), name='getUrlApi'),
+    path('getDoctorID/', getDocIDView.as_view(), name='getDocID')
 ]

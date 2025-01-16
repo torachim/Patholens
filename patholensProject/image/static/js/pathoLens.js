@@ -422,16 +422,14 @@ export async function loadImageAPI(format, diagnosisID) {
 /**
  * API call to save the time for a given action in the database
  * @param {string} action - The current action
- * @param {time} absoluteTime  - The time needed for the current action
+ * @param {time} timestamp  - The time needed for the current action
  * @param {string} diagnosisID - The ID of the current diagnosis
  * @param {*} csrfToken - Csrf token for the api call
  */
-export async function endTimer(action, startTime, diagnosisID, csrfToken){
-    let endTime = performance.now();
-    let absoluteTime = endTime - startTime;
+export async function sendTimeStamp(action, timestamp, diagnosisID, csrfToken){
     const actionTime = {
             action: action,
-            absoluteTime: absoluteTime,
+            absoluteTime: timestamp,
             diagnosisID: diagnosisID,
     }
 
@@ -453,6 +451,8 @@ export async function endTimer(action, startTime, diagnosisID, csrfToken){
     .then(data => console.log('Saving Time succesfull', data))
     .catch(error => console.log('error', error))
 }
+
+
 
 /**
  * Saves the value of how confident the doctor is with his diagnosis in the database
@@ -488,25 +488,22 @@ export async function sendConfidence(confidenceValue, diagnosisID, csrfToken){
  * @returns {string} sub number
  */
 async function fetchImageSub(diagnosisID) {
-    try {
-        const response = await fetch(`/api/getURL/${diagnosisID}/`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        });
+    let diagURL;
+    await fetch(`/api/getURL/${diagnosisID}/`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json()
+        })
+        .then(data =>{ 
+            diagURL = data.url 
+        })
+        .catch(err => {
+            console.error("Error loadng Nifti Files", err);
+        })
 
-        if (response.ok) {
-            const data = await response.json();
-            return data.url;
-        } else {
-            console.error("Failed to fetch the URL:", response.status);
-            return null;
-        }
-    } catch (error) {
-        console.error("Error fetching the URL:", error);
-        return null;
-    }
+    return diagURL;      
 }
 
 /**
@@ -514,26 +511,21 @@ async function fetchImageSub(diagnosisID) {
  * @returns Doctor ID
  */
 async function fetchDoctorID(){
-    try {
-        const response = await fetch(`/api/getDoctorID/`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        });
-
-        if (response.ok) {
-            const data = await response.json();
-            return data.docID;
-        } else {
-            console.error("Failed to fetch the Doctor ID:", response.status);
-            return null;
-        }
-    }
-    catch (error) {
-        console.error("Error fetching the Doctor ID:", error);
-        return null;
-    }
+    let docID;
+    await fetch(`/api/getDoctorID/`)
+        .then(response => {
+            if(!response.ok){
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            docID = data.docID;
+        })
+        .catch(err => {
+            console.error("Error loading Nifti Files", err);
+        })
+    return docID;
 }
 
 /**

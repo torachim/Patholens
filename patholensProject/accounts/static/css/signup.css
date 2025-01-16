@@ -190,7 +190,7 @@ body {
     border-radius: 8px; /* Rounded corners */
     color: #f7f7f7; /* Text color */
     font-size: 18px; /* Font size */
-    font-family: Calibri; /* Font family */
+    font-family: Calibri, Arial, sans-serif; /* Font family */
     font-weight: bold; /* Font weight */
     cursor: pointer; /* Pointer cursor on hover */
     box-shadow: 5px 5px rgba(0, 0, 0, 0.2); /* Shadow for the button */
