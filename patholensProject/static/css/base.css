@@ -110,7 +110,7 @@ body{
     overflow-y: scroll;
     margin-top: 15px;
     margin-bottom: 15px;
-    font-family: Calibri;
+    font-family: Calibri, Arial, sans-serif;
 }
 
 .helpContent p {
