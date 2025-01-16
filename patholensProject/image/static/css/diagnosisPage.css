@@ -440,3 +440,15 @@ input[type="radio"]:checked::before {
     align-items: center;
     z-index: 3;
 }
+
+.saveLesionWindow {
+    display: none;
+    border: black 2px solid;
+    flex-direction: column;
+    z-index: 4;
+}
+
+.saveLesionButtons{
+    display: flex;
+    flex-direction: row;
+}

@@ -10,11 +10,15 @@ document.addEventListener('DOMContentLoaded', function() {
     let erasing = false;
     let drawCube = false;
     let drawUndoCube = false;
+    let pen = false;
 
     const canvas = document.getElementById("imageBrain");
     const jumpRect = document.getElementById("jumpRect");
     const alertMessageBox = document.getElementById("alertMessageBox");
     const closeAlertWindow = document.getElementById("closeAlertWindow");
+    const saveLesionWindow = document.getElementById("saveLesionWindow");
+    const saveLesion = document.getElementById("submitLesion");
+    const controlLesion = document.getElementById("controlLesion");
 
     // Load FLAIR default
     let selectedFormat = "FLAIR";
@@ -37,6 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     drawUndoCube = true;
                     drawCube = false;
                     jumpRect.style.display = "none"
+                    showSaveWindow();
                 }
             }
             else{
@@ -117,7 +122,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Pixel
     document.getElementById("selectTool").addEventListener("click", function(e){
         if(drawCube){
-            showAlertWindow
+            showAlertWindow();
         }
         else{
             drawRectangle = false;
@@ -125,12 +130,19 @@ document.addEventListener('DOMContentLoaded', function() {
             saveDrawingState();
             nv.setDrawingEnabled(true);  
             changeDrawingMode(6, false);
+            pen = true;
             activateButton("selectTool"); //changes button style while selected
         }
     });
 
     // disables drawing after a pixel is marked
-    document.getElementById("imageBrain").addEventListener("mouseup", disableDrawing)
+    document.getElementById("imageBrain").addEventListener("mouseup", () => {
+    if(pen){
+        showSaveWindow()
+        pen = false;
+    }
+    disableDrawing();
+    })
 
     // disables drawing
     function disableDrawing(){
@@ -271,6 +283,16 @@ document.addEventListener('DOMContentLoaded', function() {
         let utcTime = Date.now();
         await sendTimeStamp(action, utcTime, diagnosisID, csrfToken);
     }
+
+    function showSaveWindow(){
+        saveLesionWindow.style.display = "flex";
+        overlay.style.display = "flex";
+    }
+
+    controlLesion.addEventListener("click", () => {
+        saveLesionWindow.style.display = "none";
+        overlay.style.display = "none";
+    })
 
     // save image if logged out        ATTENTION: prevent saving image twice!! It wont work
     //document.getElementById("logoutButton").addEventListener("click", savedEditedImage(nv, diagnosisID, csrfToken));
