@@ -452,6 +452,8 @@ export async function sendTimeStamp(action, timestamp, diagnosisID, csrfToken){
     .catch(error => console.log('error', error))
 }
 
+
+
 /**
  * Saves the value of how confident the doctor is with his diagnosis in the database
  * @param {int} confidenceValue - The confidence value of the doctor for the current diagnosis

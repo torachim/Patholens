@@ -152,16 +152,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Pixel
     document.getElementById("selectTool").addEventListener("click", function(e){
-        if(!drawCube){
+        if(drawCube){
+            showAlertWindow();
+        }
+        else{
             drawRectangle = false;
             erasing = false;
             saveDrawingState();
             nv.setDrawingEnabled(true);  
             changeDrawingMode(6, false);
             activateButton("selectTool"); //changes button style while selected
-        }
-        else{
-            showAlertWindow();
         }
     });
         
@@ -183,7 +183,10 @@ document.addEventListener('DOMContentLoaded', function() {
         
     // enables erasing the drawing by clicking on eraser
     document.getElementById("eraseTool").addEventListener("click", function(e){
-        if(!drawCube){
+        if(drawCube){
+            showAlertWindow();
+        }
+        else{
             erasing = true;
             drawRectangle = false;
             saveDrawingState();
@@ -191,9 +194,6 @@ document.addEventListener('DOMContentLoaded', function() {
             // 0 = Eraser and true => eraser ist filled so a whole area can be erased
             changeDrawingMode(0, true);
             activateButton("eraseTool");
-        }
-        else{
-            showAlertWindow();
         }
     });
 
@@ -352,12 +352,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Function to show the confidence window
     finishButton.addEventListener("click", () => {
-        if(!drawCube){
-            popupOverlay.style.display = "flex";
-            popupFrame.style.display = "block";
+        if(drawCube){
+            showAlertWindow();
         }
         else{
-            showAlertWindow();
+            popupOverlay.style.display = "flex";
+            popupFrame.style.display = "block";
         }
     });
 

@@ -60,6 +60,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
+    // Saves a timestamp for a given action
     async function sendTime(action){
         let utcTime = Date.now();
         sendTimeStamp(action, utcTime, diagnosisID, csrfToken);
