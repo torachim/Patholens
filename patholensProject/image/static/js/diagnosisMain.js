@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const saveLesionWindow = document.getElementById("saveLesionWindow");
     const saveLesion = document.getElementById("submitLesion");
     const controlLesion = document.getElementById("controlLesion");
+    const saveLesionButton = document.getElementById("saveButton");
 
     // Load FLAIR default
     let selectedFormat = "FLAIR";
@@ -199,6 +200,7 @@ document.addEventListener('DOMContentLoaded', function() {
             drawUndoCube = false;
             jumpRect.style.display = "flex";
         }
+        saveLesionButton.style.display = "none";
         deactivateAllButtons(); //only changes style after being clicked
         sendTime("Undo")
     })
@@ -293,6 +295,7 @@ document.addEventListener('DOMContentLoaded', function() {
     controlLesion.addEventListener("click", () => {
         saveLesionWindow.style.display = "none";
         overlay.style.display = "none";
+        saveLesionButton.style.display = "flex";
     })
 
     saveLesion.addEventListener("click", () => {
@@ -300,7 +303,14 @@ document.addEventListener('DOMContentLoaded', function() {
         lesionNumber = lesionNumber + 1;
         saveLesionWindow.style.display = "none";
         overlay.style.display = "none";
+        drawCube = false;
+        drawUndoCube = false;
+        drawRectangle = false;
     });
+
+    saveLesionButton.addEventListener("click", () => {
+        showSaveWindow();
+    })
 
     async function saveImage(){
         await savedEditedImage(nv, diagnosisID, lesionNumber, csrfToken);

@@ -446,6 +446,7 @@ input[type="radio"]:checked::before {
     border: black 2px solid;
     flex-direction: column;
     z-index: 4;
+    color: white;
 }
 
 .saveLesionButtons{
