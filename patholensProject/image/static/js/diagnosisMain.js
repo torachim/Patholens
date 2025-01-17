@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let drawCube = false;
     let drawUndoCube = false;
     let pen = false;
+    let lesionNumber = 1;
 
     const canvas = document.getElementById("imageBrain");
     const jumpRect = document.getElementById("jumpRect");
@@ -233,7 +234,7 @@ document.addEventListener('DOMContentLoaded', function() {
     async function endDiagnosis(confidenceValue){
         await sendConfidence(confidenceValue, diagnosisID, csrfToken);
         await sendTime("Confidence Confirmed");
-        await savedEditedImage(nv, diagnosisID, csrfToken);
+       // await savedEditedImage(nv, diagnosisID, csrfToken);
         window.location.assign(`/image/AIpage/${diagnosisID}`)
     }
 
@@ -293,6 +294,19 @@ document.addEventListener('DOMContentLoaded', function() {
         saveLesionWindow.style.display = "none";
         overlay.style.display = "none";
     })
+
+    saveLesion.addEventListener("click", () => {
+        saveImage();
+        lesionNumber = lesionNumber + 1;
+        saveLesionWindow.style.display = "none";
+        overlay.style.display = "none";
+    });
+
+    async function saveImage(){
+        await savedEditedImage(nv, diagnosisID, lesionNumber, csrfToken);
+        sendTime("Saved Lesion");
+        nv.createEmptyDrawing();
+    }
 
     // save image if logged out        ATTENTION: prevent saving image twice!! It wont work
     //document.getElementById("logoutButton").addEventListener("click", savedEditedImage(nv, diagnosisID, csrfToken));

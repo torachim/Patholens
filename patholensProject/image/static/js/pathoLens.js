@@ -532,10 +532,11 @@ async function fetchDoctorID(){
  * Save the current diagnosis in the database
  * @param {Niivue} nv - Niivue instance
  * @param {string} diagnosisID - The ID of the current diagnosis
+ * @param {Int} lesionNumber - The Number of the current lesion.
  * @param {string} csrfToken - csrfToken for the API
  * 
  */
-export async function savedEditedImage(nv, diagnosisID, csrfToken) {
+export async function savedEditedImage(nv, diagnosisID, lesionNumber, csrfToken) {
     try {
         // Wait for subID from fetchImageURL
         const subID = await fetchImageSub(diagnosisID);
@@ -546,7 +547,7 @@ export async function savedEditedImage(nv, diagnosisID, csrfToken) {
             return;
         }
 
-        const filename = `sub-${subID}_acq-${docID}_space-edited-image.nii.gz`; // Dynamic filename
+        const filename = `sub-${subID}_acq-${docID}_lesion-${lesionNumber}_mask.nii.gz`; // Dynamic filename
 
         // Create the blob object for the image
         const imageBlob = nv.saveImage({
