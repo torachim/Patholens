@@ -78,9 +78,20 @@ def continueDiagnosis(request):
     if diagnosisData.get("status") and diagnosisData.get("object"):
         diagID = diagnosisData["object"].diagID
         return redirect("newDiagnosis", diagnosisID=diagID, mode=mode)
+    
+@login_required
+def checkUnfinishedDiagnosis(request):
+    diagnosisData = getContinueDiag(request.user.id)
+
+    mode = "continue"
+    if diagnosisData.get("status") and diagnosisData.get("object"):
+        return JsonResponse({'unfinished': True})
     else:
-        # If no diagnosis is found, redirect to home page
-        return render(request, "noUnfinishedDiagnosis.html")
+        return JsonResponse({'unfinished': False})
+    
+@login_required
+def noUnfinishedDiagnosis(request):
+    return render(request, 'noUnfinishedDiagnosis.html')
 
 
 @login_required
