@@ -238,22 +238,37 @@ class GetDiagnosis(APIView):
             subID = getURL(diagnosisID)
             docID = request.user.id
 
-            diagnosisPath = os.path.join(
+            diagnosisFolder = os.path.join(
                         settings.MEDIA_ROOT,
-                        f"website_data/derivatives/diagnosis/sub-{subID}/doc-{docID}/sub-{subID}_acq-{docID}_space-edited-image.nii.gz"
+                        f"website_data/derivatives/diagnosis/sub-{subID}/doc-{docID}"
             )
             
-            if not os.path.exists(diagnosisPath):
+            if not os.path.exists(diagnosisFolder):
                 return Response(
-                    {"error": f"Diagnosis File {diagnosisPath} not found"},
+                    {"error": f"Diagnosis File {diagnosisFolder} not found"},
                     status=status.HTTP_404_NOT_FOUND
                 )
             
+            files = [
+                os.path.relpath(os.path.join(root, file), settings.MEDIA_ROOT)
+                for root, _, filenames in os.walk(diagnosisFolder)
+                for file in filenames
+            ]
+
             relativePath = f"media/website_data/derivatives/diagnosis/sub-{subID}/doc-{docID}/sub-{subID}_acq-{docID}_space-edited-image.nii.gz"
+
+            if not files:
+                return Response(
+                    {"error": "No files found in the folder"},
+                    status=status.HTTP_404_NOT_FOUND
+                )
+            
+            imageFiles = [os.path.join("media", file) for file in files]
+            print(imageFiles)
 
             return Response(
                     {"status": "success",
-                     "path": relativePath,
+                     "files": [os.path.join("media", file) for file in files]
                     },
                     status=status.HTTP_200_OK
             )
