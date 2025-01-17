@@ -306,6 +306,7 @@ document.addEventListener('DOMContentLoaded', function() {
         await savedEditedImage(nv, diagnosisID, lesionNumber, csrfToken);
         sendTime("Saved Lesion");
         nv.createEmptyDrawing();
+        loadImageAndEdited();
     }
 
     // save image if logged out        ATTENTION: prevent saving image twice!! It wont work

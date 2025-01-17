@@ -603,14 +603,18 @@ export async function loadImageWithDiagnosis(diagnosisID, formatMri) {
                 return response.json();
             })
             .then(data => {
-                const URL = data.path;
-                const diagURL = `http://127.0.0.1:8000/${URL}`
-                console.log(diagURL);
-                volumes.push({url: diagURL,
-                              schema: "nifti",
-                              colorMap: "blue",
-                              opacity: 0.65
-                });
+                const urls = data.files;
+                for (let url in urls){
+                    const diagUrl = `http://127.0.0.1:8000/${urls[url]}`;
+                    console.log(diagUrl);
+                    volumes.push({url: diagUrl,
+                                  schema: "nifti",
+                                  colorMap: "blue",
+                                  opacity: 0.65,
+
+                    });
+
+                }
             })
             .catch(err => {
                 console.error("Error loading Nifti Files", err);
