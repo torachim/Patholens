@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let drawUndoCube = false;
     let pen = false;
     let lesionNumber = 1;
+    let save = false;
 
     const canvas = document.getElementById("imageBrain");
     const jumpRect = document.getElementById("jumpRect");
@@ -19,6 +20,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const saveLesion = document.getElementById("submitLesion");
     const controlLesion = document.getElementById("controlLesion");
     const saveLesionButton = document.getElementById("saveButton");
+    const logOutWindow = document.getElementById("logoutInfoBox");
+    const logOutWindowContinue = document.getElementById("continueLogoutButton");
+    const logOutWindowAbort = document.getElementById("dontLogoutButton");
+    const saveFirstWindow = document.getElementById("saveFirstInfo");
+    const closeSaveFirst = document.getElementById("closeSaveInfo")
 
     // Load FLAIR default
     let selectedFormat = "FLAIR";
@@ -127,6 +133,9 @@ document.addEventListener('DOMContentLoaded', function() {
         if(drawCube){
             showAlertWindow();
         }
+        else if(save){
+            showSaveInfo();
+        }
         else{
             drawRectangle = false;
             erasing = false;
@@ -143,7 +152,6 @@ document.addEventListener('DOMContentLoaded', function() {
     if(pen){
         showSaveWindow()
     }
-    saveDrawingState();
     disableDrawing();
     })
 
@@ -181,11 +189,16 @@ document.addEventListener('DOMContentLoaded', function() {
     // INFO: You need to right click and drag to draw rectangle
     // enable rectangle drawing when the corresponding button in html is clicked
     document.getElementById("frameTool").addEventListener("click", function () {
-        saveDrawingState();
-        nv.setDrawingEnabled(true);
-        nv.opts.dragMode = DRAG_MODE.callbackOnly;  // Draw rectangle only when dragging
-        nv.opts.onDragRelease = onDragRelease;      // Set callback for rectangle drawing
-        activateButton("frameTool"); //changes button style while drawing rectangle
+        if(save){
+            showSaveInfo();
+        }
+        else{
+            saveDrawingState();
+            nv.setDrawingEnabled(true);
+            nv.opts.dragMode = DRAG_MODE.callbackOnly;  // Draw rectangle only when dragging
+            nv.opts.onDragRelease = onDragRelease;      // Set callback for rectangle drawing
+            activateButton("frameTool"); //changes button style while drawing rectangle
+        }
     });
 
      // Undo the drawing/erasing
@@ -203,6 +216,7 @@ document.addEventListener('DOMContentLoaded', function() {
             jumpRect.style.display = "flex";
         }
         saveLesionButton.style.display = "none";
+        save = false;
         deactivateAllButtons(); //only changes style after being clicked
         sendTime("Undo")
     })
@@ -292,6 +306,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function showSaveWindow(){
         saveLesionWindow.style.display = "flex";
         overlay.style.display = "flex";
+        save = true;
     }
 
     controlLesion.addEventListener("click", () => {
@@ -305,9 +320,11 @@ document.addEventListener('DOMContentLoaded', function() {
         lesionNumber = lesionNumber + 1;
         saveLesionWindow.style.display = "none";
         overlay.style.display = "none";
+        saveLesionButton.style.display = "none";
         drawCube = false;
         drawUndoCube = false;
         drawRectangle = false;
+        save = false;
     });
 
     saveLesionButton.addEventListener("click", () => {
@@ -322,7 +339,40 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // save image if logged out        ATTENTION: prevent saving image twice!! It wont work
-    //document.getElementById("logoutButton").addEventListener("click", savedEditedImage(nv, diagnosisID, csrfToken));
+    const logOut = document.getElementById("logoutButton");
+
+    logOut.addEventListener("click", () => {
+        logOutControl();
+    })
+
+    function logOutControl(){
+        if(save){
+            logOutWindow.style.display = "flex";
+            overlay.style.display = "flex";
+        }
+        else{
+            window.location.assign("/logout/diagnosisPage")
+        }
+    }
+
+    logOutWindowContinue.addEventListener("click", () => {
+        window.location.assign("/logout/diagnosisPage");
+    })
+
+    logOutWindowAbort.addEventListener("click", () => {
+        logOutWindow.style.display = "none";
+        overlay.style.display = "none";
+    })
+
+    function showSaveInfo(){
+        saveFirstWindow.style.display = "flex";
+        overlay.style.display = "flex";
+    }
+
+    closeSaveFirst.addEventListener("click", () => {
+        saveFirstWindow.style.display = "none";
+        overlay.style.display = "none";
+    })
 
 });
 

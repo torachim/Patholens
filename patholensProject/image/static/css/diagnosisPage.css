@@ -427,6 +427,11 @@ input[type="radio"]:checked::before {
     transform: scale(0.97); 
 }
 
+.alertWindowButtons{
+    display: flex;
+    flex-direction: row;
+}
+
 .overlay {
     position: fixed;
     top: 0;
