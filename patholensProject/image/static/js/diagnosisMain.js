@@ -143,6 +143,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if(pen){
         showSaveWindow()
     }
+    saveDrawingState();
     disableDrawing();
     })
 
