@@ -4,8 +4,6 @@ import { niivueCanvas, drawRectangleNiivue,loadImageAPI, sendTimeStamp, sendConf
 
 document.addEventListener('DOMContentLoaded', function() {
 
-    sendTime("Started Diagnosis");
-
     let drawRectangle = false;
     let erasing = false;
     let drawCube = false;
@@ -83,14 +81,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Call the appropriate function based on the mode
     if (mode === "new") {
+        sendTime("Started Diagnosis");
         loadImage();
     } else if (mode === "continue") {
+        sendTime("Continue Diagnosis");
         loadImageAndEdited(); // Calls loadImageAndDiagnosis internally
     }
 
 
     async function loadImageAndEdited() {
         const volumes = await loadImageWithDiagnosis(diagnosisID, selectedFormat);
+        lesionNumber = volumes.length;
         nv.loadVolumes(volumes);
     } 
 
@@ -141,7 +142,6 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById("imageBrain").addEventListener("mouseup", () => {
     if(pen){
         showSaveWindow()
-        pen = false;
     }
     disableDrawing();
     })
@@ -149,8 +149,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // disables drawing
     function disableDrawing(){
         deactivateAllButtons();
-        if(!drawRectangle && !erasing){
+        if(!drawRectangle && !erasing && pen){
             sendTime("Freehand Drawing");
+            pen = false;
             nv.setDrawingEnabled(false);
         }
         else if(!drawRectangle && erasing){
