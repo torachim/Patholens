@@ -528,6 +528,33 @@ async function fetchDoctorID(){
     return docID;
 }
 
+
+export async function setContinueDiag(diagnosisID, csrfToken) {
+    const docID = await fetchDoctorID();
+    console.log(docID);
+    await fetch('/image/api/setContinue/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken,
+        },
+        body: JSON.stringify({
+            docID: docID,
+            diagnosisID: diagnosisID
+        })
+    })
+    .then(response => {
+        if (response.ok) {
+            console.log('Continue diagnosis updated successfully!');
+            return response.json();
+        } else {
+            throw new Error('Failed to update continue value');
+        }
+    })
+    .catch(error => console.error(error));  
+}
+
+
 /**
  * Save the current diagnosis in the database
  * @param {Niivue} nv - Niivue instance

@@ -37,8 +37,7 @@
                 <img alt="helpButton" src="{% static 'images\HelpButton.png' %}" id="helpButton">
             </i>
             {% with request.resolver_match.url_name as currentPage %}
-            <!--<a href="/logout/{{ currentPage }}"><img alt="logout" src="{% static 'images\LogoutIcon.png' %}" id="logoutButton"></a>-->
-            <img alt="logout" src="{% static 'images\LogoutIcon.png' %}" id="logoutButton">
+            <a href="/logout/{{ currentPage }}"><img alt="logout" src="{% static 'images\LogoutIcon.png' %}" id="logoutButton"></a>
             {% endwith %}
         </div>
     </div>

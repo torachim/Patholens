@@ -1,5 +1,5 @@
 import { Niivue, DRAG_MODE } from "./index.js";
-import { niivueCanvas, drawRectangleNiivue,loadImageAPI, sendTimeStamp, sendConfidence, savedEditedImage, loadImageWithDiagnosis, drawCubeNV, jumpRectangle } from "./pathoLens.js";
+import { niivueCanvas, drawRectangleNiivue,loadImageAPI, sendTimeStamp, sendConfidence, savedEditedImage, loadImageWithDiagnosis, drawCubeNV, jumpRectangle, setContinueDiag } from "./pathoLens.js";
 
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -341,18 +341,20 @@ document.addEventListener('DOMContentLoaded', function() {
     // save image if logged out        ATTENTION: prevent saving image twice!! It wont work
     const logOut = document.getElementById("logoutButton");
 
-    logOut.addEventListener("click", () => {
-        logOutControl();
-    })
-
-    function logOutControl(){
+    logOut.addEventListener("click", (event) => {
         if(save){
+            event.preventDefault();
             logOutWindow.style.display = "flex";
             overlay.style.display = "flex";
         }
         else{
-            window.location.assign("/logout/diagnosisPage")
+            controlRedirect();
+            window.location.href = event.currentTarget.href
         }
+    })
+
+    async function controlRedirect(){
+         await setContinueDiag(diagnosisID, csrfToken);
     }
 
     logOutWindowContinue.addEventListener("click", () => {

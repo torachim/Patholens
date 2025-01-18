@@ -6,7 +6,7 @@ from django.http import JsonResponse
 from django.conf import settings
 import os
 from image.diagnosisManager import getURL, ConfidenceType, setConfidence
-from accounts.doctorManager import deleteContinueDiag
+from accounts.doctorManager import deleteContinueDiag, setContinueDiag
 from .timeHandler import setUseTime
 
 import os
@@ -278,6 +278,27 @@ class GetDiagnosis(APIView):
                     {"error": str(e)},
                     status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+        
+class setContinueAPIView(APIView):
+    def post(self, request):
+        
+        try:
+            data = request.data
+            docID = data.get("docID")
+            diagnosisID = data.get("diagnosisID")
+
+            print(docID, diagnosisID)
+
+            if(not docID or not diagnosisID):
+                return Response({"error": "Invalid Data"}, status=status.HTTP_404_NOT_FOUND)
+            
+            setContinueDiag(docID, diagnosisID)
+
+            return Response({"status": "success"},
+                            status=status.HTTP_200_OK)
+        
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             
 
 
