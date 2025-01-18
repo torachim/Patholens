@@ -287,8 +287,6 @@ class setContinueAPIView(APIView):
             docID = data.get("docID")
             diagnosisID = data.get("diagnosisID")
 
-            print(docID, diagnosisID)
-
             if(not docID or not diagnosisID):
                 return Response({"error": "Invalid Data"}, status=status.HTTP_404_NOT_FOUND)
             

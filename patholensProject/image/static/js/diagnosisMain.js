@@ -353,6 +353,20 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     })
 
+    const homePage = document.getElementById("homePageButton");
+
+    homePage.addEventListener("click", (event) => {
+        if(save){
+            event.preventDefault();
+            logOutWindow.style.display = "flex";
+            overlay.style.display = "flex";
+        }
+        else{
+            controlRedirect();
+            window.location.href = event.currentTarget.href
+        }
+    })
+
     async function controlRedirect(){
          await setContinueDiag(diagnosisID, csrfToken);
     }

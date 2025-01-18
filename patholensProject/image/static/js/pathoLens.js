@@ -528,10 +528,13 @@ async function fetchDoctorID(){
     return docID;
 }
 
-
+/**
+ * Sets the current Diagnosis to continue Diagnosis
+ * @param {string} diagnosisID - The current diagnosis ID
+ * @param {*} csrfToken - csrf Token
+ */
 export async function setContinueDiag(diagnosisID, csrfToken) {
     const docID = await fetchDoctorID();
-    console.log(docID);
     await fetch('/image/api/setContinue/', {
         method: 'POST',
         headers: {
