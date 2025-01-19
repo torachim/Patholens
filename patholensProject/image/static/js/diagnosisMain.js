@@ -349,7 +349,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         else{
             controlRedirect();
-            window.location.href = event.currentTarget.href
         }
     })
 
@@ -363,7 +362,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         else{
             controlRedirect();
-            window.location.href = event.currentTarget.href
         }
     })
 
