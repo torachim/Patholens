@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let pen = false;
     let lesionNumber = 1;
     let save = false;
+    let homeOrLog= false;
 
     const canvas = document.getElementById("imageBrain");
     const jumpRect = document.getElementById("jumpRect");
@@ -346,9 +347,15 @@ document.addEventListener('DOMContentLoaded', function() {
             event.preventDefault();
             logOutWindow.style.display = "flex";
             overlay.style.display = "flex";
+            homeOrLog = false;
+        }
+        else if(drawCube){
+            event.preventDefault();
+            alertMessageBox.style.display = "flex"
+            overlay.style.display = "flex";
         }
         else{
-            controlRedirect();
+            setContinue();
         }
     })
 
@@ -359,18 +366,30 @@ document.addEventListener('DOMContentLoaded', function() {
             event.preventDefault();
             logOutWindow.style.display = "flex";
             overlay.style.display = "flex";
+            homeOrLog = true;
+        }
+        else if(drawCube){
+            event.preventDefault();
+            alertMessageBox.style.display = "flex"
+            overlay.style.display = "flex";
         }
         else{
-            controlRedirect();
+            setContinue();
         }
     })
 
-    async function controlRedirect(){
+    async function setContinue(){
          await setContinueDiag(diagnosisID, csrfToken);
     }
 
     logOutWindowContinue.addEventListener("click", () => {
-        window.location.assign("/logout/diagnosisPage");
+        setContinue();
+        if(homeOrLog){
+            window.location.assign("/startingPage/");
+        }
+        else{
+            window.location.assign("/logout/newDiagnosis");
+        }
     })
 
     logOutWindowAbort.addEventListener("click", () => {
