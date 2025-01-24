@@ -96,14 +96,9 @@ body {
     max-height: 24px;
 }
 
-.outlineSquare {
-    width: 24px;
-    height: 20px;
-    border: 3.8px solid #434343;
-    border-radius: 2px;
-    background-color: transparent;
-    display: inline-block;
-    box-sizing: border-box;
+#cuboidIcon{
+    width: 24;;
+    height: 24px;
 }
 
 #eraseTool i {
