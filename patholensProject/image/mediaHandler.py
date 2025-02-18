@@ -2,7 +2,7 @@ from image.dataHandler import *
 from .models import Media
 
 
-def addMedia() -> bool:
+def syncMediaToDB() -> bool:
     """
     This function processes all datasets in the media directory, checks if they already exist in the Media 
     database, and updates or adds new dataset entries accordingly.
