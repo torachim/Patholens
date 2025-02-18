@@ -67,6 +67,7 @@ class GetImageAPIView(APIView):
                 {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
+
 class SetUseTimeAPIView(APIView):
 
     def post(self, request):
@@ -264,8 +265,6 @@ class GetDiagnosis(APIView):
                     status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
             
-
-
 
 class DeleteDiagnosisAPIView(APIView):
     def delete(self, request):

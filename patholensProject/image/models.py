@@ -50,6 +50,8 @@ class Media(models.Model):
     name = models.CharField(blank=False, max_length=100, unique=True)
     # all the URLs linked to the patients in the dataset
     url = models.TextField(blank=False)
+    # visible of the media for all doctors
+    visibility = models.BooleanField(default=True)
 
     def save(self, *args, **kwargs):
         # makes name str to upper case
