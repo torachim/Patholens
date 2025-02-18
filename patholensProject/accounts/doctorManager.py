@@ -172,8 +172,6 @@ def finishedDatasets(docID: str) -> list:
     # only if there are values in the dict
     if datasetNamesAndURL: 
         startedDatasets: list = list(datasetNamesAndURL.keys())
-    
-        
         
         for dataset in startedDatasets:
             # the patients that the doctor finished to edit
@@ -277,7 +275,7 @@ def getAvailableDatasets(docID) -> list:
     if not docObject:
         return datasets
     
-    datasets: str = [sets.name for sets in docObject.datasets.all()]
+    datasets: str = [sets.name for sets in docObject.datasets.all() if sets.visibility]
     
     return datasets
            

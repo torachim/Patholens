@@ -10,12 +10,12 @@ class Doctors(models.Model):
     )
 
     # references to the diagnosis. When deleted it will be set to NULL
-    continueDiag = models.OneToOneField("image.Diagnosis", on_delete=models.SET_NULL, null=True, default=None)
+    continueDiag = models.OneToOneField("image.Diagnosis", on_delete=models.SET_NULL, null=True, default=None, blank=True)
     
     # datasets which the Doctor can edit
     datasets = models.ManyToManyField("image.Media", blank=True)
     
-    finishedPatients = models.JSONField(null=True, blank=True)
+    finishedPatients = models.JSONField(null=True, blank=True, default=None)
     
    
     def __str__(self):
