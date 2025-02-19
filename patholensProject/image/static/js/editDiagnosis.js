@@ -253,7 +253,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const zoomButton = document.getElementById("zoomButton");
     let zoomed = false;
     const dropdownMenus = document.querySelectorAll(".dropdown");
-    const overlay = document.getElementById("overlay");
+    //const overlay = document.getElementById("overlay");
 
     //Image while zoomed out
     function zoomOut(){
@@ -262,7 +262,7 @@ document.addEventListener('DOMContentLoaded', function() {
         comparisonContainer.style.height = "24%";
         zoomButton.src = "/static/icons/editPageZoomButton.png";
         zoomed = false;
-        overlay.style.display = "none";
+        //overlay.style.display = "none";
         sendTime("Zoom Out Edit");
     }
 
@@ -276,7 +276,7 @@ document.addEventListener('DOMContentLoaded', function() {
             comparisonContainer.style.width = "81%";
             comparisonContainer.style.top = "25%";
             comparisonContainer.style.height = "60%";
-            overlay.style.display = "flex";
+            //overlay.style.display = "flex";
             zoomButton.src = "/static/icons/editPageZoomOutButton.png";
             zoomed = true;
             sendTime("Zoom In Edit");
@@ -286,8 +286,10 @@ document.addEventListener('DOMContentLoaded', function() {
     document.body.addEventListener("click", (e) =>{
         if(zoomed){
             console.log(e.target);
-            if(e.target != comparisonContainer && e.target != zoomButton ){
+            if (!comparisonContainer.contains(e.target) && e.target !== zoomButton) {
+
                 let clickedDropdown = false;
+
                 dropdownMenus.forEach(dropdown => {
                     if (dropdown.contains(e.target)){
                         clickedDropdown = true;
@@ -388,3 +390,6 @@ document.addEventListener('DOMContentLoaded', function() {
      // save image if logged out
      //document.getElementById("logoutButton").addEventListener("click", savedEditedImage(nv, diagnosisID, csrfToken));
 });
+
+
+//test
