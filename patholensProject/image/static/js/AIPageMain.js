@@ -115,6 +115,7 @@ document.addEventListener('DOMContentLoaded', function () {
     TakeMyDiagnosisButton.addEventListener("click", () => {
         sendTime("Finished Diagnosis");
         deleteContinueDiagnosis(diagnosisID, csrfToken);
+        window.location.assign(`/image/editDiagnosis/${diagnosisID}/transitionPage/`)
     });
 
 
@@ -122,5 +123,6 @@ document.addEventListener('DOMContentLoaded', function () {
     TakeAIDiagnosisButton.addEventListener("click", () => {
         sendTime("Finished Diagnosis");
         deleteContinueDiagnosis(diagnosisID, csrfToken);
+        window.location.assign(`/image/editDiagnosis/${diagnosisID}/transitionPage/`)
     });
 });
