@@ -1,5 +1,5 @@
 import { Niivue, DRAG_MODE } from "./index.js";
-import { niivueCanvas, drawRectangleNiivue,loadImageAPI, sendTimeStamp, sendConfidence, savedEditedImage, loadImageWithDiagnosis, drawCubeNV, jumpRectangle, setContinueDiag } from "./pathoLens.js";
+import { niivueCanvas, drawRectangleNiivue,loadImageAPI, sendTimeStamp, sendConfidence, savedEditedImage, loadImageWithDiagnosis, drawCubeNV, jumpRectangle, setContinueDiag, addLabel } from "./pathoLens.js";
 
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let drawUndoCube = false;
     let pen = false;
     let lesionNumber = 1;
+    let penValue = 1;
     let save = false;
     let homeOrLog= false;
 
@@ -38,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (nv.opts.drawingEnabled){
             if(drawCube){
                 let finishedCube;
-                finishedCube = drawCubeNV(nv, data);
+                finishedCube = drawCubeNV(nv, data, penValue);
                 if(!finishedCube){
                     showAlertWindow()
                 }
@@ -52,7 +53,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
             else{
-                drawRectangleNiivue(nv, data);
+                drawRectangleNiivue(nv, data, penValue);
                 drawCube = true;
                 saveDrawingState();
                 jumpRect.style.display = "flex"
@@ -99,7 +100,9 @@ document.addEventListener('DOMContentLoaded', function() {
     async function loadImageAndEdited() {
         const volumes = await loadImageWithDiagnosis(diagnosisID, selectedFormat);
         lesionNumber = volumes.length;
+        penValue = volumes.length;
         nv.loadVolumes(volumes);
+       // addLabel(nv);
     } 
 
     async function loadImage() {
@@ -142,7 +145,7 @@ document.addEventListener('DOMContentLoaded', function() {
             erasing = false;
             saveDrawingState();
             nv.setDrawingEnabled(true);  
-            changeDrawingMode(6, false);
+            changeDrawingMode(penValue, false);
             pen = true;
             activateButton("selectTool"); //changes button style while selected
         }
@@ -318,7 +321,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     saveLesion.addEventListener("click", () => {
         saveImage();
-        lesionNumber = lesionNumber + 1;
         saveLesionWindow.style.display = "none";
         overlay.style.display = "none";
         saveLesionButton.style.display = "none";

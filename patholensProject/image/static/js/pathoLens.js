@@ -43,11 +43,12 @@ let corAx;
  * Draws a rectangle when released
  * @param {Niivue} nv - Niivue instance
  * @param {*} data - The data from the drag and release
+ * @param {int} penValue - The color
  */
-export function drawRectangleNiivue(nv, data){
+export function drawRectangleNiivue(nv, data, penValue){
 
     nv.setDrawOpacity(0.5);
-    const colourValue = 3 // blue
+    const colourValue = penValue 
     nv.setPenValue(colourValue) 
 
     const { voxStart, voxEnd, axCorSag } = data
@@ -106,7 +107,7 @@ export function drawRectangleNiivue(nv, data){
         }
     }
 
-    fillRectangle(nv, bottomLeft, bottomRight, topLeft, topRight);
+    fillRectangle(nv, bottomLeft, bottomRight, topLeft, topRight, colourValue);
 
     // draw the rect lines
     nv.drawPenLine(topLeft, topRight, colourValue);
@@ -142,11 +143,12 @@ export function jumpRectangle(nv){
  * Draw a cube when a second rectangle is connected to the first
  * @param {Niivue} nv - Niivue instance
  * @param {dict} data - The data created by the drag release
+ * @param {int} penValue - The color
  * @returns bool
  */
-export function drawCubeNV(nv, data){
+export function drawCubeNV(nv, data, penValue){
 
-    const colourValue = 3;
+    const colourValue = penValue;
     nv.setPenValue(colourValue);
 
     // Get the data from the drag
@@ -230,11 +232,11 @@ export function drawCubeNV(nv, data){
         nv.refreshDrawing(true);
 
         // Fill all the faces
-        fillRectangle(nv, rectangleBL, rectangleBR, bottomLeftD, bottomRightD);
-        fillRectangle(nv, rectangleTL, rectangleTR, topLeftD, topRightD);
-        fillRectangle(nv, rectangleBL, rectangleTL, bottomLeftD, topLeftD);
-        fillRectangle(nv, rectangleBR, rectangleTR, bottomRightD, topRightD);
-        fillRectangle(nv, bottomLeftD, bottomRightD, topLeftD, topRightD);
+        fillRectangle(nv, rectangleBL, rectangleBR, bottomLeftD, bottomRightD, colourValue);
+        fillRectangle(nv, rectangleTL, rectangleTR, topLeftD, topRightD, colourValue);
+        fillRectangle(nv, rectangleBL, rectangleTL, bottomLeftD, topLeftD, colourValue);
+        fillRectangle(nv, rectangleBR, rectangleTR, bottomRightD, topRightD, colourValue);
+        fillRectangle(nv, bottomLeftD, bottomRightD, topLeftD, topRightD, colourValue);
 
         nv.refreshDrawing(true);
 
@@ -342,8 +344,8 @@ function comparePtToRect(pt){
  * @param {Array<int>} PtTL  - Top-Left point of a rectangle [x, y, z]
  * @param {Array<int>} PtTR  - Top-Right point of a rectangle [x, y, z]
  */
-function fillRectangle(nv, PtBL, PtBR, PtTL, PtTR){
-    const colourValue = 3;
+function fillRectangle(nv, PtBL, PtBR, PtTL, PtTR, penValue){
+    const colourValue = penValue;
     nv.setPenValue(colourValue);
 
     const xMin = Math.min(PtBL[0], PtBR[0], PtTR[0], PtTL[0]);
@@ -641,7 +643,6 @@ export async function loadImageWithDiagnosis(diagnosisID, formatMri) {
                                   schema: "nifti",
                                   colorMap: "blue",
                                   opacity: 0.65,
-
                     });
 
                 }
@@ -652,6 +653,20 @@ export async function loadImageWithDiagnosis(diagnosisID, formatMri) {
 
         return volumes;
     }
+
+export function addLabel(nv){
+    nv.addLabel("Leseion", {         
+        textColor: [1,1,1,1],
+        bulletScale: 1,
+        bulletColor: [1,1,1,1],
+        lineWidth: 1.0,
+        lineColor: [1,1,1,1],
+        lineTerminator: "none" /* NONE */,
+        textScale: 1 },
+        [50, 50, 50]);
+
+        nv.drawScene();
+}
 
 /**
  * Returns two volumes the first is the normal MRI image and the second is the AI Diagnosis
