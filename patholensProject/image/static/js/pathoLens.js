@@ -1,5 +1,19 @@
 import { Niivue } from "./index.js";
 
+
+const colours = {
+    1: [1, "red"],
+    2: [2, "green"],
+    3: [3, "blue"],
+    4: [4, "yellow"],
+    5: [5, "blue2cyan"],
+    6: [6, "magenta"],
+    7: [9, "brown"],
+    8: [13, "turquoise"],
+    9: [19, "jet"],
+    0: [23, "violet"]
+};
+
 /**
  * Create a niivue object and attach it to a given canvas
  * @param {dictionary} niivueOptions - A Dictionary with the Niivue options -> see Niivue documentation
@@ -48,8 +62,9 @@ let corAx;
 export function drawRectangleNiivue(nv, data, penValue){
 
     nv.setDrawOpacity(0.5);
-    const colourValue = penValue 
-    nv.setPenValue(colourValue) 
+    const colour = colours[penValue%10];
+    const colourValue = colour[0];
+    nv.setPenValue(colourValue); 
 
     const { voxStart, voxEnd, axCorSag } = data
     // these rect corners will be set based on the plane the drawing was created in 
@@ -148,7 +163,8 @@ export function jumpRectangle(nv){
  */
 export function drawCubeNV(nv, data, penValue){
 
-    const colourValue = penValue;
+    const colour = colours[penValue%10];
+    const colourValue = colour[0];
     nv.setPenValue(colourValue);
 
     // Get the data from the drag
@@ -636,15 +652,17 @@ export async function loadImageWithDiagnosis(diagnosisID, formatMri) {
             })
             .then(data => {
                 const urls = data.files;
-                for (let url in urls){
-                    const diagUrl = `http://127.0.0.1:8000/${urls[url]}`;
+                console.log(urls);
+                for (let i = urls.length -1; i >= 0; i--){
+                    const diagUrl = `http://127.0.0.1:8000/${urls[i]}`;
+                    const colour = colours[(i + 1)%10];
+                    console.log(colour)
                     console.log(diagUrl);
                     volumes.push({url: diagUrl,
                                   schema: "nifti",
-                                  colorMap: "blue",
-                                  opacity: 0.65,
+                                  colorMap: colour[1],
+                                  opacity: 0.85,
                     });
-
                 }
             })
             .catch(err => {
@@ -654,18 +672,10 @@ export async function loadImageWithDiagnosis(diagnosisID, formatMri) {
         return volumes;
     }
 
-export function addLabel(nv){
-    nv.addLabel("Leseion", {         
-        textColor: [1,1,1,1],
-        bulletScale: 1,
-        bulletColor: [1,1,1,1],
-        lineWidth: 1.0,
-        lineColor: [1,1,1,1],
-        lineTerminator: "none" /* NONE */,
-        textScale: 1 },
-        [50, 50, 50]);
-
-        nv.drawScene();
+export function changePenValue(nv, mode, filled){
+    const colour = colours[mode%10];
+    const colourValue = colour[0];
+    nv.setPenValue(colourValue, filled);
 }
 
 /**

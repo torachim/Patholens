@@ -1,5 +1,5 @@
 import { Niivue, DRAG_MODE } from "./index.js";
-import { niivueCanvas, drawRectangleNiivue,loadImageAPI, sendTimeStamp, sendConfidence, savedEditedImage, loadImageWithDiagnosis, drawCubeNV, jumpRectangle, setContinueDiag, addLabel } from "./pathoLens.js";
+import { niivueCanvas, drawRectangleNiivue,loadImageAPI, sendTimeStamp, sendConfidence, savedEditedImage, loadImageWithDiagnosis, drawCubeNV, jumpRectangle, setContinueDiag, changePenValue } from "./pathoLens.js";
 
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -129,7 +129,7 @@ document.addEventListener('DOMContentLoaded', function() {
      * True => drawn shape will be filled
      */
     function changeDrawingMode(mode, filled){
-        nv.setPenValue(mode, filled);
+        changePenValue(nv, mode, filled);
     }
 
     // Pixel

@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.conf import settings
 import os
+import re
 from image.diagnosisManager import getURL, ConfidenceType, setConfidence
 from accounts.doctorManager import deleteContinueDiag, setContinueDiag
 from .timeHandler import setUseTime
@@ -216,7 +217,11 @@ class GetImageAndMaskAPIView(APIView):
                 {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
      
-     
+
+def sort_lesion_number(filename):
+    match = re.search(r'lesion-(\d+)', filename) 
+    return int(match.group(1)) if match else float('inf')
+
 class GetDiagnosis(APIView):
 
     def get(self, request, diagnosisID):
@@ -255,6 +260,8 @@ class GetDiagnosis(APIView):
                 for file in filenames
             ]
 
+
+
             relativePath = f"media/website_data/derivatives/diagnosis/sub-{subID}/doc-{docID}/sub-{subID}_acq-{docID}_space-edited-image.nii.gz"
 
             if not files:
@@ -263,6 +270,8 @@ class GetDiagnosis(APIView):
                     status=status.HTTP_404_NOT_FOUND
                 )
             
+            files.sort(key=sort_lesion_number)
+
             imageFiles = [os.path.join("media", file) for file in files]
             print(imageFiles)
 
