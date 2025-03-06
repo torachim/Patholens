@@ -656,8 +656,6 @@ export async function loadImageWithDiagnosis(diagnosisID, formatMri) {
                 for (let i = urls.length -1; i >= 0; i--){
                     const diagUrl = `http://127.0.0.1:8000/${urls[i]}`;
                     const colour = colours[(i + 1)%10];
-                    console.log(colour)
-                    console.log(diagUrl);
                     volumes.push({url: diagUrl,
                                   schema: "nifti",
                                   colorMap: colour[1],
@@ -751,14 +749,13 @@ export async function loadOverlayDAI(formatMask, formatMri, diagnosisID) {
     })
     .then(data => {
         const urls = data.files;
-        for(let url in urls){
-            const diagUrl = `http://127.0.0.1:8000/${urls[url]}`;
-            console.log(diagUrl);
+        for (let i = urls.length -1; i >= 0; i--){
+            const diagUrl = `http://127.0.0.1:8000/${urls[i]}`;
+            const colour = colours[(i + 1)%10];
             volumes.push({url: diagUrl,
                           schema: "nifti",
-                          colorMap: "blue",
-                          opacity: 0.65,
-
+                          colorMap: colour[1],
+                          opacity: 0.85,
             });
         }
     })

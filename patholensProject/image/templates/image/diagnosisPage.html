@@ -74,11 +74,17 @@
 </div>
 
 <div class="saveLesionWindow" id="saveLesionWindow">
-    <p>Do you want to save the current lesion?</p>
-    <p>Or do you want to take another look?</p>
+    <button class="popupClose" id="controlLesion">&times;</button>
+    <div class="saveLesionText">
+        <p>Do you want to save the current lesion?</p>
+        <p>Please enter your confidence for the current lesion!</p>
+    </div>
+    <div class="confidenceMeterContainer" style="position: relative; width: 70%; top: 0; left: 0; transform: none; margin-top: 40px;">
+        <input type="range" class="confidenceMeter" min="0" max="10" value="5" id="confidenceMeter">
+        <div class="tooltip" id="tooltip">5</div>
+    </div>
     <div class="saveLesionButtons">
         <button id="submitLesion">Save Lesion</button>
-        <button id="controlLesion">Take another look</button>
     </div>
 </div>
 

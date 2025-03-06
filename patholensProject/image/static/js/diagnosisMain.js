@@ -281,7 +281,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Functions to close the confidence window
     closePopup.addEventListener("click", () => {
         popupOverlay.style.display = "none";
-        sendTime("Aborted Confidence")
+        sendTime("Aborted Confidence");
     });
 
     popupOverlay.addEventListener("click", (e) => {
