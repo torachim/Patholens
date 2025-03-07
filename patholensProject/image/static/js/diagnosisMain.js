@@ -245,16 +245,18 @@ document.addEventListener('DOMContentLoaded', function() {
     
     //confidence meter window 
     const confirmButton = document.querySelector('.popupConfirm');
-    const confidenceSlider = document.getElementById('confidenceMeter');
+    const confidenceSlider1 = document.getElementById('confidenceMeter1');
+    const confidenceSlider2 = document.getElementById('confidenceMeter2');
 
     // Listener for the confirmation button
     confirmButton.addEventListener('click', () => {
-        const confidenceValue = confidenceSlider.value; 
+        const confidenceValue = confidenceSlider2.value; 
         endDiagnosis(confidenceValue);
     });
 
     async function endDiagnosis(confidenceValue){
-        await sendConfidence(confidenceValue, diagnosisID, csrfToken);
+        let confiidenceType = "all Lesions"
+        await sendConfidence(confidenceValue, diagnosisID, confiidenceType, csrfToken);
         await sendTime("Confidence Confirmed");
        // await savedEditedImage(nv, diagnosisID, csrfToken);
         window.location.assign(`/image/AIpage/${diagnosisID}`)
@@ -321,6 +323,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     saveLesion.addEventListener("click", () => {
         saveImage();
+        const confidenceValue = confidenceSlider1.value;
+        let confidenceType = "lesion " + lesionNumber;
+        sendConfidence(confidenceValue, diagnosisID, confidenceType, csrfToken);
         saveLesionWindow.style.display = "none";
         overlay.style.display = "none";
         saveLesionButton.style.display = "none";

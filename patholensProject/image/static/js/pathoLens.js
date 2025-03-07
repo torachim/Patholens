@@ -476,9 +476,10 @@ export async function sendTimeStamp(action, timestamp, diagnosisID, csrfToken){
  * Saves the value of how confident the doctor is with his diagnosis in the database
  * @param {int} confidenceValue - The confidence value of the doctor for the current diagnosis
  * @param {string} diagnosisID - The ID of the current diagnosis
+ * @param {string} confidenceType - The type of the confidence
  * @param {string} csrfToken - csrf Token for the API call
  */
-export async function sendConfidence(confidenceValue, diagnosisID, csrfToken){
+export async function sendConfidence(confidenceValue, diagnosisID, confidenceType, csrfToken){
     await fetch(`/image/api/saveConfidence/${diagnosisID}/`, {
         method: 'POST',
         headers: {
@@ -486,7 +487,8 @@ export async function sendConfidence(confidenceValue, diagnosisID, csrfToken){
             'X-CSRFToken': csrfToken
         },
         body: JSON.stringify({
-            confidence: confidenceValue
+            confidence: confidenceValue,
+            confidenceType: confidenceType,
         })
     })
     .then(response => {

@@ -121,6 +121,7 @@ class SaveConfidenceAPIView(APIView):
         try:
             data = request.data
             confidence = data.get('confidence')
+            confidenceType = data.get('confidenceType') 
 
             # check if it is a valid value
             if confidence is None or not (0 <= int(confidence) <= 10):
@@ -131,7 +132,7 @@ class SaveConfidenceAPIView(APIView):
             # TODO: Know which confidence you want to save: First confidence, AI confidence, edited confidence
             """
             
-            keyValue = [{"allLesions": confidence}]
+            keyValue = [{confidenceType: confidence}]
             returnValue = setConfidence(diagID, ConfidenceType.FIRST_EDIT,keyValue)
     
             # Successfully
