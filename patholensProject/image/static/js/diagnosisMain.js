@@ -13,6 +13,8 @@ document.addEventListener('DOMContentLoaded', function() {
     let penValue = 1;
     let save = false;
     let homeOrLog= false;
+    let diagnosisStarted = false;
+
 
     const canvas = document.getElementById("imageBrain");
     const jumpRect = document.getElementById("jumpRect");
@@ -80,7 +82,12 @@ document.addEventListener('DOMContentLoaded', function() {
         radio.addEventListener('change', (event) => {
             selectedFormat = event.target.value;
             if (mode === "new") {
-                loadImage(selectedFormat);
+                if (diagnosisStarted){
+                    loadImageAndEdited();
+                }
+                else {
+                    loadImage(selectedFormat);
+                }
             } else if (mode === "continue") {
                 loadImageAndEdited();
             }
@@ -332,6 +339,7 @@ document.addEventListener('DOMContentLoaded', function() {
         drawUndoCube = false;
         drawRectangle = false;
         save = false;
+        diagnosisStarted = true;
     });
 
     saveLesionButton.addEventListener("click", () => {
