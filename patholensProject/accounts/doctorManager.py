@@ -259,7 +259,6 @@ def setContinueDiag(docID: str, diagID: str) -> dict:
     returnDict.update({"status": True})
     return returnDict
    
-   
 def getAvailableDatasets(docID) -> list:
     """
     Retrieves the list of available datasets associated with the specific doctor.
@@ -282,7 +281,6 @@ def getAvailableDatasets(docID) -> list:
     
     return datasets
            
-
 def deleteContinueDiag(docID: str) -> dict:
     """
     Deletes the ongoing diagnosis of the doctor.

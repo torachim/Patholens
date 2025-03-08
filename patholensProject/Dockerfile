@@ -1,19 +1,21 @@
-FROM ubuntu:22.04
+# Use the latest Python image as the base
+FROM python:3.10
 
-RUN apt-get update && apt-get -y --no-install-recommends install \
-    python3 \
-    python3-pip
-
+# Set the working directory inside the container
 WORKDIR /app
 
-COPY ./requirements.txt .
+# Copy the dependency file and install dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-ENV PYTHONUNBUFFERED=1
-
-RUN pip3 install --no-cache-dir -r requirements.txt
-
+# Copy the entire project code into the container
 COPY . .
 
+# Set execution permissions for startup script
+RUN chmod +x ./startup_app.sh
+
+# Expose Django application port
 EXPOSE 8000
-RUN  chmod 777 ./startup_app.sh
+
+# Start application
 ENTRYPOINT ["sh", "./startup_app.sh"]

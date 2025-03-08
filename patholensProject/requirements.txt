@@ -3,3 +3,4 @@ djangorestframework
 drf-spectacular
 numpy
 django-import-export
+django-cors-headers

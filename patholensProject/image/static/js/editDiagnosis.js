@@ -286,8 +286,10 @@ document.addEventListener('DOMContentLoaded', function() {
     document.body.addEventListener("click", (e) =>{
         if(zoomed){
             console.log(e.target);
-            if(e.target != comparisonContainer && e.target != zoomButton ){
+            if (!comparisonContainer.contains(e.target) && e.target !== zoomButton) {
+
                 let clickedDropdown = false;
+
                 dropdownMenus.forEach(dropdown => {
                     if (dropdown.contains(e.target)){
                         clickedDropdown = true;
@@ -390,3 +392,5 @@ document.addEventListener('DOMContentLoaded', function() {
      // save image if logged out
      //document.getElementById("logoutButton").addEventListener("click", savedEditedImage(nv, diagnosisID, csrfToken));
 });
+
+
