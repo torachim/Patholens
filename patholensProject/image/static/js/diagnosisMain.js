@@ -102,7 +102,6 @@ document.addEventListener('DOMContentLoaded', function() {
         lesionNumber = volumes.length;
         penValue = volumes.length;
         nv.loadVolumes(volumes);
-       // addLabel(nv);
     } 
 
     async function loadImage() {
