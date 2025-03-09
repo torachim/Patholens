@@ -1,12 +1,13 @@
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-
+from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.conf import settings
 import os
+import re
 from image.diagnosisManager import getURL, ConfidenceType, setConfidence
-from accounts.doctorManager import deleteContinueDiag
+from accounts.doctorManager import deleteContinueDiag, setContinueDiag
 from .timeHandler import setUseTime
 
 import os
@@ -121,6 +122,7 @@ class SaveConfidenceAPIView(APIView):
         try:
             data = request.data
             confidence = data.get('confidence')
+            confidenceType = data.get('confidenceType') 
 
             # check if it is a valid value
             if confidence is None or not (0 <= int(confidence) <= 10):
@@ -131,7 +133,7 @@ class SaveConfidenceAPIView(APIView):
             # TODO: Know which confidence you want to save: First confidence, AI confidence, edited confidence
             """
             
-            keyValue = [{"allLesions": confidence}]
+            keyValue = [{confidenceType: confidence}]
             returnValue = setConfidence(diagID, ConfidenceType.FIRST_EDIT,keyValue)
     
             # Successfully
@@ -217,7 +219,11 @@ class GetImageAndMaskAPIView(APIView):
                 {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
      
-     
+
+def sortLesionNumber(filename):
+    match = re.search(r'lesion-(\d+)', filename) 
+    return int(match.group(1)) if match else float('inf')
+
 class GetDiagnosis(APIView):
 
     def get(self, request, diagnosisID):
@@ -239,22 +245,41 @@ class GetDiagnosis(APIView):
             subID = getURL(diagnosisID)
             docID = request.user.id
 
-            diagnosisPath = os.path.join(
+            diagnosisFolder = os.path.join(
                         settings.MEDIA_ROOT,
-                        f"website_data/derivatives/diagnosis/sub-{subID}/doc-{docID}/sub-{subID}_acq-{docID}_space-edited-image.nii.gz"
+                        f"website_data/derivatives/diagnosis/sub-{subID}/doc-{docID}"
             )
             
-            if not os.path.exists(diagnosisPath):
+            if not os.path.exists(diagnosisFolder):
                 return Response(
-                    {"error": f"Diagnosis File {diagnosisPath} not found"},
+                    {"error": f"Diagnosis File {diagnosisFolder} not found"},
                     status=status.HTTP_404_NOT_FOUND
                 )
             
+            files = [
+                os.path.relpath(os.path.join(root, file), settings.MEDIA_ROOT)
+                for root, _, filenames in os.walk(diagnosisFolder)
+                for file in filenames
+            ]
+
+
+
             relativePath = f"media/website_data/derivatives/diagnosis/sub-{subID}/doc-{docID}/sub-{subID}_acq-{docID}_space-edited-image.nii.gz"
+
+            if not files:
+                return Response(
+                    {"error": "No files found in the folder"},
+                    status=status.HTTP_404_NOT_FOUND
+                )
+            
+            # sorts the diagnosis images regarding their lesion number
+            files.sort(key=sortLesionNumber)
+
+            imageFiles = [os.path.join("media", file) for file in files]
 
             return Response(
                     {"status": "success",
-                     "path": relativePath,
+                     "files": [os.path.join("media", file) for file in files]
                     },
                     status=status.HTTP_200_OK
             )
@@ -264,6 +289,68 @@ class GetDiagnosis(APIView):
                     {"error": str(e)},
                     status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+        
+class setContinueAPIView(APIView):
+    def post(self, request):
+        
+        try:
+            data = request.data
+            docID = data.get("docID")
+            diagnosisID = data.get("diagnosisID")
+
+            if(not docID or not diagnosisID):
+                return Response({"error": "Invalid Data"}, status=status.HTTP_404_NOT_FOUND)
+            
+            setContinueDiag(docID, diagnosisID)
+
+            return Response({"status": "success"},
+                            status=status.HTTP_200_OK)
+        
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+
+class saveImageAPIView(APIView):
+    def post(self, request):
+        try:
+            # Extract file and file name from the request
+            image_file = request.FILES.get("imageFile")
+            filename = request.POST.get("filename")
+            diagnosisID = request.POST.get("diagnosisID")  # get the subID from the request
+
+            if not image_file or not filename or not diagnosisID:
+                return JsonResponse({"error": "Invalid data"}, status=400)
+
+            docID = request.user.id
+            subID = getURL(diagnosisID)
+
+            # Define the directory structure: media/website_data/derivatives/diagnosis/sub-{subID}
+            sub_folder = os.path.join(
+                settings.MEDIA_ROOT,
+                "website_data",
+                "derivatives",
+                "diagnosis",
+                f"sub-{subID}"
+                f"/doc-{docID}"
+            )
+
+            # Ensure the directory exists
+            os.makedirs(sub_folder, exist_ok=True)
+
+            # Full file path
+            filepath = os.path.join(sub_folder, filename)
+
+            # Save the file
+            with open(filepath, "wb") as f:
+                for chunk in image_file.chunks():
+                    f.write(chunk)
+
+
+            setContinueDiag(docID, diagnosisID)
+
+            return JsonResponse({"message": "Image saved successfully"})
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=400)
             
 
 class DeleteDiagnosisAPIView(APIView):

@@ -1,5 +1,19 @@
 import { Niivue } from "./index.js";
 
+
+const colours = {
+    1: [1, "red"],
+    2: [2, "green"],
+    3: [3, "blue"],
+    4: [4, "yellow"],
+    5: [5, "blue2cyan"],
+    6: [6, "magenta"],
+    7: [9, "brown"],
+    8: [13, "turquoise"],
+    9: [19, "jet"],
+    0: [23, "violet"]
+};
+
 /**
  * Create a niivue object and attach it to a given canvas
  * @param {dictionary} niivueOptions - A Dictionary with the Niivue options -> see Niivue documentation
@@ -43,12 +57,14 @@ let corAx;
  * Draws a rectangle when released
  * @param {Niivue} nv - Niivue instance
  * @param {*} data - The data from the drag and release
+ * @param {int} penValue - The color
  */
-export function drawRectangleNiivue(nv, data){
+export function drawRectangleNiivue(nv, data, penValue){
 
     nv.setDrawOpacity(0.5);
-    const colourValue = 3 // blue
-    nv.setPenValue(colourValue) 
+    const colour = colours[penValue%10];
+    const colourValue = colour[0];
+    nv.setPenValue(colourValue); 
 
     const { voxStart, voxEnd, axCorSag } = data
     // these rect corners will be set based on the plane the drawing was created in 
@@ -106,7 +122,7 @@ export function drawRectangleNiivue(nv, data){
         }
     }
 
-    fillRectangle(nv, bottomLeft, bottomRight, topLeft, topRight);
+    fillRectangle(nv, bottomLeft, bottomRight, topLeft, topRight, colourValue);
 
     // draw the rect lines
     nv.drawPenLine(topLeft, topRight, colourValue);
@@ -142,11 +158,13 @@ export function jumpRectangle(nv){
  * Draw a cube when a second rectangle is connected to the first
  * @param {Niivue} nv - Niivue instance
  * @param {dict} data - The data created by the drag release
+ * @param {int} penValue - The color
  * @returns bool
  */
-export function drawCubeNV(nv, data){
+export function drawCubeNV(nv, data, penValue){
 
-    const colourValue = 3;
+    const colour = colours[penValue%10];
+    const colourValue = colour[0];
     nv.setPenValue(colourValue);
 
     // Get the data from the drag
@@ -230,11 +248,11 @@ export function drawCubeNV(nv, data){
         nv.refreshDrawing(true);
 
         // Fill all the faces
-        fillRectangle(nv, rectangleBL, rectangleBR, bottomLeftD, bottomRightD);
-        fillRectangle(nv, rectangleTL, rectangleTR, topLeftD, topRightD);
-        fillRectangle(nv, rectangleBL, rectangleTL, bottomLeftD, topLeftD);
-        fillRectangle(nv, rectangleBR, rectangleTR, bottomRightD, topRightD);
-        fillRectangle(nv, bottomLeftD, bottomRightD, topLeftD, topRightD);
+        fillRectangle(nv, rectangleBL, rectangleBR, bottomLeftD, bottomRightD, colourValue);
+        fillRectangle(nv, rectangleTL, rectangleTR, topLeftD, topRightD, colourValue);
+        fillRectangle(nv, rectangleBL, rectangleTL, bottomLeftD, topLeftD, colourValue);
+        fillRectangle(nv, rectangleBR, rectangleTR, bottomRightD, topRightD, colourValue);
+        fillRectangle(nv, bottomLeftD, bottomRightD, topLeftD, topRightD, colourValue);
 
         nv.refreshDrawing(true);
 
@@ -342,8 +360,8 @@ function comparePtToRect(pt){
  * @param {Array<int>} PtTL  - Top-Left point of a rectangle [x, y, z]
  * @param {Array<int>} PtTR  - Top-Right point of a rectangle [x, y, z]
  */
-function fillRectangle(nv, PtBL, PtBR, PtTL, PtTR){
-    const colourValue = 3;
+function fillRectangle(nv, PtBL, PtBR, PtTL, PtTR, penValue){
+    const colourValue = penValue;
     nv.setPenValue(colourValue);
 
     const xMin = Math.min(PtBL[0], PtBR[0], PtTR[0], PtTL[0]);
@@ -458,9 +476,10 @@ export async function sendTimeStamp(action, timestamp, diagnosisID, csrfToken){
  * Saves the value of how confident the doctor is with his diagnosis in the database
  * @param {int} confidenceValue - The confidence value of the doctor for the current diagnosis
  * @param {string} diagnosisID - The ID of the current diagnosis
+ * @param {string} confidenceType - The type of the confidence
  * @param {string} csrfToken - csrf Token for the API call
  */
-export async function sendConfidence(confidenceValue, diagnosisID, csrfToken){
+export async function sendConfidence(confidenceValue, diagnosisID, confidenceType, csrfToken){
     await fetch(`/image/api/saveConfidence/${diagnosisID}/`, {
         method: 'POST',
         headers: {
@@ -468,7 +487,8 @@ export async function sendConfidence(confidenceValue, diagnosisID, csrfToken){
             'X-CSRFToken': csrfToken
         },
         body: JSON.stringify({
-            confidence: confidenceValue
+            confidence: confidenceValue,
+            confidenceType: confidenceType,
         })
     })
     .then(response => {
@@ -529,13 +549,44 @@ async function fetchDoctorID(){
 }
 
 /**
+ * Sets the current Diagnosis to continue Diagnosis
+ * @param {string} diagnosisID - The current diagnosis ID
+ * @param {*} csrfToken - csrf Token
+ */
+export async function setContinueDiag(diagnosisID, csrfToken) {
+    const docID = await fetchDoctorID();
+    await fetch('/image/api/setContinue/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken,
+        },
+        body: JSON.stringify({
+            docID: docID,
+            diagnosisID: diagnosisID
+        })
+    })
+    .then(response => {
+        if (response.ok) {
+            console.log('Continue diagnosis updated successfully!');
+            return response.json();
+        } else {
+            throw new Error('Failed to update continue value');
+        }
+    })
+    .catch(error => console.error(error));  
+}
+
+
+/**
  * Save the current diagnosis in the database
  * @param {Niivue} nv - Niivue instance
  * @param {string} diagnosisID - The ID of the current diagnosis
+ * @param {Int} lesionNumber - The Number of the current lesion.
  * @param {string} csrfToken - csrfToken for the API
  * 
  */
-export async function savedEditedImage(nv, diagnosisID, csrfToken) {
+export async function savedEditedImage(nv, diagnosisID, lesionNumber, csrfToken) {
     try {
         // Wait for subID from fetchImageURL
         const subID = await fetchImageSub(diagnosisID);
@@ -546,7 +597,7 @@ export async function savedEditedImage(nv, diagnosisID, csrfToken) {
             return;
         }
 
-        const filename = `sub-${subID}_acq-${docID}_space-edited-image.nii.gz`; // Dynamic filename
+        const filename = `sub-${subID}_acq-${docID}_lesion-${lesionNumber}_mask.nii.gz`; // Dynamic filename
 
         // Create the blob object for the image
         const imageBlob = nv.saveImage({
@@ -602,14 +653,17 @@ export async function loadImageWithDiagnosis(diagnosisID, formatMri) {
                 return response.json();
             })
             .then(data => {
-                const URL = data.path;
-                const diagURL = `http://127.0.0.1:8000/${URL}`
-                console.log(diagURL);
-                volumes.push({url: diagURL,
-                              schema: "nifti",
-                              colorMap: "blue",
-                              opacity: 0.65
-                });
+                const urls = data.files;
+                console.log(urls);
+                for (let i = urls.length -1; i >= 0; i--){
+                    const diagUrl = `http://127.0.0.1:8000/${urls[i]}`;
+                    const colour = colours[(i + 1)%10];
+                    volumes.push({url: diagUrl,
+                                  schema: "nifti",
+                                  colorMap: colour[1],
+                                  opacity: 0.85,
+                    });
+                }
             })
             .catch(err => {
                 console.error("Error loading Nifti Files", err);
@@ -617,6 +671,12 @@ export async function loadImageWithDiagnosis(diagnosisID, formatMri) {
 
         return volumes;
     }
+
+export function changePenValue(nv, mode, filled){
+    const colour = colours[mode%10];
+    const colourValue = colour[0];
+    nv.setPenValue(colourValue, filled);
+}
 
 /**
  * Returns two volumes the first is the normal MRI image and the second is the AI Diagnosis
@@ -690,13 +750,16 @@ export async function loadOverlayDAI(formatMask, formatMri, diagnosisID) {
         return response.json();
     })
     .then(data => {
-        const URL = data.path;
-        const diagURL = `http://127.0.0.1:8000/${URL}`
-        volumes.push({url: diagURL,
-                        schema: "nifti",
-                        colorMap: "blue",
-                        opacity: 0.65,
-        });
+        const urls = data.files;
+        for (let i = urls.length -1; i >= 0; i--){
+            const diagUrl = `http://127.0.0.1:8000/${urls[i]}`;
+            const colour = colours[(i + 1)%10];
+            volumes.push({url: diagUrl,
+                          schema: "nifti",
+                          colorMap: colour[1],
+                          opacity: 0.85,
+            });
+        }
     })
     .catch(err => {
         console.error("Error loading Nifti Files", err);

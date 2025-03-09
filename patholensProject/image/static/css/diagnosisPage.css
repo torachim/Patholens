@@ -422,6 +422,14 @@ input[type="radio"]:checked::before {
     transform: scale(0.97); 
 }
 
+.alertWindowButtons{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
 .overlay {
     position: fixed;
     top: 0;
@@ -434,4 +442,62 @@ input[type="radio"]:checked::before {
     justify-content: center;
     align-items: center;
     z-index: 3;
+}
+
+.saveLesionWindow {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #005E7A;
+    padding: 20px 30px;
+    border-radius: 20px;
+    width: 450px;
+    height: 325px;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    z-index: 4;
+    color: white;
+}
+
+.saveLesionText{
+    font-family: 'Cabin', sans-serif;
+    font-size: 20px;
+    margin-top: 50px;
+}
+
+.saveLesionButtons{
+    display: flex;
+    flex-direction: row;
+    margin-top: 40px;
+    justify-content: space-evenly;
+    width: 100%;
+}
+
+.saveLesionButtons button {
+    background-color: #00afb9;
+    border: none;
+    width: 200px;
+    height: 35px;
+    border-radius: 8px;
+    color: white;
+    font-size: 18px;
+    font-family: Calibri, Arial, sans-serif;
+    font-weight: regular;
+    cursor: pointer;
+    box-shadow: 5px 5px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.saveLesionButtons button:hover {
+    background-color:#02bbc5; 
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3); 
+}
+
+.saveLesionButtons button:active {
+    background-color: #029da5; 
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); 
 }

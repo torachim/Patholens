@@ -534,7 +534,7 @@ body {
     transform: scale(0.97); 
 }
 
-.overlay {
+.alertOverlay {
     position: fixed;
     top: 0;
     left: 0;

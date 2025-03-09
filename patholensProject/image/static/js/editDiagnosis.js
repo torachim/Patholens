@@ -375,16 +375,18 @@ document.addEventListener('DOMContentLoaded', function() {
             sendTime("Aborted Confidence Edit");
         }
     })
+    
+    const alertOverlay = document.getElementById("alertOverlay");
 
     closeAlertWindow.addEventListener("click", () => {
         alertMessageBox.style.display = "none";
-        overlay.style.display = "none";
+        alertOverlay.style.display = "none";
     })
 
  
     function showAlertWindow(){
         alertMessageBox.style.display = "flex"
-        overlay.style.display = "flex";
+        alertOverlay.style.display = "flex";
     }
 
      // save image if logged out
