@@ -16,25 +16,25 @@ class MediaAdmin(admin.ModelAdmin):
     
     Provides a custom action to add media datasets from the /media folder to the database.
     """
-    actions = ["addMedia"]
+    actions = ["syncMediaToDBAdminFunc"]
 
-    def addMedia(self, request, queryset=None):
+    def syncMediaToDBAdminFunc(self, request, queryset=None):
         """
-        Adds new datasets from the /media folder to the Media database by calling the addMedia function.
+        Adds new datasets from the /media folder to the Media database by calling the syncMediaToDB function.
         
         Args:
             * request: The HTTP request object.
             * queryset: Optional queryset of selected items (not used).
         """
         try:
-            from image.mediaHandler import addMedia
-            addMedia()
-            self.message_user(request, "The new datasets where added to the Media Database", messages.SUCCESS)
+            from image.mediaHandler import syncMediaToDB
+            syncMediaToDB()
+            self.message_user(request, "The Media Database is now up to date.", messages.SUCCESS)
 
         except Exception as e:
-            self.message_user(request, f"Their was a error when running 'addMedia': {str(e)}", messages.ERROR)
+            self.message_user(request, f"Their was a error when running 'syncMediaToDB': {str(e)}", messages.ERROR)
 
-    addMedia.short_description = "All data sets in the /media folder will be added to the Database"
+    syncMediaToDBAdminFunc.short_description = "Add all datasets from the /media folder to the database"
 
 
 class UseTimeInline(admin.StackedInline):
