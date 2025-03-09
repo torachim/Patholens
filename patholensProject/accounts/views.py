@@ -155,8 +155,7 @@ def logoutView(request, calledFrom):
     # if called from one of these pages, the process needs to be saved before logging out
     if calledFrom == "newDiagnosis" or calledFrom == "editPage":
         # TODO: save progress
-        print("diagnose")
-
+        pass
     logout(request)
     return redirect("/")  # redirects to the login screen
 

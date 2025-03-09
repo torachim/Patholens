@@ -261,10 +261,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     async function endDiagnosis(confidenceValue){
-        let confiidenceType = "all Lesions"
-        await sendConfidence(confidenceValue, diagnosisID, confiidenceType, csrfToken);
+        let confidenceType = "all Lesions"
+        await sendConfidence(confidenceValue, diagnosisID, confidenceType, csrfToken);
         await sendTime("Confidence Confirmed");
-       // await savedEditedImage(nv, diagnosisID, csrfToken);
         window.location.assign(`/image/AIpage/${diagnosisID}`)
     }
 
@@ -304,34 +303,38 @@ document.addEventListener('DOMContentLoaded', function() {
         overlay.style.display = "none";
     })
 
- 
+    // Function to show the alert Window if necessary 
     function showAlertWindow(){
         alertMessageBox.style.display = "flex"
         overlay.style.display = "flex";
     }
 
+    // Send the current timestamp to the backend
     async function sendTime(action){
         let utcTime = Date.now();
         await sendTimeStamp(action, utcTime, diagnosisID, csrfToken);
     }
 
+    // Shows the save window if necessary
     function showSaveWindow(){
         saveLesionWindow.style.display = "flex";
         overlay.style.display = "flex";
-        save = true;
+        save = true; //save eq. true so the "save lesion" block appears
     }
 
+    // If you want to close the save Lesion window
     controlLesion.addEventListener("click", () => {
         saveLesionWindow.style.display = "none";
         overlay.style.display = "none";
         saveLesionButton.style.display = "flex";
     })
 
+    // If the user decides to save the current lesion
     saveLesion.addEventListener("click", () => {
-        saveImage();
-        const confidenceValue = confidenceSlider1.value;
-        let confidenceType = "lesion " + lesionNumber;
-        sendConfidence(confidenceValue, diagnosisID, confidenceType, csrfToken);
+        saveImage(); // save the current image
+        const confidenceValue = confidenceSlider1.value; // get the confidence value
+        let confidenceType = "lesion " + lesionNumber; //generate the confidence type
+        sendConfidence(confidenceValue, diagnosisID, confidenceType, csrfToken); //save the confidence
         saveLesionWindow.style.display = "none";
         overlay.style.display = "none";
         saveLesionButton.style.display = "none";
@@ -342,10 +345,12 @@ document.addEventListener('DOMContentLoaded', function() {
         diagnosisStarted = true;
     });
 
+    // show the save window if the user clicks on the save button
     saveLesionButton.addEventListener("click", () => {
         showSaveWindow();
     })
 
+    // Save the image and send the time stamp
     async function saveImage(){
         await savedEditedImage(nv, diagnosisID, lesionNumber, csrfToken);
         sendTime("Saved Lesion");
@@ -356,31 +361,35 @@ document.addEventListener('DOMContentLoaded', function() {
     // save image if logged out        ATTENTION: prevent saving image twice!! It wont work
     const logOut = document.getElementById("logoutButton");
 
+    //If the user clicks on the logout button
     logOut.addEventListener("click", (event) => {
+        // if save is true show alert window and prevent logout 
         if(save){
             event.preventDefault();
             logOutWindow.style.display = "flex";
             overlay.style.display = "flex";
-            homeOrLog = false;
+            homeOrLog = false; // false for logout 
         }
+        // if the user is currently drawing a cube show alert window and prevent logout 
         else if(drawCube){
             event.preventDefault();
             alertMessageBox.style.display = "flex"
             overlay.style.display = "flex";
         }
         else{
-            setContinue();
+            setContinue(); //send continue and logout 
         }
     })
 
     const homePage = document.getElementById("homePageButton");
 
+    //if user clicks on the home button same as the logout button 
     homePage.addEventListener("click", (event) => {
         if(save){
             event.preventDefault();
             logOutWindow.style.display = "flex";
             overlay.style.display = "flex";
-            homeOrLog = true;
+            homeOrLog = true; // true for back to homepage
         }
         else if(drawCube){
             event.preventDefault();
@@ -392,10 +401,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     })
 
+    // sets continue for the current diagnosis
     async function setContinue(){
          await setContinueDiag(diagnosisID, csrfToken);
     }
 
+    // log out the user
     logOutWindowContinue.addEventListener("click", () => {
         setContinue();
         if(homeOrLog){

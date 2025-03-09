@@ -219,7 +219,7 @@ class GetImageAndMaskAPIView(APIView):
             )
      
 
-def sort_lesion_number(filename):
+def sortLesionNumber(filename):
     match = re.search(r'lesion-(\d+)', filename) 
     return int(match.group(1)) if match else float('inf')
 
@@ -271,10 +271,10 @@ class GetDiagnosis(APIView):
                     status=status.HTTP_404_NOT_FOUND
                 )
             
-            files.sort(key=sort_lesion_number)
+            # sorts the diagnosis images regarding their lesion number
+            files.sort(key=sortLesionNumber)
 
             imageFiles = [os.path.join("media", file) for file in files]
-            print(imageFiles)
 
             return Response(
                     {"status": "success",
