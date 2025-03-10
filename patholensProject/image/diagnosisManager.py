@@ -117,3 +117,25 @@ def setConfidence(diagID: str, confidenceType: ConfidenceType, keyValues: list[d
 
     returnValue.update({"status": True, "message": "New Values where saved."})
     return returnValue
+
+
+def getConfidence(diagnosisID: str) -> dict | bool:
+    """Function returns all Lesions and their saved confidence
+
+    Args:
+        diagnosisID (str): Diagnosis ID of the current ongoing diagnosis
+
+    Returns:
+        dict | bool: Returns either a dict if the lesions and their confidence Value or false.
+    """
+
+    diagObj : Diagnosis = getDiagnosisObject(diagnosisID)
+
+    if not diagObj:
+        return False
+    
+    savedConfidence: dict | None = getattr(diagObj, "confidence", None)
+    savedConfidence: dict = savedConfidence if savedConfidence else {}
+
+    return savedConfidence
+    

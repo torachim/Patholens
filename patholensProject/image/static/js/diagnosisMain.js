@@ -1,5 +1,5 @@
 import { Niivue, DRAG_MODE } from "./index.js";
-import { niivueCanvas, drawRectangleNiivue,loadImageAPI, sendTimeStamp, sendConfidence, savedEditedImage, loadImageWithDiagnosis, drawCubeNV, jumpRectangle, setContinueDiag, changePenValue } from "./pathoLens.js";
+import { niivueCanvas, drawRectangleNiivue,loadImageAPI, sendTimeStamp, sendConfidence, savedEditedImage, loadImageWithDiagnosis, drawCubeNV, jumpRectangle, setContinueDiag, changePenValue, getLesionConfidence } from "./pathoLens.js";
 
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -28,7 +28,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const logOutWindowContinue = document.getElementById("continueLogoutButton");
     const logOutWindowAbort = document.getElementById("dontLogoutButton");
     const saveFirstWindow = document.getElementById("saveFirstInfo");
-    const closeSaveFirst = document.getElementById("closeSaveInfo")
+    const closeSaveFirst = document.getElementById("closeSaveInfo");
+    const lesionList = document.getElementById("lesionList");
 
     // Load FLAIR default
     let selectedFormat = "FLAIR";
@@ -91,6 +92,7 @@ document.addEventListener('DOMContentLoaded', function() {
             } else if (mode === "continue") {
                 loadImageAndEdited();
             }
+
         });
     });
 
@@ -98,9 +100,11 @@ document.addEventListener('DOMContentLoaded', function() {
     if (mode === "new") {
         sendTime("Started Diagnosis");
         loadImage();
+        updateLesionList();
     } else if (mode === "continue") {
         sendTime("Continue Diagnosis");
         loadImageAndEdited(); // Calls loadImageAndDiagnosis internally
+        updateLesionList();
     }
 
 
@@ -356,6 +360,7 @@ document.addEventListener('DOMContentLoaded', function() {
         sendTime("Saved Lesion");
         nv.createEmptyDrawing();
         loadImageAndEdited();
+        updateLesionList();
     }
 
     // save image if logged out        ATTENTION: prevent saving image twice!! It wont work
@@ -431,6 +436,33 @@ document.addEventListener('DOMContentLoaded', function() {
         saveFirstWindow.style.display = "none";
         overlay.style.display = "none";
     })
+
+
+    async function updateLesionList(){
+        const lesions = await getLesionConfidence(diagnosisID);
+        lesionList.innerHTML = "";
+
+        console.log("lesions: ", lesions);
+
+        if(Object.keys(lesions) == 0){
+            lesionList.innerHTML = "<p>No lesions saved yet</p>";
+            return;
+        }
+
+        for(const [key, value] of Object.entries(lesions)){
+            console.log("hallo", key, value);
+            const listItem = document.createElement("li");
+            listItem.className = "lesionItem";
+
+            listItem.innerHTML = `
+                <span class = "lesionName"> ${key} </span>
+                <span class="lesionConfidence"> Confidence: ${value} </span>
+                <button class="deleteLesion" data-id="${key}">&times;</button>
+                `;
+            
+                lesionList.appendChild(listItem);
+        }
+    }
 
 });
 

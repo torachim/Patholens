@@ -797,3 +797,30 @@ export async function deleteContinueDiagnosis(diagnosisID, csrfToken) {
         console.error('Error during deletion:', error.message || error);
     }
 }
+
+/**
+ * Returns the lesions and their confidence for a given diagnosis
+ * @param {string} diagnosisID - The diagnosis ID of the current diagnosis
+ * @returns Dictionary with all the lesions and their associated confidence
+ */
+export async function getLesionConfidence(diagnosisID){
+    let confidences = {};
+    const apiURL = `/image/api/getLesionConfidence/${diagnosisID}`
+
+    await fetch(apiURL)
+        .then(response => {
+            if(!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            confidences = data.data;
+        })
+        .catch(err => {
+            console.error('Error loading confidences:', err);
+        });
+    console.log("confidence: ", confidences);    
+    return confidences;
+   
+}

@@ -6,7 +6,7 @@ from django.http import JsonResponse
 from django.conf import settings
 import os
 import re
-from image.diagnosisManager import getURL, ConfidenceType, setConfidence
+from image.diagnosisManager import getURL, ConfidenceType, setConfidence, getConfidence
 from accounts.doctorManager import deleteContinueDiag, setContinueDiag
 from .timeHandler import setUseTime
 
@@ -379,4 +379,31 @@ class DeleteDiagnosisAPIView(APIView):
             return Response({
                 'status': 'error',
                 'message': f'An unexpected error occurred: {str(e)}'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class getLesionConfidence(APIView):
+
+    def get(self, request, diagnosisID):
+
+        try:
+            if not diagnosisID:
+                return Response({
+                    'status': 'error',
+                    'error': 'DiagnosisID is required'
+                },
+                status = status.HTTP_400_BAD_REQUEST
+                )
+            
+            confidences: dict = getConfidence(diagnosisID)
+
+            return Response({
+                'status': 'success',
+                'data': confidences,
+            },
+            status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({
+                'status': 'error',
+                'error': f'An unexpected error occured: {str(e)}'
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
