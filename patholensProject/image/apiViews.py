@@ -407,3 +407,55 @@ class getLesionConfidence(APIView):
                 'status': 'error',
                 'error': f'An unexpected error occured: {str(e)}'
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+
+class DeleteLesion(APIView):
+
+    def delete(self, request):
+        try:
+            data = request.data
+            lesionNumber = data.get('lesion')
+            diagID = data.get("diagnosisID")
+            subID = data.get("subID")
+
+
+            if not (diagID or lesionNumber):
+                return Response({
+                    'status': 'error',
+                    'error': 'DiagnosisID and lesion number is required'
+                },
+                status = status.HTTP_400_BAD_REQUEST
+                )
+            
+
+            docID = request.user.id
+            
+            file = f"sub-{subID}_acq-{docID}_{lesionNumber}_mask.nii.gz"
+
+            filepath = os.path.join(
+                settings.MEDIA_ROOT,
+                "website_data",
+                "derivatives",
+                "diagnosis",
+                f"sub-{subID}",
+                f"doc-{docID}",
+                file
+            )
+
+            print(filepath)
+            if os.path.isfile(filepath):
+                os.remove(filepath)
+            
+            return Response({
+                'status': 'success',
+                'message': 'Lesion deleted successfully',
+                }, status=status.HTTP_200_OK)
+
+
+        except Exception as e:
+            return Response({
+                'status': 'error',
+                'message': f'An unexpected error occurred: {str(e)}'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+

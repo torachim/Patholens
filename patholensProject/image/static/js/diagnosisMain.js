@@ -1,5 +1,5 @@
 import { Niivue, DRAG_MODE } from "./index.js";
-import { niivueCanvas, drawRectangleNiivue,loadImageAPI, sendTimeStamp, sendConfidence, savedEditedImage, loadImageWithDiagnosis, drawCubeNV, jumpRectangle, setContinueDiag, changePenValue, getLesionConfidence } from "./pathoLens.js";
+import { niivueCanvas, drawRectangleNiivue,loadImageAPI, sendTimeStamp, sendConfidence, savedEditedImage, loadImageWithDiagnosis, drawCubeNV, jumpRectangle, setContinueDiag, changePenValue, getLesionConfidence, deleteLesion } from "./pathoLens.js";
 
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -337,7 +337,7 @@ document.addEventListener('DOMContentLoaded', function() {
     saveLesion.addEventListener("click", () => {
         saveImage(); // save the current image
         const confidenceValue = confidenceSlider1.value; // get the confidence value
-        let confidenceType = "lesion " + lesionNumber; //generate the confidence type
+        let confidenceType = "lesion-" + lesionNumber; //generate the confidence type
         sendConfidence(confidenceValue, diagnosisID, confidenceType, csrfToken); //save the confidence
         saveLesionWindow.style.display = "none";
         overlay.style.display = "none";
@@ -467,6 +467,7 @@ document.addEventListener('DOMContentLoaded', function() {
             button.addEventListener("click", function(){
                 const lesion = this.dataset.id;
                 console.log("lesion: ", lesion);
+                deleteLesion(diagnosisID, lesion, csrfToken);
             })
         })
     }

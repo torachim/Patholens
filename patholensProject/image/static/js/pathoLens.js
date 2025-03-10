@@ -822,5 +822,38 @@ export async function getLesionConfidence(diagnosisID){
         });
     console.log("confidence: ", confidences);    
     return confidences;
-   
+}
+
+export async function deleteLesion(diagnosisID, lesion, csrfToken){
+
+    const subID = await fetchImageSub(diagnosisID);
+
+    if(!subID){
+        console.error("Image subID could not be loaded");
+        return
+    }
+
+    console.log(subID, diagnosisID, lesion);
+
+    await fetch("/image/api/deleteLesion/", {
+        method: "DELETE",
+        headers: {
+            "Content-Type": 'application/json',
+            "X-CSRFToken": csrfToken,
+        },
+        body: JSON.stringify({
+            subID: subID,
+            diagnosisID: diagnosisID,
+            lesion: lesion,
+        })
+    })
+    .then(response => {
+        if(response.ok){
+            console.log("Lesion successfully deleted");
+            return response.json();
+        } else{
+            throw new Error("Failed to delete lesion");
+        }
+    })
+    .catch(error => console.error(error));
 }
