@@ -468,8 +468,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 const lesion = this.dataset.id;
                 console.log("lesion: ", lesion);
                 deleteLesion(diagnosisID, lesion, csrfToken);
+                reload();
             })
         })
+
+
+        async function reload(){
+            await loadImageAndEdited();
+            await updateLesionList();
+        }
     }
 
 });

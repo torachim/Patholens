@@ -6,7 +6,7 @@ from django.http import JsonResponse
 from django.conf import settings
 import os
 import re
-from image.diagnosisManager import getURL, ConfidenceType, setConfidence, getConfidence
+from image.diagnosisManager import getURL, ConfidenceType, setConfidence, getConfidence, deleteConfidence
 from accounts.doctorManager import deleteContinueDiag, setContinueDiag
 from .timeHandler import setUseTime
 
@@ -445,13 +445,19 @@ class DeleteLesion(APIView):
             print(filepath)
             if os.path.isfile(filepath):
                 os.remove(filepath)
-            
-            return Response({
-                'status': 'success',
-                'message': 'Lesion deleted successfully',
-                }, status=status.HTTP_200_OK)
 
-
+            if deleteConfidence(diagID, lesionNumber):
+ 
+                return Response({
+                    'status': 'success',
+                    'message': 'Lesion deleted successfully',
+                    }, status=status.HTTP_200_OK)
+            else:
+                return Response({
+                    'status': 'Error',
+                    'message': 'Error during deleting of the lesion'
+                    }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
         except Exception as e:
             return Response({
                 'status': 'error',

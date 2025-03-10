@@ -138,4 +138,20 @@ def getConfidence(diagnosisID: str) -> dict | bool:
     savedConfidence: dict = savedConfidence if savedConfidence else {}
 
     return savedConfidence
+
+def deleteConfidence(diagnosisID: str, lesion: str) -> bool:
+
+    diagObj: Diagnosis = getDiagnosisObject(diagnosisID)
+
+    if not diagObj:
+        return False
+    
+    confidences: dict = getattr(diagObj, "confidence", None)
+
+    del confidences[lesion]
+
+    setattr(diagObj, "confidence", confidences)
+    diagObj.save()
+
+    return True
     
