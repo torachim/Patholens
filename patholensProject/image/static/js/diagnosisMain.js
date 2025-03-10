@@ -462,6 +462,13 @@ document.addEventListener('DOMContentLoaded', function() {
             
                 lesionList.appendChild(listItem);
         }
+
+        document.querySelectorAll(".deleteLesion").forEach(button => {
+            button.addEventListener("click", function(){
+                const lesion = this.dataset.id;
+                console.log("lesion: ", lesion);
+            })
+        })
     }
 
 });
