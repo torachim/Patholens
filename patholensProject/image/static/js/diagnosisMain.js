@@ -1,5 +1,5 @@
 import { Niivue, DRAG_MODE } from "./index.js";
-import { niivueCanvas, drawRectangleNiivue,loadImageAPI, sendTimeStamp, sendConfidence, savedEditedImage, loadImageWithDiagnosis, drawCubeNV, jumpRectangle, setContinueDiag, changePenValue, getLesionConfidence, deleteLesion } from "./pathoLens.js";
+import { niivueCanvas, drawRectangleNiivue,loadImageAPI, sendTimeStamp, sendConfidence, savedEditedLesion, loadImageWithDiagnosis, drawCubeNV, jumpRectangle, setContinueDiag, changePenValue, getLesionConfidence, deleteLesion, scanForLesions } from "./pathoLens.js";
 
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -335,8 +335,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // If the user decides to save the current lesion
     saveLesion.addEventListener("click", () => {
-        saveImage(); // save the current image
         const confidenceValue = confidenceSlider1.value; // get the confidence value
+        saveImage(confidenceValue); // save the current image
         let confidenceType = "lesion-" + lesionNumber; //generate the confidence type
         sendConfidence(confidenceValue, diagnosisID, confidenceType, csrfToken); //save the confidence
         saveLesionWindow.style.display = "none";
@@ -355,8 +355,8 @@ document.addEventListener('DOMContentLoaded', function() {
     })
 
     // Save the image and send the time stamp
-    async function saveImage(){
-        await savedEditedImage(nv, diagnosisID, lesionNumber, csrfToken);
+    async function saveImage(confidence){
+        await savedEditedLesion(nv, diagnosisID, lesionNumber, confidence, csrfToken);
         sendTime("Saved Lesion");
         nv.createEmptyDrawing();
         loadImageAndEdited();
@@ -444,20 +444,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
         console.log("lesions: ", lesions);
 
-        if(Object.keys(lesions) == 0){
+        if(lesions.length == 0){
             lesionList.innerHTML = "<p>No lesions saved yet</p>";
             return;
         }
 
-        for(const [key, value] of Object.entries(lesions)){
-            console.log("hallo", key, value);
+        for(let i = 0; i < lesions.length; i++){
+            const lesion = lesions[i]
             const listItem = document.createElement("li");
             listItem.className = "lesionItem";
 
             listItem.innerHTML = `
-                <span class = "lesionName"> ${key} </span>
-                <span class="lesionConfidence"> Confidence: ${value} </span>
-                <button class="deleteLesion" data-id="${key}">&times;</button>
+                <span class = "lesionName"> ${lesion['name']} </span>
+                <span class="lesionConfidence"> Confidence: ${lesion['confidence']} </span>
+                <button class="deleteLesion" data-id="${lesion['lesionID']}">&times;</button>
                 `;
             
                 lesionList.appendChild(listItem);
@@ -474,7 +474,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
         async function reload(){
-            await loadImageAndEdited();
+            let entries = await scanForLesions(diagnosisID);
+            if(entries){
+                await loadImageAndEdited();
+            } else {
+                await loadImage(selectedFormat);
+            }
             await updateLesionList();
         }
     }

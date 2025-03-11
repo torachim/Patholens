@@ -9,6 +9,7 @@ import re
 from image.diagnosisManager import getURL, ConfidenceType, setConfidence, getConfidence, deleteConfidence
 from accounts.doctorManager import deleteContinueDiag, setContinueDiag
 from .timeHandler import setUseTime
+from image.lesionHandler import createLesion, getLesions, getLesionsConfidence, getNumberOfLesion
 
 import os
 
@@ -317,6 +318,8 @@ class saveImageAPIView(APIView):
             image_file = request.FILES.get("imageFile")
             filename = request.POST.get("filename")
             diagnosisID = request.POST.get("diagnosisID")  # get the subID from the request
+            lesionName = request.POST.get("lesionName")
+            confidence = request.POST.get("confidence")
 
             if not image_file or not filename or not diagnosisID:
                 return JsonResponse({"error": "Invalid data"}, status=400)
@@ -324,14 +327,18 @@ class saveImageAPIView(APIView):
             docID = request.user.id
             subID = getURL(diagnosisID)
 
-            # Define the directory structure: media/website_data/derivatives/diagnosis/sub-{subID}
-            sub_folder = os.path.join(
-                settings.MEDIA_ROOT,
+            mediaURL = os.path.join(
                 "website_data",
                 "derivatives",
                 "diagnosis",
-                f"sub-{subID}"
-                f"/doc-{docID}"
+                f"sub-{subID}",
+                f"doc-{docID}"
+            )
+
+            # Define the directory structure: media/website_data/derivatives/diagnosis/sub-{subID}
+            sub_folder = os.path.join(
+                settings.MEDIA_ROOT,
+                mediaURL
             )
 
             # Ensure the directory exists
@@ -340,6 +347,8 @@ class saveImageAPIView(APIView):
             # Full file path
             filepath = os.path.join(sub_folder, filename)
 
+            fileURL = os.path.join(mediaURL, filename)
+
             # Save the file
             with open(filepath, "wb") as f:
                 for chunk in image_file.chunks():
@@ -347,6 +356,7 @@ class saveImageAPIView(APIView):
 
 
             setContinueDiag(docID, diagnosisID)
+            createLesion(diagnosisID, confidence, lesionName, fileURL)
 
             return JsonResponse({"message": "Image saved successfully"})
         except Exception as e:
@@ -385,7 +395,6 @@ class DeleteDiagnosisAPIView(APIView):
 class getLesionConfidence(APIView):
 
     def get(self, request, diagnosisID):
-
         try:
             if not diagnosisID:
                 return Response({
@@ -395,11 +404,13 @@ class getLesionConfidence(APIView):
                 status = status.HTTP_400_BAD_REQUEST
                 )
             
-            confidences: dict = getConfidence(diagnosisID)
+            #confidences: dict = getConfidence(diagnosisID)
+            lesion = getLesionsConfidence(diagnosisID)
+            print(lesion)
 
             return Response({
                 'status': 'success',
-                'data': confidences,
+                'data': lesion,
             },
             status=status.HTTP_200_OK)
         except Exception as e:
@@ -431,6 +442,7 @@ class DeleteLesion(APIView):
             docID = request.user.id
             
             file = f"sub-{subID}_acq-{docID}_{lesionNumber}_mask.nii.gz"
+
 
             filepath = os.path.join(
                 settings.MEDIA_ROOT,
@@ -465,3 +477,38 @@ class DeleteLesion(APIView):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
+class scanLesions(APIView):
+    def get(self, request):
+
+        diagID = request.GET.get('diagnosisID')
+        subID = request.GET.get('subID')
+        docID = request.user.id
+
+        if not (diagID and subID):
+            return Response({
+                    'status': 'Error',
+                    'message': 'Diagnosis ID is required',
+                }, status=status.HTTP_400_BAD_REQUEST)
+        
+        folder = os.path.join(
+                settings.MEDIA_ROOT,
+                "website_data",
+                "derivatives",
+                "diagnosis",
+                f"sub-{subID}",
+                f"doc-{docID}"
+            )
+        
+        hasEntries = False
+
+        with os.scandir(folder) as entries:
+            if any(entries):
+                hasEntries = True
+            else:
+                hasEntries = False
+        
+        return Response({
+                'status': 'success',
+                'message': 'Folder scan successful',
+                'entries': hasEntries
+                }, status=status.HTTP_200_OK)

@@ -1,16 +1,17 @@
 from django.urls import path, include
-from .apiViews import SetUseTimeAPIView, GetImageAPIView, SaveConfidenceAPIView, GetImageAndMaskAPIView, GetDiagnosis, DeleteDiagnosisAPIView, saveImageAPIView, setContinueAPIView, getLesionConfidence, DeleteLesion
+from .apiViews import SetUseTimeAPIView, GetImageAPIView, SaveConfidenceAPIView, GetImageAndMaskAPIView, GetDiagnosis, DeleteDiagnosisAPIView, saveImageAPIView, setContinueAPIView, getLesionConfidence, DeleteLesion, scanLesions
 from . import views
 
 urlpatterns = [
     path('saveConfidence/<str:diagID>/', SaveConfidenceAPIView.as_view(), name='saveConfidence'),
     path('getImage/<str:diagnosisID>/', GetImageAPIView.as_view(), name='getImage'),
     path('setUseTime/', SetUseTimeAPIView.as_view(), name='setUseTime'),
-    path("saveImage/", saveImageAPIView.as_view(), name="saveImage"),
+    path("saveImage/", saveImageAPIView.as_view(), name='saveImage'),
     path('getDiagnosis/<str:diagnosisID>/', GetDiagnosis.as_view(), name='getDiagnosis'),
     path('getImageAndMask/<str:diagnosisID>/', GetImageAndMaskAPIView.as_view(), name='getImageAndMask'),
     path('deleteDiagnosis/', DeleteDiagnosisAPIView.as_view(), name='deleteDiagnosis'),
-    path('setContinue/', setContinueAPIView.as_view(), name="setContinue"),
+    path('setContinue/', setContinueAPIView.as_view(), name='setContinue'),
     path('getLesionConfidence/<str:diagnosisID>/', getLesionConfidence.as_view(), name='getLesionConfidence'),
     path('deleteLesion/', DeleteLesion.as_view(), name='deleteLesion'),
+    path('scanLesion/', scanLesions.as_view(), name='scanLesion'),
 ]

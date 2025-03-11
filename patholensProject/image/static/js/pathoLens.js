@@ -583,21 +583,23 @@ export async function setContinueDiag(diagnosisID, csrfToken) {
  * @param {Niivue} nv - Niivue instance
  * @param {string} diagnosisID - The ID of the current diagnosis
  * @param {Int} lesionNumber - The Number of the current lesion.
+ * @param {Int} confidence - The confidence for the current lesion
  * @param {string} csrfToken - csrfToken for the API
  * 
  */
-export async function savedEditedImage(nv, diagnosisID, lesionNumber, csrfToken) {
+export async function savedEditedLesion(nv, diagnosisID, lesionNumber, confidence, csrfToken) {
     try {
         // Wait for subID from fetchImageURL
         const subID = await fetchImageSub(diagnosisID);
         const docID = await fetchDoctorID();
+        const name = `lesion-${lesionNumber}`
 
         if (!subID) {
             console.error("Image subID could not be retrieved.");
             return;
         }
 
-        const filename = `sub-${subID}_acq-${docID}_lesion-${lesionNumber}_mask.nii.gz`; // Dynamic filename
+        const filename = `sub-${subID}_acq-${docID}_${name}_mask.nii.gz`; // Dynamic filename
 
         // Create the blob object for the image
         const imageBlob = nv.saveImage({
@@ -609,7 +611,9 @@ export async function savedEditedImage(nv, diagnosisID, lesionNumber, csrfToken)
         // Create a FormData object
         const formData = new FormData();
         formData.append("filename", filename);
-        formData.append("diagnosisID", diagnosisID)
+        formData.append("diagnosisID", diagnosisID);
+        formData.append("lesionName", name)
+        formData.append("confidence", confidence)
         formData.append("imageFile", new Blob([imageBlob], { type: "application/octet-stream" }));
 
         // Send the data to the API
@@ -816,11 +820,11 @@ export async function getLesionConfidence(diagnosisID){
         })
         .then(data => {
             confidences = data.data;
+            console.log(confidences);
         })
         .catch(err => {
             console.error('Error loading confidences:', err);
-        });
-    console.log("confidence: ", confidences);    
+        });   
     return confidences;
 }
 
@@ -856,4 +860,31 @@ export async function deleteLesion(diagnosisID, lesion, csrfToken){
         }
     })
     .catch(error => console.error(error));
+}
+
+export async function scanForLesions(diagnosisID){
+
+    const subID = await fetchImageSub(diagnosisID);
+    let hasEntries;
+
+    const params = new URLSearchParams({
+        diagnosisID: diagnosisID,
+        subID: subID,
+    });
+
+    const apiURL = `/image/api/scanLesion/?${params.toString()}`
+
+    await fetch(apiURL)
+            .then(response => {
+                if(!response.ok){
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json()
+            })
+            .then(data => {
+                hasEntries = data.entries;
+            })
+            .catch(error => console.error(error));
+
+    return hasEntries;
 }

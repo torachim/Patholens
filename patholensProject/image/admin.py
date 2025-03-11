@@ -7,7 +7,7 @@ from django.utils.translation import gettext_lazy as _
 from import_export import resources, fields
 from import_export.admin import ExportMixin
 
-from .models import UseTime, Diagnosis, Media
+from .models import UseTime, Diagnosis, Media, Lesions
 
 
 class MediaAdmin(admin.ModelAdmin):
@@ -148,3 +148,4 @@ class DiagnosisAdmin(ExportMixin, admin.ModelAdmin):
     
 admin.site.register(Media, MediaAdmin)
 admin.site.register(UseTime)
+admin.site.register(Lesions)

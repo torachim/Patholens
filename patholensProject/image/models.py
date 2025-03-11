@@ -23,6 +23,33 @@ class Diagnosis(models.Model):
         return str(self.diagID)
 
 
+class Lesions(models.Model):
+    """
+    Table to safe all the lesions for all the diagnosis.
+    Also safe the confidence of the lesions
+    """
+    # lesion ID
+    lesionID = models.AutoField(primary_key=True)
+    # lesion Name
+    name = models.CharField(max_length=255)
+    # confidence Value for each lesion
+    confidence = models.IntegerField()
+    # url to the lesion picture
+    url = models.TextField(blank=False)
+    # if true the lesion is deleted and should not be shown -> soft delete
+    deleted = models.BooleanField(default=False)
+    # key for the diagnosis
+    diagnosis = models.ForeignKey(
+        Diagnosis,
+        on_delete=models.CASCADE,
+        related_name="lesions"
+    )
+
+    def __int__(self):
+        return (self.lesionID)
+
+
+
 # useTime class for storing the timestamps of executed actions during diagnosis
 class UseTime(models.Model):
     """
