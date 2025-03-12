@@ -9,7 +9,7 @@ import re
 from image.diagnosisManager import getURL, ConfidenceType, setConfidence, getConfidence, deleteConfidence
 from accounts.doctorManager import deleteContinueDiag, setContinueDiag
 from .timeHandler import setUseTime
-from image.lesionHandler import createLesion, getLesions, getLesionsConfidence, getNumberOfLesion, softDeleteLesion
+from image.lesionHandler import createLesion, getLesions, getLesionsConfidence, getNumberOfLesion, softDeleteLesion, undoSoftDelete
 
 import os
 
@@ -485,3 +485,33 @@ class getNumberLesions(APIView):
                     'message': f'An unexpected Error occured {e}'
                 }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+class undoDeleteLesion(APIView):
+    def post(self, request):
+        try:
+            data = request.data
+            diagID = data.get("diagnosisID")
+            lesionID = data.get("lesionID")
+
+            if not (diagID and lesionID):
+                return Response({
+                        'status': 'Error',
+                        'message': 'DiagnosisID and LesionID is required',
+                    }, status=status.HTTP_400_BAD_REQUEST)
+            
+            if(undoSoftDelete(diagID, lesionID)):
+                return Response({
+                    'status': 'success',
+                    'message': 'Lesion deleted successfully',
+                    }, status=status.HTTP_200_OK)
+            else:
+                return Response({
+                    'status': 'Error',
+                    'message': 'Error during deleting of the lesion'
+                    }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except Exception as e:
+            return Response({
+                    'status': 'error',
+                    'message': f'An unexpected Error occured {e}'
+                }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+            

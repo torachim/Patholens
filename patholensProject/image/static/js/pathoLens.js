@@ -835,8 +835,6 @@ export async function getLesionConfidence(diagnosisID){
  */
 export async function deleteLesion(diagnosisID, lesionID, csrfToken){
 
-    console.log(diagnosisID, lesionID);
-
     await fetch("/image/api/deleteLesion/", {
         method: "DELETE",
         headers: {
@@ -880,4 +878,27 @@ export async function getNumberOfLesions(diagnosisID){
             .catch(error => console.error(error));
 
     return lesionNumber
+}
+
+export async function undoDeleteLesion(diagnosisID, lesionID, csrfToken){
+    await fetch("/image/api/undoDeleteLesion/", {
+        method: "POST",
+        headers: {
+            "Content-Type": 'application/json',
+            "X-CSRFToken": csrfToken,
+        },
+        body: JSON.stringify({
+            diagnosisID: diagnosisID,
+            lesionID: lesionID,
+        }) 
+    })
+    .then(response => {
+        if(response.ok){
+            console.log("Undo delete successfully");
+            return response.json();
+        } else{
+            throw new Error("Failed to undo delete lesion");
+        }
+    })
+    .catch(error => console.error(error));
 }

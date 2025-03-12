@@ -88,7 +88,7 @@ def undoSoftDelete(diagnosisID: str, lesionID) -> bool:
     Returns:
         bool: True -> successful, False -> an error occured
     """
-    lesion: Lesions = Lesions.objects.get(lesionsID = lesionID)
+    lesion: Lesions = Lesions.objects.get(lesionID = lesionID)
 
     if not lesion:
         return False

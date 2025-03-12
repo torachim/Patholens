@@ -1,5 +1,5 @@
 import { Niivue, DRAG_MODE } from "./index.js";
-import { niivueCanvas, drawRectangleNiivue,loadImageAPI, sendTimeStamp, sendConfidence, savedEditedLesion, loadImageWithDiagnosis, drawCubeNV, jumpRectangle, setContinueDiag, changePenValue, getLesionConfidence, deleteLesion, getNumberOfLesions } from "./pathoLens.js";
+import { niivueCanvas, drawRectangleNiivue,loadImageAPI, sendTimeStamp, sendConfidence, savedEditedLesion, loadImageWithDiagnosis, drawCubeNV, jumpRectangle, setContinueDiag, changePenValue, getLesionConfidence, deleteLesion, getNumberOfLesions, undoDeleteLesion } from "./pathoLens.js";
 
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let save = false;
     let homeOrLog= false;
     let undoDelete = false;
-    let deletedLesionID = null;
+    let deletedLesionID;
 
     const canvas = document.getElementById("imageBrain");
     const jumpRect = document.getElementById("jumpRect");
@@ -214,20 +214,27 @@ document.addEventListener('DOMContentLoaded', function() {
 
      // Undo the drawing/erasing
      document.getElementById("undoTool").addEventListener("click", function (e) {
-        nv.drawUndo();
-        // If drawCube drawCube is set false so it's no longer activated
-        if(drawCube){
-            drawCube = false;
-            jumpRect.style.display = "none";
+        if(undoDelete){
+            undoDeleteLesion(diagnosisID, deletedLesionID, csrfToken);
+            undoDelete = false;
+            deletedLesionID = 0;
+            reload();
+        } else {
+            nv.drawUndo();
+            // If drawCube drawCube is set false so it's no longer activated
+            if(drawCube){
+                drawCube = false;
+                jumpRect.style.display = "none";
+            }
+            // If drawUndoCube drawCube is set to true again so draw cube is enabled
+            else if(drawUndoCube){
+                drawCube = true;
+                drawUndoCube = false;
+                jumpRect.style.display = "flex";
+            }
+            saveLesionButton.style.display = "none";
+            save = false;
         }
-        // If drawUndoCube drawCube is set to true again so draw cube is enabled
-        else if(drawUndoCube){
-            drawCube = true;
-            drawUndoCube = false;
-            jumpRect.style.display = "flex";
-        }
-        saveLesionButton.style.display = "none";
-        save = false;
         deactivateAllButtons(); //only changes style after being clicked
         sendTime("Undo")
     })
@@ -461,7 +468,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 const lesionID = this.dataset.id;
                 undoDelete = true;
                 deletedLesionID = lesionID;
-                console.log("lesion: ", lesionID);
                 deleteLesion(diagnosisID, lesionID, csrfToken);
                 reload();
             })
