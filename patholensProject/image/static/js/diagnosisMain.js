@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     loadImageAndEdited();
                 }
                 else {
-                    loadImage(selectedFormat);
+                    loadImage();
                 }
             } else if (mode === "continue") {
                 loadImageAndEdited();

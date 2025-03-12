@@ -408,7 +408,6 @@ class getLesionConfidence(APIView):
             
             #confidences: dict = getConfidence(diagnosisID)
             lesion = getLesionsConfidence(diagnosisID)
-            print(lesion)
 
             return Response({
                 'status': 'success',
@@ -439,25 +438,6 @@ class DeleteLesion(APIView):
                 status = status.HTTP_400_BAD_REQUEST
                 )
             
-
-            docID = request.user.id
-            
-            file = f"sub-{3}_acq-{docID}_{lesionNumber}_mask.nii.gz"
-
-
-            filepath = os.path.join(
-                settings.MEDIA_ROOT,
-                "website_data",
-                "derivatives",
-                "diagnosis",
-                f"sub-{3}",
-                f"doc-{docID}",
-                file
-            )
-
-            print(lesionNumber)
-            
-            print(filepath)
             #if os.path.isfile(filepath):
             #    os.remove(filepath)
 

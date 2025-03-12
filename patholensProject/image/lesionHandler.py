@@ -23,6 +23,16 @@ def createLesion(diagonsisID: str, confidence: int, name: str, url: str) -> Lesi
     return lesion
 
 def softDeleteLesion(diagnosisID: str, lesionID) -> bool:
+    """
+    soft delets in diagnosis -> sets the argument deleted in the table to true
+
+    Args:
+        diagnosisID (str): The ID of the current diagnosis
+        lesionID (int): The ID of the lesion that is going to be deleted
+
+    Returns:
+        bool: True -> successful, False -> an error occured
+    """
     lesion: Lesions = Lesions.objects.get(lesionID = lesionID)
 
     if not lesion:
@@ -33,6 +43,17 @@ def softDeleteLesion(diagnosisID: str, lesionID) -> bool:
     return True
 
 def getLesionsConfidence(diagnosisID: str) -> list:
+    """
+    Returns the confidence value for all lesions of the current diagnosis
+    that are not soft deleted
+
+    Args:
+        diagnosisID (str): ID of the current diagnosis
+
+    Returns:
+        list: A list that includes dictionaries with the ID (lesionID),
+        the name(name) and the confidence(confidence) of all the lesions.
+    """
     diagObj: Diagnosis = Diagnosis.objects.get(diagID = diagnosisID)
 
     if not diagObj:
@@ -42,6 +63,15 @@ def getLesionsConfidence(diagnosisID: str) -> list:
     return list(lesions.values("lesionID", "name", "confidence"))
 
 def getLesions(diagnosisID: str) -> list:
+    """
+    Returns the urls of all the lesions for a current diagnosis that are not soft deleted.
+
+    Args:
+        diagnosisID (str): ID of the current diagnosis
+
+    Returns:
+        list: A list with dictionary for each lesion which contains its url.
+    """
     diagObj: Diagnosis = Diagnosis.objects.get(diagID = diagnosisID)
 
     lesions: Lesions = Lesions.objects.filter(diagnosis = diagObj, deleted = False).order_by("lesionID")
@@ -49,6 +79,15 @@ def getLesions(diagnosisID: str) -> list:
     return list(lesions.values("url"))
 
 def undoSoftDelete(diagnosisID: str, lesionID) -> bool:
+    """undos the soft delete -> set the argument delete to false
+
+    Args:
+        diagnosisID (str): ID of the current diagnosis
+        lesionID (int): ID of the lesion
+
+    Returns:
+        bool: True -> successful, False -> an error occured
+    """
     lesion: Lesions = Lesions.objects.get(lesionsID = lesionID)
 
     if not lesion:
@@ -59,6 +98,15 @@ def undoSoftDelete(diagnosisID: str, lesionID) -> bool:
     return True
 
 def getNumberOfLesion(diagnosisID: str) -> int|bool:
+    """
+    Returns the number of Lesions of a diagnosis, includes the soft deleted ones
+
+    Args:
+        diagnosisID (str): ID of the current diagnosis
+
+    Returns:
+        int|bool: Returns the number of Lesion or false if an error occures
+    """
     diagObj: Diagnosis = Diagnosis.objects.get(diagID = diagnosisID)
 
     if not diagObj:

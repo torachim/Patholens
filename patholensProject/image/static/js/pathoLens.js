@@ -827,6 +827,12 @@ export async function getLesionConfidence(diagnosisID){
     return confidences;
 }
 
+/**
+ * Soft deletes a specific lesion
+ * @param {string} diagnosisID - ID of the current diagnosis
+ * @param {Int} lesionID - ID of the lesion that should be deletet
+ * @param {string} csrfToken - csrf token
+ */
 export async function deleteLesion(diagnosisID, lesionID, csrfToken){
 
     console.log(diagnosisID, lesionID);
@@ -853,7 +859,11 @@ export async function deleteLesion(diagnosisID, lesionID, csrfToken){
     .catch(error => console.error(error));
 }
 
-
+/**
+ * Returns the total number of lesions of the current diagnosis including the soft deleted ones
+ * @param {string} diagnosisID - ID of the current diagnosis
+ * @returns {Int} - The number of lesion including the soft deleted
+ */
 export async function getNumberOfLesions(diagnosisID){
     let lesionNumber;
 
