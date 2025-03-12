@@ -9,7 +9,7 @@ import re
 from image.diagnosisManager import getURL, ConfidenceType, setConfidence, getConfidence, deleteConfidence
 from accounts.doctorManager import deleteContinueDiag, setContinueDiag
 from .timeHandler import setUseTime
-from image.lesionHandler import createLesion, getLesions, getLesionsConfidence, getNumberOfLesion
+from image.lesionHandler import createLesion, getLesions, getLesionsConfidence, getNumberOfLesion, softDeleteLesion
 
 import os
 
@@ -263,24 +263,26 @@ class GetDiagnosis(APIView):
                 for file in filenames
             ]
 
+            lesions = getLesions(diagnosisID)
+            urlLesions = []
+            for lesion in lesions:
+                url = lesion['url']
+                mediaUrl = os.path.join(
+                                'media',
+                                url
+                                )
+                urlLesions.append(mediaUrl)
 
-
-            relativePath = f"media/website_data/derivatives/diagnosis/sub-{subID}/doc-{docID}/sub-{subID}_acq-{docID}_space-edited-image.nii.gz"
 
             if not files:
                 return Response(
                     {"error": "No files found in the folder"},
                     status=status.HTTP_404_NOT_FOUND
                 )
-            
-            # sorts the diagnosis images regarding their lesion number
-            files.sort(key=sortLesionNumber)
-
-            imageFiles = [os.path.join("media", file) for file in files]
 
             return Response(
                     {"status": "success",
-                     "files": [os.path.join("media", file) for file in files]
+                     "files": urlLesions
                     },
                     status=status.HTTP_200_OK
             )
@@ -425,9 +427,8 @@ class DeleteLesion(APIView):
     def delete(self, request):
         try:
             data = request.data
-            lesionNumber = data.get('lesion')
+            lesionNumber = data.get('lesionID')
             diagID = data.get("diagnosisID")
-            subID = data.get("subID")
 
 
             if not (diagID or lesionNumber):
@@ -441,7 +442,7 @@ class DeleteLesion(APIView):
 
             docID = request.user.id
             
-            file = f"sub-{subID}_acq-{docID}_{lesionNumber}_mask.nii.gz"
+            file = f"sub-{3}_acq-{docID}_{lesionNumber}_mask.nii.gz"
 
 
             filepath = os.path.join(
@@ -449,16 +450,18 @@ class DeleteLesion(APIView):
                 "website_data",
                 "derivatives",
                 "diagnosis",
-                f"sub-{subID}",
+                f"sub-{3}",
                 f"doc-{docID}",
                 file
             )
 
+            print(lesionNumber)
+            
             print(filepath)
-            if os.path.isfile(filepath):
-                os.remove(filepath)
+            #if os.path.isfile(filepath):
+            #    os.remove(filepath)
 
-            if deleteConfidence(diagID, lesionNumber):
+            if softDeleteLesion(diagID, lesionNumber):
  
                 return Response({
                     'status': 'success',
@@ -476,39 +479,29 @@ class DeleteLesion(APIView):
                 'message': f'An unexpected error occurred: {str(e)}'
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+    
+class getNumberLesions(APIView):
 
-class scanLesions(APIView):
-    def get(self, request):
-
-        diagID = request.GET.get('diagnosisID')
-        subID = request.GET.get('subID')
-        docID = request.user.id
-
-        if not (diagID and subID):
+    def get(self, request, diagnosisID):
+                
+        try:
+            if not (diagnosisID):
+                return Response({
+                        'status': 'Error',
+                        'message': 'Diagnosis ID is required',
+                    }, status=status.HTTP_400_BAD_REQUEST)
+            
+            numberOfLesions = getNumberOfLesion(diagnosisID)
+            
             return Response({
-                    'status': 'Error',
-                    'message': 'Diagnosis ID is required',
-                }, status=status.HTTP_400_BAD_REQUEST)
-        
-        folder = os.path.join(
-                settings.MEDIA_ROOT,
-                "website_data",
-                "derivatives",
-                "diagnosis",
-                f"sub-{subID}",
-                f"doc-{docID}"
-            )
-        
-        hasEntries = False
-
-        with os.scandir(folder) as entries:
-            if any(entries):
-                hasEntries = True
-            else:
-                hasEntries = False
-        
-        return Response({
-                'status': 'success',
-                'message': 'Folder scan successful',
-                'entries': hasEntries
+                    'status': 'success',
+                    'message': 'Number of lesions tranfered',
+                    'number': numberOfLesions,
                 }, status=status.HTTP_200_OK)
+        
+        except Exception as e:
+            return Response({
+                    'status': 'error',
+                    'message': f'An unexpected Error occured {e}'
+                }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+

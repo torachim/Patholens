@@ -44,7 +44,7 @@ def getLesionsConfidence(diagnosisID: str) -> list:
 def getLesions(diagnosisID: str) -> list:
     diagObj: Diagnosis = Diagnosis.objects.get(diagID = diagnosisID)
 
-    lesions: Lesions = Lesions.objects.filter(diagnosis = diagObj).order_by("lesionID")
+    lesions: Lesions = Lesions.objects.filter(diagnosis = diagObj, deleted = False).order_by("lesionID")
 
     return list(lesions.values("url"))
 

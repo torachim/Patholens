@@ -808,7 +808,7 @@ export async function deleteContinueDiagnosis(diagnosisID, csrfToken) {
  * @returns Dictionary with all the lesions and their associated confidence
  */
 export async function getLesionConfidence(diagnosisID){
-    let confidences = {};
+    let confidences = [];
     const apiURL = `/image/api/getLesionConfidence/${diagnosisID}`
 
     await fetch(apiURL)
@@ -820,7 +820,6 @@ export async function getLesionConfidence(diagnosisID){
         })
         .then(data => {
             confidences = data.data;
-            console.log(confidences);
         })
         .catch(err => {
             console.error('Error loading confidences:', err);
@@ -828,16 +827,9 @@ export async function getLesionConfidence(diagnosisID){
     return confidences;
 }
 
-export async function deleteLesion(diagnosisID, lesion, csrfToken){
+export async function deleteLesion(diagnosisID, lesionID, csrfToken){
 
-    const subID = await fetchImageSub(diagnosisID);
-
-    if(!subID){
-        console.error("Image subID could not be loaded");
-        return
-    }
-
-    console.log(subID, diagnosisID, lesion);
+    console.log(diagnosisID, lesionID);
 
     await fetch("/image/api/deleteLesion/", {
         method: "DELETE",
@@ -846,9 +838,8 @@ export async function deleteLesion(diagnosisID, lesion, csrfToken){
             "X-CSRFToken": csrfToken,
         },
         body: JSON.stringify({
-            subID: subID,
             diagnosisID: diagnosisID,
-            lesion: lesion,
+            lesionID: lesionID,
         })
     })
     .then(response => {
@@ -862,19 +853,11 @@ export async function deleteLesion(diagnosisID, lesion, csrfToken){
     .catch(error => console.error(error));
 }
 
-export async function scanForLesions(diagnosisID){
 
-    const subID = await fetchImageSub(diagnosisID);
-    let hasEntries;
+export async function getNumberOfLesions(diagnosisID){
+    let lesionNumber;
 
-    const params = new URLSearchParams({
-        diagnosisID: diagnosisID,
-        subID: subID,
-    });
-
-    const apiURL = `/image/api/scanLesion/?${params.toString()}`
-
-    await fetch(apiURL)
+    await fetch(`/image/api/getNumberLesions/${diagnosisID}`)
             .then(response => {
                 if(!response.ok){
                     throw new Error(`HTTP error! Status: ${response.status}`);
@@ -882,9 +865,9 @@ export async function scanForLesions(diagnosisID){
                 return response.json()
             })
             .then(data => {
-                hasEntries = data.entries;
+                lesionNumber = data.number;
             })
             .catch(error => console.error(error));
 
-    return hasEntries;
+    return lesionNumber
 }

@@ -1,5 +1,5 @@
 import { Niivue, DRAG_MODE } from "./index.js";
-import { niivueCanvas, drawRectangleNiivue,loadImageAPI, sendTimeStamp, sendConfidence, savedEditedLesion, loadImageWithDiagnosis, drawCubeNV, jumpRectangle, setContinueDiag, changePenValue, getLesionConfidence, deleteLesion, scanForLesions } from "./pathoLens.js";
+import { niivueCanvas, drawRectangleNiivue,loadImageAPI, sendTimeStamp, sendConfidence, savedEditedLesion, loadImageWithDiagnosis, drawCubeNV, jumpRectangle, setContinueDiag, changePenValue, getLesionConfidence, deleteLesion, getNumberOfLesions } from "./pathoLens.js";
 
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -110,7 +110,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function loadImageAndEdited() {
         const volumes = await loadImageWithDiagnosis(diagnosisID, selectedFormat);
-        lesionNumber = volumes.length;
+        lesionNumber = await getNumberOfLesions(diagnosisID) + 1;
         penValue = volumes.length;
         nv.loadVolumes(volumes);
     } 
@@ -337,8 +337,6 @@ document.addEventListener('DOMContentLoaded', function() {
     saveLesion.addEventListener("click", () => {
         const confidenceValue = confidenceSlider1.value; // get the confidence value
         saveImage(confidenceValue); // save the current image
-        let confidenceType = "lesion-" + lesionNumber; //generate the confidence type
-        sendConfidence(confidenceValue, diagnosisID, confidenceType, csrfToken); //save the confidence
         saveLesionWindow.style.display = "none";
         overlay.style.display = "none";
         saveLesionButton.style.display = "none";
@@ -442,8 +440,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const lesions = await getLesionConfidence(diagnosisID);
         lesionList.innerHTML = "";
 
-        console.log("lesions: ", lesions);
-
         if(lesions.length == 0){
             lesionList.innerHTML = "<p>No lesions saved yet</p>";
             return;
@@ -465,17 +461,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
         document.querySelectorAll(".deleteLesion").forEach(button => {
             button.addEventListener("click", function(){
-                const lesion = this.dataset.id;
-                console.log("lesion: ", lesion);
-                deleteLesion(diagnosisID, lesion, csrfToken);
+                const lesionID = this.dataset.id;
+                console.log("lesion: ", lesionID);
+                deleteLesion(diagnosisID, lesionID, csrfToken);
                 reload();
             })
         })
 
 
         async function reload(){
-            let entries = await scanForLesions(diagnosisID);
-            if(entries){
+            let numberLesions = await getNumberOfLesions(diagnosisID);
+            if(numberLesions != 0){
                 await loadImageAndEdited();
             } else {
                 await loadImage(selectedFormat);
