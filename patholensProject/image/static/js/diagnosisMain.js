@@ -13,8 +13,8 @@ document.addEventListener('DOMContentLoaded', function() {
     let penValue = 1;
     let save = false;
     let homeOrLog= false;
-    let diagnosisStarted = false;
-
+    let undoDelete = false;
+    let deletedLesionID = null;
 
     const canvas = document.getElementById("imageBrain");
     const jumpRect = document.getElementById("jumpRect");
@@ -75,6 +75,16 @@ document.addEventListener('DOMContentLoaded', function() {
                drawOpacity: 0.65,
                }, 
                canvas)
+    
+    async function reload(){
+        let numberLesions = await getNumberOfLesions(diagnosisID);
+        if(numberLesions != 0){
+            await loadImageAndEdited();
+        } else {
+            await loadImage();
+        }
+        await updateLesionList();
+    }
 
 
     // Function to handle changes in the format selection
@@ -82,30 +92,17 @@ document.addEventListener('DOMContentLoaded', function() {
     radioButtons.forEach((radio) => {
         radio.addEventListener('change', (event) => {
             selectedFormat = event.target.value;
-            if (mode === "new") {
-                if (diagnosisStarted){
-                    loadImageAndEdited();
-                }
-                else {
-                    loadImage();
-                }
-            } else if (mode === "continue") {
-                loadImageAndEdited();
-            }
-
+            reload();
         });
     });
 
     // Call the appropriate function based on the mode
     if (mode === "new") {
         sendTime("Started Diagnosis");
-        loadImage();
-        updateLesionList();
     } else if (mode === "continue") {
         sendTime("Continue Diagnosis");
-        loadImageAndEdited(); // Calls loadImageAndDiagnosis internally
-        updateLesionList();
     }
+    reload();
 
 
     async function loadImageAndEdited() {
@@ -462,26 +459,13 @@ document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll(".deleteLesion").forEach(button => {
             button.addEventListener("click", function(){
                 const lesionID = this.dataset.id;
+                undoDelete = true;
+                deletedLesionID = lesionID;
                 console.log("lesion: ", lesionID);
                 deleteLesion(diagnosisID, lesionID, csrfToken);
                 reload();
             })
         })
-
-
-        async function reload(){
-            let numberLesions = await getNumberOfLesions(diagnosisID);
-            if(numberLesions != 0){
-                await loadImageAndEdited();
-            } else {
-                await loadImage(selectedFormat);
-            }
-            await updateLesionList();
-        }
     }
 
 });
-
-
-
-
