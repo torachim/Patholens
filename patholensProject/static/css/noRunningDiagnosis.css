@@ -46,13 +46,13 @@ body {
 
 
 /* Container for the datasets*/
-.noUnfinishedDiagnosisPopup {
+.noRunningDiagnosisPopup {
     padding: 20px;
     background-color: #00242F; 
     text-align: center;
     display: flex;
     flex-direction: column; 
-    justify-content: flex-start; 
+    justify-content: center; 
     align-items: center; 
     gap: 20px; 
     width: 100%;
@@ -66,7 +66,7 @@ body {
 
 p {
     color: #ffffff;
-    font-size: 20px;
+    font-size: 25px;
     font-style: normal;
     font-family: 'Calibri';
     justify-content: center;

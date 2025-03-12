@@ -63,7 +63,7 @@
             window.location.href="{% url 'continueDiagnosis' %}"
         }
         else{
-            document.getElementById("rightFrame").src = "{% url 'noUnfinishedDiagnosis' %}"
+            document.getElementById("rightFrame").src = "{% url 'noRunningDiagnosis' %}"
         }
     })  
   }

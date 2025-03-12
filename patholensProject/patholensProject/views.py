@@ -91,8 +91,8 @@ def checkUnfinishedDiagnosis(request):
         return JsonResponse({'unfinished': False})
     
 @login_required
-def noUnfinishedDiagnosis(request):
-    return render(request, 'noUnfinishedDiagnosis.html')
+def noRunningDiagnosis(request):
+    return render(request, 'noRunningDiagnosis.html')
 
 
 @login_required
