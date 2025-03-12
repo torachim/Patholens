@@ -1,110 +1,49 @@
-\documentclass{article}
-\usepackage{url}
-\usepackage{hyperref}
-\hypersetup{
-    colorlinks=true,
-    linkcolor=blue,
-    filecolor=magenta,      
-    urlcolor=cyan,
-}
-\usepackage{listings}
-\usepackage{xcolor}
+# **Patholens Project - Running with Docker Compose**
 
-\definecolor{codegreen}{rgb}{0,0.6,0}
-\definecolor{codegray}{rgb}{0.5,0.5,0.5}
-\definecolor{codepurple}{rgb}{0.58,0,0.82}
-\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+## **Prerequisites**
+Before running the project, make sure you have the following installed on your system:
 
-\lstdefinestyle{mystyle}{
-    backgroundcolor=\color{backcolour},   
-    commentstyle=\color{codegreen},
-    keywordstyle=\color{magenta},
-    numberstyle=\tiny\color{codegray},
-    stringstyle=\color{codepurple},
-    basicstyle=\ttfamily\footnotesize,
-    breakatwhitespace=false,         
-    breaklines=true,                 
-    captionpos=b,                    
-    keepspaces=true,                 
-    numbers=left,                    
-    numbersep=5pt,                  
-    showspaces=false,                
-    showstringspaces=false,
-    showtabs=false,                  
-    tabsize=2
-}
+- [Docker](https://www.docker.com/get-started)
 
-\lstset{style=mystyle}
+- [Docker Compose](https://docs.docker.com/compose/install/)
 
-\begin{document}
+## **Getting Started**
+To run the project using Docker Compose, follow these steps:
 
-\title{Patholens Project - Running with Docker Compose}
-\author{}
-\date{}
-\maketitle
+### **1. Clone the Repository**
+If you haven't already, clone the project repository from **Bitbucket**:
+```sh
+git clone <REPOSITORY_URL>
+```
+Replace <REPOSITORY_URL> with the actual URL of the repository
 
-\section*{Voraussetzungen}
-Bevor Sie das Projekt ausführen, stellen Sie sicher, dass Sie Folgendes auf Ihrem System installiert haben:
-
-\begin{itemize}
-    \item Docker
-    \item Docker Compose
-\end{itemize}
-
-\section*{Erste Schritte}
-Um das Projekt mit Docker Compose auszuführen, folgen Sie diesen Schritten:
-
-\subsection*{1. Repository klonen}
-Falls Sie dies noch nicht getan haben, klonen Sie das Projekt-Repository:
-
-\begin{lstlisting}[language=bash]
-git clone https://github.com/YOUR_USERNAME/patholens.git
-\end{lstlisting}
-
-\textit{(Ersetzen Sie \texttt{YOUR\_USERNAME} mit dem richtigen Repository-Besitzer.)}
-
-\subsection*{2. Navigieren Sie zum Projektverzeichnis}
-Wechseln Sie in das Verzeichnis, in dem sich die \texttt{docker-compose.yml}-Datei befindet:
-
-\begin{lstlisting}[language=bash]
+### **2. Navigate to the Project Directory**
+Move into the directory where the `docker-compose.yml` file is located:
+```sh
 cd patholens/patholensProject
-\end{lstlisting}
+```
 
-\subsection*{3. Starten Sie die Anwendung}
-Führen Sie den folgenden Befehl aus, um die Anwendung zu erstellen und zu starten:
-
-\begin{lstlisting}[language=bash]
+### **3. Start the Application**
+Run the following command to build and start the application:
+```sh
 docker compose up --build
-\end{lstlisting}
+```
 
-\textit{(Das Flag \texttt{--build} stellt sicher, dass Docker das Image neu erstellt, falls es Änderungen gibt.)}
+### **4. Access the Application**
+Once the application is running, you can access it in your browser:
 
-\subsection*{4. Auf die Anwendung zugreifen}
-Sobald die Anwendung läuft, können Sie sie in Ihrem Browser aufrufen:
+* Main application:
+```sh
+http://localhost:8000/
+```
 
-\begin{itemize}
-    \item \textbf{Hauptanwendung:} \\
-    \url{http://localhost:8000/}
-    
-    \item \textbf{Django Admin Panel:} \\
-    \url{http://localhost:8000/admin/}
-    
-    \item \textbf{Medien-Dateien (falls benötigt):} \\
-    \url{http://localhost:8000/media/}
-\end{itemize}
+* Django Admin Panel:
+```sh
+http://localhost:8000/admin/
+```
 
-\subsection*{5. Anwendung stoppen}
-Um die Anwendung zu stoppen, drücken Sie \texttt{STRG + C} im Terminal und führen Sie dann den folgenden Befehl aus:
-
-\begin{lstlisting}[language=bash]
+### **5. Stopping the Application**
+To stop the application, press `CTRL + C` in the terminal and then run:
+```sh
 docker compose down
-\end{lstlisting}
-
-\subsection*{6. Anwendung neu starten}
-Um die Anwendung ohne Neuerstellung neu zu starten:
-
-\begin{lstlisting}[language=bash]
-docker compose up
-\end{lstlisting}
-
-\end{document}
+```
