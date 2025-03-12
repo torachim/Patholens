@@ -84,7 +84,6 @@ def continueDiagnosis(request):
 def checkUnfinishedDiagnosis(request):
     diagnosisData = getContinueDiag(request.user.id)
 
-    mode = "continue"
     if diagnosisData.get("status") and diagnosisData.get("object"):
         return JsonResponse({'unfinished': True})
     else:
