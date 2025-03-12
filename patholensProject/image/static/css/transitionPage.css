@@ -45,7 +45,7 @@ html, body {
     background-color:#00afb9;
     color: white;
     font-size: 16px;
-    font-family: Calibri;
+    font-family: Calibri, Arial, sans-serif;
     font-weight: bold;
     border: none;
     border-radius: 10px;

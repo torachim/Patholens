@@ -30,11 +30,17 @@ class UseTime(models.Model):
     diagnosis process
     """
     # CASCADE: if the referenced diagnosis is deleted, the useTime entry will be automatically deleted aswell
-    diag= models.OneToOneField(Diagnosis, on_delete=models.CASCADE, primary_key=True, default=1)
+    diag = models.OneToOneField(Diagnosis, on_delete=models.CASCADE, primary_key=True, default=1)
     actionTime = models.JSONField(null=True)
 
     def __str__(self):
         return str(self.diag)
+    
+    def toDict(self):
+        return {
+            "diag": str(self.diag),
+            "actionTime": self.actionTime
+        }
 
 
 class Media(models.Model):
@@ -44,6 +50,8 @@ class Media(models.Model):
     name = models.CharField(blank=False, max_length=100, unique=True)
     # all the URLs linked to the patients in the dataset
     url = models.TextField(blank=False)
+    # indicates whether the media is visible to all doctors
+    visibility = models.BooleanField(default=True)
 
     def save(self, *args, **kwargs):
         # makes name str to upper case

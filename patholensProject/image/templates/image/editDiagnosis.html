@@ -18,28 +18,47 @@
 
 {%block content%}
 
+<div class="toolbarContainer">
+    <div class="toolbar">    
+        <button class="toolButton" id="selectTool">
+            <img alt="freehand drawing" src="{% static 'icons\FreehandDrawingIcon.png' %}" id="freehandDrawingIcon">
+        </button>
 
-<div class="toolbar">    
-    <button class="toolButton" id="selectTool">
-        <img alt="freehand drawing" src="{% static 'icons\FreehandDrawingIcon.png' %}" id="freehandDrawingIcon">
-    </button>
+        <button class="toolButton" id="frameTool">
+            <div class="outlineSquare"></div>
+        </button>
 
-    <button class="toolButton" id="frameTool">
-        <div class="outlineSquare"></div>
-    </button>
+        <button class="toolButton" id="eraseTool">
+            <i class="fa-solid fa-eraser"></i>
+        </button>
 
-    <button class="toolButton" id="eraseTool">
-        <i class="fa-solid fa-eraser"></i>
-    </button>
+        <button class="toolButton" id="undoTool">
+            <i class="fa-solid fa-rotate-left"></i>    
+        </button>
+    </div>
 
-    <button class="toolButton" id="undoTool">
-        <i class="fa-solid fa-rotate-left"></i>    
-    </button>
+    <div>
+        <button class="jumpRect" id="jumpRect">Jump To Rectangle</button>
+    </div>
 </div>
 
 <!--Container for image loading-->
 <div class="imageBox">
     <canvas id="imageBrain" width="100%" height="376%"></canvas>
+</div>
+
+<div class="alertOverlay" id="alertOverlay"></div>
+
+<div class="alertMessageBox" id="alertMessageBox">
+    <h3>ERROR</h3>
+        <p>Please Finish Your Cuboid First!</p>
+        <button id="closeAlertWindow">OK</button>
+</div>
+
+<div class="alertMessageBox" id="alertMessageBox">
+    <h3>ERROR</h3>
+        <p>Please Finish Your Cuboid First!</p>
+        <button id="closeAlertWindow">OK</button>
 </div>
 
 <div id="compareAndDropdownContainer">

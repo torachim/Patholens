@@ -42,10 +42,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'drf_spectacular'
+    'drf_spectacular',
+    'import_export',
+    'corsheaders',
 ]
 
-
+# to use the export module from django
+IMPORT_EXPORT_USE_TRANSACTIONS = True
 
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
@@ -54,12 +57,13 @@ REST_FRAMEWORK = {
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Patholens API',
-    'DESCRIPTION': 'API to access the brainscan data in .nii.gz format',
+    'DESCRIPTION': 'API to access the brainscan data and save diagnosis both in .nii.gz format',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
 }
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -68,6 +72,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = 'patholensProject.urls'
 
@@ -178,3 +184,11 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 209715200  # 200 MB
 
 # Maximum allowed size for file uploads in bytes
 FILE_UPLOAD_MAX_MEMORY_SIZE = 209715200  # 200 MB
+
+
+# DummyCache deactivates 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+    }
+}

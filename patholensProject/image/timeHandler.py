@@ -1,10 +1,10 @@
-from image.models import UseTime
-from image.models import Diagnosis
+from image.models import UseTime, Diagnosis
 from rest_framework.exceptions import ValidationError
 from django.db import transaction
 from .serializer import useTimeSerialize
 
-def createUseTime(diagObjesct: Diagnosis):
+
+def createUseTime(diagObjesct: Diagnosis) -> UseTime:
     """
     Create a new Usetime for a started diagnosis. Connects it with the started diagnosis.
 
@@ -20,9 +20,7 @@ def createUseTime(diagObjesct: Diagnosis):
 
     return timeObj
 
-
-
-def setUseTime(diagID: str, action: str, duration: float):
+def setUseTime(diagID: str, action: str, duration: float) -> None:
     """
     Creates a dictionary which includes the action and the needed time to finnished this action.
     This dictionary get added to the entry with given diagnois.
@@ -74,5 +72,3 @@ def setUseTime(diagID: str, action: str, duration: float):
     except Exception as e:
         raise ValidationError({'error': e})
      
-
-    

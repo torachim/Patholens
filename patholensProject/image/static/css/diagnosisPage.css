@@ -9,7 +9,6 @@ body {
     box-sizing: border-box;
 }
 
-
 .homeButton {
     margin-right: 10px;
     text-decoration: none;
@@ -27,6 +26,18 @@ body {
     height: 40px;
 }
 
+.toolbarContainer {
+    display: flex;              
+    justify-content: center;    
+    align-items: center;        
+    position: relative;         
+    width: 100%; 
+    margin: 20px auto; 
+    margin-top: 25px; 
+    margin-bottom: -30px;
+    transition: margin-left 1.5s ease;
+    transition: margin-right 1.5s ease;
+}
 
 /* Main toolbar styling */
 .toolbar {
@@ -40,14 +51,12 @@ body {
     gap: 55px;
     width: 370px;
     height: 40px;
-    margin: 20px auto; 
-    margin-top: 25px; 
-    margin-bottom: -30px;
+    z-index: 0;
 }
 
 /* Tool button styling */
 .toolButton {
-    background-color: #D9D9D9;
+    background-color: #c6c5c5;
     border: none;
     border-radius: 10px;
     width: 45px;
@@ -57,13 +66,23 @@ body {
     align-items: center;
     cursor: pointer;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
-    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    transition: transform 0.1s ease, box-shadow 0.1s ease, background-color 0.1s ease;
 }
 
+/*applies style while activating the button*/
 .toolButton:active {
-    transform: translateY(2px) scale(1.01);
+    transform: translateY(2px) scale(1.07);
     background-color: #ffffff;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.4);
+    box-shadow: 0px 6px 5px rgba(0, 0, 0, 0.5);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease; 
+}
+
+/*style applied when button is active*/
+.activeButton {
+    transform:  scale(1.07);
+    background-color: #ffffff;
+    box-shadow: 0px 6px 6px rgba(0, 0, 0, 0.5);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
 }
 
 #selectTool i {
@@ -77,14 +96,9 @@ body {
     max-height: 24px;
 }
 
-.outlineSquare {
+#cuboidIcon{
     width: 24px;
-    height: 20px;
-    border: 3.8px solid #434343;
-    border-radius: 2px;
-    background-color: transparent;
-    display: inline-block;
-    box-sizing: border-box;
+    height: 24px;
 }
 
 #eraseTool i {
@@ -92,12 +106,10 @@ body {
     color: #434343;
 }
 
-
 #undoTool i {
     font-size: 24px;
     color: #434343;
 }
-
 
 /* container for the radio boxes */
 .container {
@@ -112,9 +124,9 @@ body {
 /* container for the canvas */
 .imageBox{
     margin-top: 50px;
+    position: relative; 
+    z-index: 0;
 }
-
-
 
 /* radio buttons */
 .radioForm {
@@ -124,8 +136,6 @@ body {
     margin-top: 10px;
     margin-bottom: -40px;
 }
-
-
 
 input[type="radio"] {
     cursor: pointer;
@@ -152,14 +162,11 @@ input[type="radio"]:checked::before {
     transform: translate(-50%, -50%); 
 }
 
-
-
 .radioForm label {
     display: flex;
     align-items: center; 
     gap: 12px; 
 }
-
 
 .radioForm label p {
     margin: 0; 
@@ -168,7 +175,6 @@ input[type="radio"]:checked::before {
     font-family: Calibri, Arial, sans-serif;
     font-weight: bold;
 }
-
 
 /* finnish diagnosis button */
 .finishDiagnosisButton {
@@ -217,7 +223,6 @@ input[type="radio"]:checked::before {
     align-items: center;
 }
 
-
 .popupFrame {
     position: relative;
     background: #005E7A;
@@ -228,8 +233,7 @@ input[type="radio"]:checked::before {
     text-align: center;
     align-items: center;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
-    display: none;
-    
+    display: none;    
 }
 
 .popupFrame p {
@@ -237,11 +241,9 @@ input[type="radio"]:checked::before {
     color: white;
     font-size: 20px;
     margin-top: 50px;
-
 }
 
 .popupClose {
-  
     position: absolute; 
     top: 10px;
     right: 10px;
@@ -274,7 +276,6 @@ input[type="radio"]:checked::before {
     transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-
 .popupConfirm:hover {
     background-color:#02bbc5; 
     transform: translateX(-50%) scale(1.005); 
@@ -295,7 +296,6 @@ input[type="radio"]:checked::before {
     left: 50%;
     transform: translate(-50%, -50%);
 }
-
 
 .confidenceMeter {
     width: 100%;
@@ -328,9 +328,176 @@ input[type="radio"]:checked::before {
     transform: translateX(-50%);
     background: rgba(0, 0, 0, 0.3);
     color: white;
-    font-family: 'Calibri', sans-serif;
+    font-family: Calibri, Arial,sans-serif;
     padding: 5px;
     border-radius: 5px;
     visibility: hidden; 
     white-space: nowrap;   
-}  
+}
+
+
+.jumpRect {
+    display: none;
+    background-color: #D9D9D9; 
+    color: #434343;
+    border-radius: 5px;
+    padding: 7px 13px; 
+    font-size: 16px;
+    font-family: Calibri, Arial, sans-serif;
+    font-weight: bolder;
+    cursor: pointer;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3); 
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+    z-index: 1;
+    margin-left: 20px; 
+}
+
+.jumpRect:hover {
+    background-color: #ffffff;
+    transform:  scale(1.03);
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.4);
+}
+
+.jumpRect:active {
+    transform: scale(0.97) translateY(2px);
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.5); 
+    background-color: #afafaf
+}
+
+.alertMessageBox {
+    display: none;
+    flex-direction: column; 
+    align-items: center;
+    justify-content: center; 
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
+    width: 350px;
+    height: auto;
+    border-radius: 10px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 4;
+    font-family: Calibri, Arial, sans-serif;
+}
+
+.alertMessageBox h3 {
+    font-size: 28px;
+    font-weight: bold;
+    color: #cc0404;
+    text-align: center;
+    margin-bottom: 1px;
+    margin-top: 30px;
+}
+
+.alertMessageBox p {
+    font-size: 16px;
+    color: #2c2c2c;
+    text-align: center;
+    margin-bottom: 20px; 
+}
+
+.alertMessageBox button {
+    background-color: #d60707;
+    color: #ffffff;
+    border: none;
+    border-radius: 7px;
+    padding: 10px 20px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px; 
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.alertMessageBox button:hover {
+    background-color: #db0707;  
+    transform: scale(1.05); 
+}
+
+.alertMessageBox button:active {
+    background-color: #900303;  
+    transform: scale(0.97); 
+}
+
+.alertWindowButtons{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(8px);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 3;
+}
+
+.saveLesionWindow {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #005E7A;
+    padding: 20px 30px;
+    border-radius: 20px;
+    width: 450px;
+    height: 325px;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    z-index: 4;
+    color: white;
+}
+
+.saveLesionText{
+    font-family: 'Cabin', sans-serif;
+    font-size: 20px;
+    margin-top: 50px;
+}
+
+.saveLesionButtons{
+    display: flex;
+    flex-direction: row;
+    margin-top: 40px;
+    justify-content: space-evenly;
+    width: 100%;
+}
+
+.saveLesionButtons button {
+    background-color: #00afb9;
+    border: none;
+    width: 200px;
+    height: 35px;
+    border-radius: 8px;
+    color: white;
+    font-size: 18px;
+    font-family: Calibri, Arial, sans-serif;
+    font-weight: regular;
+    cursor: pointer;
+    box-shadow: 5px 5px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.saveLesionButtons button:hover {
+    background-color:#02bbc5; 
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3); 
+}
+
+.saveLesionButtons button:active {
+    background-color: #029da5; 
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); 
+}

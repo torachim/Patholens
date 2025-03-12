@@ -6,8 +6,7 @@ html, body {
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 100%;
-    
+    height: 100%;  
 }
 
 .loginWindow {
@@ -24,14 +23,11 @@ html, body {
     border-radius: 10px;
 }
 
-
-
 .loginWindowText{
     color: #f7f7f7;
     display: flex;
     align-items: center;
-    flex-direction: column;
-    
+    flex-direction: column;  
 }
 
 .loginWindowText h2{
@@ -40,7 +36,6 @@ html, body {
     font-weight: 600;
     margin-top: 30px;
     margin-bottom: 1px;
-
 }
 
 .loginWindowText h4 {
@@ -143,14 +138,23 @@ html, body {
     border-radius: 8px;
     color: #f7f7f7;
     font-size: 18px;
-    font-family: Calibri;
+    font-family: Calibri, Arial, sans-serif;
     font-weight: bold;
     cursor: pointer;
     box-shadow: 5px 5px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease; 
 }
 
 .loginButton Button:hover{
-    background-color: #028f97;
+    background-color: #0ac1ca; 
+    transform: scale(1.025); 
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3); 
+}
+
+.loginButton Button:active {
+    background-color:  #009198; 
+    transform: scale(0.95); 
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4); 
 }
 
 .loginWindowLinks p {
@@ -166,10 +170,12 @@ html, body {
 }
 
 .loginWindowLinks a:hover{
-    color: #028f97;
-
+    color: #10cbd5;
 } 
 
+.loginWindowLinks a:active{
+    color: #028f97;
+} 
 
 .head{
     display:flex;
@@ -177,14 +183,12 @@ html, body {
     align-items: center;
 }
 
-
 .passwordContainer {
     position: relative; /* For positioning the icon */
     display: flex;
     align-items: center;
     margin-top: 0px; /* Space between password fields */
 }
-
 
 .togglePassword {
     position: absolute;     /* Positions the element absolutely within its container */

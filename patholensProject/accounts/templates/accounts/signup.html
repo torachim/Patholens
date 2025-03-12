@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" href="{% static 'css/signup.css' %}" />
+        <link rel="stylesheet" href="{% static 'css/signup.css' %}?v=2" />
         <link
             href="https://fonts.googleapis.com/css2?family=Cabin:wght@400;500;600;700&display=swap"
             rel="stylesheet"
@@ -73,7 +73,7 @@
                         </script>
                         
                         {% if not information.availableUser %}
-                            <p class="information"> An account with this email already exists.</p>
+                            <p class="information"> An account with this user information already exists.</p>
                         {% elif not information.equalPasswords %}
                             <p class="information"> The passwords you entered do not match. </p>
                         {% elif not information.passwordStrength %}

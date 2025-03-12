@@ -68,7 +68,7 @@ h1{
     color: #ffffff;
     font-size: 35px;
     font-style: bold;
-    font-family: 'Calibri';
+    font-family: Calibri, Arial, sans-serif;
     margin-top: 2%;
     margin-bottom: 1%;
     justify-content: center;
@@ -79,7 +79,7 @@ p {
     color: #ffffff;
     font-size: 20px;
     font-style: normal;
-    font-family: 'Calibri';
+    font-family: Calibri, Arial, sans-serif;
     justify-content: center;
     align-items: center;
 }

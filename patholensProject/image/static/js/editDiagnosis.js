@@ -1,21 +1,46 @@
 import { Niivue, DRAG_MODE } from "./index.js";
-import { niivueCanvas,drawRectangleNiivue,loadImageAPI, loadImageWithDiagnosis, loadImageWithMask, loadOverlayDAI, endTimer, sendConfidence, savedEditedImage } from "./pathoLens.js";
+import { niivueCanvas,drawRectangleNiivue,loadImageAPI, loadImageWithDiagnosis, loadImageWithMask, loadOverlayDAI, sendTimeStamp, sendConfidence, savedEditedImage, deleteContinueDiagnosis, jumpRectangle, drawCubeNV } from "./pathoLens.js";
 
 document.addEventListener('DOMContentLoaded', function() {
     
-    let startTime;
     let drawRectangle = false;
     let erasing = false;
+    let drawCube = false;
+    let drawUndoCube = false;
+
+    const jumpRect = document.getElementById("jumpRect");
+    const alertMessageBox = document.getElementById("alertMessageBox");
+    const closeAlertWindow = document.getElementById("closeAlertWindow");
     
     //function to drag a rectangle in the niivue 
     const onDragRelease = (data) => {
         drawRectangle = true;
         //if drawing is enabled
         if (nv.opts.drawingEnabled){
-            drawRectangleNiivue(nv, data)
-            endTimer("Rectangle", startTime, diagnosisID, csrfToken)
-            nv.setDrawingEnabled(false); //drawingEnabled equals false so you have to click the button again to draw another rechtangle
+            if(drawCube){
+                let finishedCube;
+                finishedCube = drawCubeNV(nv, data);
+                if(!finishedCube){
+                    showAlertWindow();
+                }
+                else{
+                    sendTime("Cuboid Edit");
+                    saveDrawingState();
+                    drawUndoCube = true;
+                    drawCube = false;
+                    jumpRect.style.display = "none"
+                }
+            }
+            else{
+                drawRectangleNiivue(nv, data)
+                drawCube = true;
+                saveDrawingState();
+                jumpRect.style.display = "flex";
+                sendTime("Rectangle Edit");
+            }
+            deactivateAllButtons(); //deactiviates the active style of button
         }
+        nv.setDrawingEnabled(false); //drawingEnabled equals false so you have to click the button again to draw another rechtangle
     }
 
 
@@ -52,7 +77,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // Dropdown change listener for the AI Mask
     const aiDropdown = document.getElementById('AIdropdown');
     aiDropdown.addEventListener('click', (event) => {
+        const action = `AI Model ${selectedFormatMask}`;
         if (event.target.classList.contains('option')) {
+            if(selectedDisplay != "My Diagnosis"){
+                sendTime(action);
+            }
             selectedFormatMask = aiModelMapping[event.target.textContent];
             loadImages();
         }
@@ -71,6 +100,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const displayDropdown = document.getElementById('displayDropdown');
     displayDropdown.addEventListener('click', (event) => {
         if (event.target.classList.contains('option')) {
+            if(event.target.textContent == "My Diagnosis"){
+                const action = `AI Model ${selectedFormatMask}`;
+                sendTime(action);
+            }
             selectedDisplay = event.target.textContent;
             loadImages();
         }
@@ -113,14 +146,23 @@ document.addEventListener('DOMContentLoaded', function() {
         nv.setPenValue(mode, filled);
     }
 
+    jumpRect.addEventListener("click", () => {
+        jumpRectangle(nv);
+    })
+
     // Pixel
     document.getElementById("selectTool").addEventListener("click", function(e){
-        drawRectangle = false;
-        erasing = false;
-        startTimer()
-        saveDrawingState();
-        nv.setDrawingEnabled(true);  
-        changeDrawingMode(6, false);
+        if(drawCube){
+            showAlertWindow();
+        }
+        else{
+            drawRectangle = false;
+            erasing = false;
+            saveDrawingState();
+            nv.setDrawingEnabled(true);  
+            changeDrawingMode(6, false);
+            activateButton("selectTool"); //changes button style while selected
+        }
     });
         
      // disables drawing after a Pixel is marked
@@ -128,11 +170,12 @@ document.addEventListener('DOMContentLoaded', function() {
      
     // disables drawing
     function disableDrawing(){
+        deactivateAllButtons();
         if(!drawRectangle && !erasing){
-            endTimer('Freehand drawing', startTime, diagnosisID, csrfToken)
+            sendTime("Freehand Drawing Edit");
         }
         else if(!drawRectangle && erasing){
-            endTimer('Erasing', startTime, diagnosisID, csrfToken)
+            sendTime("Erasing Edit");
             erasing = false
         }
         nv.setDrawingEnabled(false);
@@ -140,32 +183,72 @@ document.addEventListener('DOMContentLoaded', function() {
         
     // enables erasing the drawing by clicking on eraser
     document.getElementById("eraseTool").addEventListener("click", function(e){
-        erasing = true;
-        drawRectangle = false;
-        startTimer();
-        saveDrawingState();
-        nv.setDrawingEnabled(true);
-        // 0 = Eraser and true => eraser ist filled so a whole area can be erased
-        changeDrawingMode(0, true);
-       
+        if(drawCube){
+            showAlertWindow();
+        }
+        else{
+            erasing = true;
+            drawRectangle = false;
+            saveDrawingState();
+            nv.setDrawingEnabled(true);
+            // 0 = Eraser and true => eraser ist filled so a whole area can be erased
+            changeDrawingMode(0, true);
+            activateButton("eraseTool");
+        }
     });
 
+    // INFO: You need to right click and drag to draw rectangle
     // enable rectangle drawing when the corresponding button in html is clicked
     document.getElementById("frameTool").addEventListener("click", function () {
-        startTimer()
         saveDrawingState();
         nv.setDrawingEnabled(true);
         nv.opts.dragMode = DRAG_MODE.callbackOnly;  // Draw rectangle only when dragging
         nv.opts.onDragRelease = onDragRelease;      // Set callback for rectangle drawing
+        activateButton("frameTool"); //changes button style while drawing rectangle
     });
 
-    // Function to start the timer 
-    function startTimer(){
-        startTime = performance.now();
+     // Undo the drawing/erasing
+     document.getElementById("undoTool").addEventListener("click", function (e) {
+        nv.drawUndo();
+        if(drawCube){
+            drawCube = false;
+            jumpRect.style.display = "none";
+        }
+        else if(drawUndoCube){
+            drawCube = true;
+            drawUndoCube = false;
+            jumpRect.style.display = "flex";
+        }
+        sendTime("Undo Edit")
+        deactivateAllButtons(); //only changes style after being clicked
+    })
+
+    //Removes the style applied when button is active
+    function deactivateAllButtons() {
+        document.querySelectorAll(".toolButton").forEach(button => {
+            if (!button.id.includes("undoTool")) { //Exclude Undo button
+                button.classList.remove("activeButton");
+            }
+        });
+    }
+
+    //applies style when button is active
+    function activateButton(buttonId) {
+        deactivateAllButtons(); 
+        if (buttonId !== "undoTool") {
+            const button = document.getElementById(buttonId);
+            button.classList.add("activeButton"); //only changes style of button
+        }
+    }
+
+    async function sendTime(action){
+        let utcTime = Date.now();
+        await sendTimeStamp(action, utcTime, diagnosisID, csrfToken);
     }
     
 
     // Zoom functionality
+    
     let comparisonContainer = document.getElementById("comparisonContainer");
     const zoomButton = document.getElementById("zoomButton");
     let zoomed = false;
@@ -180,6 +263,7 @@ document.addEventListener('DOMContentLoaded', function() {
         zoomButton.src = "/static/icons/editPageZoomButton.png";
         zoomed = false;
         overlay.style.display = "none";
+        sendTime("Zoom Out Edit");
     }
 
     zoomButton.addEventListener("click", () =>{
@@ -195,14 +279,17 @@ document.addEventListener('DOMContentLoaded', function() {
             overlay.style.display = "flex";
             zoomButton.src = "/static/icons/editPageZoomOutButton.png";
             zoomed = true;
+            sendTime("Zoom In Edit");
         }
     });
 
     document.body.addEventListener("click", (e) =>{
         if(zoomed){
             console.log(e.target);
-            if(e.target != comparisonContainer && e.target != zoomButton ){
+            if (!comparisonContainer.contains(e.target) && e.target !== zoomButton) {
+
                 let clickedDropdown = false;
+
                 dropdownMenus.forEach(dropdown => {
                     if (dropdown.contains(e.target)){
                         clickedDropdown = true;
@@ -217,6 +304,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     
     // dropdown functionality
+
     function swapOptions(optionElement) {
         const parentDropdown = optionElement.closest('.dropdown');
         const textBox = parentDropdown.querySelector('.textBox');
@@ -239,7 +327,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     //confidence meter window 
-    
+
     const confirmButton = document.querySelector('.popupConfirm');
     const confidenceSlider = document.getElementById('confidenceMeter');
 
@@ -251,8 +339,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function endDiagnosis(confidenceValue){
         await sendConfidence(confidenceValue, diagnosisID, csrfToken);
-        await endTimer('Confidence confirmed', startTime, diagnosisID, csrfToken);
+        await sendTime("Finished Diagnosis");
         await savedEditedImage(nv, diagnosisID, csrfToken);
+        await deleteContinueDiagnosis(diagnosisID, csrfToken);
         window.location.assign(`/image/editDiagnosis/${diagnosisID}/transitionPage/`)
     }
 
@@ -265,30 +354,43 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Function to show the confidence window
     finishButton.addEventListener("click", () => {
-        popupOverlay.style.display = "flex";
-        popupFrame.style.display = "block";
-        startTimer();
+        if(drawCube){
+            showAlertWindow();
+        }
+        else{
+            popupOverlay.style.display = "flex";
+            popupFrame.style.display = "block";
+        }
     });
 
     // Functions to close the confidence window
     closePopup.addEventListener("click", () => {
         popupOverlay.style.display = "none";
-        endTimer('Aborted confidence', startTime, diagnosisID, csrfToken);
+        sendTime("Aborted Confidence Edit");
     });
 
     popupOverlay.addEventListener("click", (e) => {
         if (e.target === popupOverlay) {
             popupOverlay.style.display = "none";
-            endTimer('Aborted confidence', startTime, diagnosisID, csrfToken);
+            sendTime("Aborted Confidence Edit");
         }
     })
-
-    // Undo the drawing/erasing
-    document.getElementById("undoTool").addEventListener("click", function (e) {
-        nv.drawUndo();
-    })
     
+    const alertOverlay = document.getElementById("alertOverlay");
+
+    closeAlertWindow.addEventListener("click", () => {
+        alertMessageBox.style.display = "none";
+        alertOverlay.style.display = "none";
+    })
+
+ 
+    function showAlertWindow(){
+        alertMessageBox.style.display = "flex"
+        alertOverlay.style.display = "flex";
+    }
+
      // save image if logged out
      //document.getElementById("logoutButton").addEventListener("click", savedEditedImage(nv, diagnosisID, csrfToken));
 });
+
 

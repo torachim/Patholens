@@ -16,27 +16,76 @@
 
 {%block content%}
 
+<div class="toolbarContainer">
+    <div class="toolbar">    
+        <button class="toolButton" id="selectTool">
+            <img alt="freehand drawing" src="{% static 'icons\FreehandDrawingIcon.png' %}" id="freehandDrawingIcon">
+        </button>
 
-<div class="toolbar">    
-    <button class="toolButton" id="selectTool">
-        <img alt="freehand drawing" src="{% static 'icons\FreehandDrawingIcon.png' %}" id="freehandDrawingIcon">
-    </button>
+        <button class="toolButton" id="frameTool">
+            <img alt="cuboid" src="{% static 'icons\cuboidIcon.png' %}" id="cuboidIcon">
+        </button>
 
-    <button class="toolButton" id="frameTool">
-        <div class="outlineSquare"></div>
-    </button>
+        <button class="toolButton" id="eraseTool">
+            <i class="fa-solid fa-eraser"></i>
+        </button>
 
-    <button class="toolButton" id="eraseTool">
-        <i class="fa-solid fa-eraser"></i>
-    </button>
+        <button class="toolButton" id="undoTool">
+            <i class="fa-solid fa-rotate-left"></i>    
+        </button>
+    </div>
 
-    <button class="toolButton" id="undoTool">
-        <i class="fa-solid fa-rotate-left"></i>    
-    </button>
+    <div>
+        <button class="jumpRect" id="jumpRect">Jump To Rectangle</button>
+    </div>
+
+    <div>
+        <button class="jumpRect" id="saveButton">Save Lesion</button>
+    </div>
 </div>
 
 <div class="imageBox">
     <canvas id="imageBrain" width="100%" height="376%"></canvas>
+</div>
+
+<div class="overlay" id="overlay"></div>
+
+<div class="alertMessageBox" id="alertMessageBox">
+    <h3>ERROR</h3>
+        <p>Please Finish Your Cuboid First!</p>
+        <button id="closeAlertWindow">OK</button>
+</div>
+
+<div class="alertMessageBox" id="saveFirstInfo">
+    <h3>ERROR</h3>
+        <p>Please Save Your Lesion First!</p>
+        <button id="closeSaveInfo">OK</button>
+</div>
+
+<div class="alertMessageBox" id="logoutInfoBox">
+    <h3>WARNING</h3>
+        <p>You Have Unsaved Lesions!</p>
+        <p>If You Continue These Are Going To Be Deleted!</p>
+        <p>You Want To Proceed?</p>
+        <div class="alertWindowButtons">
+            <button id="continueLogoutButton">YES</button>
+            <button id="dontLogoutButton">NO</button>
+        </div>
+</div>
+
+<div class="saveLesionWindow" id="saveLesionWindow">
+    <button class="popupClose" id="controlLesion">&times;</button>
+    <div class="saveLesionText">
+        <p>Do you want to save the current lesion?</p>
+        <p>Please enter your confidence for the current lesion!</p>
+    </div>
+    <div class="confidenceMeterContainer" style="position: relative; width: 70%; top: 0; left: 0; transform: none; margin-top: 40px;">
+        <input type="range" class="confidenceMeter" min="0" max="10" value="5" id="confidenceMeter1">
+        <div class="tooltip" id="tooltip">5</div>
+    </div>
+    <div class="saveLesionButtons">
+        <button id="submitLesion">Save Lesion</button>
+    </div>
 </div>
 
 <!--Selection T1 / Flair-->
@@ -68,7 +117,7 @@
 
         <div class="confidenceMeterContainer">
             
-            <input type="range" class="confidenceMeter" min="0" max="10" value="5" id="confidenceMeter">
+            <input type="range" class="confidenceMeter" min="0" max="10" value="5" id="confidenceMeter2">
   
 
             <div class="tooltip" id="tooltip">5</div>
@@ -81,34 +130,37 @@
 
 
 <script>
-    const slider = document.getElementById('confidenceMeter');
-    const tooltip = document.getElementById('tooltip');
     const confirmButton = document.getElementById('confirmButton');
     const displayValue = document.getElementById('displayValue');
 
-    slider.addEventListener('input', function () {
-    const value = slider.value;
-    tooltip.textContent = value; 
-    tooltip.style.visibility = 'visible'; 
+    document.querySelectorAll(".confidenceMeter").forEach(slider => {
 
-    
-    const sliderRect = slider.getBoundingClientRect(); 
-    const thumbPosition = ((value - slider.min) / (slider.max - slider.min)) * sliderRect.width;
+        const tooltip = slider.nextElementSibling;
 
-    
-    tooltip.style.left = `${thumbPosition}px`;
-    tooltip.style.transform = `translateX(-50%)`;
-    });
+        slider.addEventListener('input', function () {
+            const value = slider.value;
+            tooltip.textContent = value; 
+            tooltip.style.visibility = 'visible'; 
 
-    
-    slider.addEventListener('mouseover', function () {
-        tooltip.style.visibility = 'visible';
-    });
+            
+            const sliderRect = slider.getBoundingClientRect(); 
+            const thumbPosition = ((value - slider.min) / (slider.max - slider.min)) * sliderRect.width;
 
-    
-    slider.addEventListener('mouseout', function () {
-        tooltip.style.visibility = 'hidden';
-    });
+            
+            tooltip.style.left = `${thumbPosition}px`;
+            tooltip.style.transform = `translateX(-50%)`;
+        });
+
+        
+        slider.addEventListener('mouseover', function () {
+            tooltip.style.visibility = 'visible';
+        });
+
+        
+        slider.addEventListener('mouseout', function () {
+            tooltip.style.visibility = 'hidden';
+        });
+    })
 </script>
 
 <input type="hidden" id="diagID" value="{{ diagnosisID }}">

@@ -52,7 +52,7 @@ body {
 }
 
 .leftPanel .profileInfo {
-    font-family: 'Calibri';
+    font-family: Calibri, Arial, sans-serif;
     font-size: 16px;
     color: #ffffff;
     line-height: 1.2; 
@@ -85,7 +85,7 @@ body {
 .leftPanel .buttons button {
     background-color: #00AFB9;
     color: #FFFFFF;
-    font-family: 'Calibri';
+    font-family: Calibri, Arial, sans-serif;
     font-weight: bold;
     font-size: 20px;
     border: none;

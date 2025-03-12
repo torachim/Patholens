@@ -1,10 +1,10 @@
 import { Niivue } from "./index.js";
-import { niivueCanvas, loadImageWithDiagnosis, loadImageWithMask, loadOverlayDAI, endTimer } from "./pathoLens.js";
+import { niivueCanvas, loadImageWithDiagnosis, loadImageWithMask, loadOverlayDAI, sendTimeStamp, deleteContinueDiagnosis } from "./pathoLens.js";
 
 document.addEventListener('DOMContentLoaded', function () {
 
     const canvas = document.getElementById("imageBrain");
-    const nv = niivueCanvas({}, canvas);
+    const nv = niivueCanvas({drawOpacity: 0.5}, canvas);
 
     //default formats
     let selectedFormatMask = "DEEPFCD";
@@ -31,8 +31,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const action = `AI Model ${selectedFormatMask}`;
         if (event.target.classList.contains('option')) {
             if(selectedDisplay != "My Diagnosis"){
-                endTimer(action, startTime, diagnosisID, csrfToken);
-                startTime = performance.now();
+                sendTime(action);
             }
             selectedFormatMask = aiModelMapping[event.target.textContent];
             loadImages();
@@ -54,15 +53,18 @@ document.addEventListener('DOMContentLoaded', function () {
         if (event.target.classList.contains('option')) {
             if(event.target.textContent == "My Diagnosis"){
                 const action = `AI Model ${selectedFormatMask}`;
-                endTimer(action, startTime, diagnosisID, csrfToken);
-            }
-            if(selectedDisplay == "My Diagnosis"){
-                startTime = performance.now();
+                sendTime(action);
             }
             selectedDisplay = event.target.textContent;
             loadImages();
         }
     });
+
+    // Saves a timestamp for a given action
+    async function sendTime(action){
+        let utcTime = Date.now();
+        sendTimeStamp(action, utcTime, diagnosisID, csrfToken);
+    }
 
     // function to load the images in the correct overlay
     async function loadImages(){
@@ -104,9 +106,23 @@ document.addEventListener('DOMContentLoaded', function () {
     const editDiagnosisButton = document.getElementById("editDiagnosis");
 
     editDiagnosisButton.addEventListener("click", () => {
+        sendTime("Start Editing");
         window.location.assign(`/image/editDiagnosis/${diagnosisID}`)
     });
 
+
+    const TakeMyDiagnosisButton = document.getElementById("TakeMyDiagnosis");
+    TakeMyDiagnosisButton.addEventListener("click", () => {
+        sendTime("Finished Diagnosis");
+        deleteContinueDiagnosis(diagnosisID, csrfToken);
+        window.location.assign(`/image/editDiagnosis/${diagnosisID}/transitionPage/`)
+    });
+
+
+    const TakeAIDiagnosisButton = document.getElementById("TakeAIDiagnosis");
+    TakeAIDiagnosisButton.addEventListener("click", () => {
+        sendTime("Finished Diagnosis");
+        deleteContinueDiagnosis(diagnosisID, csrfToken);
+        window.location.assign(`/image/editDiagnosis/${diagnosisID}/transitionPage/`)
+    });
 });
-
-
