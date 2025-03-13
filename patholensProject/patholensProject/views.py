@@ -71,7 +71,7 @@ def continueDiagnosis(request):
     
     Retrieves the diagnosis object for the logged-in user and redirects to the diagnosis page.
     """
-    diagnosisData = getContinueDiag(request.user.id)
+    diagnosisData: dict = getContinueDiag(request.user.id)
 
     mode = "continue"
     
@@ -79,9 +79,19 @@ def continueDiagnosis(request):
     if diagnosisData.get("status") and diagnosisData.get("object"):
         diagID = diagnosisData["object"].diagID
         return redirect("newDiagnosis", diagnosisID=diagID, mode=mode)
+    
+@login_required
+def checkUnfinishedDiagnosis(request):
+    diagnosisData: dict = getContinueDiag(request.user.id)
+
+    if diagnosisData.get("status") and diagnosisData.get("object"):
+        return JsonResponse({'unfinished': True})
     else:
-        # If no diagnosis is found, redirect to home page
-        return render(request, "home.html")
+        return JsonResponse({'unfinished': False})
+    
+@login_required
+def noRunningDiagnosis(request):
+    return render(request, 'noRunningDiagnosis.html')
 
 
 @login_required
