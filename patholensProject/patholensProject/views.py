@@ -71,7 +71,7 @@ def continueDiagnosis(request):
     
     Retrieves the diagnosis object for the logged-in user and redirects to the diagnosis page.
     """
-    diagnosisData = getContinueDiag(request.user.id)
+    diagnosisData: dict = getContinueDiag(request.user.id)
 
     mode = "continue"
     
@@ -82,7 +82,7 @@ def continueDiagnosis(request):
     
 @login_required
 def checkUnfinishedDiagnosis(request):
-    diagnosisData = getContinueDiag(request.user.id)
+    diagnosisData: dict = getContinueDiag(request.user.id)
 
     if diagnosisData.get("status") and diagnosisData.get("object"):
         return JsonResponse({'unfinished': True})
