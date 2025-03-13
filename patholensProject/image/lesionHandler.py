@@ -18,27 +18,18 @@ def createLesion(diagonsisID: str, confidence: int, name: str, url: str) -> Lesi
     
     diagObj: Diagnosis = Diagnosis.objects.get(diagID = diagonsisID)
 
-    lesion: Lesions = Lesions.objects.create(name=name, confidence = confidence, url = url, deleted = False, diagnosis = diagObj)
+    lesion: Lesions = Lesions.objects.create(name=name, confidence = confidence, url = url, deleted = False, shown = True, diagnosis = diagObj)
 
     return lesion
 
-def softDeleteLesion(diagnosisID: str, lesionID) -> bool:
-    """
-    soft delets in diagnosis -> sets the argument deleted in the table to true
 
-    Args:
-        diagnosisID (str): The ID of the current diagnosis
-        lesionID (int): The ID of the lesion that is going to be deleted
-
-    Returns:
-        bool: True -> successful, False -> an error occured
-    """
+def toggleDeleteLesion(lesionID) -> bool:
     lesion: Lesions = Lesions.objects.get(lesionID = lesionID)
 
     if not lesion:
         return False
-
-    lesion.deleted = True
+    
+    lesion.deleted = not lesion.deleted
     lesion.save()
     return True
 
@@ -60,7 +51,7 @@ def getLesionsConfidence(diagnosisID: str) -> list:
         return False
     
     lesions: Lesions = Lesions.objects.filter(diagnosis = diagObj, deleted = False)
-    return list(lesions.values("lesionID", "name", "confidence"))
+    return list(lesions.values("lesionID", "name", "confidence", "shown"))
 
 def getLesions(diagnosisID: str) -> list:
     """
@@ -76,26 +67,8 @@ def getLesions(diagnosisID: str) -> list:
 
     lesions: Lesions = Lesions.objects.filter(diagnosis = diagObj, deleted = False).order_by("lesionID")
 
-    return list(lesions.values("url"))
+    return list(lesions.values("url", "shown"))
 
-def undoSoftDelete(diagnosisID: str, lesionID) -> bool:
-    """undos the soft delete -> set the argument delete to false
-
-    Args:
-        diagnosisID (str): ID of the current diagnosis
-        lesionID (int): ID of the lesion
-
-    Returns:
-        bool: True -> successful, False -> an error occured
-    """
-    lesion: Lesions = Lesions.objects.get(lesionID = lesionID)
-
-    if not lesion:
-        return False
-    
-    lesion.deleted = False
-    lesion.save()
-    return True
 
 def getNumberOfLesion(diagnosisID: str) -> int|bool:
     """
@@ -115,3 +88,34 @@ def getNumberOfLesion(diagnosisID: str) -> int|bool:
     lesionsNumber = Lesions.objects.filter(diagnosis = diagObj).count()
 
     return lesionsNumber
+
+def toggleShowLesion(lesionID) -> bool:
+    """
+    Toggle the deleted status of a lesion between True and False
+
+    Args:
+        lesionID (int): The ID of the lesion
+
+    Returns:
+        bool: True if successful, False else
+    """
+    lesion: Lesions = Lesions.objects.get(lesionID = lesionID)
+
+    if not lesion:
+        return False
+    
+    lesion.shown = not lesion.shown
+    print(lesion.shown)
+    lesion.save()
+    return True
+
+def hardDeleteLesions(diagnosisID: str) -> tuple[list,int]|bool:
+
+    diagObj: Diagnosis = Diagnosis.objects.get(diagID = diagnosisID)
+    if not diagObj:
+        return False
+    
+    lesions: Lesions = Lesions.objects.filter(diagnosis = diagObj, deleted = True)
+    urls = list(lesions.values_list('url', flat = True))
+    deletedCount, _ = lesions.delete()
+    return urls, deletedCount

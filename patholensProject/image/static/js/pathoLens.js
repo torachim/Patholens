@@ -658,15 +658,18 @@ export async function loadImageWithDiagnosis(diagnosisID, formatMri) {
             })
             .then(data => {
                 const urls = data.files;
+                const status = data.status;
                 console.log(urls);
                 for (let i = urls.length -1; i >= 0; i--){
-                    const diagUrl = `http://127.0.0.1:8000/${urls[i]}`;
-                    const colour = colours[(i + 1)%10];
-                    volumes.push({url: diagUrl,
-                                  schema: "nifti",
-                                  colorMap: colour[1],
-                                  opacity: 0.85,
-                    });
+                    if(status[i]){
+                        const diagUrl = `http://127.0.0.1:8000/${urls[i]}`;
+                        const colour = colours[(i + 1)%10];
+                        volumes.push({url: diagUrl,
+                                    schema: "nifti",
+                                    colorMap: colour[1],
+                                    opacity: 0.85,
+                        });
+                    }
                 }
             })
             .catch(err => {
@@ -823,39 +826,30 @@ export async function getLesionConfidence(diagnosisID){
         })
         .catch(err => {
             console.error('Error loading confidences:', err);
-        });   
+        });  
     return confidences;
 }
 
-/**
- * Soft deletes a specific lesion
- * @param {string} diagnosisID - ID of the current diagnosis
- * @param {Int} lesionID - ID of the lesion that should be deletet
- * @param {string} csrfToken - csrf token
- */
-export async function deleteLesion(diagnosisID, lesionID, csrfToken){
-
-    await fetch("/image/api/deleteLesion/", {
-        method: "DELETE",
-        headers: {
+export async function toggleDeleteLesion(lesionID, csrfToken){
+    await fetch("/image/api/toggleDeleteLesion/", {
+        method: 'POST',
+        headers:{
             "Content-Type": 'application/json',
             "X-CSRFToken": csrfToken,
         },
-        body: JSON.stringify({
-            diagnosisID: diagnosisID,
-            lesionID: lesionID,
-        })
+        body: JSON.stringify({lesionID: lesionID})
     })
     .then(response => {
         if(response.ok){
-            console.log("Lesion successfully deleted");
+            console.log("Lesion successfully toggled");
             return response.json();
         } else{
-            throw new Error("Failed to delete lesion");
+            throw new Error("Failed to toggle delete lesion");
         }
     })
     .catch(error => console.error(error));
 }
+
 
 /**
  * Returns the total number of lesions of the current diagnosis including the soft deleted ones
@@ -880,24 +874,45 @@ export async function getNumberOfLesions(diagnosisID){
     return lesionNumber
 }
 
-export async function undoDeleteLesion(diagnosisID, lesionID, csrfToken){
-    await fetch("/image/api/undoDeleteLesion/", {
-        method: "POST",
+export async function toggleShownLesion(lesionID, csrfToken){
+    await fetch('/image/api/toggleShownLesion/', {
+        method: 'POST',
         headers: {
             "Content-Type": 'application/json',
             "X-CSRFToken": csrfToken,
         },
         body: JSON.stringify({
-            diagnosisID: diagnosisID,
             lesionID: lesionID,
-        }) 
+        })
     })
     .then(response => {
         if(response.ok){
-            console.log("Undo delete successfully");
-            return response.json();
-        } else{
-            throw new Error("Failed to undo delete lesion");
+            console.log("Toggle Lesion status successful");
+            return response.json()
+        }else {
+            throw new Error("Failed to toggle status");
+        }
+    })
+    .catch(error => console.error(error));
+}
+
+export async function hardDeleteLesions(diagnosisID, csrfToken){
+    await fetch('/image/api/hardDeleteLesions/', {
+        method: 'DELETE',
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": csrfToken,
+        },
+        body: JSON.stringify({
+            diagnosisID: diagnosisID,
+        })
+    })
+    .then(response => {
+        if(response.ok){
+            console.log("Lesions hard deleted")
+            return response.json()
+        }else{
+            throw new Error("Faled to delete Lesions")
         }
     })
     .catch(error => console.error(error));

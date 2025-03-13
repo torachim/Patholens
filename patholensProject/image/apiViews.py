@@ -9,7 +9,7 @@ import re
 from image.diagnosisManager import getURL, ConfidenceType, setConfidence, getConfidence, deleteConfidence
 from accounts.doctorManager import deleteContinueDiag, setContinueDiag
 from .timeHandler import setUseTime
-from image.lesionHandler import createLesion, getLesions, getLesionsConfidence, getNumberOfLesion, softDeleteLesion, undoSoftDelete
+from image.lesionHandler import createLesion, getLesions, getLesionsConfidence, getNumberOfLesion, toggleShowLesion, toggleDeleteLesion, hardDeleteLesions
 
 import os
 
@@ -265,6 +265,7 @@ class GetDiagnosis(APIView):
 
             lesions = getLesions(diagnosisID)
             urlLesions = []
+            shown = []
             for lesion in lesions:
                 url = lesion['url']
                 mediaUrl = os.path.join(
@@ -272,6 +273,7 @@ class GetDiagnosis(APIView):
                                 url
                                 )
                 urlLesions.append(mediaUrl)
+                shown.append(lesion['shown'])
 
 
             if not files:
@@ -282,7 +284,8 @@ class GetDiagnosis(APIView):
 
             return Response(
                     {"status": "success",
-                     "files": urlLesions
+                     "files": urlLesions,
+                     'status': shown,
                     },
                     status=status.HTTP_200_OK
             )
@@ -420,45 +423,6 @@ class getLesionConfidence(APIView):
                 'error': f'An unexpected error occured: {str(e)}'
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
-
-class DeleteLesion(APIView):
-
-    def delete(self, request):
-        try:
-            data = request.data
-            lesionNumber = data.get('lesionID')
-            diagID = data.get("diagnosisID")
-
-
-            if not (diagID or lesionNumber):
-                return Response({
-                    'status': 'error',
-                    'error': 'DiagnosisID and lesion number is required'
-                },
-                status = status.HTTP_400_BAD_REQUEST
-                )
-            
-            #if os.path.isfile(filepath):
-            #    os.remove(filepath)
-
-            if softDeleteLesion(diagID, lesionNumber):
- 
-                return Response({
-                    'status': 'success',
-                    'message': 'Lesion deleted successfully',
-                    }, status=status.HTTP_200_OK)
-            else:
-                return Response({
-                    'status': 'Error',
-                    'message': 'Error during deleting of the lesion'
-                    }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    
-        except Exception as e:
-            return Response({
-                'status': 'error',
-                'message': f'An unexpected error occurred: {str(e)}'
-            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
     
 class getNumberLesions(APIView):
 
@@ -485,33 +449,96 @@ class getNumberLesions(APIView):
                     'message': f'An unexpected Error occured {e}'
                 }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-class undoDeleteLesion(APIView):
+        
+class toggleLesionDelete(APIView):
+
     def post(self, request):
         try:
             data = request.data
-            diagID = data.get("diagnosisID")
-            lesionID = data.get("lesionID")
+            lesionID = data.get('lesionID')
 
-            if not (diagID and lesionID):
+            if not lesionID:
                 return Response({
-                        'status': 'Error',
-                        'message': 'DiagnosisID and LesionID is required',
-                    }, status=status.HTTP_400_BAD_REQUEST)
+                    'stauts': 'Error',
+                    'message': 'LesionID is required'
+                }, status=status.HTTP_400_BAD_REQUEST)
             
-            if(undoSoftDelete(diagID, lesionID)):
+            if(toggleDeleteLesion(lesionID)):
                 return Response({
                     'status': 'success',
-                    'message': 'Lesion deleted successfully',
+                    'message': 'Lesion delete toggle successful',
                     }, status=status.HTTP_200_OK)
             else:
                 return Response({
                     'status': 'Error',
-                    'message': 'Error during deleting of the lesion'
+                    'message': 'Error during delete toggle of the lesion'
                     }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
         except Exception as e:
             return Response({
                     'status': 'error',
                     'message': f'An unexpected Error occured {e}'
                 }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
 
+class toggleLesionShown(APIView):
+    def post(self, request):
+
+        try:
+            data = request.data
+            lesionID = data.get("lesionID")
+
+            if not lesionID:
+                return Response({
+                        'status': 'Error',
+                        'message': 'LesionID is required',
+                    }, status=status.HTTP_400_BAD_REQUEST)
             
+            if toggleShowLesion(lesionID):
+                return Response({
+                    'status': 'success',
+                    'message': 'Lesion shown status changed successfully',
+                    }, status=status.HTTP_200_OK)
+            else:
+                return Response({
+                    'status': 'Error',
+                    'message': 'Error during changing status of the lesion'
+                    }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
+        except Exception as e:
+            return Response({
+                    'status': 'error',
+                    'message': f'An unexpected Error occured {e}'
+                }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+class hardDelete(APIView):
+    def delete(self, request):
+        try:
+            data = request.data
+            diagnosisID = data.get('diagnosisID')
+            if not diagnosisID:
+                return Response({
+                        'status': 'Error',
+                        'message': 'DiagnosisID is required'
+                    }, status=status.HTTP_400_BAD_REQUEST)
+            
+            urls, deletetCount = hardDeleteLesions(diagnosisID)
+            if deletetCount != 0:
+                for url in urls:
+                    imagePath = os.path.join(settings.MEDIA_ROOT,
+                                            url,
+                                            )
+                    if os.path.isfile:
+                        os.remove(imagePath)
+
+            return Response({
+                    'status': 'success',
+                    'message': 'Lesion shown status changed successfully',
+                    }, status=status.HTTP_200_OK)
+        
+        except Exception as e:
+            return Response({
+                    'status': 'Error',
+                    'message': f"An unexpected error occured {e}"
+                }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        

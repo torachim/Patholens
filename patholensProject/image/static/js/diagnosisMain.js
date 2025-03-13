@@ -1,5 +1,5 @@
 import { Niivue, DRAG_MODE } from "./index.js";
-import { niivueCanvas, drawRectangleNiivue,loadImageAPI, sendTimeStamp, sendConfidence, savedEditedLesion, loadImageWithDiagnosis, drawCubeNV, jumpRectangle, setContinueDiag, changePenValue, getLesionConfidence, deleteLesion, getNumberOfLesions, undoDeleteLesion } from "./pathoLens.js";
+import { niivueCanvas, drawRectangleNiivue,loadImageAPI, sendTimeStamp, sendConfidence, savedEditedLesion, loadImageWithDiagnosis, drawCubeNV, jumpRectangle, setContinueDiag, changePenValue, getLesionConfidence, getNumberOfLesions, toggleShownLesion, toggleDeleteLesion, hardDeleteLesions } from "./pathoLens.js";
 
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -215,7 +215,7 @@ document.addEventListener('DOMContentLoaded', function() {
      // Undo the drawing/erasing
      document.getElementById("undoTool").addEventListener("click", function (e) {
         if(undoDelete){
-            undoDeleteLesion(diagnosisID, deletedLesionID, csrfToken);
+            toggleDeleteLesion(deletedLesionID, csrfToken);
             undoDelete = false;
             deletedLesionID = 0;
             reload();
@@ -272,6 +272,7 @@ document.addEventListener('DOMContentLoaded', function() {
         let confidenceType = "all Lesions"
         await sendConfidence(confidenceValue, diagnosisID, confidenceType, csrfToken);
         await sendTime("Confidence Confirmed");
+        await hardDeleteLesions(diagnosisID, csrfToken);
         window.location.assign(`/image/AIpage/${diagnosisID}`)
     }
 
@@ -348,7 +349,6 @@ document.addEventListener('DOMContentLoaded', function() {
         drawUndoCube = false;
         drawRectangle = false;
         save = false;
-        diagnosisStarted = true;
     });
 
     // show the save window if the user clicks on the save button
@@ -361,8 +361,7 @@ document.addEventListener('DOMContentLoaded', function() {
         await savedEditedLesion(nv, diagnosisID, lesionNumber, confidence, csrfToken);
         sendTime("Saved Lesion");
         nv.createEmptyDrawing();
-        loadImageAndEdited();
-        updateLesionList();
+        reload();
     }
 
     // save image if logged out        ATTENTION: prevent saving image twice!! It wont work
@@ -458,18 +457,35 @@ document.addEventListener('DOMContentLoaded', function() {
                 <span class = "lesionName"> ${lesion['name']} </span>
                 <span class="lesionConfidence"> Confidence: ${lesion['confidence']} </span>
                 <button class="deleteLesion" data-id="${lesion['lesionID']}">&times;</button>
+                <span class="showLesion" data-id="${lesion['lesionID']}">
+                    ${lesion['shown']
+                            ? '<i class="eyeIconOpen" id="eyeIcon"></i>'
+                            : '<i class="eyeIconClose" id="eyeIcon"></i>' 
+                    }
+                 </span>
                 `;
             
                 lesionList.appendChild(listItem);
         }
 
         document.querySelectorAll(".deleteLesion").forEach(button => {
-            button.addEventListener("click", function(){
+            button.addEventListener("click", async function(){
+                await sendTime("deleted Lesion");
                 const lesionID = this.dataset.id;
                 undoDelete = true;
                 deletedLesionID = lesionID;
-                deleteLesion(diagnosisID, lesionID, csrfToken);
+                toggleDeleteLesion(lesionID, csrfToken);
                 reload();
+            })
+        })
+
+        document.querySelectorAll(".showLesion").forEach(span => {
+            let buttonClicked = false;
+            span.addEventListener("click", function(){
+                const lesionID = this.dataset.id;
+                toggleShownLesion(lesionID, csrfToken);
+                buttonClicked = !buttonClicked;
+                reload()
             })
         })
     }

@@ -38,6 +38,8 @@ class Lesions(models.Model):
     url = models.TextField(blank=False)
     # if true the lesion is deleted and should not be shown -> soft delete
     deleted = models.BooleanField(default=False)
+    # if true the lesion is shown on the edited page
+    shown = models.BooleanField(default=True)
     # key for the diagnosis
     diagnosis = models.ForeignKey(
         Diagnosis,
