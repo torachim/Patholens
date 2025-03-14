@@ -9,6 +9,5 @@ fi
 
 cd ..
 
-docker build -t fcd-assistant:$DOCKER_TAG ./fcd-assistant
 docker build -t patholens:$DOCKER_TAG ./patholensProject
 docker build -t devcontainer_patholens:$DOCKER_TAG -f ./.devcontainer/devcontainer.Dockerfile .
