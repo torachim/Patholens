@@ -14,7 +14,12 @@
           "extensions": [
             "KorbinianEckstein.niivue",
             "ms-python.python",
-            "eamodio.gitlens"
+            "eamodio.gitlens",
+            "ms-python.vscode-pylance",
+            "dbaeumer.vscode-eslint",
+            "esbenp.prettier-vscode", 
+            "oderwat.indent-rainbow",
+            "ms-azuretools.vscode-docker"
         ]
         }
       },
