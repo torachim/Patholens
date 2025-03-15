@@ -6,7 +6,8 @@ RUN apt-get update && apt-get -y --no-install-recommends install \
     python3-pip \
     nodejs \
     npm \
-    sqlite3
+    sqlite3 \
+    docker.io 
 
 WORKDIR /tmp
 
