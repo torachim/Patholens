@@ -14,8 +14,8 @@ COPY ./patholensProject/requirements.txt .
 
 RUN pip3 install --no-cache-dir -r requirements.txt
 
+COPY ./fcd-assistant/package.json .
+
 RUN npm install
 
 WORKDIR /app
-
-CMD ["sh", "./startup_app.sh"]
