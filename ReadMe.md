@@ -66,9 +66,9 @@ git clone <REPOSITORY_URL>
 Replace <REPOSITORY_URL> with the actual URL of the repository
 
 ### **2. Navigate to the Project Directory**
-Move into the directory where the `docker-compose.yml` file is located:
+Move into the project directory where the `docker-compose.yml` file is located:
 ```sh
-cd patholens/patholensProject
+cd patholens
 ```
 
 ### **3. Start the Application**
