@@ -1,24 +1,32 @@
 {
-    "name": "PG ASD",
-    "build": {
-        "dockerfile": "./devcontainer.Dockerfile",
-        "context": "../"
-    },
-    "runArgs": [
-        "--cap-add=SYS_PTRACE",
-        "--security-opt",
-        "seccomp=unconfined"
-      ],
-      "customizations": {
-        "vscode": {
+  "name": "PG ASD",
+  "build": {
+      "dockerfile": "./devcontainer.Dockerfile",
+      "context": "../"
+  },
+  "runArgs": [
+      "--cap-add=SYS_PTRACE",
+      "--security-opt",
+      "seccomp=unconfined"
+  ],
+  "mounts": [
+      "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
+  ],
+  "customizations": {
+      "vscode": {
           "extensions": [
-            "KorbinianEckstein.niivue",
-            "ms-python.python",
-            "eamodio.gitlens"
-        ]
-        }
-      },
-      "workspaceMount": "source=${localWorkspaceFolder},target=/patholens,type=bind",
-      "workspaceFolder": "/patholens",
-      "onCreateCommand": "apt update && apt install -y git && git config --global --add safe.directory /patholens"
+              "KorbinianEckstein.niivue",
+              "ms-python.python",
+              "eamodio.gitlens",
+              "ms-python.vscode-pylance",
+              "dbaeumer.vscode-eslint",
+              "esbenp.prettier-vscode",
+              "oderwat.indent-rainbow",
+              "ms-azuretools.vscode-docker"
+          ]
+      }
+  },
+  "workspaceMount": "source=${localWorkspaceFolder},target=/patholens,type=bind",
+  "workspaceFolder": "/patholens",
+  "onCreateCommand": "apt update && apt install -y git && git config --global --add safe.directory /patholens"
 }
