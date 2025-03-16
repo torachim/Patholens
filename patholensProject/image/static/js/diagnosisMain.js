@@ -192,7 +192,7 @@ document.addEventListener('DOMContentLoaded', function() {
             saveDrawingState();
             nv.setDrawingEnabled(true);
             // 0 = Eraser and true => eraser ist filled so a whole area can be erased
-            changeDrawingMode(0, true);
+            nv.setPenValue(0,true);
             activateButton("eraseTool"); 
         }
     });
