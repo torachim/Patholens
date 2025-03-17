@@ -93,6 +93,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (event.target.classList.contains('option')) {
             selectedFormatMri = event.target.textContent;
             loadImages();
+            loadImage();
         }
     });
 
@@ -125,7 +126,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
      //loading Images for the main Frame
     async function loadImage() {
-        const volumes = await loadImageAPI(selectedFormat, diagnosisID);
+        const volumes = await loadImageAPI(selectedFormatMri, diagnosisID);
         nv.loadVolumes(volumes);
     }
 
@@ -392,5 +393,4 @@ document.addEventListener('DOMContentLoaded', function() {
      // save image if logged out
      //document.getElementById("logoutButton").addEventListener("click", savedEditedImage(nv, diagnosisID, csrfToken));
 });
-
 
