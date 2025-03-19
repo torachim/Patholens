@@ -71,7 +71,7 @@
     .then(response => response.json())
     .then(data => {
       if(data.unfinished){
-        document.getElementById("rightFrame").src = "{% url 'BlockNewDiagnosis' %}"
+        document.getElementById("rightFrame").src = "{% url 'blockNewDiagnosis' %}"
       }
       else{
         window.open( "{% url 'selectDataset' %}",'windowFrame')

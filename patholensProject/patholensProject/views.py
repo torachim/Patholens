@@ -94,8 +94,8 @@ def noRunningDiagnosis(request):
     return render(request, 'noRunningDiagnosis.html')
 
 @login_required
-def BlockNewDiagnosis(request):
-    return render(request, 'BlockNewDiagnosis.html')
+def blockNewDiagnosis(request):
+    return render(request, 'blockNewDiagnosis.html')
 
 @login_required
 def homeWindow(request):
