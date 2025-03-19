@@ -93,6 +93,9 @@ def checkUnfinishedDiagnosis(request):
 def noRunningDiagnosis(request):
     return render(request, 'noRunningDiagnosis.html')
 
+@login_required
+def BlockNewDiagnosis(request):
+    return render(request, 'BlockNewDiagnosis.html')
 
 @login_required
 def homeWindow(request):
