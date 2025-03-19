@@ -11,56 +11,8 @@ from image.mediaHandler import syncMediaToDB
 from import_export import resources, fields
 from import_export.admin import ExportMixin
 
-from .models import UseTime, Diagnosis, Media
+from .models import UseTime, Diagnosis, Media, AiModel
 
-
-class MediaAdmin(admin.ModelAdmin):
-    """
-    Custom admin class for managing Media objects in the admin interface.
-    
-    Provides a button to add media datasets from the /media folder to the database.
-    """
-
-    def get_urls(self):
-        """
-        Add custom URL for the sync media button.
-        """
-        # Get the default URLs provided by Django admin
-        urls = super().get_urls()
-        
-        # Define custom URLs, including one for the sync media action
-        custom_urls = [
-            path('sync-media/', self.admin_site.admin_view(self.sync_media_action), name='sync_media_action'),
-        ]
-        
-        # Return the combined list of URLs: custom ones followed by the default ones
-        return custom_urls + urls
-
-    def sync_media_action(self, request):
-        """
-        Function that is called when the sync media button is clicked.
-        """
-        result = syncMediaToDB()  # Execute the function to sync media to the database
-        
-        if result == True:   
-            self.message_user(request, "The Media Database is now up to date.", messages.SUCCESS)
-        else:
-            self.message_user(request, "Error in 'syncMediaToDB'", messages.ERROR)
-
-        # After executing, redirect back to the previous page or the admin home page
-        return redirect(request.META.get('HTTP_REFERER', 'admin:index'))
-
-    def changelist_view(self, request, extra_context=None):
-        """
-        Make the sync media button available in the admin interface.
-        """ 
-        extra_context = extra_context or {}
-        
-        # Set a context variable to indicate that the sync button should be shown
-        extra_context['show_sync_media_button'] = True
-        
-        # Call the parent method to render the changelist view, passing the modified context
-        return super().changelist_view(request, extra_context=extra_context)
 
 
 class UseTimeInline(admin.StackedInline):
@@ -107,6 +59,74 @@ class DiagnosisResource(resources.ModelResource):
             return diagnosis.usetime.toDict().get('actionTime')
         except UseTime.DoesNotExist:
             return None
+
+
+class AiModelInline(admin.StackedInline):
+    """
+    Inline admin class for managing AI model objects related to a Media.
+    
+    Displays AI Model records as stacked inline forms within the Media admin interface.
+    """
+    model = AiModel
+    extra = 0  # Ensures no empty additional forms are shown
+
+
+class AiModelAdmin(admin.ModelAdmin):
+    list_display = ('modelName', 'mediaEntry', 'aiModelID')
+    list_filter = ('mediaEntry', 'visibility')
+    
+
+class MediaAdmin(admin.ModelAdmin):
+    """
+    Custom admin class for managing Media objects in the admin interface.
+    
+    Provides a button to add media datasets from the /media folder to the database.
+    """
+    
+    # connects the ai models to the media entry
+    inlines = [AiModelInline]
+
+
+    def get_urls(self):
+        """
+        Add custom URL for the sync media button.
+        """
+        # Get the default URLs provided by Django admin
+        urls = super().get_urls()
+        
+        # Define custom URLs, including one for the sync media action
+        custom_urls = [
+            path('sync-media/', self.admin_site.admin_view(self.sync_media_action), name='sync_media_action'),
+        ]
+        
+        # Return the combined list of URLs: custom ones followed by the default ones
+        return custom_urls + urls
+
+    def sync_media_action(self, request):
+        """
+        Function that is called when the sync media button is clicked.
+        """
+        result = syncMediaToDB()  # Execute the function to sync media to the database
+        
+        if result == True:   
+            self.message_user(request, "The Media Database is now up to date.", messages.SUCCESS)
+        else:
+            self.message_user(request, "Error in 'syncMediaToDB'", messages.ERROR)
+
+        # After executing, redirect back to the previous page or the admin home page
+        return redirect(request.META.get('HTTP_REFERER', 'admin:index'))
+
+    def changelist_view(self, request, extra_context=None):
+        """
+        Make the sync media button available in the admin interface.
+        """ 
+        extra_context = extra_context or {}
+        
+        # Set a context variable to indicate that the sync button should be shown
+        extra_context['show_sync_media_button'] = True
+        
+        # Call the parent method to render the changelist view, passing the modified context
+        return super().changelist_view(request, extra_context=extra_context)
 
 
 @admin.register(Diagnosis)
@@ -174,3 +194,4 @@ class DiagnosisAdmin(ExportMixin, admin.ModelAdmin):
     
 admin.site.register(Media, MediaAdmin)
 admin.site.register(UseTime)
+admin.site.register(AiModel, AiModelAdmin)
