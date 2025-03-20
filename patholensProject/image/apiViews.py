@@ -9,6 +9,7 @@ import re
 from .diagnosisServices import getURL, ConfidenceType, setConfidence
 from accounts.doctorServices import deleteContinueDiag, setContinueDiag
 from .timeServices import setUseTime
+from .mediaServices import getAIModels
 
 import os
 
@@ -380,3 +381,21 @@ class DeleteDiagnosisAPIView(APIView):
                 'status': 'error',
                 'message': f'An unexpected error occurred: {str(e)}'
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class AIModelNamesAPIView(APIView):
+    def get(self, request, dataset):
+
+        aiModelNames: list[str] = getAIModels(dataset) # get all the ai model names
+        
+        if aiModelNames == []:
+            return Response({
+                'status': 'error',
+                'message': f'No ai models where found'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
+        else:
+            return Response({
+                'status': 'success',
+                'models': aiModelNames
+            }, status=status.HTTP_200_OK)
