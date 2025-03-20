@@ -44,7 +44,7 @@ class UseTime(models.Model):
 
 
 class Media(models.Model):
-    mediaID = models.AutoField(primary_key=True)  # uniquqe of the dataset
+    mediaID = models.AutoField(primary_key=True)  # unique for each dataset
     name = models.CharField(blank=False, max_length=100, unique=True)  # name of the dataset 
     visibility = models.BooleanField(default=True) # indicates whether the media is visible to all doctors
     url = models.TextField(blank=False) # all the URLs linked to the patients in the dataset
@@ -61,7 +61,7 @@ class Media(models.Model):
         return self.name
 
 
-class AiModel(models.Model):
+class AIModel(models.Model):
     modelName = models.CharField(max_length=255)
     aiModelID = models.AutoField(primary_key=True)
     mediaEntry = models.ForeignKey(Media, on_delete=models.CASCADE, blank=False) # key for the Media entry

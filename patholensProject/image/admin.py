@@ -11,7 +11,7 @@ from .mediaServices import syncData
 from import_export import resources, fields
 from import_export.admin import ExportMixin
 
-from .models import UseTime, Diagnosis, Media, AiModel
+from .models import UseTime, Diagnosis, Media, AIModel
 
 
 
@@ -61,17 +61,17 @@ class DiagnosisResource(resources.ModelResource):
             return None
 
 
-class AiModelInline(admin.StackedInline):
+class AIModelInline(admin.StackedInline):
     """
     Inline admin class for managing AI model objects related to a Media.
     
     Displays AI Model records as stacked inline forms within the Media admin interface.
     """
-    model = AiModel
+    model = AIModel
     extra = 0  # Ensures no empty additional forms are shown
 
 
-class AiModelAdmin(admin.ModelAdmin):
+class AIModelAdmin(admin.ModelAdmin):
     list_display = ('modelName', 'mediaEntry', 'aiModelID')
     list_filter = ('mediaEntry', 'visibility')
     
@@ -84,7 +84,7 @@ class MediaAdmin(admin.ModelAdmin):
     """
     
     # connects the ai models to the media entry
-    inlines = [AiModelInline]
+    inlines = [AIModelInline]
 
 
     def get_urls(self):
@@ -194,4 +194,4 @@ class DiagnosisAdmin(ExportMixin, admin.ModelAdmin):
     
 admin.site.register(Media, MediaAdmin)
 admin.site.register(UseTime)
-admin.site.register(AiModel, AiModelAdmin)
+admin.site.register(AIModel, AIModelAdmin)

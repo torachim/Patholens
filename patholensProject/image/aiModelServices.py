@@ -1,5 +1,5 @@
 from image.dataHandler import getAIModelNamesFromMediaFolder
-from .models import AiModel, Media
+from .models import AIModel, Media
 
 def syncAIEntries(dataset: str) -> bool:
     """
@@ -9,14 +9,14 @@ def syncAIEntries(dataset: str) -> bool:
         dataset (str): The name of the dataset
 
     Returns:
-        bool: True when everythin works
+        bool: True when everything works
     """
     
     aiModels: list[str.upper] = getAIModelNamesFromMediaFolder(dataset)
     
     for model in aiModels:
         # Skip, if the objects exists
-        if AiModel.objects.filter(modelName=model).exists():
+        if AIModel.objects.filter(modelName=model).exists():
             continue
         # Skip, if the Media entry is not existing any more
         if not Media.objects.filter(name=dataset).exists():
@@ -24,6 +24,6 @@ def syncAIEntries(dataset: str) -> bool:
         
         # Create a new ai model entry
         media: Media = Media.objects.get(name=dataset) 
-        AiModel.objects.create(modelName=model, mediaEntry=media, visibility=True)
+        AIModel.objects.create(modelName=model, mediaEntry=media, visibility=True)
     
     return True

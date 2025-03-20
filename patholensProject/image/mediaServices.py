@@ -1,6 +1,6 @@
 from .dataHandler import *
 from .aiModelServices import syncAIEntries
-from .models import Media, AiModel
+from .models import Media, AIModel
 
 
 def syncData() -> bool:
@@ -35,9 +35,9 @@ def syncMediEntries(datasetName) -> bool:
     Returns:
         bool:  
         - `True`if the function successfully processes all datasets, updates existing ones, and creates new entries as needed.
-        - `False`if their are no datasets in the directory.
+        - `False`if there are no datasets in the directory.
     """
-    url: list[str] = getPatientURLsFromFolder(datasetName)
+    urlList: list[str] = getPatientURLsFromFolder(datasetName)
         
     # dataset exists in the media db
     if Media.objects.filter(name=datasetName).exists():
@@ -47,10 +47,10 @@ def syncMediEntries(datasetName) -> bool:
         # convert the string to a list by splitting the string at ','
         savedURLAsList: list = [s.strip() for s in savedURLAsString.split(",")]
 
-        # if patients where added after creating the dataset in the db: add the missing patients
-        if len(savedURLAsList) < len(url):
+        # if patients were added after creating the dataset in the db: add the missing patients
+        if len(savedURLAsList) < len(urlList):
             # adds all missing patinents url to savedURLAsList
-            [savedURLAsList.append(patientURL) for patientURL in url if patientURL not in savedURLAsList]
+            [savedURLAsList.append(patientURL) for patientURL in urlList if patientURL not in savedURLAsList]
             
             # converts the list to a string
             savedURLAsList = str(savedURLAsList).replace("[", "").replace("]", "").replace("'", "")
@@ -60,8 +60,8 @@ def syncMediEntries(datasetName) -> bool:
     
     # dataset needs to be added to the media db
     else:
-        url = str(url).replace("[", "").replace("]", "").replace("'", "")
-        Media.objects.create(name=datasetName, url=url)
+        urlStr: str = str(urlList).replace("[", "").replace("]", "").replace("'", "")
+        Media.objects.create(name=datasetName, url=urlStr)
         
     return True
 
@@ -79,7 +79,7 @@ def getPatientURLs(datasetName: str) -> list[str]:
 
 def getAIModels(datasetName: str) -> list[str]:
     """
-    Goes through the media entry and returns all the available (visible for the doctors) ai models.
+    Iterates through the media entry and returns all the available (visible for the doctors) ai models.
 
     Args:
         datasetName (str): Name of the dataset
@@ -93,11 +93,11 @@ def getAIModels(datasetName: str) -> list[str]:
         return []
 
     media: Media = Media.objects.get(name=datasetName)
-    aiModels: AiModel = media.aimodel_set.all() # retrieves all the ai models
+    aiModels: AIModel = media.aimodel_set.all() # retrieves all the ai models
     aiModels = [model for model in aiModels if model.visibility] # take only the models which should be visible to the doctors
     
     for model in aiModels:
-        nameOfModel = model.modelName.split(f"_{datasetName}")[0] # cut of the name of the dataset in the name of the ai model
+        nameOfModel = model.modelName.split(f"_{datasetName}")[0] # cut off the name of the dataset in the name of the ai model
         names.append(nameOfModel)
         
     return names

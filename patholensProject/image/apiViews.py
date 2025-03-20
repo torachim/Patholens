@@ -391,7 +391,7 @@ class AIModelNamesAPIView(APIView):
         if aiModelNames == []:
             return Response({
                 'status': 'error',
-                'message': f'No ai models where found'
+                'message': f'No ai models were found'
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             
         else:

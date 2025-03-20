@@ -5,7 +5,7 @@ import unittest
 from django.contrib.auth.models import User
 import uuid
 
-class TestDoctorsManager(unittest.TestCase):
+class TestDoctorsServices(unittest.TestCase):
 
     # is called first
     def setUp(self):
@@ -39,4 +39,4 @@ class TestDoctorsManager(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.main(defaultTest="TestDiagnosisManager")
+    unittest.main()
