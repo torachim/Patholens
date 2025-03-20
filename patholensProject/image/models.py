@@ -60,11 +60,10 @@ class Media(models.Model):
     def __str__(self):
         return self.name
 
+
 class AiModel(models.Model):
     modelName = models.CharField(max_length=255)
     aiModelID = models.AutoField(primary_key=True)
     mediaEntry = models.ForeignKey(Media, on_delete=models.CASCADE, blank=False) # key for the Media entry
-    visibility = models.BooleanField(default=True, verbose_name='Show doctors model') # indicates whether the ai model should be visibile to the doctors
-    
-    
+    visibility = models.BooleanField(default=True, verbose_name='Show model to doctors') # indicates whether the ai model should be visibile to the doctors
     

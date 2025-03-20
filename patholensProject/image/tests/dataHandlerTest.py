@@ -13,7 +13,7 @@ django.setup()
 
 from django.test import TestCase
 from image.dataHandler import *
-from image.mediaHandler import syncMediaToDB
+from patholensProject.image.mediaServices import syncData
 import unittest
 
 
@@ -42,8 +42,8 @@ class TestDataHandler(unittest.TestCase):
         shuffledList = shuffleList(toBeSortedList)
         self.assertNotEqual(toBeSortedList, shuffledList)
 
-    def testsyncMediaToDB(self):
-        print(syncMediaToDB())
+    def testsyncData(self):
+        print(syncData())
             
 
 if __name__ == "__main__":

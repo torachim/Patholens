@@ -1,6 +1,6 @@
 from django.test import TestCase
-from doctorManager import *
-from image.diagnosisManager import *
+from doctorServices import *
+from image.diagnosisServices import *
 import unittest
 from django.contrib.auth.models import User
 import uuid

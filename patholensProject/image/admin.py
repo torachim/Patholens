@@ -7,7 +7,7 @@ from django.shortcuts import redirect
 from django.shortcuts import render
 from django.urls import path
 
-from image.mediaHandler import syncMediaToDB 
+from .mediaServices import syncData 
 from import_export import resources, fields
 from import_export.admin import ExportMixin
 
@@ -106,12 +106,12 @@ class MediaAdmin(admin.ModelAdmin):
         """
         Function that is called when the sync media button is clicked.
         """
-        result = syncMediaToDB()  # Execute the function to sync media to the database
+        result = syncData()  # Execute the function to sync media to the database
         
         if result == True:   
             self.message_user(request, "The Media Database is now up to date.", messages.SUCCESS)
         else:
-            self.message_user(request, "Error in 'syncMediaToDB'", messages.ERROR)
+            self.message_user(request, "Error in 'syncData'", messages.ERROR)
 
         # After executing, redirect back to the previous page or the admin home page
         return redirect(request.META.get('HTTP_REFERER', 'admin:index'))
