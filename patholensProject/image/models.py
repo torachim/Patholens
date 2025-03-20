@@ -66,4 +66,3 @@ class AiModel(models.Model):
     aiModelID = models.AutoField(primary_key=True)
     mediaEntry = models.ForeignKey(Media, on_delete=models.CASCADE, blank=False) # key for the Media entry
     visibility = models.BooleanField(default=True, verbose_name='Show model to doctors') # indicates whether the ai model should be visibile to the doctors
-    

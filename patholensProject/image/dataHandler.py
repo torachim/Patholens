@@ -94,9 +94,9 @@ def getAIModelNamesFromMediaFolder(dataset: str) -> list[str]:
         return []
     
     allSubDirs: list[str] = os.listdir(aiSubPath)
-    firstSubDir = allSubDirs[0]  # Pick the first sub-directory to locate AI model outputs
+    firstSubDir: str = allSubDirs[0]  # Pick the first sub-directory to locate AI model outputs
     
-    # Path to AI-generated predictions: media/datasetname/derivatives/ai/sub-.../pred/
+    # Path to AI-generated predictions: media/dataset/derivatives/ai/sub-.../pred/
     aiPredPath = os.path.join(aiSubPath, firstSubDir, "pred")
     aiFiles: list[str] = os.listdir(aiPredPath)
     
@@ -104,11 +104,13 @@ def getAIModelNamesFromMediaFolder(dataset: str) -> list[str]:
          # Filter out files that are not related to masks
         if "mask" in filePath:
             prefix = "acq-"  # prefix to look for in the file path
-            prefixPosition = filePath.rfind(prefix)
-            suffixPosition = filePath.rfind('_mask')
+            prefixPosition: int = filePath.rfind(prefix)
+            suffixPosition:int = filePath.rfind('_mask')
             
             # Since the prefix is always in the string, start extracting after the prefix
-            model = filePath[prefixPosition + len(prefix):suffixPosition]  # Extract model name between prefix and suffix
+            model: str = filePath[prefixPosition + len(prefix):suffixPosition]  # Extract model name between prefix and suffix
+            # Add the dataset name to the model name for uniqueness
+            model: str = f"{model}_{dataset}"
             modelNames.append(model)
             
     return modelNames

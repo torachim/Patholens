@@ -1,12 +1,12 @@
 from image.dataHandler import getAIModelNamesFromMediaFolder
 from .models import AiModel, Media
 
-def syncAIEntries(dataset):
+def syncAIEntries(dataset: str) -> bool:
     """
     Retrieves all the possible ai model names of a dataset and adds them to the database.
 
     Args:
-        dataset (str): The name of the dataset.
+        dataset (str): The name of the dataset
 
     Returns:
         bool: True when everythin works
@@ -27,7 +27,3 @@ def syncAIEntries(dataset):
         AiModel.objects.create(modelName=model, mediaEntry=media, visibility=True)
     
     return True
-            
-                 
-    
-    

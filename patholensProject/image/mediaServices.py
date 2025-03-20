@@ -1,13 +1,17 @@
 from .dataHandler import *
-from .models import Media
+from .aiModelServices import syncAIEntries
+from .models import Media, AiModel
 
 
 def syncData() -> bool:
+    """
+    Synchronizes media entries by calling `syncMediaEntries` and `syncAIEntries` 
+    for each dataset found in `getNamesFromMediaFolder`.
 
-    
-    ## REMOVE!!!
-    getAIModelNamesFromMediaFolder("website_data")
-    
+    Returns:
+        bool: `True` if all media and AI entries were successfully synchronized, 
+              otherwise `False`.
+    """
     allDatasets: list[str] = getNamesFromMediaFolder()
     
     if allDatasets == []:
@@ -16,11 +20,12 @@ def syncData() -> bool:
     for datasetName in allDatasets:
         if not syncMediEntries(datasetName):
             return False
+
+        if not syncAIEntries(datasetName):
+            return False
     
     return True
         
-       
-
 def syncMediEntries(datasetName) -> bool:
     """
     This function processes all datasets in the media directory, checks if they already exist in the Media 
@@ -71,3 +76,29 @@ def getPatientURLs(datasetName: str) -> list[str]:
         savedURLAsList: list = [s.strip() for s in savedURLAsString.split(",")]
 
     return savedURLAsList 
+
+def getAIModels(datasetName: str) -> list[str]:
+    """
+    Goes through the media entry and returns all the available (visible for the doctors) ai models.
+
+    Args:
+        datasetName (str): Name of the dataset
+
+    Returns:
+        list[str]: Ai model names
+    """
+    names = []
+    
+    if not Media.objects.filter(name=datasetName).exists():
+        return []
+
+    media: Media = Media.objects.get(name=datasetName)
+    aiModels: AiModel = media.aimodel_set.all() # retrieves all the ai models
+    aiModels = [model for model in aiModels if model.visibility] # take only the models which should be visible to the doctors
+    
+    for model in aiModels:
+        nameOfModel = model.modelName.split(f"_{datasetName}")[0] # cut of the name of the dataset in the name of the ai model
+        names.append(nameOfModel)
+        
+    return names
+                
