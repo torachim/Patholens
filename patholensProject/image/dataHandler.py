@@ -94,8 +94,16 @@ def getAIModelNamesFromMediaFolder(dataset: str) -> list[str]:
         return []
     
     allSubDirs: list[str] = os.listdir(aiSubPath)
-    firstSubDir: str = allSubDirs[0]  # Pick the first sub-directory to locate AI model outputs
     
+    firstSubDir: str = None
+    # checks if there are patients with ai pictures
+    for file in allSubDirs:
+        if "sub-" in file:
+            firstSubDir: str = file  # Pick the first sub-directory to locate AI model outputs
+
+    if firstSubDir == None:
+        return []
+
     # Path to AI-generated predictions: media/dataset/derivatives/ai/sub-.../pred/
     aiPredPath = os.path.join(aiSubPath, firstSubDir, "pred")
     aiFiles: list[str] = os.listdir(aiPredPath)
