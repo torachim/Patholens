@@ -685,12 +685,13 @@ export function changePenValue(nv, mode, filled){
  * @param {string} diagnosisID The ID of the current diagnosis
  * @returns Array with 2 volumes
  */
-export async function loadImageWithMask(formatMask, formatMri, diagnosisID) {
+export async function loadImageWithMask(formatMask, formatMri, diagnosisID, datasetName) {
     const getIMbaseApiURL = `/image/api/getImageAndMask/${diagnosisID}`;
     // Parameters which get send to the backend -> the requested formats
     const params = new URLSearchParams({
         mask: formatMask,
         mri: formatMri,
+        dataset: datasetName,
     });
 
     let volumes = [];
