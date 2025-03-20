@@ -404,8 +404,9 @@ function fillRectangle(nv, PtBL, PtBR, PtTL, PtTR, penValue){
  */
 export async function loadImageAPI(format, diagnosisID) {
     let volumes = [];
+    const datasetName = localStorage.getItem('currentDataset') || 'website_data';
     //get the apiURL to fetch the path to the requested image
-    const apiURL = `/image/api/getImage/${diagnosisID}/?format =${format}`;
+    const apiURL = `/image/api/getImage/${diagnosisID}/?format =${format}&dataset=${datasetName}`;
     console.log(`API URL: ${apiURL}`);
 
     //fetch the data from the given apiURL
@@ -638,7 +639,10 @@ export async function savedEditedImage(nv, diagnosisID, lesionNumber, csrfToken)
  * @returns Array with the volumes
  */
 export async function loadImageWithDiagnosis(diagnosisID, formatMri) {
-        const getDApiURL = `/image/api/getDiagnosis/${diagnosisID}`;
+
+    // API call to fetch the MRI image
+        const datasetName = localStorage.getItem('currentDataset') || 'website_data';
+        const getDApiURL = `/image/api/getDiagnosis/${diagnosisID}&dataset=${datasetName}`;
 
 
         // API call to fetch the imageURL in the requested format (T1 or Flair)
@@ -685,13 +689,16 @@ export function changePenValue(nv, mode, filled){
  * @param {string} diagnosisID The ID of the current diagnosis
  * @returns Array with 2 volumes
  */
-export async function loadImageWithMask(formatMask, formatMri, diagnosisID, datasetName) {
-    const getIMbaseApiURL = `/image/api/getImageAndMask/${diagnosisID}`;
+export async function loadImageWithMask(formatMask, formatMri, diagnosisID) {
+
+    const datasetName = localStorage.getItem('currentDataset') || 'website_data';
+
+
+    const getIMbaseApiURL = `/image/api/getImageAndMask/${diagnosisID}&dataset=${datasetName}`;
     // Parameters which get send to the backend -> the requested formats
     const params = new URLSearchParams({
         mask: formatMask,
         mri: formatMri,
-        dataset: datasetName,
     });
 
     let volumes = [];
@@ -738,7 +745,10 @@ export async function loadImageWithMask(formatMask, formatMri, diagnosisID, data
  * @returns  Array with 3 Volumes
  */
 export async function loadOverlayDAI(formatMask, formatMri, diagnosisID) {
-    const getDApiURL = `/image/api/getDiagnosis/${diagnosisID}`;
+
+    const datasetName = localStorage.getItem('currentDataset') || 'website_data';
+    const getDApiURL = `/image/api/getDiagnosis/${diagnosisID}&dataset=${datasetName}
+`;
     let volumes = [];
     
     volumes = await loadImageWithMask(formatMask, formatMri, diagnosisID);
