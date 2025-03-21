@@ -35,7 +35,7 @@ class GetImageAPIView(APIView):
         """
         try:
             #do NOT remove this space
-            imageFormat = request.GET.get("format ") 
+            imageFormat = request.GET.get("format") 
             if not imageFormat:
                 imageFormat = "FLAIR"
 
@@ -45,6 +45,9 @@ class GetImageAPIView(APIView):
                 return JsonResponse({"error": "Invalid format"}, status=400)
             
             datasetName = request.GET.get("datasetName")
+
+            datasetName = datasetName.upper()
+            
             if not datasetName:
                 return JsonResponse({"error": "Dataset name is required"}, status=400)
 

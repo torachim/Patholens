@@ -405,12 +405,12 @@ function fillRectangle(nv, PtBL, PtBR, PtTL, PtTR, penValue){
 export async function loadImageAPI(format, diagnosisID) {
     let volumes = [];
     const datasetName = localStorage.getItem('currentDataset') || 'website_data';
+    console.log(`Dataset Name: ${datasetName}`);
 
     const params = new URLSearchParams({
         format: format,
         datasetName: datasetName,
     });
-    //get the apiURL to fetch the path to the requested image
     const apiURL = `/image/api/getImage/${diagnosisID}/?${params.toString()}`;
     console.log(`API URL: ${apiURL}`);
 
