@@ -46,7 +46,6 @@ class GetImageAPIView(APIView):
             
             datasetName = request.GET.get("datasetName")
 
-            datasetName = datasetName.upper()
             
             if not datasetName:
                 return JsonResponse({"error": "Dataset name is required"}, status=400)
