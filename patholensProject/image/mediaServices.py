@@ -101,4 +101,3 @@ def getAIModels(datasetName: str) -> list[str]:
         names.append(nameOfModel)
         
     return names
-                

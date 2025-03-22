@@ -107,19 +107,36 @@ def data(request):
     docID = request.user.id
     mediaNames: list = getAvailableDatasets(docID)
     finished: list = finishedDatasets(docID)
-
+    
     finishedTitle = []
-    # if there are values in list, update 
+    # if datasets where finished, add them
     if finished:
         finishedTitle = [item.title() for item in finished]
     
     notFinished = [media.title() for media in mediaNames if media not in finished]
+    
+    allDatasets = []
+    
+    for dataset in notFinished:
+        # Get progress statistics for the current dataset        
+        stats = datasetProgress(docID, dataset)
         
-    return render(request, 'selectDataset.html', {'allDataSets': notFinished, 'finishedDatasets': finishedTitle})
+        # Create a dictionary to store dataset info
+        dataset_info = {"name": dataset}
+        
+        # If there are no stats for the dataset, set the stats to an empty string
+        if not stats:
+            dataset_info["stats"] = ""
+        # If stats exist, format them as (completed/total) and add it to the dictionary
+        else:
+            dataset_info["stats"] = f"({stats[0]}/{stats[1]})"
+        
+        allDatasets.append(dataset_info)
+        
+    return render(request, 'selectDataset.html', {'allDataSets': allDatasets, 'finishedDatasets': finishedTitle})
 
 
 @login_required
 def finished(request, datasetName: str):
     datasetName = datasetName.title()
     return render(request, "finishedMessage.html", {'datasetName': datasetName})
-        
