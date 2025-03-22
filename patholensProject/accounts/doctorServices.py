@@ -321,14 +321,38 @@ def getFinishedPatientsAmount(docID: str, dataset: str) -> int | bool:
         bool: False if the doctor ID is invalid or the doctor object is not found.
     """
     
+
     docObject = getDoctorObject(docID)
     if not docObject: return False
     
     allFinishedPatients: dict = docObject.finishedPatients
-    finishedPatients: list | None = allFinishedPatients.get(dataset, None)
- 
-    if not finishedPatients: 
-        return 0 # Dataset was not started yet, thats why all patients are remaining
+    if not allFinishedPatients:
+        return 0
     
+    finishedPatients: list | None = allFinishedPatients.get(dataset.upper(), None)
+    
+    if not finishedPatients:
+        return 0 # Dataset was not started yet, thats why all patients are remaining
+
     return len(finishedPatients)
-  
+
+def datasetProgress(docID: str, dataset: str) -> tuple[int, int] | bool:
+    """
+    Retrieves the number of finished patients and the total number of available patients as a tuple.
+
+    Args:
+        docID (str): The ID of the doctor who is logged in.
+        dataset (str): The name of the dataset for which statistics are retrieved.
+
+    Returns:
+        tuple: The first number is the number of finished patients, and the second is the total number of available patients.
+        bool: False if the doctor ID is not valid.
+
+    """
+    amountOfAllPatients: int = len(getPatientURLs(dataset.upper()))
+    
+    amountOfFinishedPatients: int | bool = getFinishedPatientsAmount(docID, dataset)
+    if amountOfFinishedPatients == None:
+        return False
+    
+    return (amountOfFinishedPatients, amountOfAllPatients)
