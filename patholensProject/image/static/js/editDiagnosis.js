@@ -1,5 +1,5 @@
 import { Niivue, DRAG_MODE } from "./index.js";
-import { niivueCanvas,drawRectangleNiivue,loadImageAPI, loadImageWithDiagnosis, loadImageWithMask, loadOverlayDAI, sendTimeStamp, sendConfidence, savedEditedImage, deleteContinueDiagnosis, jumpRectangle, drawCubeNV } from "./pathoLens.js";
+import { niivueCanvas,drawRectangleNiivue,loadImageAPI, loadImageWithDiagnosis, loadImageWithMask, loadOverlayDAI, sendTimeStamp, sendConfidence, savedEditedImage, deleteContinueDiagnosis, jumpRectangle, drawCubeNV, setContinueDiag} from "./pathoLens.js";
 
 document.addEventListener('DOMContentLoaded', function() {
     
@@ -389,6 +389,21 @@ document.addEventListener('DOMContentLoaded', function() {
         alertMessageBox.style.display = "flex"
         alertOverlay.style.display = "flex";
     }
+
+    const logOut = document.getElementById("logoutButton");
+    const homePage = document.getElementById("homePageButton");
+    
+    async function  setContinue() {
+        await setContinueDiag(diagnosisID, "editDiagnosis", csrfToken);
+    }
+    
+    logOut.addEventListener("click", () => {
+        setContinue();
+    })
+
+    homePage.addEventListener("click", () => {
+        setContinue();
+    })
 
      // save image if logged out
      //document.getElementById("logoutButton").addEventListener("click", savedEditedImage(nv, diagnosisID, csrfToken));

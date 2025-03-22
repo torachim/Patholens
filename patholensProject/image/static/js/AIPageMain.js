@@ -1,5 +1,5 @@
 import { Niivue } from "./index.js";
-import { niivueCanvas, loadImageWithDiagnosis, loadImageWithMask, loadOverlayDAI, sendTimeStamp, deleteContinueDiagnosis } from "./pathoLens.js";
+import { niivueCanvas, loadImageWithDiagnosis, loadImageWithMask, loadOverlayDAI, sendTimeStamp, deleteContinueDiagnosis, setContinueDiag } from "./pathoLens.js";
 
 document.addEventListener('DOMContentLoaded', function () {
 
@@ -19,11 +19,9 @@ document.addEventListener('DOMContentLoaded', function () {
         "Model D": "NNUNET"
     };
 
-    let startTime;
 
     // Load default image and mask
     loadImages();
-    startTime = performance.now();
 
     // Dropdown change listener for the AI Mask
     const aiDropdown = document.getElementById('AIdropdown');
@@ -101,6 +99,17 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     })
 
+    const logOut = document.getElementById("logoutButton");
+    const homePage = document.getElementById("homePageButton");
+
+    logOut.addEventListener("click", async () => {
+        await setContinueDiag(diagnosisID, "AIpage", csrfToken);
+    })
+
+    homePage.addEventListener("click", async () => {
+        console.log("Back to homepage")
+        await setContinueDiag(diagnosisID, "AIpage", csrfToken);
+    })
 
 
     const editDiagnosisButton = document.getElementById("editDiagnosis");

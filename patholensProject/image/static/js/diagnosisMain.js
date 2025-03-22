@@ -403,7 +403,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // sets continue for the current diagnosis
     async function setContinue(){
-         await setContinueDiag(diagnosisID, csrfToken);
+         await setContinueDiag(diagnosisID, "newDiagnosis", csrfToken);
     }
 
     // log out the user

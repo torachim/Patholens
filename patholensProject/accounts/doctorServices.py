@@ -217,7 +217,7 @@ def getContinueDiag(docID: str) -> dict:
     returnDict.update({"status": True, "object": toBeContinuedDiagnosis})
     return returnDict
 
-def setContinueDiag(docID: str, diagID: str) -> dict:
+def setContinueDiag(docID: str, diagID: str, website: str) -> dict:
     """
     Associates an ongoing diagnosis with a doctor based on their respective IDs.
 
@@ -251,7 +251,7 @@ def setContinueDiag(docID: str, diagID: str) -> dict:
         returnDict.update({"status": False, "reason": DIAG_REASON, "message": "The diagnosis does not exist."})
         return returnDict
     
-    docObject.continueDiag = diagObject
+    docObject.continueDiag = {"Diagnosis": diagID, "website": website}
     docObject.save()
     
     returnDict.update({"status": True})
@@ -302,7 +302,7 @@ def deleteContinueDiag(docID: str) -> dict:
         returnDict.update ({"status": False, "reason": DOC_REASON ,"message": "The doctor does not exist."})
         return returnDict
     
-    docObject.continueDiag = None
+    docObject.continueDiag = {}
     docObject.save()
     
     returnDict.update({"status": True})

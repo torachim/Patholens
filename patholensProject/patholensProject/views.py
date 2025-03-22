@@ -77,8 +77,12 @@ def continueDiagnosis(request):
     
     # Check if a valid diagnosis was returned
     if diagnosisData.get("status") and diagnosisData.get("object"):
-        diagID = diagnosisData["object"].diagID
-        return redirect("newDiagnosis", diagnosisID=diagID, mode=mode)
+        continueDiagnosis = diagnosisData["object"]
+        diagID = continueDiagnosis["Diagnosis"]
+        website = continueDiagnosis["website"]
+        if website == "newDiagnosis":
+            return redirect(website, diagnosisID=diagID, mode=mode)
+        return redirect(website, diagnosisID=diagID)
     
 @login_required
 def checkUnfinishedDiagnosis(request):
