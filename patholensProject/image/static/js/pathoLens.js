@@ -407,11 +407,7 @@ export async function loadImageAPI(format, diagnosisID) {
     const datasetName = localStorage.getItem('currentDataset') || 'website_data';
     console.log(`Dataset Name: ${datasetName}`);
 
-    const params = new URLSearchParams({
-        format: format,
-        datasetName: datasetName,
-    });
-    const apiURL = `/image/api/getImage/${diagnosisID}/?${params.toString()}`;
+    const apiURL = `/image/api/getImage/${diagnosisID}/?format =${format}`;
     console.log(`API URL: ${apiURL}`);
 
     //fetch the data from the given apiURL

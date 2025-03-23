@@ -6,7 +6,7 @@ from django.http import JsonResponse
 from django.conf import settings
 import os
 import re
-from image.diagnosisManager import getURL, ConfidenceType, setConfidence
+from image.diagnosisManager import getURL, ConfidenceType, setConfidence, getDatasetName
 from accounts.doctorManager import deleteContinueDiag, setContinueDiag
 from .timeHandler import setUseTime
 
@@ -35,7 +35,7 @@ class GetImageAPIView(APIView):
         """
         try:
             #do NOT remove this space
-            imageFormat = request.GET.get("format") 
+            imageFormat = request.GET.get("format ") 
             if not imageFormat:
                 imageFormat = "FLAIR"
 
@@ -44,9 +44,8 @@ class GetImageAPIView(APIView):
             if imageFormat not in settings.SUPPORTED_IMAGE_FORMATS:
                 return JsonResponse({"error": "Invalid format"}, status=400)
             
-            datasetName = request.GET.get("datasetName")
-
-            
+            datasetName = getDatasetName(diagnosisID).lower()
+            print(datasetName)
             if not datasetName:
                 return JsonResponse({"error": "Dataset name is required"}, status=400)
 
@@ -58,6 +57,7 @@ class GetImageAPIView(APIView):
                 settings.MEDIA_ROOT,
                 f"{datasetName}/sub-{imageID}/anat/sub-{imageID}{fileSuffix}",
             )
+            print(imagePath)
             if not os.path.exists(imagePath):
                 return Response(
                     {"error": "Image not found"}, status=status.HTTP_404_NOT_FOUND
@@ -72,7 +72,7 @@ class GetImageAPIView(APIView):
         except Exception as e:
             return Response(
                 {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+           )
 
 
 class SetUseTimeAPIView(APIView):
