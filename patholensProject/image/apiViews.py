@@ -6,9 +6,9 @@ from django.http import JsonResponse
 from django.conf import settings
 import os
 import re
-from image.diagnosisManager import getURL, ConfidenceType, setConfidence, getDatasetName
-from accounts.doctorManager import deleteContinueDiag, setContinueDiag
-from .timeHandler import setUseTime
+from .diagnosisServices import getURL, ConfidenceType, setConfidence, getDatasetName
+from accounts.doctorServices import setContinueDiag, deleteContinueDiag
+from .timeServices import setUseTime
 
 import os
 
