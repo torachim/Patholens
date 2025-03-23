@@ -119,13 +119,13 @@ def setConfidence(diagID: str, confidenceType: ConfidenceType, keyValues: list[d
     return returnValue
 
 def getDatasetName(diagnosisID: str) -> str | bool:
-    """Returns the dataset of a diagnosis
+    """Returns the name of a dataset, given the diagnosis ID.
 
     Args:
         diagnosisID (str): ID of the diagnosis
 
     Returns:
-        str | bool: Dataset if success else False
+        the dataset name if the diagnosis exists, otherwise False
     """
 
     if not Diagnosis.objects.filter(diagID = diagnosisID).exists():

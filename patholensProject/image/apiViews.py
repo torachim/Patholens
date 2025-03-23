@@ -9,6 +9,7 @@ import re
 from .diagnosisServices import getURL, ConfidenceType, setConfidence, getDatasetName
 from accounts.doctorServices import setContinueDiag, deleteContinueDiag
 from .timeServices import setUseTime
+from .mediaServices import getAIModels
 
 import os
 
@@ -45,7 +46,6 @@ class GetImageAPIView(APIView):
                 return JsonResponse({"error": "Invalid format"}, status=400)
             
             datasetName = getDatasetName(diagnosisID).lower()
-            print(datasetName)
             if not datasetName:
                 return JsonResponse({"error": "Dataset name is required"}, status=400)
 
@@ -57,7 +57,6 @@ class GetImageAPIView(APIView):
                 settings.MEDIA_ROOT,
                 f"{datasetName}/sub-{imageID}/anat/sub-{imageID}{fileSuffix}",
             )
-            print(imagePath)
             if not os.path.exists(imagePath):
                 return Response(
                     {"error": "Image not found"}, status=status.HTTP_404_NOT_FOUND
@@ -182,7 +181,6 @@ class GetImageAndMaskAPIView(APIView):
                 return JsonResponse({"error": "Invalid format"}, status=400)
             
             datasetName = getDatasetName(diagnosisID).lower()
-            print(datasetName)
             if not datasetName:
                 return JsonResponse({"error": "Dataset name is required"}, status=400)
 
@@ -258,7 +256,6 @@ class GetDiagnosis(APIView):
             docID = request.user.id
 
             datasetName = getDatasetName(diagnosisID).lower()
-            print(datasetName)
             if not datasetName:
                 return JsonResponse({"error": "Dataset name is required"}, status=400)
 
@@ -336,7 +333,6 @@ class saveImageAPIView(APIView):
             diagnosisID = request.POST.get("diagnosisID")
             
             datasetName = getDatasetName(diagnosisID).lower()
-            print(datasetName)
             if not datasetName:
                 return JsonResponse({"error": "Dataset name is required"}, status=400)  # get the subID from the request
 
