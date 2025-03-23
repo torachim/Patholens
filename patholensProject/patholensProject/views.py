@@ -109,7 +109,7 @@ def data(request):
     finished: list = finishedDatasets(docID)
     
     finishedTitle = []
-    # if datasets where finished, add them
+    # if datasets were finished, add them
     if finished:
         finishedTitle = [item.title() for item in finished]
     

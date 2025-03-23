@@ -332,7 +332,7 @@ def getFinishedPatientsAmount(docID: str, dataset: str) -> int | bool:
     finishedPatients: list | None = allFinishedPatients.get(dataset.upper(), None)
     
     if not finishedPatients:
-        return 0 # Dataset was not started yet, thats why all patients are remaining
+        return 0 # Dataset was not started yet, that's why all patients are remaining
 
     return len(finishedPatients)
 
