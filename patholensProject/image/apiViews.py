@@ -181,7 +181,8 @@ class GetImageAndMaskAPIView(APIView):
             if imageFormatMask not in settings.SUPPORTED_IMAGE_FORMATS or imageFormatMri not in settings.SUPPORTED_IMAGE_FORMATS:
                 return JsonResponse({"error": "Invalid format"}, status=400)
             
-            datasetName = request.GET.get("datasetName")
+            datasetName = getDatasetName(diagnosisID).lower()
+            print(datasetName)
             if not datasetName:
                 return JsonResponse({"error": "Dataset name is required"}, status=400)
 
@@ -256,7 +257,8 @@ class GetDiagnosis(APIView):
             subID = getURL(diagnosisID)
             docID = request.user.id
 
-            datasetName = request.GET.get("datasetName")
+            datasetName = getDatasetName(diagnosisID).lower()
+            print(datasetName)
             if not datasetName:
                 return JsonResponse({"error": "Dataset name is required"}, status=400)
 
@@ -331,7 +333,12 @@ class saveImageAPIView(APIView):
             # Extract file and file name from the request
             image_file = request.FILES.get("imageFile")
             filename = request.POST.get("filename")
-            diagnosisID = request.POST.get("diagnosisID")  # get the subID from the request
+            diagnosisID = request.POST.get("diagnosisID")
+            
+            datasetName = getDatasetName(diagnosisID).lower()
+            print(datasetName)
+            if not datasetName:
+                return JsonResponse({"error": "Dataset name is required"}, status=400)  # get the subID from the request
 
             if not image_file or not filename or not diagnosisID:
                 return JsonResponse({"error": "Invalid data"}, status=400)
@@ -339,9 +346,6 @@ class saveImageAPIView(APIView):
             docID = request.user.id
             subID = getURL(diagnosisID)
 
-            datasetName = request.GET.get("datasetName")
-            if not datasetName:
-                return JsonResponse({"error": "Dataset name is required"}, status=400)
 
             # Define the directory structure: media/{datasetName}/derivatives/diagnosis/sub-{subID}
             sub_folder = os.path.join(
