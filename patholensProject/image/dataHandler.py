@@ -69,3 +69,56 @@ def shuffleList(aList: list) -> list:
     # shuffles the list random
     newList = np.random.permutation(aList)
     return list(newList)
+
+def getAIModelNamesFromMediaFolder(dataset: str) -> list[str]:
+    """
+    Extracts AI model names from a given dataset's media folder.
+    
+    This function navigates through the dataset directory structure to find AI-generated
+    mask images and extracts the model names.
+    
+    Args:
+        dataset (str): The name of the dataset folder.
+    
+    Returns:
+        list[str]: A list of AI model names extracted from the file names.
+    """
+    global DATASETPATH
+    
+    modelNames = []
+    
+    # Define the path to the AI-generated derivative folder
+    aiSubPath = os.path.join(DATASETPATH, dataset, "derivatives", "ai")
+    
+    if not os.path.exists(aiSubPath):
+        return []
+    
+    allSubDirs: list[str] = os.listdir(aiSubPath)
+    
+    firstSubDir: str = None
+    # checks if there are patients with ai pictures
+    for file in allSubDirs:
+        if "sub-" in file:
+            firstSubDir: str = file  # Pick the first sub-directory to locate AI model outputs
+
+    if firstSubDir == None:
+        return []
+
+    # Path to AI-generated predictions: media/dataset/derivatives/ai/sub-.../pred/
+    aiPredPath = os.path.join(aiSubPath, firstSubDir, "pred")
+    aiFiles: list[str] = os.listdir(aiPredPath)
+    
+    for filePath in aiFiles:
+         # Filter out files that are not related to masks
+        if "mask" in filePath:
+            prefix = "acq-"  # prefix to look for in the file path
+            prefixPosition: int = filePath.rfind(prefix)
+            suffixPosition:int = filePath.rfind('_mask')
+            
+            # Since the prefix is always in the string, start extracting after the prefix
+            model: str = filePath[prefixPosition + len(prefix):suffixPosition]  # Extract model name between prefix and suffix
+            # Add the dataset name to the model name for uniqueness
+            model: str = f"{model}_{dataset}"
+            modelNames.append(model)
+            
+    return modelNames

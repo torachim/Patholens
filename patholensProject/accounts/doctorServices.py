@@ -1,8 +1,8 @@
 import uuid
 import random
 
-from image.mediaHandler import *
-from image.diagnosisManager import *
+from image.mediaServices import *
+from image.diagnosisServices import *
 from accounts.models import Doctors
 
 

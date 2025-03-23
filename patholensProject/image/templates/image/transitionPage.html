@@ -21,16 +21,17 @@
                     {% if datasetFinished %}
                         You finished all patients in <br> {{ datasetName }}
                     {% else %}
-                        Do you want to continue?
+                        You successfully finished the diagnosis.<br>
+                        <div id="secondLine">Do you want to start a new diagnosis?</div>
                     {% endif %}
                 </h1>
             </div>
             
             <div class="decisionButtons">
                 {% if datasetFinished%}
-                    <button id="homeButton" class="homeButton"> Reutrn to the homepage </button> 
+                    <button id="homeButton" class="homeButton"> Return to the homepage </button> 
                 {% else %}
-                    <button id="continueButton" class="continueButton"> Yes, continue </button>
+                    <button id="continueButton" class="continueButton"> Yes </button>
                     <button id="homeButton" class="homeButton"> No, return to homepage </button>        
                 {% endif %}
                 </div>            

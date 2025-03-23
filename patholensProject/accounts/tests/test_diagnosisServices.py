@@ -1,11 +1,11 @@
 from django.test import TestCase
-from accounts.doctorManager import *
-from image.diagnosisManager import *
+from doctorServices import *
+from image.diagnosisServices import *
 import unittest
 from django.contrib.auth.models import User
 
 
-class TestDiagnosisManager(unittest.TestCase):
+class TestDiagnosisServices(unittest.TestCase):
     # is called first
     def setUp(self):
         # Create a test user

@@ -1,13 +1,13 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
-from image.timeHandler import *
+from image.timeServices import *
 from image.views import *
-from image.mediaHandler import *
-from image.diagnosisManager import *
+from image.mediaServices import *
+from image.diagnosisServices import *
 from image.models import Media
 
-from accounts.doctorManager import *
+from accounts.doctorServices import *
 
 
 @login_required
@@ -93,6 +93,9 @@ def checkUnfinishedDiagnosis(request):
 def noRunningDiagnosis(request):
     return render(request, 'noRunningDiagnosis.html')
 
+@login_required
+def blockNewDiagnosis(request):
+    return render(request, 'blockNewDiagnosis.html')
 
 @login_required
 def homeWindow(request):

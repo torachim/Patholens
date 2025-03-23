@@ -28,10 +28,17 @@ html, body {
 .contentTitle h1{
     color: white;
     font-weight: bold;
-    margin-top: 75px;
-    font-size: 33px;
+    margin-top: 55px;
+    margin-inline: 10px;
+    font-size: 27px;
     font-family: Calibri, Arial, sans-serif;
 
+}
+
+
+
+#secondLine{
+    font-size: 20px;
 }
 
 .decisionButtons {
@@ -44,12 +51,12 @@ html, body {
 .decisionButtons button {
     background-color:#00afb9;
     color: white;
-    font-size: 16px;
+    font-size: 19px;
     font-family: Calibri, Arial, sans-serif;
     font-weight: bold;
     border: none;
     border-radius: 10px;
-    width: 190px;
+    width: 210px;
     height: 45px;
     margin-top: 10px;
     cursor: pointer;
