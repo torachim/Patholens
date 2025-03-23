@@ -6,8 +6,8 @@ from django.http import JsonResponse
 from django.conf import settings
 import os
 import re
-from .diagnosisServices import getURL, ConfidenceType, setConfidence
-from accounts.doctorServices import deleteContinueDiag, setContinueDiag
+from .diagnosisServices import getURL, ConfidenceType, setConfidence, getDatasetName
+from accounts.doctorServices import setContinueDiag, deleteContinueDiag
 from .timeServices import setUseTime
 from .mediaServices import getAIModels
 
@@ -44,6 +44,10 @@ class GetImageAPIView(APIView):
 
             if imageFormat not in settings.SUPPORTED_IMAGE_FORMATS:
                 return JsonResponse({"error": "Invalid format"}, status=400)
+            
+            datasetName = getDatasetName(diagnosisID).lower()
+            if not datasetName:
+                return JsonResponse({"error": "Dataset name is required"}, status=400)
 
             # get the path to the image of a given diagnosis
             imageID = getURL(diagnosisID)
@@ -51,7 +55,7 @@ class GetImageAPIView(APIView):
             fileSuffix = settings.SUPPORTED_IMAGE_FORMATS[imageFormat]
             imagePath = os.path.join(
                 settings.MEDIA_ROOT,
-                f"website_data/sub-{imageID}/anat/sub-{imageID}{fileSuffix}",
+                f"{datasetName}/sub-{imageID}/anat/sub-{imageID}{fileSuffix}",
             )
             if not os.path.exists(imagePath):
                 return Response(
@@ -60,14 +64,14 @@ class GetImageAPIView(APIView):
 
             # relative path for the client
             relativePath = (
-                f"/media/website_data/sub-{imageID}/anat/sub-{imageID}{fileSuffix}"
+                f"/media/{datasetName}/sub-{imageID}/anat/sub-{imageID}{fileSuffix}"
             )
             return Response({"path": relativePath}, status=status.HTTP_200_OK)
 
         except Exception as e:
             return Response(
                 {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+           )
 
 
 class SetUseTimeAPIView(APIView):
@@ -171,9 +175,14 @@ class GetImageAndMaskAPIView(APIView):
 
             imageFormatMask = request.GET.get("mask", "DEEPFCD").upper()
             imageFormatMri = request.GET.get('mri').upper()
+            
 
             if imageFormatMask not in settings.SUPPORTED_IMAGE_FORMATS or imageFormatMri not in settings.SUPPORTED_IMAGE_FORMATS:
                 return JsonResponse({"error": "Invalid format"}, status=400)
+            
+            datasetName = getDatasetName(diagnosisID).lower()
+            if not datasetName:
+                return JsonResponse({"error": "Dataset name is required"}, status=400)
 
             # Get the MRI image path
             imageID = getURL(diagnosisID)
@@ -181,7 +190,7 @@ class GetImageAndMaskAPIView(APIView):
             mriPath = os.path.normpath(
                 os.path.join(
                     settings.MEDIA_ROOT,
-                    f"website_data/sub-{imageID}/anat/sub-{imageID}{fileSuffixMri}",
+                    f"{datasetName}/sub-{imageID}/anat/sub-{imageID}{fileSuffixMri}",
                 )
             )
 
@@ -190,7 +199,7 @@ class GetImageAndMaskAPIView(APIView):
             maskPath = os.path.normpath(
                 os.path.join(
                     settings.MEDIA_ROOT,
-                    f"website_data/derivatives/ai/sub-{imageID}/pred/sub-{imageID}{fileSuffixMask}",
+                    f"{datasetName}/derivatives/ai/sub-{imageID}/pred/sub-{imageID}{fileSuffixMask}",
                 )
             )
 
@@ -206,8 +215,8 @@ class GetImageAndMaskAPIView(APIView):
                 )
 
             # Relative paths for the client
-            mriRelativePath = f"/media/website_data/sub-{imageID}/anat/sub-{imageID}{fileSuffixMri}"
-            maskRelativePath = f"/media/website_data/derivatives/ai/sub-{imageID}/pred/sub-{imageID}{fileSuffixMask}"
+            mriRelativePath = f"/media/{datasetName}/sub-{imageID}/anat/sub-{imageID}{fileSuffixMri}"
+            maskRelativePath = f"/media/{datasetName}/derivatives/ai/sub-{imageID}/pred/sub-{imageID}{fileSuffixMask}"
 
 
             return Response(
@@ -246,9 +255,13 @@ class GetDiagnosis(APIView):
             subID = getURL(diagnosisID)
             docID = request.user.id
 
+            datasetName = getDatasetName(diagnosisID).lower()
+            if not datasetName:
+                return JsonResponse({"error": "Dataset name is required"}, status=400)
+
             diagnosisFolder = os.path.join(
                         settings.MEDIA_ROOT,
-                        f"website_data/derivatives/diagnosis/sub-{subID}/doc-{docID}"
+                        f"{datasetName}/derivatives/diagnosis/sub-{subID}/doc-{docID}"
             )
             
             if not os.path.exists(diagnosisFolder):
@@ -265,7 +278,7 @@ class GetDiagnosis(APIView):
 
 
 
-            relativePath = f"media/website_data/derivatives/diagnosis/sub-{subID}/doc-{docID}/sub-{subID}_acq-{docID}_space-edited-image.nii.gz"
+            relativePath = f"media/{datasetName}/derivatives/diagnosis/sub-{subID}/doc-{docID}/sub-{subID}_acq-{docID}_space-edited-image.nii.gz"
 
             if not files:
                 return Response(
@@ -317,7 +330,11 @@ class saveImageAPIView(APIView):
             # Extract file and file name from the request
             image_file = request.FILES.get("imageFile")
             filename = request.POST.get("filename")
-            diagnosisID = request.POST.get("diagnosisID")  # get the subID from the request
+            diagnosisID = request.POST.get("diagnosisID")
+            
+            datasetName = getDatasetName(diagnosisID).lower()
+            if not datasetName:
+                return JsonResponse({"error": "Dataset name is required"}, status=400)  # get the subID from the request
 
             if not image_file or not filename or not diagnosisID:
                 return JsonResponse({"error": "Invalid data"}, status=400)
@@ -325,10 +342,11 @@ class saveImageAPIView(APIView):
             docID = request.user.id
             subID = getURL(diagnosisID)
 
-            # Define the directory structure: media/website_data/derivatives/diagnosis/sub-{subID}
+
+            # Define the directory structure: media/{datasetName}/derivatives/diagnosis/sub-{subID}
             sub_folder = os.path.join(
                 settings.MEDIA_ROOT,
-                "website_data",
+                f"{datasetName}",
                 "derivatives",
                 "diagnosis",
                 f"sub-{subID}"
