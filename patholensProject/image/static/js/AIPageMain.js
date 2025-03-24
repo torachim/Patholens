@@ -3,6 +3,13 @@ import { niivueCanvas, loadImageWithDiagnosis, loadImageWithMask, loadOverlayDAI
 
 document.addEventListener('DOMContentLoaded', function () {
 
+    async function getModels() {
+        
+        await fetch('/image/api/getAiModels/')
+
+    }
+    getModels();
+
     const canvas = document.getElementById("imageBrain");
     const nv = niivueCanvas({drawOpacity: 0.5}, canvas);
 
