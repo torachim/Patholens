@@ -404,9 +404,9 @@ class DeleteDiagnosisAPIView(APIView):
 class AIModelNamesAPIView(APIView):
     def get(self, request, diagID):
         
-        dataset = getDatasetName(diagID).upper()
+        dataset = getDatasetName(diagID)        
         aiModelNames: list[str] = getAIModels(dataset) # get all the ai model names
-        
+
         if aiModelNames == []:
             return Response({
                 'status': 'error',
