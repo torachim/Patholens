@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     async function getModels() {
         
-        await fetch('/image/api/getAiModels/')
+        await fetch('/image/api/getAiModels/<str:diagID>/')
 
     }
     getModels();

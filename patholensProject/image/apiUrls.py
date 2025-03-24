@@ -11,5 +11,5 @@ urlpatterns = [
     path('getImageAndMask/<str:diagnosisID>/', GetImageAndMaskAPIView.as_view(), name='getImageAndMask'),
     path('deleteDiagnosis/', DeleteDiagnosisAPIView.as_view(), name='deleteDiagnosis'),
     path('setContinue/', setContinueAPIView.as_view(), name="setContinue"),
-    path('getAiModels/', AIModelNamesAPIView.as_view(), name="getAiModel")
+    path('getAiModels/<str:diagID>/', AIModelNamesAPIView.as_view(), name="getAiModel")
 ]
