@@ -220,11 +220,6 @@ class GetImageAndMaskAPIView(APIView):
                 {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
      
-
-def sortLesionNumber(filename):
-    match = re.search(r'lesion-(\d+)', filename) 
-    return int(match.group(1)) if match else float('inf')
-
 class GetDiagnosis(APIView):
 
     def get(self, request, diagnosisID):
