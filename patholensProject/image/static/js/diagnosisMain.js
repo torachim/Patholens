@@ -1,5 +1,5 @@
 import { Niivue, DRAG_MODE } from "./index.js";
-import { niivueCanvas, drawRectangleNiivue,loadImageAPI, sendTimeStamp, sendConfidence, savedEditedLesion, loadImageWithDiagnosis, drawCubeNV, jumpRectangle, setContinueDiag, changePenValue, getLesionConfidence, getNumberOfLesions, toggleShownLesion, toggleDeleteLesion, hardDeleteLesions } from "./pathoLens.js";
+import { niivueCanvas,  drawRectangleNiivue,loadImageAPI, sendTimeStamp, sendConfidence, savedEditedLesion, loadImageWithDiagnosis, drawCubeNV, jumpRectangle, setContinueDiag, changePenValue, getLesionConfidence, getNumberOfLesions, toggleShownLesion, toggleDeleteLesion, hardDeleteLesions } from "./pathoLens.js";
 
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -437,57 +437,83 @@ document.addEventListener('DOMContentLoaded', function() {
         saveFirstWindow.style.display = "none";
         overlay.style.display = "none";
     })
+// Add this near the top with other DOM element declarations
+const lesionListToggle = document.getElementById("lesionListToggle");
+const lesionConfidenceBox = document.getElementById("lesionConfidenceBox");
 
+// Add this event listener with the others
+lesionListToggle.addEventListener("click", () => {
+    lesionConfidenceBox.classList.toggle("show");
+    lesionListToggle.textContent = lesionConfidenceBox.classList.contains("show") 
+        ? "Hide Lesions" 
+        : "Show Lesions";
+});
 
-    async function updateLesionList(){
-        const lesions = await getLesionConfidence(diagnosisID);
-        lesionList.innerHTML = "";
+// Modify the updateLesionList function to ensure proper styling:
+async function updateLesionList() {
+    const lesions = await getLesionConfidence(diagnosisID);
+    lesionList.innerHTML = "";
 
-        if(lesions.length == 0){
-            lesionList.innerHTML = "<p>No lesions saved yet</p>";
-            return;
-        }
-
-        for(let i = 0; i < lesions.length; i++){
-            const lesion = lesions[i]
-            const listItem = document.createElement("li");
-            listItem.className = "lesionItem";
-
-            listItem.innerHTML = `
-                <span class = "lesionName"> ${lesion['name']} </span>
-                <span class="lesionConfidence"> Confidence: ${lesion['confidence']} </span>
-                <button class="deleteLesion" data-id="${lesion['lesionID']}">&times;</button>
-                <span class="showLesion" data-id="${lesion['lesionID']}">
-                    ${lesion['shown']
-                            ? '<i class="eyeIconOpen" id="eyeIcon"></i>'
-                            : '<i class="eyeIconClose" id="eyeIcon"></i>' 
-                    }
-                 </span>
-                `;
-            
-                lesionList.appendChild(listItem);
-        }
-
-        document.querySelectorAll(".deleteLesion").forEach(button => {
-            button.addEventListener("click", async function(){
-                await sendTime("deleted Lesion");
-                const lesionID = this.dataset.id;
-                undoDelete = true;
-                deletedLesionID = lesionID;
-                toggleDeleteLesion(lesionID, csrfToken);
-                reload();
-            })
-        })
-
-        document.querySelectorAll(".showLesion").forEach(span => {
-            let buttonClicked = false;
-            span.addEventListener("click", function(){
-                const lesionID = this.dataset.id;
-                toggleShownLesion(lesionID, csrfToken);
-                buttonClicked = !buttonClicked;
-                reload()
-            })
-        })
+    if (lesions.length === 0) {
+        lesionList.innerHTML = "<p style='color: white;'>No lesions saved yet</p>";
+        return;
     }
+
+    for (let i = 0; i < lesions.length; i++) {
+        const lesion = lesions[i];
+        const listItem = document.createElement("li");
+        listItem.className = "lesionItem";
+        
+        const colours = {
+            1: [1, "red"],
+            2: [2, "green"],
+            3: [3, "blue"],
+            4: [4, "yellow"],
+            5: [5, "cyan"],
+            6: [6, "magenta"],
+            7: [7, "orange"],  // Braun als Hex-Code
+            8: [8, "#40E0D0"],  // Türkis als Hex-Code
+            9: [19, "#C00000"],  // Jet (sehr dunkles Grau) als Hex-Code
+            0: [23, "#800080"]   // Violett als Hex-Code
+        };
+
+        const colorIndex = (i + 1) % 10;
+        const colorInfo = colours[colorIndex];
+        const colorName = colorInfo[1];
+        
+        listItem.innerHTML = `
+            <span class="lesionName" style="color: ${colorName}; font-weight: bold">${lesion.name}</span>
+            <span class="lesionConfidence" style="color: white;"><b>Confidence:</b> ${lesion.confidence}</span>
+            <button class="deleteLesion" data-id="${lesion.lesionID}">
+                <i class="fas fa-times" style="color:white"></i>
+            </button>
+            <button class="toggleVisibility" data-id="${lesion.lesionID}">
+                ${lesion.shown 
+                    ? '<i class="fas fa-eye" style="color:white"></i>' 
+                    : '<i class="fas fa-eye-slash" style="color:white"></i>'}
+            </button>
+        `;
+
+        lesionList.appendChild(listItem);
+    }
+
+    // Event listeners remain the same
+    document.querySelectorAll(".deleteLesion").forEach(button => {
+        button.addEventListener("click", async function() {
+            await sendTime("Deleted Lesion");
+            const lesionID = this.dataset.id;
+            toggleDeleteLesion(lesionID, csrfToken);
+            reload();
+        });
+    });
+
+    document.querySelectorAll(".toggleVisibility").forEach(button => {
+        button.addEventListener("click", function() {
+            const lesionID = this.dataset.id;
+            toggleShownLesion(lesionID, csrfToken);
+            reload();
+        });
+    });
+}
 
 });

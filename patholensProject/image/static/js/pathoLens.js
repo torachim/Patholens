@@ -10,7 +10,7 @@ const colours = {
     6: [6, "magenta"],
     7: [9, "brown"],
     8: [13, "turquoise"],
-    9: [19, "jet"],
+    9: [19, "dark red"],
     0: [23, "violet"]
 };
 
