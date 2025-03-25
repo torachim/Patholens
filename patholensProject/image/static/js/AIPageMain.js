@@ -6,16 +6,18 @@ import { niivueCanvas, loadImageWithDiagnosis, loadImageWithMask, loadOverlayDAI
 document.addEventListener('DOMContentLoaded', function () {
 
     let startTime;
-
-    loadImages();
-    startTime = performance.now();
     
+    //default formats
     const canvas = document.getElementById("imageBrain");
     const nv = niivueCanvas({ drawOpacity: 0.5 }, canvas);
     
     let selectedFormatMask;
     let selectedFormatMri = "FLAIR";
     let selectedDisplay = "AI Diagnosis";
+
+    // Load default image and mask
+    loadImages();
+    startTime = performance.now();
 
     // Model Handling
     async function getModels(diagnosisID) {
@@ -35,6 +37,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       }
 
+      // creates dropdown option for each modul
     function createDropdownOptions(models) {
         const dropdown = document.getElementById('AIdropdown');
         if (!dropdown) {
@@ -60,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Event Handling
+    // Event Handling for dropdown
     function handleDropdownClick(event) {
         const dropdown = event.currentTarget;
         const isOption = event.target.closest('.option');
@@ -91,8 +94,8 @@ document.addEventListener('DOMContentLoaded', function () {
         sendTimeStamp(action, utcTime, diagnosisID, csrfToken);
     }
     
+    // function to load the images in the correct overlay
     async function loadImages() {
-
         let volumes;
         if(selectedDisplay === "AI Diagnosis") {
             volumes = await loadImageWithMask(selectedFormatMask, selectedFormatMri, diagnosisID);
@@ -105,8 +108,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         
         nv.loadVolumes(volumes);
-        nv.updateGLVolume();     
-       
+        nv.updateGLVolume();       
     }
 
     // Initialization
