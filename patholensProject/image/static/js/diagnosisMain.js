@@ -5,7 +5,6 @@ import { niivueCanvas,  drawRectangleNiivue,loadImageAPI, sendTimeStamp, sendCon
 document.addEventListener('DOMContentLoaded', function() {
 
     let drawRectangle = false;
-    let erasing = false;
     let drawCube = false;
     let drawUndoCube = false;
     let pen = false;
@@ -149,7 +148,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         else{
             drawRectangle = false;
-            erasing = false;
             saveDrawingState();
             nv.setDrawingEnabled(true);  
             changeDrawingMode(penValue, false);
@@ -169,33 +167,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // disables drawing
     function disableDrawing(){
         deactivateAllButtons();
-        if(!drawRectangle && !erasing && pen){
+        if(!drawRectangle && pen){
             sendTime("Freehand Drawing");
             pen = false;
             nv.setDrawingEnabled(false);
         }
-        else if(!drawRectangle && erasing){
-            sendTime("Erasing");
-            erasing = false
-            nv.setDrawingEnabled(false);
-        }   
-    }  
-    
-    // enables erasing the drawing by clicking on eraser
-    document.getElementById("eraseTool").addEventListener("click", function(e){
-        if(drawCube){
-            showAlertWindow();
-        }
-        else{
-            erasing = true;
-            drawRectangle = false;
-            saveDrawingState();
-            nv.setDrawingEnabled(true);
-            // 0 = Eraser and true => eraser ist filled so a whole area can be erased
-            nv.setPenValue(0,true);
-            activateButton("eraseTool"); 
-        }
-    });
+    }
 
     // INFO: You need to right click and drag to draw rectangle
     // enable rectangle drawing when the corresponding button in html is clicked
@@ -212,7 +189,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-     // Undo the drawing/erasing
+     // Undo the drawing/
      document.getElementById("undoTool").addEventListener("click", function (e) {
         if(undoDelete){
             toggleDeleteLesion(deletedLesionID, csrfToken);

@@ -187,12 +187,14 @@ document.addEventListener('DOMContentLoaded', function() {
             showAlertWindow();
         }
         else{
-            erasing = true;
             drawRectangle = false;
             saveDrawingState();
+            nv.refreshDrawing()
+            /**erasing = true;
+            
             nv.setDrawingEnabled(true);
             // 0 = Eraser and true => eraser ist filled so a whole area can be erased
-            changeDrawingMode(0, true);
+            changeDrawingMode(0, true);**/
             activateButton("eraseTool");
         }
     });
