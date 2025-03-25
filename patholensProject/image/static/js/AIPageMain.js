@@ -1,43 +1,41 @@
+
 import { Niivue } from "./index.js";
 import { niivueCanvas, loadImageWithDiagnosis, loadImageWithMask, loadOverlayDAI, sendTimeStamp, deleteContinueDiagnosis } from "./pathoLens.js";
 
 
 document.addEventListener('DOMContentLoaded', function () {
-   
+
+    let startTime;
+
+    loadImages();
+    startTime = performance.now();
+    
     const canvas = document.getElementById("imageBrain");
     const nv = niivueCanvas({ drawOpacity: 0.5 }, canvas);
     
-     //default formats
     let selectedFormatMask;
     let selectedFormatMri = "FLAIR";
     let selectedDisplay = "AI Diagnosis";
 
-    let startTime;
-
-    // Load default image and mask
-    loadImages();
-    startTime = performance.now();
-
     // Model Handling
     async function getModels(diagnosisID) {
         try {
-            console.log('Fetching models...'); // Debug 3
-            const response = await fetch(`/image/api/getAiModels/${diagnosisID}`);
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
-            const data = await response.json();
-            console.log('API Response:', data); // Debug 4
-            return data.models.map((model, index) => ({
-                key: model,
-                displayName: "Model " + String.fromCharCode(65 + index) // A, B, C, ...
-              }));
+          const response = await fetch(`/image/api/getAiModels/${diagnosisID}`);
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          const data = await response.json();
+          
+          return data.models.map((model, index) => ({
+            key: model,
+            displayName: "Model " + String.fromCharCode(65 + index) 
+          }));
+          
         } catch (error) {
-            console.error('Model error:', error);
-            return [];
+          console.error('Model error:', error);
+          return [];
         }
-    }
+      }
 
     function createDropdownOptions(models) {
-        console.log('Creating dropdown options:', models); // Debug 5
         const dropdown = document.getElementById('AIdropdown');
         if (!dropdown) {
             console.error('AIdropdown element not found!');
@@ -46,8 +44,8 @@ document.addEventListener('DOMContentLoaded', function () {
         
         const optionsContainer = dropdown.querySelector('.options');
         const textBox = dropdown.querySelector('.textBox');
+        optionsContainer.innerHTML = '';
 
-        // Creates a dropdown option for each model
         models.forEach(model => {
             const option = document.createElement('div');
             option.className = 'option';
@@ -62,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Event Handling of dropdown
+    // Event Handling
     function handleDropdownClick(event) {
         const dropdown = event.currentTarget;
         const isOption = event.target.closest('.option');
@@ -92,25 +90,27 @@ document.addEventListener('DOMContentLoaded', function () {
         let utcTime = Date.now();
         sendTimeStamp(action, utcTime, diagnosisID, csrfToken);
     }
-
-    // function to load the images in the correct overlay
+    
     async function loadImages() {
-            let volumes;
-            if(selectedDisplay === "AI Diagnosis") {
-                volumes = await loadImageWithMask(selectedFormatMask, selectedFormatMri, diagnosisID);
-            }
-            else if(selectedDisplay === "My Diagnosis") {
-                volumes = await loadImageWithDiagnosis(diagnosisID, selectedFormatMri);
-            }
-            else if(selectedDisplay === "Show Overlay") {
-                volumes = await loadOverlayDAI(selectedFormatMask, selectedFormatMri, diagnosisID);
-            } 
-            nv.loadVolumes(volumes);
+
+        let volumes;
+        if(selectedDisplay === "AI Diagnosis") {
+            volumes = await loadImageWithMask(selectedFormatMask, selectedFormatMri, diagnosisID);
+        }
+        else if(selectedDisplay === "My Diagnosis") {
+            volumes = await loadImageWithDiagnosis(diagnosisID, selectedFormatMri);
+        }
+        else if(selectedDisplay === "Show Overlay") {
+            volumes = await loadOverlayDAI(selectedFormatMask, selectedFormatMri, diagnosisID);
+        }
+        
+        nv.loadVolumes(volumes);
+        nv.updateGLVolume();     
+       
     }
 
     // Initialization
     async function initialize() {
-        try {
             console.log('Initializing with diagnosis ID:', diagnosisID); // Debug 14
             const models = await getModels(diagnosisID);
             createDropdownOptions(models);
@@ -121,14 +121,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Initial image load
             await loadImages();
-            console.log('Initialization complete'); // Debug 15
-            
-        } catch (error) {
-            console.error('Initialization failed:', error); // Debug 16
-        }
     }
 
     initialize();
+
 
     const editDiagnosisButton = document.getElementById("editDiagnosis");
 
