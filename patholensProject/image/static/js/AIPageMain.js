@@ -3,13 +3,38 @@ import { niivueCanvas, loadImageWithDiagnosis, loadImageWithMask, loadOverlayDAI
 
 document.addEventListener('DOMContentLoaded', function () {
 
-    async function getModels() {
-        
-       const response =  await fetch(`/image/api/getAiModels/${diagnosisID}`)
-
+    async function getModels(diagnosisID) {
+        try {
+            const response = await fetch(`/image/api/getAiModels/${diagnosisID}`);
+    
+            if (!response.ok) {
+                // Hier wird der Fehler behandelt, falls die Antwort des Servers keinen Erfolg hatte
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+    
+            const data = await response.json();
+    
+            // Überprüfen, ob der Status der Antwort 'success' ist
+            if (data.status === 'success') {
+                // Die Modelle werden als Array zurückgegeben, sodass sie weiterverwendet werden können
+                return data.models;
+                
+            } else {
+                // Fehlerbehandlung, falls der Status der API 'error' ist
+                throw new Error("Error: " + data.message);
+            }
+            
+        } catch (error) {
+            console.error('Error fetching AI models: ', error.message);
+            // Falls ein Fehler auftritt, gibt es einen leeren Array zurück oder einen Fehler
+            return [];
+        }
     }
-    getModels();
+    
 
+    getModels(diagnosisID);
+    
+    
     const canvas = document.getElementById("imageBrain");
     const nv = niivueCanvas({drawOpacity: 0.5}, canvas);
 
