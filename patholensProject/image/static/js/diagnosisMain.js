@@ -181,6 +181,7 @@ document.addEventListener('DOMContentLoaded', function() {
             showSaveInfo();
         }
         else{
+            pen = false;
             saveDrawingState();
             nv.setDrawingEnabled(true);
             nv.opts.dragMode = DRAG_MODE.callbackOnly;  // Draw rectangle only when dragging
