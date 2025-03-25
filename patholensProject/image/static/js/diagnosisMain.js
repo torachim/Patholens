@@ -502,6 +502,8 @@ async function updateLesionList() {
         button.addEventListener("click", async function() {
             await sendTime("Deleted Lesion");
             const lesionID = this.dataset.id;
+            undoDelete = true;
+            deletedLesionID = lesionID
             toggleDeleteLesion(lesionID, csrfToken);
             reload();
         });
