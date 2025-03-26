@@ -4,7 +4,7 @@ from django.core.cache import cache
 
 from .models import Doctors
 from image.models import Media
-from image.mediaHandler import syncMediaToDB
+from image.mediaServices import syncData
 
 
 # Always triggered when a doctor is saved
@@ -12,7 +12,7 @@ from image.mediaHandler import syncMediaToDB
 def assign_default_datasets(sender, instance, created, **kwargs):
     # Only when a doctor is created the code gets triggered
     if created:
-        syncMediaToDB()
+        syncData()
         # All existing Media from the database
         allDatasets = Media.objects.all()
         # Add the datasets to the Doctor

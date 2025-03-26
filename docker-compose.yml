@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  patholens:
+    build: ./patholensProject  # build Backend-Image
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./patholensProject:/app  # Mount Code
+      - ./patholensProject/media:/app/media  # important to get media Nifti files
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: ["sh", "./patholensProject/startup_app.sh"]

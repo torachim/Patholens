@@ -642,7 +642,8 @@ export async function savedEditedLesion(nv, diagnosisID, lesionNumber, confidenc
  * @returns Array with the volumes
  */
 export async function loadImageWithDiagnosis(diagnosisID, formatMri) {
-        const getDApiURL = `/image/api/getDiagnosis/${diagnosisID}`;
+
+        const getDApiURL = `/image/api/getDiagnosis/${diagnosisID}/`;
 
 
         // API call to fetch the imageURL in the requested format (T1 or Flair)
@@ -693,6 +694,7 @@ export function changePenValue(nv, mode, filled){
  * @returns Array with 2 volumes
  */
 export async function loadImageWithMask(formatMask, formatMri, diagnosisID) {
+
     const getIMbaseApiURL = `/image/api/getImageAndMask/${diagnosisID}`;
     // Parameters which get send to the backend -> the requested formats
     const params = new URLSearchParams({
@@ -744,7 +746,8 @@ export async function loadImageWithMask(formatMask, formatMri, diagnosisID) {
  * @returns  Array with 3 Volumes
  */
 export async function loadOverlayDAI(formatMask, formatMri, diagnosisID) {
-    const getDApiURL = `/image/api/getDiagnosis/${diagnosisID}`;
+
+    const getDApiURL = `/image/api/getDiagnosis/${diagnosisID}/`;
     let volumes = [];
     
     volumes = await loadImageWithMask(formatMask, formatMri, diagnosisID);

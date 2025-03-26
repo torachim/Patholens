@@ -7,17 +7,16 @@ from django.shortcuts import redirect
 from django.http import JsonResponse
 from django.shortcuts import render
 
-from image.mediaHandler import syncMediaToDB
-from image.diagnosisManager import getURL
-from . import doctorManager
+from image.mediaServices import syncData
+from image.diagnosisServices import getURL
+from . import doctorServices
 
 
 def customLogin(request, user):
     # Call the default login function
     login(request, user)
     
-    # if their are any new folders in the media folder the ulrs will be added to the db or a new entry will be added
-    syncMediaToDB()
+    syncData() # Detects new folders in the media directory and adds them to the database or updates existing entries with missing URLs
 
 def signupView(request):
 
@@ -97,7 +96,7 @@ def signupView(request):
         )
 
         # creates a doctor
-        doctorManager.createDoctor(user)
+        doctorServices.createDoctor(user)
 
         # login of user
         customLogin(request, user)

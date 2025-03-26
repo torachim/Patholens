@@ -118,40 +118,23 @@ def setConfidence(diagID: str, confidenceType: ConfidenceType, keyValues: list[d
     returnValue.update({"status": True, "message": "New Values where saved."})
     return returnValue
 
-
-def getConfidence(diagnosisID: str) -> dict | bool:
-    """Function returns all Lesions and their saved confidence
+def getDatasetName(diagnosisID: str) -> str | bool:
+    """Returns the name of a dataset, given the diagnosis ID.
 
     Args:
-        diagnosisID (str): Diagnosis ID of the current ongoing diagnosis
+        diagnosisID (str): ID of the diagnosis
 
     Returns:
-        dict | bool: Returns either a dict if the lesions and their confidence Value or false.
+        the dataset name if the diagnosis exists, otherwise False
     """
 
-    diagObj : Diagnosis = getDiagnosisObject(diagnosisID)
-
-    if not diagObj:
+    if not Diagnosis.objects.filter(diagID = diagnosisID).exists():
         return False
     
-    savedConfidence: dict | None = getattr(diagObj, "confidence", None)
-    savedConfidence: dict = savedConfidence if savedConfidence else {}
+    diagnosis: Diagnosis = Diagnosis.objects.get(diagID = diagnosisID)
 
-    return savedConfidence
+    dataset = diagnosis.mediaFolder
 
-def deleteConfidence(diagnosisID: str, lesion: str) -> bool:
+    datasetName = dataset.name
 
-    diagObj: Diagnosis = getDiagnosisObject(diagnosisID)
-
-    if not diagObj:
-        return False
-    
-    confidences: dict = getattr(diagObj, "confidence", None)
-
-    del confidences[lesion]
-
-    setattr(diagObj, "confidence", confidences)
-    diagObj.save()
-
-    return True
-    
+    return datasetName

@@ -3,9 +3,9 @@ from django.shortcuts import render
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 
-from accounts.doctorManager import *
-from image.mediaHandler import *
-from image.diagnosisManager import *
+from accounts.doctorServices import *
+from .mediaServices import *
+from .diagnosisServices import *
 
 import os
 

@@ -6,10 +6,11 @@ from django.http import JsonResponse
 from django.conf import settings
 import os
 import re
-from image.diagnosisManager import getURL, ConfidenceType, setConfidence, getConfidence, deleteConfidence
-from accounts.doctorManager import deleteContinueDiag, setContinueDiag
-from .timeHandler import setUseTime
+from .diagnosisServices import getURL, ConfidenceType, setConfidence, getDatasetName
+from accounts.doctorServices import setContinueDiag, deleteContinueDiag
+from .timeServices import setUseTime
 from image.lesionHandler import createLesion, getLesions, getLesionsConfidence, getNumberOfLesion, toggleShowLesion, toggleDeleteLesion, hardDeleteLesions
+from .mediaServices import getAIModels
 
 import os
 
@@ -44,6 +45,10 @@ class GetImageAPIView(APIView):
 
             if imageFormat not in settings.SUPPORTED_IMAGE_FORMATS:
                 return JsonResponse({"error": "Invalid format"}, status=400)
+            
+            datasetName = getDatasetName(diagnosisID).lower()
+            if not datasetName:
+                return JsonResponse({"error": "Dataset name is required"}, status=400)
 
             # get the path to the image of a given diagnosis
             imageID = getURL(diagnosisID)
@@ -51,7 +56,7 @@ class GetImageAPIView(APIView):
             fileSuffix = settings.SUPPORTED_IMAGE_FORMATS[imageFormat]
             imagePath = os.path.join(
                 settings.MEDIA_ROOT,
-                f"website_data/sub-{imageID}/anat/sub-{imageID}{fileSuffix}",
+                f"{datasetName}/sub-{imageID}/anat/sub-{imageID}{fileSuffix}",
             )
             if not os.path.exists(imagePath):
                 return Response(
@@ -60,14 +65,14 @@ class GetImageAPIView(APIView):
 
             # relative path for the client
             relativePath = (
-                f"/media/website_data/sub-{imageID}/anat/sub-{imageID}{fileSuffix}"
+                f"/media/{datasetName}/sub-{imageID}/anat/sub-{imageID}{fileSuffix}"
             )
             return Response({"path": relativePath}, status=status.HTTP_200_OK)
 
         except Exception as e:
             return Response(
                 {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+           )
 
 
 class SetUseTimeAPIView(APIView):
@@ -171,9 +176,14 @@ class GetImageAndMaskAPIView(APIView):
 
             imageFormatMask = request.GET.get("mask", "DEEPFCD").upper()
             imageFormatMri = request.GET.get('mri').upper()
+            
 
             if imageFormatMask not in settings.SUPPORTED_IMAGE_FORMATS or imageFormatMri not in settings.SUPPORTED_IMAGE_FORMATS:
                 return JsonResponse({"error": "Invalid format"}, status=400)
+            
+            datasetName = getDatasetName(diagnosisID).lower()
+            if not datasetName:
+                return JsonResponse({"error": "Dataset name is required"}, status=400)
 
             # Get the MRI image path
             imageID = getURL(diagnosisID)
@@ -181,7 +191,7 @@ class GetImageAndMaskAPIView(APIView):
             mriPath = os.path.normpath(
                 os.path.join(
                     settings.MEDIA_ROOT,
-                    f"website_data/sub-{imageID}/anat/sub-{imageID}{fileSuffixMri}",
+                    f"{datasetName}/sub-{imageID}/anat/sub-{imageID}{fileSuffixMri}",
                 )
             )
 
@@ -190,7 +200,7 @@ class GetImageAndMaskAPIView(APIView):
             maskPath = os.path.normpath(
                 os.path.join(
                     settings.MEDIA_ROOT,
-                    f"website_data/derivatives/ai/sub-{imageID}/pred/sub-{imageID}{fileSuffixMask}",
+                    f"{datasetName}/derivatives/ai/sub-{imageID}/pred/sub-{imageID}{fileSuffixMask}",
                 )
             )
 
@@ -206,8 +216,8 @@ class GetImageAndMaskAPIView(APIView):
                 )
 
             # Relative paths for the client
-            mriRelativePath = f"/media/website_data/sub-{imageID}/anat/sub-{imageID}{fileSuffixMri}"
-            maskRelativePath = f"/media/website_data/derivatives/ai/sub-{imageID}/pred/sub-{imageID}{fileSuffixMask}"
+            mriRelativePath = f"/media/{datasetName}/sub-{imageID}/anat/sub-{imageID}{fileSuffixMri}"
+            maskRelativePath = f"/media/{datasetName}/derivatives/ai/sub-{imageID}/pred/sub-{imageID}{fileSuffixMask}"
 
 
             return Response(
@@ -220,6 +230,7 @@ class GetImageAndMaskAPIView(APIView):
                 {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
      
+     ##Search function for unimportant stuff
 class GetDiagnosis(APIView):
 
     def get(self, request, diagnosisID):
@@ -241,9 +252,13 @@ class GetDiagnosis(APIView):
             subID = getURL(diagnosisID)
             docID = request.user.id
 
+            datasetName = getDatasetName(diagnosisID).lower()
+            if not datasetName:
+                return JsonResponse({"error": "Dataset name is required"}, status=400)
+
             diagnosisFolder = os.path.join(
                         settings.MEDIA_ROOT,
-                        f"website_data/derivatives/diagnosis/sub-{subID}/doc-{docID}"
+                        f"{datasetName}/derivatives/diagnosis/sub-{subID}/doc-{docID}"
             )
             
             if not os.path.exists(diagnosisFolder):
@@ -317,9 +332,15 @@ class saveImageAPIView(APIView):
             # Extract file and file name from the request
             image_file = request.FILES.get("imageFile")
             filename = request.POST.get("filename")
-            diagnosisID = request.POST.get("diagnosisID")  # get the subID from the request
+            diagnosisID = request.POST.get("diagnosisID")
             lesionName = request.POST.get("lesionName")
             confidence = request.POST.get("confidence")
+            
+            datasetName = getDatasetName(diagnosisID).lower()
+
+            if not datasetName:
+                return JsonResponse({"error": "Dataset name is required"}, status=400)  # get the subID from the request
+            
 
             if not image_file or not filename or not diagnosisID:
                 return JsonResponse({"error": "Invalid data"}, status=400)
@@ -328,7 +349,7 @@ class saveImageAPIView(APIView):
             subID = getURL(diagnosisID)
 
             mediaURL = os.path.join(
-                "website_data",
+                f"{datasetName}",
                 "derivatives",
                 "diagnosis",
                 f"sub-{subID}",
@@ -537,3 +558,22 @@ class hardDelete(APIView):
                     'message': f"An unexpected error occured {e}"
                 }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
+
+
+class AIModelNamesAPIView(APIView):
+    def get(self, request, diagID):
+        
+        dataset = getDatasetName(diagID).upper()
+        aiModelNames: list[str] = getAIModels(dataset) # get all the ai model names
+        
+        if aiModelNames == []:
+            return Response({
+                'status': 'error',
+                'message': f'No ai models were found'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
+        else:
+            return Response({
+                'status': 'success',
+                'models': aiModelNames
+            }, status=status.HTTP_200_OK)

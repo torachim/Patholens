@@ -1,0 +1,27 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Patholens - Please finish running Diagnosis</title>
+        <link rel="stylesheet" href="{% static 'css/blockNewDiagnosis.css' %}?v=1" />
+    </head>
+
+    <!-- Close Effect--->
+    <body onclick="window.location.href='/homeWindow'">
+        
+        <!-- Start image as background -->
+        <div class="frameContainer">
+            <iframe class="backgroundFrame" src="{% url 'homeWindow' %}" frameborder="0"></iframe>
+            <div class="overlay"></div>
+        </div>
+
+        <div class="CantStartNewDiagnosisPopup">
+            <p>
+                You still have an unfinished diagnosis. Please finish the running diagnosis before starting a new one.
+            </p>
+        </div>
+
+    </body>
+</html>

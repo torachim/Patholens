@@ -71,8 +71,8 @@ document.addEventListener('DOMContentLoaded', function() {
         "Model D": "NNUNET"
     };
 
-    loadImages(); //loading zoomable Images 
-    loadImage(); //loading main Image
+    loadZoomImage(); //loading zoomable Images 
+    loadMainImage(); //loading main Image
 
     // Dropdown change listener for the AI Mask
     const aiDropdown = document.getElementById('AIdropdown');
@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 sendTime(action);
             }
             selectedFormatMask = aiModelMapping[event.target.textContent];
-            loadImages();
+            loadZoomImage();
         }
     });
 
@@ -92,7 +92,8 @@ document.addEventListener('DOMContentLoaded', function() {
     formatDropdown.addEventListener('click', (event) => {
         if (event.target.classList.contains('option')) {
             selectedFormatMri = event.target.textContent;
-            loadImages();
+            loadZoomImage();
+            loadMainImage();
         }
     });
 
@@ -105,11 +106,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 sendTime(action);
             }
             selectedDisplay = event.target.textContent;
-            loadImages();
+            loadZoomImage();
         }
     });
     // function to load the images in the correct overlay
-    async function loadImages(){
+    async function loadZoomImage(){
         let volumes;
         if(selectedDisplay == "AI Diagnosis"){
             volumes = await loadImageWithMask(selectedFormatMask, selectedFormatMri, diagnosisID);
@@ -124,8 +125,8 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
      //loading Images for the main Frame
-    async function loadImage() {
-        const volumes = await loadImageAPI(selectedFormat, diagnosisID);
+    async function loadMainImage() {
+        const volumes = await loadImageAPI(selectedFormatMri, diagnosisID);
         nv.loadVolumes(volumes);
     }
 
@@ -395,4 +396,4 @@ document.addEventListener('DOMContentLoaded', function() {
      //document.getElementById("logoutButton").addEventListener("click", savedEditedImage(nv, diagnosisID, csrfToken));
 });
 
-
+//1

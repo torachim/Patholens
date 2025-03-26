@@ -35,8 +35,8 @@
         </div>
       
       <div class="buttons">
-        <button onclick="event.stopPropagation();window.location.href={% url 'continueDiagnosis' %}">Continue Diagnosis</button>
-        <button onclick="event.stopPropagation();window.open( {% url 'selectDataset' %},'windowFrame')">New Diagnosis</button>                                                                                                        
+        <button onclick="checkUnfinishedDiagnosis()">Continue Diagnosis</button>
+        <button onclick="checkNewDiagnosis()">New Diagnosis</button>                                                                                                        
       </div>
 
     </div>
@@ -46,11 +46,38 @@
     <iframe class="rightFrame"
       src="{% url 'homeWindow' %}"
       name = "windowFrame"
-      style="border: none">
+      style="border: none"
+      id="rightFrame">
     </iframe>
 
   </div>
 </body>
 
+<script>
+  function checkUnfinishedDiagnosis(){
+    fetch('/checkUnfinishedDiagnosis/')
+    .then(response => response.json())
+    .then(data => {
+        if(data.unfinished){
+            window.location.href="{% url 'continueDiagnosis' %}"
+        }
+        else{
+            document.getElementById("rightFrame").src = "{% url 'noRunningDiagnosis' %}"
+        }
+    })  
+  }
+  function checkNewDiagnosis(){
+    fetch('/checkUnfinishedDiagnosis/')
+    .then(response => response.json())
+    .then(data => {
+      if(data.unfinished){
+        document.getElementById("rightFrame").src = "{% url 'blockNewDiagnosis' %}"
+      }
+      else{
+        window.open( "{% url 'selectDataset' %}",'windowFrame')
+      }
+    })
+  }
+</script>
 
 {% endblock %}

@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from image.diagnosisManager import getURL
+from image.diagnosisServices import getURL
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 from django.shortcuts import render

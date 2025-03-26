@@ -1,13 +1,13 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
-from image.timeHandler import *
+from image.timeServices import *
 from image.views import *
-from image.mediaHandler import *
-from image.diagnosisManager import *
+from image.mediaServices import *
+from image.diagnosisServices import *
 from image.models import Media
 
-from accounts.doctorManager import *
+from accounts.doctorServices import *
 
 
 @login_required
@@ -71,7 +71,7 @@ def continueDiagnosis(request):
     
     Retrieves the diagnosis object for the logged-in user and redirects to the diagnosis page.
     """
-    diagnosisData = getContinueDiag(request.user.id)
+    diagnosisData: dict = getContinueDiag(request.user.id)
 
     mode = "continue"
     
@@ -79,10 +79,23 @@ def continueDiagnosis(request):
     if diagnosisData.get("status") and diagnosisData.get("object"):
         diagID = diagnosisData["object"].diagID
         return redirect("newDiagnosis", diagnosisID=diagID, mode=mode)
-    else:
-        # If no diagnosis is found, redirect to home page
-        return render(request, "home.html")
+    
+@login_required
+def checkUnfinishedDiagnosis(request):
+    diagnosisData: dict = getContinueDiag(request.user.id)
 
+    if diagnosisData.get("status") and diagnosisData.get("object"):
+        return JsonResponse({'unfinished': True})
+    else:
+        return JsonResponse({'unfinished': False})
+    
+@login_required
+def noRunningDiagnosis(request):
+    return render(request, 'noRunningDiagnosis.html')
+
+@login_required
+def blockNewDiagnosis(request):
+    return render(request, 'blockNewDiagnosis.html')
 
 @login_required
 def homeWindow(request):
@@ -94,19 +107,36 @@ def data(request):
     docID = request.user.id
     mediaNames: list = getAvailableDatasets(docID)
     finished: list = finishedDatasets(docID)
-
+    
     finishedTitle = []
-    # if there are values in list, update 
+    # if datasets were finished, add them
     if finished:
         finishedTitle = [item.title() for item in finished]
     
     notFinished = [media.title() for media in mediaNames if media not in finished]
+    
+    allDatasets = []
+    
+    for dataset in notFinished:
+        # Get progress statistics for the current dataset        
+        stats = datasetProgress(docID, dataset)
         
-    return render(request, 'selectDataset.html', {'allDataSets': notFinished, 'finishedDatasets': finishedTitle})
+        # Create a dictionary to store dataset info
+        dataset_info = {"name": dataset}
+        
+        # If there are no stats for the dataset, set the stats to an empty string
+        if not stats:
+            dataset_info["stats"] = ""
+        # If stats exist, format them as (completed/total) and add it to the dictionary
+        else:
+            dataset_info["stats"] = f"({stats[0]}/{stats[1]})"
+        
+        allDatasets.append(dataset_info)
+        
+    return render(request, 'selectDataset.html', {'allDataSets': allDatasets, 'finishedDatasets': finishedTitle})
 
 
 @login_required
 def finished(request, datasetName: str):
     datasetName = datasetName.title()
     return render(request, "finishedMessage.html", {'datasetName': datasetName})
-        
