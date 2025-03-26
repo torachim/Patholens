@@ -230,7 +230,6 @@ class GetImageAndMaskAPIView(APIView):
                 {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
      
-     ##Search function for unimportant stuff
 class GetDiagnosis(APIView):
 
     def get(self, request, diagnosisID):
@@ -249,29 +248,9 @@ class GetDiagnosis(APIView):
                                  status=status.HTTP_400_BAD_REQUEST
                                 )
             
-            subID = getURL(diagnosisID)
-            docID = request.user.id
-
             datasetName = getDatasetName(diagnosisID).lower()
             if not datasetName:
                 return JsonResponse({"error": "Dataset name is required"}, status=400)
-
-            diagnosisFolder = os.path.join(
-                        settings.MEDIA_ROOT,
-                        f"{datasetName}/derivatives/diagnosis/sub-{subID}/doc-{docID}"
-            )
-            
-            if not os.path.exists(diagnosisFolder):
-                return Response(
-                    {"error": f"Diagnosis File {diagnosisFolder} not found"},
-                    status=status.HTTP_404_NOT_FOUND
-                )
-            
-            files = [
-                os.path.relpath(os.path.join(root, file), settings.MEDIA_ROOT)
-                for root, _, filenames in os.walk(diagnosisFolder)
-                for file in filenames
-            ]
 
             lesions = getLesions(diagnosisID)
             urlLesions = []
@@ -284,13 +263,6 @@ class GetDiagnosis(APIView):
                                 )
                 urlLesions.append(mediaUrl)
                 shown.append(lesion['shown'])
-
-
-            if not files:
-                return Response(
-                    {"error": "No files found in the folder"},
-                    status=status.HTTP_404_NOT_FOUND
-                )
 
             return Response(
                     {"status": "success",
