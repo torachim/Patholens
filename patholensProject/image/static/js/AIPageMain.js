@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Load default image and mask
     loadImages();
+    initialize();
     startTime = performance.now();
 
     // Model Handling
@@ -78,12 +79,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (dropdown.id === 'AIdropdown') {
                 selectedFormatMask = option.dataset.modelKey;
-                sendTime(action);
             } else if (dropdown.id === 'formatDropdown') {
                 selectedFormatMri = option.textContent;
             } else if (dropdown.id === 'displayDropdown') {
                 selectedDisplay = option.textContent;
-                sendTime(action);
             }
 
             loadImages();
@@ -116,6 +115,12 @@ document.addEventListener('DOMContentLoaded', function () {
     // Initialization
     async function initialize() {
             const models = await getModels(diagnosisID);
+
+            if (models.length > 0) {
+                selectedFormatMask = models[0].key; 
+            } else {
+                selectedFormatMask = null; 
+            }
             createDropdownOptions(models);
             
             document.querySelectorAll('.dropdown').forEach(dropdown => {
@@ -125,8 +130,6 @@ document.addEventListener('DOMContentLoaded', function () {
             // Initial image load
             await loadImages();
     }
-
-    initialize();
 
 
     const editDiagnosisButton = document.getElementById("editDiagnosis");
