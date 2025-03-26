@@ -124,6 +124,10 @@ document.addEventListener('DOMContentLoaded', function() {
             textBox.value = option.textContent;
 
             if (dropdown.id === 'AIdropdown') {
+                const action = `AI Model ${selectedFormatMask}`;
+                if(selectedDisplay != "My Diagnosis"){
+                    sendTime(action);
+                }
                 selectedFormatMask = option.dataset.modelKey;
                 loadZoomImage();
             } else if (dropdown.id === 'formatDropdown') {
@@ -131,6 +135,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 loadZoomImage();
                 loadMainImage();
             } else if (dropdown.id === 'displayDropdown') {
+                const action = `Display Mode ${selectedDisplay}`;
+                sendTime(action);
                 selectedDisplay = option.textContent;
                 loadZoomImage();
             }

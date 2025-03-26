@@ -1,4 +1,3 @@
-
 import { Niivue } from "./index.js";
 import { niivueCanvas, loadImageWithDiagnosis, loadImageWithMask, loadOverlayDAI, sendTimeStamp, deleteContinueDiagnosis } from "./pathoLens.js";
 
@@ -14,8 +13,6 @@ document.addEventListener('DOMContentLoaded', function () {
     let selectedDisplay = "AI Diagnosis";
 
     let startTime;
-
-    // Load default image and mask
 
     initialize();
 
@@ -77,13 +74,18 @@ document.addEventListener('DOMContentLoaded', function () {
             textBox.value = option.textContent;
 
             if (dropdown.id === 'AIdropdown') {
+                const action = `AI Model ${selectedFormatMask}`;
+                if(selectedDisplay != "My Diagnosis"){
+                    sendTime(action);
+                }
                 selectedFormatMask = option.dataset.modelKey;
             } else if (dropdown.id === 'formatDropdown') {
                 selectedFormatMri = option.textContent;
             } else if (dropdown.id === 'displayDropdown') {
+                const action = `Display Mode ${selectedDisplay}`;
+                sendTime(action);
                 selectedDisplay = option.textContent;
             }
-
             loadImages();
         }
     }
