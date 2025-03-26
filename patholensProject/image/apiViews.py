@@ -11,7 +11,7 @@ from accounts.doctorServices import setContinueDiag, deleteContinueDiag
 from .timeServices import setUseTime
 from .lesionServices import createLesion, getLesions, getLesionsConfidence, getNumberOfLesion, toggleShowLesion, toggleDeleteLesion, hardDeleteLesions
 from .mediaServices import getAIModels
-
+from dataHandler import savePicture
 import os
 
 
@@ -327,27 +327,13 @@ class saveImageAPIView(APIView):
                 f"sub-{subID}",
                 f"doc-{docID}"
             )
-
-            # Define the directory structure: media/website_data/derivatives/diagnosis/sub-{subID}
-            sub_folder = os.path.join(
-                settings.MEDIA_ROOT,
-                mediaURL
-            )
-
-            # Ensure the directory exists
-            os.makedirs(sub_folder, exist_ok=True)
-
-            # Full file path
-            filepath = os.path.join(sub_folder, filename)
-
+            
             fileURL = os.path.join(mediaURL, filename)
-
-            # Save the file
-            with open(filepath, "wb") as f:
-                for chunk in image_file.chunks():
-                    f.write(chunk)
-
-
+            
+            
+            savePicture(datasetName, subID, docID, filename, image_file, mediaURL)
+            
+            
             setContinueDiag(docID, diagnosisID)
             createLesion(diagnosisID, confidence, lesionName, fileURL)
 
