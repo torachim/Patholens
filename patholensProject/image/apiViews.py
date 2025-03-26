@@ -11,7 +11,7 @@ from accounts.doctorServices import setContinueDiag, deleteContinueDiag
 from .timeServices import setUseTime
 from .lesionServices import createLesion, getLesions, getLesionsConfidence, getNumberOfLesion, toggleShowLesion, toggleDeleteLesion, hardDeleteLesions
 from .mediaServices import getAIModels
-from dataHandler import savePicture
+from .dataHandler import savePicture
 import os
 
 
