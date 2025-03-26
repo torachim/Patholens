@@ -1,5 +1,5 @@
 body{
-    background-color: #00242F !important;
+    background-color: #00242F;
     display: flex;
     flex-direction: column;
     margin: 0;
@@ -149,11 +149,9 @@ body{
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4); 
 }
 
-
 #editDiagnosis:hover {
     background-color: #01c5cf;; 
 }
-
 
 #editDiagnosis:active {
     background-color:#008f97; 

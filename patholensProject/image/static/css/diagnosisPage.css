@@ -1,12 +1,16 @@
 @import url('https://fonts.googleapis.com/css?family=Cabin');
 
 body {
-    background-color: #00242F !important;
+    background-color: #00242F;
     display: flex;
     flex-direction: column;
     margin: 0;
     padding: 0;
+}
+
+*{
     box-sizing: border-box;
+    font-family: 'Cabin', sans-serif;
 }
 
 .homeButton {
@@ -35,8 +39,7 @@ body {
     margin: 20px auto; 
     margin-top: 25px; 
     margin-bottom: -30px;
-    transition: margin-left 1.5s ease;
-    transition: margin-right 1.5s ease;
+    transition: margin-left 1.5s ease, margin-right 1.5s ease;
 }
 
 /* Main toolbar styling */
@@ -334,7 +337,6 @@ input[type="radio"]:checked::before {
     visibility: hidden; 
     white-space: nowrap;   
 }
-
 
 .jumpRect {
     display: none;
