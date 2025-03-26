@@ -16,9 +16,8 @@ document.addEventListener('DOMContentLoaded', function () {
     let startTime;
 
     // Load default image and mask
-    loadImages();
+
     initialize();
-    startTime = performance.now();
 
     // Model Handling
     async function getModels(diagnosisID) {
@@ -90,6 +89,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Saves a timestamp for a given action
+     
     async function sendTime(action){
         let utcTime = Date.now();
         sendTimeStamp(action, utcTime, diagnosisID, csrfToken);

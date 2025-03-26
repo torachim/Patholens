@@ -64,8 +64,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let selectedFormatMask;
    
 
-    loadZoomImage(); //loading zoomable Images 
-    loadMainImage(); //loading main Image
+    initialize();
 
     // Model Handling
     async function getModels(diagnosisID) {
@@ -142,6 +141,7 @@ document.addEventListener('DOMContentLoaded', function() {
     async function loadZoomImage(){
         let volumes;
         if(selectedDisplay == "AI Diagnosis"){
+            console.log(selectedFormatMask)
             volumes = await loadImageWithMask(selectedFormatMask, selectedFormatMri, diagnosisID);
         }
         else if(selectedDisplay == "My Diagnosis"){
@@ -174,7 +174,7 @@ document.addEventListener('DOMContentLoaded', function() {
         await loadMainImage();
     }
 
-    initialize();
+
 
 
      // Add drawing state to history
