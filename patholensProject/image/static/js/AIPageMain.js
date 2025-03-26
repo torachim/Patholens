@@ -4,8 +4,6 @@ import { niivueCanvas, loadImageWithDiagnosis, loadImageWithMask, loadOverlayDAI
 
 
 document.addEventListener('DOMContentLoaded', function () {
-
-    let startTime;
     
     //default formats
     const canvas = document.getElementById("imageBrain");
@@ -14,6 +12,8 @@ document.addEventListener('DOMContentLoaded', function () {
     let selectedFormatMask;
     let selectedFormatMri = "FLAIR";
     let selectedDisplay = "AI Diagnosis";
+
+    let startTime;
 
     // Load default image and mask
     loadImages();
@@ -113,7 +113,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Initialization
     async function initialize() {
-            console.log('Initializing with diagnosis ID:', diagnosisID); // Debug 14
             const models = await getModels(diagnosisID);
             createDropdownOptions(models);
             
