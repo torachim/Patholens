@@ -385,7 +385,7 @@ class DeleteDiagnosisAPIView(APIView):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class getLesionConfidence(APIView):
+class GetLesionConfidence(APIView):
 
     def get(self, request, diagnosisID):
         try:
@@ -412,7 +412,7 @@ class getLesionConfidence(APIView):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
     
-class getNumberLesions(APIView):
+class GetNumberLesions(APIView):
 
     def get(self, request, diagnosisID):
                 
@@ -438,7 +438,7 @@ class getNumberLesions(APIView):
                 }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         
-class toggleLesionDelete(APIView):
+class ToggleLesionDelete(APIView):
 
     def post(self, request):
         try:
@@ -469,7 +469,7 @@ class toggleLesionDelete(APIView):
                 }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
 
-class toggleLesionShown(APIView):
+class ToggleLesionShown(APIView):
     def post(self, request):
 
         try:
@@ -499,7 +499,7 @@ class toggleLesionShown(APIView):
                     'message': f'An unexpected Error occured {e}'
                 }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
-class hardDelete(APIView):
+class HardDelete(APIView):
     def delete(self, request):
         try:
             data = request.data

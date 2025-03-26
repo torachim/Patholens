@@ -23,7 +23,7 @@ def createLesion(diagonsisID: str, confidence: int, name: str, url: str) -> Lesi
     return lesion
 
 
-def toggleDeleteLesion(lesionID) -> bool:
+def toggleDeleteLesion(lesionID: int) -> bool:
     lesion: Lesions = Lesions.objects.get(lesionID = lesionID)
 
     if not lesion:
@@ -53,7 +53,7 @@ def getLesionsConfidence(diagnosisID: str) -> list:
     lesions: Lesions = Lesions.objects.filter(diagnosis = diagObj, deleted = False)
     return list(lesions.values("lesionID", "name", "confidence", "shown"))
 
-def getLesions(diagnosisID: str) -> list:
+def getLesions(diagnosisID: str) -> list|bool:
     """
     Returns the urls of all the lesions for a current diagnosis that are not soft deleted.
 
@@ -64,6 +64,9 @@ def getLesions(diagnosisID: str) -> list:
         list: A list with dictionary for each lesion which contains its url.
     """
     diagObj: Diagnosis = Diagnosis.objects.get(diagID = diagnosisID)
+
+    if not diagObj:
+        return False
 
     lesions: Lesions = Lesions.objects.filter(diagnosis = diagObj, deleted = False).order_by("lesionID")
 

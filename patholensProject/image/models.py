@@ -28,11 +28,8 @@ class Lesions(models.Model):
     Table to safe all the lesions for all the diagnosis.
     Also safe the confidence of the lesions
     """
-    # lesion ID
     lesionID = models.AutoField(primary_key=True)
-    # lesion Name
     name = models.CharField(max_length=255)
-    # confidence Value for each lesion
     confidence = models.IntegerField()
     # url to the lesion picture
     url = models.TextField(blank=False)

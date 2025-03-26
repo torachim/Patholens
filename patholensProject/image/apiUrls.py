@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .apiViews import SetUseTimeAPIView, GetImageAPIView, SaveConfidenceAPIView, GetImageAndMaskAPIView, GetDiagnosis, DeleteDiagnosisAPIView, saveImageAPIView, setContinueAPIView, getLesionConfidence, getNumberLesions, toggleLesionShown, toggleLesionDelete, hardDelete, AIModelNamesAPIView
+from .apiViews import SetUseTimeAPIView, GetImageAPIView, SaveConfidenceAPIView, GetImageAndMaskAPIView, GetDiagnosis, DeleteDiagnosisAPIView, saveImageAPIView, setContinueAPIView, GetLesionConfidence, GetNumberLesions, ToggleLesionShown, ToggleLesionDelete, HardDelete, AIModelNamesAPIView
 from . import views
 
 urlpatterns = [
@@ -11,10 +11,10 @@ urlpatterns = [
     path('getImageAndMask/<str:diagnosisID>/', GetImageAndMaskAPIView.as_view(), name='getImageAndMask'),
     path('deleteDiagnosis/', DeleteDiagnosisAPIView.as_view(), name='deleteDiagnosis'),
     path('setContinue/', setContinueAPIView.as_view(), name='setContinue'),
-    path('getLesionConfidence/<str:diagnosisID>/', getLesionConfidence.as_view(), name='getLesionConfidence'),
-    path('getNumberLesions/<str:diagnosisID>/', getNumberLesions.as_view(), name='getNumberLesions'),
-    path('toggleShownLesion/', toggleLesionShown.as_view(), name='toggleShownLesion'),
-    path('toggleDeleteLesion/', toggleLesionDelete.as_view(), name='toggleDeleteLesion'),
-    path('hardDeleteLesions/', hardDelete.as_view(), name='hardDelete'),
+    path('getLesionConfidence/<str:diagnosisID>/', GetLesionConfidence.as_view(), name='getLesionConfidence'),
+    path('getNumberLesions/<str:diagnosisID>/', GetNumberLesions.as_view(), name='getNumberLesions'),
+    path('toggleShownLesion/', ToggleLesionShown.as_view(), name='toggleShownLesion'),
+    path('toggleDeleteLesion/', ToggleLesionDelete.as_view(), name='toggleDeleteLesion'),
+    path('hardDeleteLesions/', HardDelete.as_view(), name='hardDelete'),
     path('getAiModels', AIModelNamesAPIView.as_view(), name="getAiModel"),
 ]
