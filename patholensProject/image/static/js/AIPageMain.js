@@ -78,10 +78,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (dropdown.id === 'AIdropdown') {
                 selectedFormatMask = option.dataset.modelKey;
+                sendTime(action);
             } else if (dropdown.id === 'formatDropdown') {
                 selectedFormatMri = option.textContent;
             } else if (dropdown.id === 'displayDropdown') {
                 selectedDisplay = option.textContent;
+                sendTime(action);
             }
 
             loadImages();
