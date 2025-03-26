@@ -127,7 +127,6 @@ document.addEventListener('DOMContentLoaded', function() {
             if (dropdown.id === 'AIdropdown') {
                 selectedFormatMask = option.dataset.modelKey;
                 loadZoomImage();
-                sendTime(action);
             } else if (dropdown.id === 'formatDropdown') {
                 selectedFormatMri = option.textContent;
                 loadZoomImage();
@@ -135,10 +134,7 @@ document.addEventListener('DOMContentLoaded', function() {
             } else if (dropdown.id === 'displayDropdown') {
                 selectedDisplay = option.textContent;
                 loadZoomImage();
-                sendTime(action);
             }
-
-            loadZoomImage();
         }
     }
     
