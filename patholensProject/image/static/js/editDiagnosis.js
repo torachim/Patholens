@@ -414,8 +414,6 @@ document.addEventListener('DOMContentLoaded', function() {
         alertOverlay.style.display = "flex";
     }
 
-     // save image if logged out
-     //document.getElementById("logoutButton").addEventListener("click", savedEditedImage(nv, diagnosisID, csrfToken));
+     
 });
 
-//1
