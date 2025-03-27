@@ -1,7 +1,7 @@
 import os
 import numpy as np
 from pathlib import Path
-
+from django.conf import settings
 
 # Specifies the base directory of the project (the directory that contains manage.py),
 BASEDIR = Path(__file__).resolve().parent.parent
@@ -122,3 +122,32 @@ def getAIModelNamesFromMediaFolder(dataset: str) -> list[str]:
             modelNames.append(model)
             
     return modelNames
+
+def savePicture(datasetName: str, subID: str, docID: str, filename: str, image_file: str, mediaURL): 
+    """
+    saves the Image which contains a lesion of a diagnosis in the media folder 
+
+    Args:
+        datasetName (str): The name of the data dataset which contains the diagnosis
+        subID (str): Sub-Id of the diagnosis
+        docID (str): Id of the doctor
+        filename (str): Name of the file
+        image_file (str): The image
+        mediaURL (_type_): The Url where to save the image
+    """
+    # Define the directory structure: media/website_data/derivatives/diagnosis/sub-{subID}
+    sub_folder = os.path.join(
+        settings.MEDIA_ROOT,
+        mediaURL
+    )
+
+    # Ensure the directory exists
+    os.makedirs(sub_folder, exist_ok=True)
+
+    # Full file path
+    filepath = os.path.join(sub_folder, filename)
+
+    # Save the file
+    with open(filepath, "wb") as f:
+        for chunk in image_file.chunks():
+            f.write(chunk)

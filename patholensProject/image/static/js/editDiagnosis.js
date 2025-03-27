@@ -1,8 +1,8 @@
 import { Niivue, DRAG_MODE } from "./index.js";
-import { niivueCanvas,drawRectangleNiivue,loadImageAPI, loadImageWithDiagnosis, loadImageWithMask, loadOverlayDAI, sendTimeStamp, sendConfidence, savedEditedImage, deleteContinueDiagnosis, jumpRectangle, drawCubeNV } from "./pathoLens.js";
+import { niivueCanvas,drawRectangleNiivue,loadImageAPI, loadImageWithDiagnosis, loadImageWithMask, loadOverlayDAI, sendTimeStamp, sendConfidence, savedEditedLesion, deleteContinueDiagnosis, jumpRectangle, drawCubeNV } from "./pathoLens.js";
 
 document.addEventListener('DOMContentLoaded', function() {
-    
+    //Not working properly I have to change a few things 
     let drawRectangle = false;
     let erasing = false;
     let drawCube = false;
@@ -240,12 +240,14 @@ document.addEventListener('DOMContentLoaded', function() {
             showAlertWindow();
         }
         else{
-            erasing = true;
             drawRectangle = false;
             saveDrawingState();
+            nv.refreshDrawing()
+            /**erasing = true;
+            
             nv.setDrawingEnabled(true);
             // 0 = Eraser and true => eraser ist filled so a whole area can be erased
-            changeDrawingMode(0, true);
+            changeDrawingMode(0, true);**/
             activateButton("eraseTool");
         }
     });
@@ -370,7 +372,7 @@ document.addEventListener('DOMContentLoaded', function() {
     async function endDiagnosis(confidenceValue){
         await sendConfidence(confidenceValue, diagnosisID, csrfToken);
         await sendTime("Finished Diagnosis");
-        await savedEditedImage(nv, diagnosisID, csrfToken);
+        await savedEditedLesion(nv, diagnosisID, csrfToken);
         await deleteContinueDiagnosis(diagnosisID, csrfToken);
         window.location.assign(`/image/editDiagnosis/${diagnosisID}/transitionPage/`)
     }
