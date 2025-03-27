@@ -16,5 +16,5 @@ urlpatterns = [
     path('toggleShownLesion/', ToggleLesionShown.as_view(), name='toggleShownLesion'),
     path('toggleDeleteLesion/', ToggleLesionDelete.as_view(), name='toggleDeleteLesion'),
     path('hardDeleteLesions/', HardDelete.as_view(), name='hardDelete'),
-    path('getAiModels', AIModelNamesAPIView.as_view(), name="getAiModel"),
+    path('getAiModels/<str:diagID>/', AIModelNamesAPIView.as_view(), name="getAiModel"),
 ]
