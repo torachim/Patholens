@@ -24,6 +24,17 @@ def createLesion(diagonsisID: str, confidence: int, name: str, url: str) -> Lesi
 
 
 def toggleDeleteLesion(lesionID: int) -> bool:
+    """
+    Toggle the delete status of a lesion between True and False
+    -> soft delete or undo soft delete 
+    -> soft delete just removes the lesion from the lesion list and the canvas but its reversable 
+
+    Args:
+        lesionID (int): The ID of the lesion
+
+    Returns:
+        bool: True if successful, False else
+    """
     lesion: Lesions = Lesions.objects.get(lesionID = lesionID)
 
     if not lesion:
@@ -94,7 +105,7 @@ def getNumberOfLesion(diagnosisID: str) -> int|bool:
 
 def toggleShowLesion(lesionID) -> bool:
     """
-    Toggle the deleted status of a lesion between True and False
+    Toggle the shown status of a lesion between True and False
 
     Args:
         lesionID (int): The ID of the lesion
@@ -113,6 +124,18 @@ def toggleShowLesion(lesionID) -> bool:
     return True
 
 def hardDeleteLesions(diagnosisID: str) -> tuple[list,int]|bool:
+    """
+    Hard delete a lesion -> removes it from the database not reversable
+
+    Args:
+        diagnosisID (str): The ID of the current diagnosis
+
+    Returns:
+        tuple[list,int]|bool: tuple contains a list which contains all the urls of the lesions
+                              where the the deleted status is true(so the lesions that are soft deleted) 
+                              and the number of hard deleted lesion
+                              False if there is no correct diagnosis ID   
+    """
 
     diagObj: Diagnosis = Diagnosis.objects.get(diagID = diagnosisID)
     if not diagObj:

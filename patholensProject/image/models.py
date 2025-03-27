@@ -25,8 +25,8 @@ class Diagnosis(models.Model):
 
 class Lesions(models.Model):
     """
-    Table to safe all the lesions for all the diagnosis.
-    Also safe the confidence of the lesions
+    Table to save all the lesions for all the diagnoses.
+    Also save the confidence of the lesions
     """
     lesionID = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)

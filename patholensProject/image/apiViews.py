@@ -279,6 +279,10 @@ class GetDiagnosis(APIView):
             )
         
 class setContinueAPIView(APIView):
+    """
+    API Class to set the continue status for an ongoing diagnosis
+
+    """
     def post(self, request):
         
         try:
@@ -299,6 +303,9 @@ class setContinueAPIView(APIView):
         
 
 class saveImageAPIView(APIView):
+    """
+    API Class to save an Image in the database 
+    """
     def post(self, request):
         try:
             # Extract file and file name from the request
@@ -343,6 +350,9 @@ class saveImageAPIView(APIView):
             
 
 class DeleteDiagnosisAPIView(APIView):
+    """
+    API Class to delete the continue status of a diagnosis
+    """
     def delete(self, request):
         """
         API endpoint to delete a diagnosis from the database
@@ -372,6 +382,9 @@ class DeleteDiagnosisAPIView(APIView):
 
 
 class GetLesionConfidence(APIView):
+    """
+    API Class to get the confidence for the marked lesions of a diagnosis
+    """
 
     def get(self, request, diagnosisID):
         try:
@@ -399,7 +412,9 @@ class GetLesionConfidence(APIView):
         
     
 class GetNumberLesions(APIView):
-
+    """
+    API Class to get the number of lesions (i.e. the number of saved images) of a diagnosis
+    """
     def get(self, request, diagnosisID):
                 
         try:
@@ -425,6 +440,9 @@ class GetNumberLesions(APIView):
 
         
 class ToggleLesionDelete(APIView):
+    """
+    API Class to toggle the delete status of a lesion -> enables soft delete
+    """
 
     def post(self, request):
         try:
@@ -456,6 +474,9 @@ class ToggleLesionDelete(APIView):
         
 
 class ToggleLesionShown(APIView):
+    """
+    API Class to toggle the shown status of the lesion
+    """
     def post(self, request):
 
         try:
@@ -486,6 +507,9 @@ class ToggleLesionShown(APIView):
                 }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
 class HardDelete(APIView):
+    """
+    API Class to hard delete a Lesion -> delete it from the database
+    """
     def delete(self, request):
         try:
             data = request.data

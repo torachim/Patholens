@@ -124,8 +124,17 @@ def getAIModelNamesFromMediaFolder(dataset: str) -> list[str]:
     return modelNames
 
 def savePicture(datasetName: str, subID: str, docID: str, filename: str, image_file: str, mediaURL): 
-    
+    """
+    saves the Image which contains a lesion of a diagnosis in the media folder 
 
+    Args:
+        datasetName (str): The name of the data dataset which contains the diagnosis
+        subID (str): Sub-Id of the diagnosis
+        docID (str): Id of the doctor
+        filename (str): Name of the file
+        image_file (str): The image
+        mediaURL (_type_): The Url where to save the image
+    """
     # Define the directory structure: media/website_data/derivatives/diagnosis/sub-{subID}
     sub_folder = os.path.join(
         settings.MEDIA_ROOT,

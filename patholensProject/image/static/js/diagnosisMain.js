@@ -424,8 +424,8 @@ document.addEventListener('DOMContentLoaded', function() {
     lesionListToggle.addEventListener("click", () => {
         lesionConfidenceBox.classList.toggle("show");
         lesionListToggle.textContent = lesionConfidenceBox.classList.contains("show") 
-            ? "Hide Lesions" 
-            : "Show Lesions";
+            ? "Hide Lesion List" 
+            : "Saved Lesions";
     });
 
     // Modify the updateLesionList function to ensure proper styling:
