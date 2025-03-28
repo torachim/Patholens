@@ -59,60 +59,95 @@ document.addEventListener('DOMContentLoaded', function() {
         canvas)
    
     //default formats
-    let selectedFormatMask = "DEEPFCD";
     let selectedFormatMri = "FLAIR"
     let selectedDisplay = "AI Diagnosis"
-    let selectedFormat = "FLAIR";
+    let selectedFormatMask;
+   
 
-    const aiModelMapping = {
-        "Model A": "DEEPFCD",
-        "Model B": "MAP18",
-        "Model C": "MELD",
-        "Model D": "NNUNET"
-    };
+    initialize();
 
-    loadZoomImage(); //loading zoomable Images 
-    loadMainImage(); //loading main Image
-
-    // Dropdown change listener for the AI Mask
-    const aiDropdown = document.getElementById('AIdropdown');
-    aiDropdown.addEventListener('click', (event) => {
-        const action = `AI Model ${selectedFormatMask}`;
-        if (event.target.classList.contains('option')) {
-            if(selectedDisplay != "My Diagnosis"){
-                sendTime(action);
-            }
-            selectedFormatMask = aiModelMapping[event.target.textContent];
-            loadZoomImage();
+    // Model Handling
+    async function getModels(diagnosisID) {
+        try {
+          const response = await fetch(`/image/api/getAiModels/${diagnosisID}`);
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          const data = await response.json();
+          
+          return data.models.map((model, index) => ({
+            key: model,
+            displayName: "Model " + String.fromCharCode(65 + index) 
+          }));
+          
+        } catch (error) {
+          console.error('Model error:', error);
+          return [];
         }
-    });
+      }
 
-    // Dropdown change listener for format of the pictures
-    const formatDropdown = document.getElementById('formatDropdown');
-    formatDropdown.addEventListener('click', (event) => {
-        if (event.target.classList.contains('option')) {
-            selectedFormatMri = event.target.textContent;
-            loadZoomImage();
-            loadMainImage();
+      // creates dropdown option for each modul
+    function createDropdownOptions(models) {
+        const dropdown = document.getElementById('AIdropdown');
+        if (!dropdown) {
+            console.error('AIdropdown element not found!');
+            return;
         }
-    });
+        
+        const optionsContainer = dropdown.querySelector('.options');
+        const textBox = dropdown.querySelector('.textBox');
+        optionsContainer.innerHTML = '';
 
-    // Dropdown change listener for the Overlay structure
-    const displayDropdown = document.getElementById('displayDropdown');
-    displayDropdown.addEventListener('click', (event) => {
-        if (event.target.classList.contains('option')) {
-            if(event.target.textContent == "My Diagnosis"){
+        models.forEach(model => {
+            const option = document.createElement('div');
+            option.className = 'option';
+            option.textContent = model.displayName;
+            option.dataset.modelKey = model.key;
+            optionsContainer.appendChild(option);
+        });
+
+        if (models.length > 0) {
+            selectedFormatMask = models[0].key;
+            textBox.value = models[0].displayName;
+        }
+    }
+
+    // Event Handling for dropdown
+    function handleDropdownClick(event) {
+        const dropdown = event.currentTarget;
+        const isOption = event.target.closest('.option');
+        
+        // Toggle dropdown visibility
+        dropdown.classList.toggle('active');
+        
+        if (isOption) {
+            const option = event.target.closest('.option');
+            const textBox = dropdown.querySelector('.textBox');
+            textBox.value = option.textContent;
+
+            if (dropdown.id === 'AIdropdown') {
                 const action = `AI Model ${selectedFormatMask}`;
+                if(selectedDisplay != "My Diagnosis"){
+                    sendTime(action);
+                }
+                selectedFormatMask = option.dataset.modelKey;
+                loadZoomImage();
+            } else if (dropdown.id === 'formatDropdown') {
+                selectedFormatMri = option.textContent;
+                loadZoomImage();
+                loadMainImage();
+            } else if (dropdown.id === 'displayDropdown') {
+                const action = `Display Mode ${selectedDisplay}`;
                 sendTime(action);
+                selectedDisplay = option.textContent;
+                loadZoomImage();
             }
-            selectedDisplay = event.target.textContent;
-            loadZoomImage();
         }
-    });
+    }
+    
     // function to load the images in the correct overlay
     async function loadZoomImage(){
         let volumes;
         if(selectedDisplay == "AI Diagnosis"){
+            console.log(selectedFormatMask)
             volumes = await loadImageWithMask(selectedFormatMask, selectedFormatMri, diagnosisID);
         }
         else if(selectedDisplay == "My Diagnosis"){
@@ -122,13 +157,30 @@ document.addEventListener('DOMContentLoaded', function() {
             volumes = await loadOverlayDAI(selectedFormatMask, selectedFormatMri, diagnosisID);
         }
         nvZoom.loadVolumes(volumes);
+        nvZoom.updateGLVolume();  
     };
 
      //loading Images for the main Frame
     async function loadMainImage() {
         const volumes = await loadImageAPI(selectedFormatMri, diagnosisID);
         nv.loadVolumes(volumes);
+        nv.updateGLVolume(); 
     }
+
+     // Initialization
+     async function initialize() {
+        const models = await getModels(diagnosisID);
+        createDropdownOptions(models);
+        
+        document.querySelectorAll('.dropdown').forEach(dropdown => {
+            dropdown.addEventListener('click', handleDropdownClick);
+        });
+
+        await loadZoomImage();
+        await loadMainImage();
+    }
+
+
 
 
      // Add drawing state to history
@@ -303,29 +355,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    
-    // dropdown functionality
-
-    function swapOptions(optionElement) {
-        const parentDropdown = optionElement.closest('.dropdown');
-        const textBox = parentDropdown.querySelector('.textBox');
-        const clickedValue = optionElement.textContent;
-        // Update the text box value
-        textBox.value = clickedValue;
-    }
-
-    document.querySelectorAll('.dropdown').forEach(dropdown => {
-        dropdown.addEventListener('click', () => {
-            dropdown.classList.toggle('active');
-        });
-    });
-
-    document.querySelectorAll('.dropdown .option').forEach(option => {
-        option.addEventListener('click', (event) => {
-            swapOptions(event.target);
-        });
-    })
-
 
     //confidence meter window 
 
@@ -390,8 +419,6 @@ document.addEventListener('DOMContentLoaded', function() {
         alertOverlay.style.display = "flex";
     }
 
-     // save image if logged out
-     //document.getElementById("logoutButton").addEventListener("click", savedEditedImage(nv, diagnosisID, csrfToken));
+     
 });
 
-//1
