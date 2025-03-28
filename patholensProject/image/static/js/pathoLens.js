@@ -10,7 +10,7 @@ const colours = {
     6: [6, "magenta"],
     7: [9, "brown"],
     8: [13, "turquoise"],
-    9: [19, "jet"],
+    9: [19, "dark red"],
     0: [23, "violet"]
 };
 
@@ -404,7 +404,7 @@ function fillRectangle(nv, PtBL, PtBR, PtTL, PtTR, penValue){
  */
 export async function loadImageAPI(format, diagnosisID) {
     let volumes = [];
-
+    //get the apiURL to fetch the path to the requested image
     const apiURL = `/image/api/getImage/${diagnosisID}/?format =${format}`;
     console.log(`API URL: ${apiURL}`);
 
@@ -583,21 +583,23 @@ export async function setContinueDiag(diagnosisID, csrfToken) {
  * @param {Niivue} nv - Niivue instance
  * @param {string} diagnosisID - The ID of the current diagnosis
  * @param {Int} lesionNumber - The Number of the current lesion.
+ * @param {Int} confidence - The confidence for the current lesion
  * @param {string} csrfToken - csrfToken for the API
  * 
  */
-export async function savedEditedImage(nv, diagnosisID, lesionNumber, csrfToken) {
+export async function savedEditedLesion(nv, diagnosisID, lesionNumber, confidence, csrfToken) {
     try {
         // Wait for subID from fetchImageURL
         const subID = await fetchImageSub(diagnosisID);
         const docID = await fetchDoctorID();
+        const name = `lesion-${lesionNumber}`
 
         if (!subID) {
             console.error("Image subID could not be retrieved.");
             return;
         }
 
-        const filename = `sub-${subID}_acq-${docID}_lesion-${lesionNumber}_mask.nii.gz`; // Dynamic filename
+        const filename = `sub-${subID}_acq-${docID}_${name}_mask.nii.gz`; // Dynamic filename
 
         // Create the blob object for the image
         const imageBlob = nv.saveImage({
@@ -609,7 +611,9 @@ export async function savedEditedImage(nv, diagnosisID, lesionNumber, csrfToken)
         // Create a FormData object
         const formData = new FormData();
         formData.append("filename", filename);
-        formData.append("diagnosisID", diagnosisID)
+        formData.append("diagnosisID", diagnosisID);
+        formData.append("lesionName", name)
+        formData.append("confidence", confidence)
         formData.append("imageFile", new Blob([imageBlob], { type: "application/octet-stream" }));
 
         // Send the data to the API
@@ -655,15 +659,18 @@ export async function loadImageWithDiagnosis(diagnosisID, formatMri) {
             })
             .then(data => {
                 const urls = data.files;
+                const status = data.status;
                 console.log(urls);
                 for (let i = urls.length -1; i >= 0; i--){
-                    const diagUrl = `http://127.0.0.1:8000/${urls[i]}`;
-                    const colour = colours[(i + 1)%10];
-                    volumes.push({url: diagUrl,
-                                  schema: "nifti",
-                                  colorMap: colour[1],
-                                  opacity: 0.85,
-                    });
+                    if(status[i]){
+                        const diagUrl = `http://127.0.0.1:8000/${urls[i]}`;
+                        const colour = colours[(i + 1)%10];
+                        volumes.push({url: diagUrl,
+                                    schema: "nifti",
+                                    colorMap: colour[1],
+                                    opacity: 0.85,
+                        });
+                    }
                 }
             })
             .catch(err => {
@@ -799,4 +806,117 @@ export async function deleteContinueDiagnosis(diagnosisID, csrfToken) {
     } catch (error) {
         console.error('Error during deletion:', error.message || error);
     }
+}
+
+/**
+ * Returns the lesions and their confidence for a given diagnosis
+ * @param {string} diagnosisID - The diagnosis ID of the current diagnosis
+ * @returns Dictionary with all the lesions and their associated confidence
+ */
+export async function getLesionConfidence(diagnosisID){
+    let confidences = [];
+    const apiURL = `/image/api/getLesionConfidence/${diagnosisID}`
+
+    await fetch(apiURL)
+        .then(response => {
+            if(!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            confidences = data.data;
+        })
+        .catch(err => {
+            console.error('Error loading confidences:', err);
+        });  
+    return confidences;
+}
+
+export async function toggleDeleteLesion(lesionID, csrfToken){
+    await fetch("/image/api/toggleDeleteLesion/", {
+        method: 'POST',
+        headers:{
+            "Content-Type": 'application/json',
+            "X-CSRFToken": csrfToken,
+        },
+        body: JSON.stringify({lesionID: lesionID})
+    })
+    .then(response => {
+        if(response.ok){
+            console.log("Lesion successfully toggled");
+            return response.json();
+        } else{
+            throw new Error("Failed to toggle delete lesion");
+        }
+    })
+    .catch(error => console.error(error));
+}
+
+
+/**
+ * Returns the total number of lesions of the current diagnosis including the soft deleted ones
+ * @param {string} diagnosisID - ID of the current diagnosis
+ * @returns {Int} - The number of lesion including the soft deleted
+ */
+export async function getNumberOfLesions(diagnosisID){
+    let lesionNumber;
+
+    await fetch(`/image/api/getNumberLesions/${diagnosisID}`)
+            .then(response => {
+                if(!response.ok){
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json()
+            })
+            .then(data => {
+                lesionNumber = data.number;
+            })
+            .catch(error => console.error(error));
+
+    return lesionNumber
+}
+
+export async function toggleShownLesion(lesionID, csrfToken){
+    await fetch('/image/api/toggleShownLesion/', {
+        method: 'POST',
+        headers: {
+            "Content-Type": 'application/json',
+            "X-CSRFToken": csrfToken,
+        },
+        body: JSON.stringify({
+            lesionID: lesionID,
+        })
+    })
+    .then(response => {
+        if(response.ok){
+            console.log("Toggle Lesion status successful");
+            return response.json()
+        }else {
+            throw new Error("Failed to toggle status");
+        }
+    })
+    .catch(error => console.error(error));
+}
+
+export async function hardDeleteLesions(diagnosisID, csrfToken){
+    await fetch('/image/api/hardDeleteLesions/', {
+        method: 'DELETE',
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": csrfToken,
+        },
+        body: JSON.stringify({
+            diagnosisID: diagnosisID,
+        })
+    })
+    .then(response => {
+        if(response.ok){
+            console.log("Lesions hard deleted")
+            return response.json()
+        }else{
+            throw new Error("Faled to delete Lesions")
+        }
+    })
+    .catch(error => console.error(error));
 }

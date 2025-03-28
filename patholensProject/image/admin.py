@@ -11,7 +11,7 @@ from .mediaServices import syncData
 from import_export import resources, fields
 from import_export.admin import ExportMixin
 
-from .models import UseTime, Diagnosis, Media, AIModel
+from .models import UseTime, Diagnosis, Media, Lesions, AIModel
 
 
 
@@ -195,3 +195,4 @@ class DiagnosisAdmin(ExportMixin, admin.ModelAdmin):
 admin.site.register(Media, MediaAdmin)
 admin.site.register(UseTime)
 admin.site.register(AIModel, AIModelAdmin)
+admin.site.register(Lesions)
