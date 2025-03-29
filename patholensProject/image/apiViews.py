@@ -342,7 +342,6 @@ class saveImageAPIView(APIView):
             savePicture(datasetName, subID, docID, filename, image_file, mediaURL)
             
             
-            setContinueDiag(docID, diagnosisID)
             createLesion(diagnosisID, confidence, lesionName, fileURL)
 
             return JsonResponse({"message": "Image saved successfully"})
