@@ -76,7 +76,7 @@ def continueDiagnosis(request):
     if diagnosisData.get("status") and diagnosisData.get("object"):
         continueDiagnosis = diagnosisData["object"]
         diagID = continueDiagnosis["Diagnosis"]
-        website = continueDiagnosis["website"]
+        website = continueDiagnosis["Website"]
         return redirect(website, diagnosisID=diagID)
     
 @login_required
