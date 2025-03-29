@@ -251,7 +251,7 @@ def setContinueDiag(docID: str, diagID: str, website: str) -> dict:
         returnDict.update({"status": False, "reason": DIAG_REASON, "message": "The diagnosis does not exist."})
         return returnDict
     
-    docObject.continueDiag = {"Diagnosis": diagID, "website": website}
+    docObject.continueDiag = {"Diagnosis": diagID, "Website": website}
     docObject.save()
     
     returnDict.update({"status": True})
