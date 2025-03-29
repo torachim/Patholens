@@ -307,3 +307,52 @@ def deleteContinueDiag(docID: str) -> dict:
     
     returnDict.update({"status": True})
     return returnDict
+
+def getFinishedPatientsAmount(docID: str, dataset: str) -> int | bool:
+    """
+    Retrieves the number of finished patients for a given doctor and dataset.
+
+    Args:
+        docID (str): The ID of the doctor who is logged in.
+        dataset (str): The name of the dataset for which finished patients are counted.
+
+    Returns:
+        int: The number of finished patients in the dataset.
+        bool: False if the doctor ID is invalid or the doctor object is not found.
+    """
+    
+
+    docObject = getDoctorObject(docID)
+    if not docObject: return False
+    
+    allFinishedPatients: dict = docObject.finishedPatients
+    if not allFinishedPatients:
+        return 0
+    
+    finishedPatients: list | None = allFinishedPatients.get(dataset.upper(), None)
+    
+    if not finishedPatients:
+        return 0 # Dataset was not started yet, that's why all patients are remaining
+
+    return len(finishedPatients)
+
+def datasetProgress(docID: str, dataset: str) -> tuple[int, int] | bool:
+    """
+    Retrieves the number of finished patients and the total number of available patients as a tuple.
+
+    Args:
+        docID (str): The ID of the doctor who is logged in.
+        dataset (str): The name of the dataset for which statistics are retrieved.
+
+    Returns:
+        tuple: The first number is the number of finished patients, and the second is the total number of available patients.
+        bool: False if the doctor ID is not valid.
+
+    """
+    amountOfAllPatients: int = len(getPatientURLs(dataset.upper()))
+    
+    amountOfFinishedPatients: int | bool = getFinishedPatientsAmount(docID, dataset)
+    if amountOfFinishedPatients == None:
+        return False
+    
+    return (amountOfFinishedPatients, amountOfAllPatients)

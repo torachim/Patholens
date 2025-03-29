@@ -5,17 +5,14 @@ html{
 }
 
 body {
-    background-color: #00242F !important;
+    background-color: #00242F ;
     display: flex;
     flex-direction: column;
-    box-sizing: border-box;
     margin: 0;
     padding: 0;
     height: 100%;
 }
 
-
-/*design for all objects*/
 *{
     box-sizing: border-box;
     font-family: 'Cabin', sans-serif;
@@ -77,7 +74,6 @@ body {
     align-items: center;
     cursor: pointer;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
-    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
 }
 
 /*applies style while activating the button*/
@@ -326,7 +322,6 @@ body {
     display: none;
 }
 
-
 /* Pop up for the confidence */
 .popupOverlay {
     position: fixed;
@@ -355,7 +350,6 @@ body {
 }
 
 .popupFrame p {
-    font-family: 'Cabin', sans-serif;
     color: white;
     font-size: 20px;
     margin-top: 50px;

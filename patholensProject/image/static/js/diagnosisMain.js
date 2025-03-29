@@ -1,11 +1,10 @@
 import { Niivue, DRAG_MODE } from "./index.js";
-import { niivueCanvas, drawRectangleNiivue,loadImageAPI, sendTimeStamp, sendConfidence, savedEditedImage, loadImageWithDiagnosis, drawCubeNV, jumpRectangle, setContinueDiag, changePenValue } from "./pathoLens.js";
+import { niivueCanvas,  drawRectangleNiivue,loadImageAPI, sendTimeStamp, sendConfidence, savedEditedLesion, loadImageWithDiagnosis, drawCubeNV, jumpRectangle, setContinueDiag, changePenValue, getLesionConfidence, getNumberOfLesions, toggleShownLesion, toggleDeleteLesion, hardDeleteLesions } from "./pathoLens.js";
 
 
 document.addEventListener('DOMContentLoaded', function() {
 
     let drawRectangle = false;
-    let erasing = false;
     let drawCube = false;
     let drawUndoCube = false;
     let pen = false;
@@ -13,8 +12,8 @@ document.addEventListener('DOMContentLoaded', function() {
     let penValue = 1;
     let save = false;
     let homeOrLog= false;
-    let diagnosisStarted = false;
-
+    let undoDelete = false;
+    let deletedLesionID;
 
     const canvas = document.getElementById("imageBrain");
     const jumpRect = document.getElementById("jumpRect");
@@ -28,7 +27,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const logOutWindowContinue = document.getElementById("continueLogoutButton");
     const logOutWindowAbort = document.getElementById("dontLogoutButton");
     const saveFirstWindow = document.getElementById("saveFirstInfo");
-    const closeSaveFirst = document.getElementById("closeSaveInfo")
+    const closeSaveFirst = document.getElementById("closeSaveInfo");
+    const lesionList = document.getElementById("lesionList");
 
     // Load FLAIR default
     let selectedFormat = "FLAIR";
@@ -74,6 +74,16 @@ document.addEventListener('DOMContentLoaded', function() {
                drawOpacity: 0.65,
                }, 
                canvas)
+    
+    async function reload(){
+        let numberLesions = await getNumberOfLesions(diagnosisID);
+        if(numberLesions != 0){
+            await loadImageAndEdited();
+        } else {
+            await loadImage();
+        }
+        await updateLesionList();
+    }
 
 
     // Function to handle changes in the format selection
@@ -81,32 +91,22 @@ document.addEventListener('DOMContentLoaded', function() {
     radioButtons.forEach((radio) => {
         radio.addEventListener('change', (event) => {
             selectedFormat = event.target.value;
-            if (mode === "new") {
-                if (diagnosisStarted){
-                    loadImageAndEdited();
-                }
-                else {
-                    loadImage(selectedFormat);
-                }
-            } else if (mode === "continue") {
-                loadImageAndEdited();
-            }
+            reload();
         });
     });
 
     // Call the appropriate function based on the mode
     if (mode === "new") {
         sendTime("Started Diagnosis");
-        loadImage();
     } else if (mode === "continue") {
         sendTime("Continue Diagnosis");
-        loadImageAndEdited(); // Calls loadImageAndDiagnosis internally
     }
+    reload();
 
 
     async function loadImageAndEdited() {
         const volumes = await loadImageWithDiagnosis(diagnosisID, selectedFormat);
-        lesionNumber = volumes.length;
+        lesionNumber = await getNumberOfLesions(diagnosisID) + 1;
         penValue = volumes.length;
         nv.loadVolumes(volumes);
     } 
@@ -148,7 +148,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         else{
             drawRectangle = false;
-            erasing = false;
             saveDrawingState();
             nv.setDrawingEnabled(true);  
             changeDrawingMode(penValue, false);
@@ -168,33 +167,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // disables drawing
     function disableDrawing(){
         deactivateAllButtons();
-        if(!drawRectangle && !erasing && pen){
+        if(!drawRectangle && pen){
             sendTime("Freehand Drawing");
             pen = false;
             nv.setDrawingEnabled(false);
         }
-        else if(!drawRectangle && erasing){
-            sendTime("Erasing");
-            erasing = false
-            nv.setDrawingEnabled(false);
-        }   
-    }  
-    
-    // enables erasing the drawing by clicking on eraser
-    document.getElementById("eraseTool").addEventListener("click", function(e){
-        if(drawCube){
-            showAlertWindow();
-        }
-        else{
-            erasing = true;
-            drawRectangle = false;
-            saveDrawingState();
-            nv.setDrawingEnabled(true);
-            // 0 = Eraser and true => eraser ist filled so a whole area can be erased
-            changeDrawingMode(0, true);
-            activateButton("eraseTool"); 
-        }
-    });
+    }
 
     // INFO: You need to right click and drag to draw rectangle
     // enable rectangle drawing when the corresponding button in html is clicked
@@ -203,6 +181,7 @@ document.addEventListener('DOMContentLoaded', function() {
             showSaveInfo();
         }
         else{
+            pen = false;
             saveDrawingState();
             nv.setDrawingEnabled(true);
             nv.opts.dragMode = DRAG_MODE.callbackOnly;  // Draw rectangle only when dragging
@@ -211,22 +190,29 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-     // Undo the drawing/erasing
+     // Undo the drawing/
      document.getElementById("undoTool").addEventListener("click", function (e) {
-        nv.drawUndo();
-        // If drawCube drawCube is set false so it's no longer activated
-        if(drawCube){
-            drawCube = false;
-            jumpRect.style.display = "none";
+        if(undoDelete){
+            toggleDeleteLesion(deletedLesionID, csrfToken);
+            undoDelete = false;
+            deletedLesionID = 0;
+            reload();
+        } else {
+            nv.drawUndo();
+            // If drawCube drawCube is set false so it's no longer activated
+            if(drawCube){
+                drawCube = false;
+                jumpRect.style.display = "none";
+            }
+            // If drawUndoCube drawCube is set to true again so draw cube is enabled
+            else if(drawUndoCube){
+                drawCube = true;
+                drawUndoCube = false;
+                jumpRect.style.display = "flex";
+            }
+            saveLesionButton.style.display = "none";
+            save = false;
         }
-        // If drawUndoCube drawCube is set to true again so draw cube is enabled
-        else if(drawUndoCube){
-            drawCube = true;
-            drawUndoCube = false;
-            jumpRect.style.display = "flex";
-        }
-        saveLesionButton.style.display = "none";
-        save = false;
         deactivateAllButtons(); //only changes style after being clicked
         sendTime("Undo")
     })
@@ -264,6 +250,7 @@ document.addEventListener('DOMContentLoaded', function() {
         let confidenceType = "all Lesions"
         await sendConfidence(confidenceValue, diagnosisID, confidenceType, csrfToken);
         await sendTime("Confidence Confirmed");
+        await hardDeleteLesions(diagnosisID, csrfToken);
         window.location.assign(`/image/AIpage/${diagnosisID}`)
     }
 
@@ -331,10 +318,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // If the user decides to save the current lesion
     saveLesion.addEventListener("click", () => {
-        saveImage(); // save the current image
         const confidenceValue = confidenceSlider1.value; // get the confidence value
-        let confidenceType = "lesion " + lesionNumber; //generate the confidence type
-        sendConfidence(confidenceValue, diagnosisID, confidenceType, csrfToken); //save the confidence
+        saveImage(confidenceValue); // save the current image
         saveLesionWindow.style.display = "none";
         overlay.style.display = "none";
         saveLesionButton.style.display = "none";
@@ -342,7 +327,6 @@ document.addEventListener('DOMContentLoaded', function() {
         drawUndoCube = false;
         drawRectangle = false;
         save = false;
-        diagnosisStarted = true;
     });
 
     // show the save window if the user clicks on the save button
@@ -351,11 +335,11 @@ document.addEventListener('DOMContentLoaded', function() {
     })
 
     // Save the image and send the time stamp
-    async function saveImage(){
-        await savedEditedImage(nv, diagnosisID, lesionNumber, csrfToken);
+    async function saveImage(confidence){
+        await savedEditedLesion(nv, diagnosisID, lesionNumber, confidence, csrfToken);
         sendTime("Saved Lesion");
         nv.createEmptyDrawing();
-        loadImageAndEdited();
+        reload();
     }
 
     // save image if logged out        ATTENTION: prevent saving image twice!! It wont work
@@ -431,9 +415,86 @@ document.addEventListener('DOMContentLoaded', function() {
         saveFirstWindow.style.display = "none";
         overlay.style.display = "none";
     })
+    
+    // Add this near the top with other DOM element declarations
+    const lesionListToggle = document.getElementById("lesionListToggle");
+    const lesionConfidenceBox = document.getElementById("lesionConfidenceBox");
+
+    // Add this event listener with the others
+    lesionListToggle.addEventListener("click", () => {
+        lesionConfidenceBox.classList.toggle("show");
+        lesionListToggle.textContent = lesionConfidenceBox.classList.contains("show") 
+            ? "Hide Lesion List" 
+            : "Saved Lesions";
+    });
+
+    // Modify the updateLesionList function to ensure proper styling:
+    async function updateLesionList() {
+        const lesions = await getLesionConfidence(diagnosisID);
+        lesionList.innerHTML = "";
+
+        if (lesions.length === 0) {
+            lesionList.innerHTML = "<p style='color: white;'>No lesions saved yet</p>";
+            return;
+        }
+
+        for (let i = 0; i < lesions.length; i++) {
+            const lesion = lesions[i];
+            const listItem = document.createElement("li");
+            listItem.className = "lesionItem";
+            
+            const colours = {
+                1: [1, "red"],
+                2: [2, "green"],
+                3: [3, "blue"],
+                4: [4, "yellow"],
+                5: [5, "cyan"],
+                6: [6, "magenta"],
+                7: [7, "orange"],  // Braun als Hex-Code
+                8: [8, "#40E0D0"],  // Türkis als Hex-Code
+                9: [19, "#C00000"],  // Jet (sehr dunkles Grau) als Hex-Code
+                0: [23, "#800080"]   // Violett als Hex-Code
+            };
+
+            const colorIndex = (i + 1) % 10;
+            const colorInfo = colours[colorIndex];
+            const colorName = colorInfo[1];
+            
+            listItem.innerHTML = `
+                <span class="lesionName" style="color: ${colorName}; font-weight: bold">${lesion.name}</span>
+                <span class="lesionConfidence" style="color: white;"><b>Confidence:</b> ${lesion.confidence}</span>
+                <button class="deleteLesion" data-id="${lesion.lesionID}">
+                    <i class="fas fa-times" style="color:white"></i>
+                </button>
+                <button class="toggleVisibility" data-id="${lesion.lesionID}">
+                    ${lesion.shown 
+                        ? '<i class="fas fa-eye" style="color:white"></i>' 
+                        : '<i class="fas fa-eye-slash" style="color:white"></i>'}
+                </button>
+            `;
+
+            lesionList.appendChild(listItem);
+        }
+
+        // Event listeners remain the same
+        document.querySelectorAll(".deleteLesion").forEach(button => {
+            button.addEventListener("click", async function() {
+                await sendTime("Deleted Lesion");
+                const lesionID = this.dataset.id;
+                undoDelete = true;
+                deletedLesionID = lesionID
+                toggleDeleteLesion(lesionID, csrfToken);
+                reload();
+            });
+        });
+
+        document.querySelectorAll(".toggleVisibility").forEach(button => {
+            button.addEventListener("click", function() {
+                const lesionID = this.dataset.id;
+                toggleShownLesion(lesionID, csrfToken);
+                reload();
+            });
+        });
+    }
 
 });
-
-
-
-

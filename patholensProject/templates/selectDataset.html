@@ -1,43 +1,33 @@
-{% load static %} 
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>All DataSets</title>
     <link rel="stylesheet" href="{% static 'css/selectDataset.css' %}?v=2" />
-</head>
+  </head>
 
-<!-- Close Effect--->
-<body onclick="window.location.href='/homeWindow'">
-
+  <body onclick="window.location.href='/homeWindow'">
     <!-- Start image as background -->
     <div class="frameContainer">
-        <iframe class="backgroundFrame" src="{% url 'homeWindow' %}" frameborder="0"></iframe>
-        <div class="overlay"></div>
+      <iframe class="backgroundFrame" src="{% url 'homeWindow' %}" frameborder="0"></iframe>
+      <div class="overlay"></div>
     </div>
 
     <!-- box with the datasets -->
     <div class="container">
-        <h1>Select dataset </h1>
-        <div class="datasetsList">
-            {% for dataset in allDataSets %}
-                <!-- Button for each dataset -->
-                <button id="notFinished" onclick="window.top.location.href='forwarding/{{dataset}}'">
-                    {{ dataset }}
-                </button>
-            {% endfor %}
-            
-            {% for dataset in finishedDatasets %}
-            <button id="finished" onclick="event.stopPropagation(); window.location.href='finished/{{dataset}}'">
-                {{ dataset }}
-            </button>
-            {% endfor %}
+      <h1>Select dataset</h1>
+      <div class="datasetsList">
+        {% for dataset in allDataSets %}
+          <!-- Button for each dataset -->
+          <button id="notFinished" onclick="window.top.location.href='forwarding/{{ dataset.name }}'">  {{ dataset.name }}  {{ dataset.stats }} </button>
+        {% endfor %}
 
-        </div>
+        {% for dataset in finishedDatasets %}
+          <button id="finished" onclick="event.stopPropagation(); window.location.href='finished/{{ dataset }}'">{{ dataset }}</button>
+        {% endfor %}
+      </div>
     </div>
-
-</body>
-
-
+  </body>
 </html>

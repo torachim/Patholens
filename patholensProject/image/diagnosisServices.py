@@ -117,3 +117,24 @@ def setConfidence(diagID: str, confidenceType: ConfidenceType, keyValues: list[d
 
     returnValue.update({"status": True, "message": "New Values where saved."})
     return returnValue
+
+def getDatasetName(diagnosisID: str) -> str | bool:
+    """Returns the name of a dataset, given the diagnosis ID.
+
+    Args:
+        diagnosisID (str): ID of the diagnosis
+
+    Returns:
+        the dataset name if the diagnosis exists, otherwise False
+    """
+
+    if not Diagnosis.objects.filter(diagID = diagnosisID).exists():
+        return False
+    
+    diagnosis: Diagnosis = Diagnosis.objects.get(diagID = diagnosisID)
+
+    dataset = diagnosis.mediaFolder
+
+    datasetName = dataset.name
+
+    return datasetName

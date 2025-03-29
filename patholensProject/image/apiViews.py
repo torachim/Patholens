@@ -6,11 +6,12 @@ from django.http import JsonResponse
 from django.conf import settings
 import os
 import re
-from .diagnosisServices import getURL, ConfidenceType, setConfidence
-from accounts.doctorServices import deleteContinueDiag, setContinueDiag
+from .diagnosisServices import getURL, ConfidenceType, setConfidence, getDatasetName
+from accounts.doctorServices import setContinueDiag, deleteContinueDiag
 from .timeServices import setUseTime
+from .lesionServices import createLesion, getLesions, getLesionsConfidence, getNumberOfLesion, toggleShowLesion, toggleDeleteLesion, hardDeleteLesions
 from .mediaServices import getAIModels
-
+from .dataHandler import savePicture
 import os
 
 
@@ -44,6 +45,10 @@ class GetImageAPIView(APIView):
 
             if imageFormat not in settings.SUPPORTED_IMAGE_FORMATS:
                 return JsonResponse({"error": "Invalid format"}, status=400)
+            
+            datasetName = getDatasetName(diagnosisID).lower()
+            if not datasetName:
+                return JsonResponse({"error": "Dataset name is required"}, status=400)
 
             # get the path to the image of a given diagnosis
             imageID = getURL(diagnosisID)
@@ -51,7 +56,7 @@ class GetImageAPIView(APIView):
             fileSuffix = settings.SUPPORTED_IMAGE_FORMATS[imageFormat]
             imagePath = os.path.join(
                 settings.MEDIA_ROOT,
-                f"website_data/sub-{imageID}/anat/sub-{imageID}{fileSuffix}",
+                f"{datasetName}/sub-{imageID}/anat/sub-{imageID}{fileSuffix}",
             )
             if not os.path.exists(imagePath):
                 return Response(
@@ -60,14 +65,14 @@ class GetImageAPIView(APIView):
 
             # relative path for the client
             relativePath = (
-                f"/media/website_data/sub-{imageID}/anat/sub-{imageID}{fileSuffix}"
+                f"/media/{datasetName}/sub-{imageID}/anat/sub-{imageID}{fileSuffix}"
             )
             return Response({"path": relativePath}, status=status.HTTP_200_OK)
 
         except Exception as e:
             return Response(
                 {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+           )
 
 
 class SetUseTimeAPIView(APIView):
@@ -171,9 +176,14 @@ class GetImageAndMaskAPIView(APIView):
 
             imageFormatMask = request.GET.get("mask", "DEEPFCD").upper()
             imageFormatMri = request.GET.get('mri').upper()
+            
 
             if imageFormatMask not in settings.SUPPORTED_IMAGE_FORMATS or imageFormatMri not in settings.SUPPORTED_IMAGE_FORMATS:
                 return JsonResponse({"error": "Invalid format"}, status=400)
+            
+            datasetName = getDatasetName(diagnosisID).lower()
+            if not datasetName:
+                return JsonResponse({"error": "Dataset name is required"}, status=400)
 
             # Get the MRI image path
             imageID = getURL(diagnosisID)
@@ -181,7 +191,7 @@ class GetImageAndMaskAPIView(APIView):
             mriPath = os.path.normpath(
                 os.path.join(
                     settings.MEDIA_ROOT,
-                    f"website_data/sub-{imageID}/anat/sub-{imageID}{fileSuffixMri}",
+                    f"{datasetName}/sub-{imageID}/anat/sub-{imageID}{fileSuffixMri}",
                 )
             )
 
@@ -190,7 +200,7 @@ class GetImageAndMaskAPIView(APIView):
             maskPath = os.path.normpath(
                 os.path.join(
                     settings.MEDIA_ROOT,
-                    f"website_data/derivatives/ai/sub-{imageID}/pred/sub-{imageID}{fileSuffixMask}",
+                    f"{datasetName}/derivatives/ai/sub-{imageID}/pred/sub-{imageID}{fileSuffixMask}",
                 )
             )
 
@@ -206,8 +216,8 @@ class GetImageAndMaskAPIView(APIView):
                 )
 
             # Relative paths for the client
-            mriRelativePath = f"/media/website_data/sub-{imageID}/anat/sub-{imageID}{fileSuffixMri}"
-            maskRelativePath = f"/media/website_data/derivatives/ai/sub-{imageID}/pred/sub-{imageID}{fileSuffixMask}"
+            mriRelativePath = f"/media/{datasetName}/sub-{imageID}/anat/sub-{imageID}{fileSuffixMri}"
+            maskRelativePath = f"/media/{datasetName}/derivatives/ai/sub-{imageID}/pred/sub-{imageID}{fileSuffixMask}"
 
 
             return Response(
@@ -220,11 +230,6 @@ class GetImageAndMaskAPIView(APIView):
                 {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
      
-
-def sortLesionNumber(filename):
-    match = re.search(r'lesion-(\d+)', filename) 
-    return int(match.group(1)) if match else float('inf')
-
 class GetDiagnosis(APIView):
 
     def get(self, request, diagnosisID):
@@ -243,44 +248,26 @@ class GetDiagnosis(APIView):
                                  status=status.HTTP_400_BAD_REQUEST
                                 )
             
-            subID = getURL(diagnosisID)
-            docID = request.user.id
+            datasetName = getDatasetName(diagnosisID).lower()
+            if not datasetName:
+                return JsonResponse({"error": "Dataset name is required"}, status=400)
 
-            diagnosisFolder = os.path.join(
-                        settings.MEDIA_ROOT,
-                        f"website_data/derivatives/diagnosis/sub-{subID}/doc-{docID}"
-            )
-            
-            if not os.path.exists(diagnosisFolder):
-                return Response(
-                    {"error": f"Diagnosis File {diagnosisFolder} not found"},
-                    status=status.HTTP_404_NOT_FOUND
-                )
-            
-            files = [
-                os.path.relpath(os.path.join(root, file), settings.MEDIA_ROOT)
-                for root, _, filenames in os.walk(diagnosisFolder)
-                for file in filenames
-            ]
-
-
-
-            relativePath = f"media/website_data/derivatives/diagnosis/sub-{subID}/doc-{docID}/sub-{subID}_acq-{docID}_space-edited-image.nii.gz"
-
-            if not files:
-                return Response(
-                    {"error": "No files found in the folder"},
-                    status=status.HTTP_404_NOT_FOUND
-                )
-            
-            # sorts the diagnosis images regarding their lesion number
-            files.sort(key=sortLesionNumber)
-
-            imageFiles = [os.path.join("media", file) for file in files]
+            lesions = getLesions(diagnosisID)
+            urlLesions = []
+            shown = []
+            for lesion in lesions:
+                url = lesion['url']
+                mediaUrl = os.path.join(
+                                'media',
+                                url
+                                )
+                urlLesions.append(mediaUrl)
+                shown.append(lesion['shown'])
 
             return Response(
                     {"status": "success",
-                     "files": [os.path.join("media", file) for file in files]
+                     "files": urlLesions,
+                     'status': shown,
                     },
                     status=status.HTTP_200_OK
             )
@@ -292,6 +279,10 @@ class GetDiagnosis(APIView):
             )
         
 class setContinueAPIView(APIView):
+    """
+    API Class to set the continue status for an ongoing diagnosis
+
+    """
     def post(self, request):
         
         try:
@@ -313,12 +304,23 @@ class setContinueAPIView(APIView):
         
 
 class saveImageAPIView(APIView):
+    """
+    API Class to save an Image in the database 
+    """
     def post(self, request):
         try:
             # Extract file and file name from the request
             image_file = request.FILES.get("imageFile")
             filename = request.POST.get("filename")
-            diagnosisID = request.POST.get("diagnosisID")  # get the subID from the request
+            diagnosisID = request.POST.get("diagnosisID")
+            lesionName = request.POST.get("lesionName")
+            confidence = request.POST.get("confidence")
+            
+            datasetName = getDatasetName(diagnosisID).lower()
+
+            if not datasetName:
+                return JsonResponse({"error": "Dataset name is required"}, status=400)  # get the subID from the request
+            
 
             if not image_file or not filename or not diagnosisID:
                 return JsonResponse({"error": "Invalid data"}, status=400)
@@ -326,29 +328,22 @@ class saveImageAPIView(APIView):
             docID = request.user.id
             subID = getURL(diagnosisID)
 
-            # Define the directory structure: media/website_data/derivatives/diagnosis/sub-{subID}
-            sub_folder = os.path.join(
-                settings.MEDIA_ROOT,
-                "website_data",
+            mediaURL = os.path.join(
+                f"{datasetName}",
                 "derivatives",
                 "diagnosis",
-                f"sub-{subID}"
-                f"/doc-{docID}"
+                f"sub-{subID}",
+                f"doc-{docID}"
             )
-
-            # Ensure the directory exists
-            os.makedirs(sub_folder, exist_ok=True)
-
-            # Full file path
-            filepath = os.path.join(sub_folder, filename)
-
-            # Save the file
-            with open(filepath, "wb") as f:
-                for chunk in image_file.chunks():
-                    f.write(chunk)
-
-
+            
+            fileURL = os.path.join(mediaURL, filename)
+            
+            
+            savePicture(datasetName, subID, docID, filename, image_file, mediaURL)
+            
+            
             setContinueDiag(docID, diagnosisID)
+            createLesion(diagnosisID, confidence, lesionName, fileURL)
 
             return JsonResponse({"message": "Image saved successfully"})
         except Exception as e:
@@ -356,6 +351,9 @@ class saveImageAPIView(APIView):
             
 
 class DeleteDiagnosisAPIView(APIView):
+    """
+    API Class to delete the continue status of a diagnosis
+    """
     def delete(self, request):
         """
         API endpoint to delete a diagnosis from the database
@@ -384,11 +382,173 @@ class DeleteDiagnosisAPIView(APIView):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-class AIModelNamesAPIView(APIView):
-    def get(self, request, dataset):
+class GetLesionConfidence(APIView):
+    """
+    API Class to get the confidence for the marked lesions of a diagnosis
+    """
 
-        aiModelNames: list[str] = getAIModels(dataset) # get all the ai model names
+    def get(self, request, diagnosisID):
+        try:
+            if not diagnosisID:
+                return Response({
+                    'status': 'error',
+                    'error': 'DiagnosisID is required'
+                },
+                status = status.HTTP_400_BAD_REQUEST
+                )
+            
+            #confidences: dict = getConfidence(diagnosisID)
+            lesion = getLesionsConfidence(diagnosisID)
+
+            return Response({
+                'status': 'success',
+                'data': lesion,
+            },
+            status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({
+                'status': 'error',
+                'error': f'An unexpected error occured: {str(e)}'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
+    
+class GetNumberLesions(APIView):
+    """
+    API Class to get the number of lesions (i.e. the number of saved images) of a diagnosis
+    """
+    def get(self, request, diagnosisID):
+                
+        try:
+            if not (diagnosisID):
+                return Response({
+                        'status': 'Error',
+                        'message': 'Diagnosis ID is required',
+                    }, status=status.HTTP_400_BAD_REQUEST)
+            
+            numberOfLesions = getNumberOfLesion(diagnosisID)
+            
+            return Response({
+                    'status': 'success',
+                    'message': 'Number of lesions tranfered',
+                    'number': numberOfLesions,
+                }, status=status.HTTP_200_OK)
+        
+        except Exception as e:
+            return Response({
+                    'status': 'error',
+                    'message': f'An unexpected Error occured {e}'
+                }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        
+class ToggleLesionDelete(APIView):
+    """
+    API Class to toggle the delete status of a lesion -> enables soft delete
+    """
+
+    def post(self, request):
+        try:
+            data = request.data
+            lesionID = data.get('lesionID')
+
+            if not lesionID:
+                return Response({
+                    'stauts': 'Error',
+                    'message': 'LesionID is required'
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            if(toggleDeleteLesion(lesionID)):
+                return Response({
+                    'status': 'success',
+                    'message': 'Lesion delete toggle successful',
+                    }, status=status.HTTP_200_OK)
+            else:
+                return Response({
+                    'status': 'Error',
+                    'message': 'Error during delete toggle of the lesion'
+                    }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
+        except Exception as e:
+            return Response({
+                    'status': 'error',
+                    'message': f'An unexpected Error occured {e}'
+                }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+
+class ToggleLesionShown(APIView):
+    """
+    API Class to toggle the shown status of the lesion
+    """
+    def post(self, request):
+
+        try:
+            data = request.data
+            lesionID = data.get("lesionID")
+
+            if not lesionID:
+                return Response({
+                        'status': 'Error',
+                        'message': 'LesionID is required',
+                    }, status=status.HTTP_400_BAD_REQUEST)
+            
+            if toggleShowLesion(lesionID):
+                return Response({
+                    'status': 'success',
+                    'message': 'Lesion shown status changed successfully',
+                    }, status=status.HTTP_200_OK)
+            else:
+                return Response({
+                    'status': 'Error',
+                    'message': 'Error during changing status of the lesion'
+                    }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
+        except Exception as e:
+            return Response({
+                    'status': 'error',
+                    'message': f'An unexpected Error occured {e}'
+                }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+class HardDelete(APIView):
+    """
+    API Class to hard delete a Lesion -> delete it from the database
+    """
+    def delete(self, request):
+        try:
+            data = request.data
+            diagnosisID = data.get('diagnosisID')
+            if not diagnosisID:
+                return Response({
+                        'status': 'Error',
+                        'message': 'DiagnosisID is required'
+                    }, status=status.HTTP_400_BAD_REQUEST)
+            
+            urls, deletetCount = hardDeleteLesions(diagnosisID)
+            if deletetCount != 0:
+                for url in urls:
+                    imagePath = os.path.join(settings.MEDIA_ROOT,
+                                            url,
+                                            )
+                    if os.path.isfile:
+                        os.remove(imagePath)
+
+            return Response({
+                    'status': 'success',
+                    'message': 'Lesion shown status changed successfully',
+                    }, status=status.HTTP_200_OK)
+        
+        except Exception as e:
+            return Response({
+                    'status': 'Error',
+                    'message': f"An unexpected error occured {e}"
+                }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+
+
+class AIModelNamesAPIView(APIView):
+    def get(self, request, diagID):
+        
+        dataset = getDatasetName(diagID)        
+        aiModelNames: list[str] = getAIModels(dataset)   # get all the ai model names
+
         if aiModelNames == []:
             return Response({
                 'status': 'error',
