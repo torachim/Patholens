@@ -96,11 +96,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Call the appropriate function based on the mode
-    if (mode === "new") {
-        sendTime("Started Diagnosis");
-    } else if (mode === "continue") {
-        sendTime("Continue Diagnosis");
-    }
+    sendTime("Open Diagnosis")
     reload();
 
 
