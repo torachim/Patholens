@@ -1,5 +1,5 @@
 import { Niivue, DRAG_MODE } from "./index.js";
-import { niivueCanvas,drawRectangleNiivue,loadImageAPI, loadImageWithDiagnosis, loadImageWithMask, loadOverlayDAI, sendTimeStamp, sendConfidence, savedEditedLesion, deleteContinueDiagnosis, jumpRectangle, drawCubeNV } from "./pathoLens.js";
+import { niivueCanvas,drawRectangleNiivue,loadImageAPI, loadImageWithDiagnosis, loadImageWithMask, loadOverlayDAI, sendTimeStamp, sendConfidence, savedEditedLesion, deleteContinueDiagnosis, jumpRectangle, drawCubeNV, setContinueDiag} from "./pathoLens.js";
 
 document.addEventListener('DOMContentLoaded', function() {
     //Not working properly I have to change a few things 
@@ -421,6 +421,20 @@ document.addEventListener('DOMContentLoaded', function() {
         alertOverlay.style.display = "flex";
     }
 
-     
+    const logOut = document.getElementById("logoutButton");
+    const homePage = document.getElementById("homePageButton");
+    
+    async function  setContinue() {
+        await setContinueDiag(diagnosisID, "editDiagnosis", csrfToken);
+    }
+    
+    logOut.addEventListener("click", () => {
+        setContinue();
+    })
+
+    homePage.addEventListener("click", () => {
+        setContinue();
+    })
+
 });
 

@@ -551,9 +551,10 @@ async function fetchDoctorID(){
 /**
  * Sets the current Diagnosis to continue Diagnosis
  * @param {string} diagnosisID - The current diagnosis ID
+ * @param {string} website - The Website where the user continues
  * @param {*} csrfToken - csrf Token
  */
-export async function setContinueDiag(diagnosisID, csrfToken) {
+export async function setContinueDiag(diagnosisID, website, csrfToken) {
     const docID = await fetchDoctorID();
     await fetch('/image/api/setContinue/', {
         method: 'POST',
@@ -563,7 +564,8 @@ export async function setContinueDiag(diagnosisID, csrfToken) {
         },
         body: JSON.stringify({
             docID: docID,
-            diagnosisID: diagnosisID
+            diagnosisID: diagnosisID,
+            website: website,
         })
     })
     .then(response => {

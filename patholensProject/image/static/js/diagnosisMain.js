@@ -96,11 +96,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Call the appropriate function based on the mode
-    if (mode === "new") {
-        sendTime("Started Diagnosis");
-    } else if (mode === "continue") {
-        sendTime("Continue Diagnosis");
-    }
+    sendTime("Open Diagnosis")
     reload();
 
 
@@ -387,7 +383,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // sets continue for the current diagnosis
     async function setContinue(){
-         await setContinueDiag(diagnosisID, csrfToken);
+         await setContinueDiag(diagnosisID, "newDiagnosis", csrfToken);
     }
 
     // log out the user

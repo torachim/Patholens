@@ -1,6 +1,5 @@
 import { Niivue } from "./index.js";
-import { niivueCanvas, loadImageWithDiagnosis, loadImageWithMask, loadOverlayDAI, sendTimeStamp, deleteContinueDiagnosis } from "./pathoLens.js";
-
+import { niivueCanvas, loadImageWithDiagnosis, loadImageWithMask, loadOverlayDAI, sendTimeStamp, deleteContinueDiagnosis, setContinueDiag } from "./pathoLens.js";
 
 document.addEventListener('DOMContentLoaded', function () {
     
@@ -12,7 +11,6 @@ document.addEventListener('DOMContentLoaded', function () {
     let selectedFormatMri = "FLAIR";
     let selectedDisplay = "AI Diagnosis";
 
-    let startTime;
 
     initialize();
 
@@ -132,6 +130,18 @@ document.addEventListener('DOMContentLoaded', function () {
             // Initial image load
             await loadImages();
     }
+    
+    const logOut = document.getElementById("logoutButton");
+    const homePage = document.getElementById("homePageButton");
+
+    logOut.addEventListener("click", async () => {
+        await setContinueDiag(diagnosisID, "AIpage", csrfToken);
+    })
+
+    homePage.addEventListener("click", async () => {
+        console.log("Back to homepage")
+        await setContinueDiag(diagnosisID, "AIpage", csrfToken);
+    })
 
 
     const editDiagnosisButton = document.getElementById("editDiagnosis");

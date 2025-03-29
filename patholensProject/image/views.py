@@ -11,8 +11,8 @@ import os
 
 
 @login_required
-def newDiagnosis(request, diagnosisID, mode):
-    return render(request, "image/diagnosisPage.html", {"diagnosisID": diagnosisID, "mode": mode})
+def newDiagnosis(request, diagnosisID):
+    return render(request, "image/diagnosisPage.html", {"diagnosisID": diagnosisID})
 
 @login_required
 def editDiagnosis(request, diagnosisID):
@@ -23,7 +23,7 @@ def AIPage(request, diagnosisID):
     return render(request, "image/AIPage.html", {"diagnosisID": diagnosisID})
 
 @login_required
-def transitionPage(request, diagnosisID, mode=None):
+def transitionPage(request, diagnosisID):
     """
     Handles the transition page view for a specific diagnosis.
 

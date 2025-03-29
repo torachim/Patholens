@@ -289,11 +289,12 @@ class setContinueAPIView(APIView):
             data = request.data
             docID = data.get("docID")
             diagnosisID = data.get("diagnosisID")
+            website = data.get("website")
 
             if(not docID or not diagnosisID):
                 return Response({"error": "Invalid Data"}, status=status.HTTP_404_NOT_FOUND)
             
-            setContinueDiag(docID, diagnosisID)
+            setContinueDiag(docID, diagnosisID, website)
 
             return Response({"status": "success"},
                             status=status.HTTP_200_OK)
@@ -341,7 +342,6 @@ class saveImageAPIView(APIView):
             savePicture(datasetName, subID, docID, filename, image_file, mediaURL)
             
             
-            setContinueDiag(docID, diagnosisID)
             createLesion(diagnosisID, confidence, lesionName, fileURL)
 
             return JsonResponse({"message": "Image saved successfully"})

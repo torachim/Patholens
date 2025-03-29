@@ -34,9 +34,7 @@ def forwardingInformation(request, datasetName):
     
     datasetName = datasetName.upper()
 
-    mode = "new"
     responseRandomURL = getRandomURL(request.user.id, datasetName)
-    
     
     if responseRandomURL["status"] == "finished":
         return render(request, 'finishedMessage.html')
@@ -61,7 +59,7 @@ def forwardingInformation(request, datasetName):
         
         addFinishedPatient(request.user.id, datasetName, pictureURL, uuid)
 
-        return redirect("newDiagnosis", diagnosisID=uuid, mode=mode)
+        return redirect("newDiagnosis", diagnosisID=uuid)
 
 
 @login_required 
@@ -73,12 +71,13 @@ def continueDiagnosis(request):
     """
     diagnosisData: dict = getContinueDiag(request.user.id)
 
-    mode = "continue"
     
     # Check if a valid diagnosis was returned
     if diagnosisData.get("status") and diagnosisData.get("object"):
-        diagID = diagnosisData["object"].diagID
-        return redirect("newDiagnosis", diagnosisID=diagID, mode=mode)
+        continueDiagnosis = diagnosisData["object"]
+        diagID = continueDiagnosis["Diagnosis"]
+        website = continueDiagnosis["Website"]
+        return redirect(website, diagnosisID=diagID)
     
 @login_required
 def checkUnfinishedDiagnosis(request):
