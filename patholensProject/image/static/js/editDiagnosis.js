@@ -1,12 +1,18 @@
 import { Niivue, DRAG_MODE } from "./index.js";
-import { niivueCanvas,drawRectangleNiivue,loadImageAPI, loadImageWithDiagnosis, loadImageWithMask, loadOverlayDAI, sendTimeStamp, sendConfidence, savedEditedLesion, deleteContinueDiagnosis, jumpRectangle, drawCubeNV, setContinueDiag} from "./pathoLens.js";
+import { niivueCanvas,drawRectangleNiivue,loadImageAPI, loadImageWithDiagnosis, loadImageWithMask, loadOverlayDAI, sendTimeStamp, sendConfidence, savedEditedLesion, deleteContinueDiagnosis, jumpRectangle, drawCubeNV, setContinueDiag, changePenValue} from "./pathoLens.js";
 
 document.addEventListener('DOMContentLoaded', function() {
     //Not working properly I have to change a few things 
     let drawRectangle = false;
-    let erasing = false;
     let drawCube = false;
     let drawUndoCube = false;
+    let pen = false;
+    let lesionNumber = 1;
+    let penValue = 1;
+    let save = false;
+    let homeOrLog= false;
+    let undoDelete = false;
+    let deletedLesionID;
 
     const jumpRect = document.getElementById("jumpRect");
     const alertMessageBox = document.getElementById("alertMessageBox");
@@ -19,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (nv.opts.drawingEnabled){
             if(drawCube){
                 let finishedCube;
-                finishedCube = drawCubeNV(nv, data);
+                finishedCube = drawCubeNV(nv, data, penValue);
                 if(!finishedCube){
                     showAlertWindow();
                 }
@@ -29,10 +35,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     drawUndoCube = true;
                     drawCube = false;
                     jumpRect.style.display = "none"
+                    showSaveWindow();
                 }
             }
             else{
-                drawRectangleNiivue(nv, data)
+                drawRectangleNiivue(nv, data, penValue)
                 drawCube = true;
                 saveDrawingState();
                 jumpRect.style.display = "flex";
@@ -196,7 +203,7 @@ document.addEventListener('DOMContentLoaded', function() {
      * True => drawn shape will be filled
      */
     function changeDrawingMode(mode, filled){
-        nv.setPenValue(mode, filled);
+        changePenValue(nv, mode, filled);
     }
 
     jumpRect.addEventListener("click", () => {
@@ -208,61 +215,55 @@ document.addEventListener('DOMContentLoaded', function() {
         if(drawCube){
             showAlertWindow();
         }
+        else if(save){
+            showSaveInfo();
+        }
         else{
             drawRectangle = false;
-            erasing = false;
             saveDrawingState();
             nv.setDrawingEnabled(true);  
             changeDrawingMode(6, false);
+            pen = true
             activateButton("selectTool"); //changes button style while selected
         }
     });
         
      // disables drawing after a Pixel is marked
-    document.getElementById("imageBrain").addEventListener("mouseup", disableDrawing)
+    document.getElementById("imageBrain").addEventListener("mouseup", () => {
+        if(pen){
+            showSaveWindow();
+        }
+        disableDrawing();
+    })
      
     // disables drawing
     function disableDrawing(){
         deactivateAllButtons();
-        if(!drawRectangle && !erasing){
+        if(!drawRectangle && pen){
             sendTime("Freehand Drawing Edit");
+            pen = false;
+            nv.setDrawingEnabled(false);
         }
-        else if(!drawRectangle && erasing){
-            sendTime("Erasing Edit");
-            erasing = false
-        }
-        nv.setDrawingEnabled(false);
     } 
         
-    // enables erasing the drawing by clicking on eraser
-    document.getElementById("eraseTool").addEventListener("click", function(e){
-        if(drawCube){
-            showAlertWindow();
-        }
-        else{
-            drawRectangle = false;
-            saveDrawingState();
-            nv.refreshDrawing()
-            /**erasing = true;
-            
-            nv.setDrawingEnabled(true);
-            // 0 = Eraser and true => eraser ist filled so a whole area can be erased
-            changeDrawingMode(0, true);**/
-            activateButton("eraseTool");
-        }
-    });
 
     // INFO: You need to right click and drag to draw rectangle
     // enable rectangle drawing when the corresponding button in html is clicked
     document.getElementById("frameTool").addEventListener("click", function () {
-        saveDrawingState();
-        nv.setDrawingEnabled(true);
-        nv.opts.dragMode = DRAG_MODE.callbackOnly;  // Draw rectangle only when dragging
-        nv.opts.onDragRelease = onDragRelease;      // Set callback for rectangle drawing
-        activateButton("frameTool"); //changes button style while drawing rectangle
+        if(save){
+            showSaveInfo();
+        }
+        else {
+            pen = false
+            saveDrawingState();
+            nv.setDrawingEnabled(true);
+            nv.opts.dragMode = DRAG_MODE.callbackOnly;  // Draw rectangle only when dragging
+            nv.opts.onDragRelease = onDragRelease;      // Set callback for rectangle drawing
+            activateButton("frameTool"); //changes button style while drawing rectangle
+        }
     });
 
-     // Undo the drawing/erasing
+     // Undo the drawing/erasing Should be edited
      document.getElementById("undoTool").addEventListener("click", function (e) {
         nv.drawUndo();
         if(drawCube){
