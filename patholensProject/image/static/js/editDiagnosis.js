@@ -1,5 +1,5 @@
 import { Niivue, DRAG_MODE } from "./index.js";
-import { niivueCanvas,drawRectangleNiivue,loadImageAPI, loadImageWithDiagnosis, loadImageWithMask, loadOverlayDAI, sendTimeStamp, sendConfidence, savedEditedLesion, deleteContinueDiagnosis, jumpRectangle, drawCubeNV, setContinueDiag, changePenValue} from "./pathoLens.js";
+import { niivueCanvas,drawRectangleNiivue,loadImageAPI, loadImageWithDiagnosis, loadImageWithMask, loadOverlayDAI, sendTimeStamp, sendConfidence, savedEditedLesion, deleteContinueDiagnosis, jumpRectangle, drawCubeNV, setContinueDiag, changePenValue, getNumberOfLesions} from "./pathoLens.js";
 
 document.addEventListener('DOMContentLoaded', function() {
     //Not working properly I have to change a few things 
@@ -21,6 +21,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const saveLesion = document.getElementById("submitLesion");
     const controlLesion = document.getElementById("controlLesion");
     const saveLesionButton = document.getElementById("saveButton");
+    const logOutWindow = document.getElementById("logoutInfoBox");
+    const logOutWindowContinue = document.getElementById("continueLogoutButton");
+    const logOutWindowAbort = document.getElementById("dontLogoutButton");
+    const saveFirstWindow = document.getElementById("saveFirstInfo");
+    const closeSaveFirst = document.getElementById("closeSaveInfo");
     
     //function to drag a rectangle in the niivue 
     const onDragRelease = (data) => {
@@ -178,6 +183,14 @@ document.addEventListener('DOMContentLoaded', function() {
         nv.updateGLVolume(); 
     }
 
+    async function loadImageAndEdited(){
+        const volumes = await loadImageWithDiagnosis(diagnosisID, selectedFormatMri, true);
+        let numbers = await getNumberOfLesions(diagnosisID);
+        lesionNumber = numbers["lesionNumber"] + 1
+        penValue = volumes.length;
+        nv.loadVolumes(volumes);
+    }
+
      // Initialization
      async function initialize() {
         const models = await getModels(diagnosisID);
@@ -189,6 +202,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
         await loadZoomImage();
         await loadMainImage();
+    }
+
+    async function reload(){
+        let numberLesions = await getNumberOfLesions(diagnosisID);
+        console.log(numberLesions)
+        if(numberLesions["activeEdited"] != 0){
+            await loadImageAndEdited();
+        } else {
+            await loadMainImage();
+        }
+        //updatelesion()
     }
 
      // Add drawing state to history
@@ -223,7 +247,7 @@ document.addEventListener('DOMContentLoaded', function() {
             drawRectangle = false;
             saveDrawingState();
             nv.setDrawingEnabled(true);  
-            changeDrawingMode(6, false);
+            changeDrawingMode(penValue, false);
             pen = true
             activateButton("selectTool"); //changes button style while selected
         }
@@ -360,21 +384,22 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
 
+
     //confidence meter window 
 
     const confirmButton = document.querySelector('.popupConfirm');
-    const confidenceSlider = document.getElementById('confidenceMeter');
+    const confidenceSliderDiagnosis = document.getElementById('confidenceMeter1');
+    const confidenceSliderLesion = document.getElementById('confidenceMeter2')
 
     // Listener for the confirmation button
     confirmButton.addEventListener('click', () => {
-        const confidenceValue = confidenceSlider.value; 
+        const confidenceValue = confidenceSliderDiagnosis.value; 
         endDiagnosis(confidenceValue);
     });
 
     async function endDiagnosis(confidenceValue){
         await sendConfidence(confidenceValue, diagnosisID, csrfToken);
         await sendTime("Finished Diagnosis");
-        await savedEditedLesion(nv, diagnosisID, csrfToken);
         await deleteContinueDiagnosis(diagnosisID, csrfToken);
         window.location.assign(`/image/editDiagnosis/${diagnosisID}/transitionPage/`)
     }
@@ -409,7 +434,29 @@ document.addEventListener('DOMContentLoaded', function() {
             sendTime("Aborted Confidence Edit");
         }
     })
-    
+
+
+    // If the user decides to save the current lesion
+    saveLesion.addEventListener("click", () => {
+        const confidenceValue = confidenceSliderLesion.value; // get the confidence value
+        saveImage(confidenceValue); // save the current image
+        saveLesionWindow.style.display = "none";
+        alertOverlay.style.display = "none";
+        saveLesionButton.style.display = "none";
+        drawCube = false;
+        drawUndoCube = false;
+        drawRectangle = false;
+        save = false;
+    });
+
+    async function saveImage(confidence){
+        const lesionName = `edited-lesion-${lesionNumber}`;
+        await savedEditedLesion(nv, diagnosisID, lesionName, confidence, csrfToken, true);
+        sendTime("Edited Saved Lesion");
+        nv.createEmptyDrawing();
+        reload();
+    }
+
     const alertOverlay = document.getElementById("alertOverlay");
 
     closeAlertWindow.addEventListener("click", () => {
@@ -437,12 +484,82 @@ document.addEventListener('DOMContentLoaded', function() {
         saveLesionButton.style.display = "flex";
     })
 
+    // show the save window if the user clicks on the save button
+    saveLesionButton.addEventListener("click", () => {
+        showSaveWindow();
+    })
+
     const logOut = document.getElementById("logoutButton");
+
+        //If the user clicks on the logout button
+        logOut.addEventListener("click", (event) => {
+            // if save is true show alert window and prevent logout 
+            if(save){
+                event.preventDefault();
+                logOutWindow.style.display = "flex";
+                alertOverlay.style.display = "flex";
+                homeOrLog = false; // false for logout 
+            }
+            // if the user is currently drawing a cube show alert window and prevent logout 
+            else if(drawCube){
+                event.preventDefault();
+                alertMessageBox.style.display = "flex"
+                alertOverlay.style.display = "flex";
+            }
+            else{
+                setContinue(); //send continue and logout 
+            }
+        })
+
     const homePage = document.getElementById("homePageButton");
+
+    //if user clicks on the home button same as the logout button 
+    homePage.addEventListener("click", (event) => {
+        if(save){
+            event.preventDefault();
+            logOutWindow.style.display = "flex";
+            alertOverlay.style.display = "flex";
+            homeOrLog = true; // true for back to homepage
+        }
+        else if(drawCube){
+            event.preventDefault();
+            alertMessageBox.style.display = "flex"
+            alertOverlay.style.display = "flex";
+        }
+        else{
+            setContinue();
+        }
+    })
     
     async function  setContinue() {
         await setContinueDiag(diagnosisID, "editDiagnosis", csrfToken);
     }
+
+    // log out the user
+    logOutWindowContinue.addEventListener("click", () => {
+        setContinue();
+        if(homeOrLog){
+            window.location.assign("/startingPage/");
+        }
+        else{
+            window.location.assign("/logout/newDiagnosis");
+        }
+    })
+
+    logOutWindowAbort.addEventListener("click", () => {
+        logOutWindow.style.display = "none";
+        alertOverlay.style.display = "none";
+    })
+
+    function showSaveInfo(){
+        saveFirstWindow.style.display = "flex";
+        alertOverlay.style.display = "flex";
+    }
+
+    closeSaveFirst.addEventListener("click", () => {
+        saveFirstWindow.style.display = "none";
+        alertOverlay.style.display = "none";
+    })
     
     logOut.addEventListener("click", () => {
         setContinue();

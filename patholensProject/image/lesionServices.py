@@ -1,6 +1,6 @@
 from image.models import Lesions, Diagnosis
 
-def createLesion(diagonsisID: str, confidence: int, name: str, url: str) -> Lesions|bool:
+def createLesion(diagonsisID: str, confidence: int, name: str, url: str, isEdit: bool) -> Lesions|bool:
     """Creates a new lesion for a specified diagnosis
 
     Args:
@@ -8,6 +8,7 @@ def createLesion(diagonsisID: str, confidence: int, name: str, url: str) -> Lesi
         confidence (int): confidence of the lesion
         name (str): name of the lesion
         url (str): path to the picture of the lesion
+        isEdit (bool): was the image saved on the edit page
 
     Returns:
         Lesions|bool: Lesion if save was successful, else false
@@ -18,7 +19,12 @@ def createLesion(diagonsisID: str, confidence: int, name: str, url: str) -> Lesi
     
     diagObj: Diagnosis = Diagnosis.objects.get(diagID = diagonsisID)
 
-    lesion: Lesions = Lesions.objects.create(name=name, confidence = confidence, url = url, deleted = False, shown = True, diagnosis = diagObj)
+    if isEdit == "false":
+        isedited = False
+    else:
+        isedited = True
+
+    lesion: Lesions = Lesions.objects.create(name=name, confidence = confidence, url = url, deleted = False, shown = True, edited = isedited, diagnosis = diagObj)
 
     return lesion
 
@@ -40,7 +46,10 @@ def toggleDeleteLesion(lesionID: int) -> bool:
     if not lesion:
         return False
     
-    lesion.deleted = not lesion.deleted
+    newStatus = not lesion.deleted
+    
+    lesion.deleted = newStatus
+    lesion.shown = not newStatus
     lesion.save()
     return True
 
@@ -100,8 +109,12 @@ def getNumberOfLesion(diagnosisID: str) -> int|bool:
         return False
 
     lesionsNumber = Lesions.objects.filter(diagnosis = diagObj).count()
-
-    return lesionsNumber
+    activeLesionNumber = Lesions.objects.filter(diagnosis = diagObj, shown = True).count()
+    activeEditedNumber = Lesions.objects.filter(diagnosis = diagObj, shown = True, edited = True).count()
+    
+    return {"lesionNumber": lesionsNumber,
+            "activeLesionsNumber": activeLesionNumber,
+            "activeEdited": activeEditedNumber}
 
 def toggleShowLesion(lesionID) -> bool:
     """

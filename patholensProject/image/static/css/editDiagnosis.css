@@ -537,6 +537,14 @@ body {
     transform: scale(0.97); 
 }
 
+.alertWindowButtons{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
 .alertOverlay {
     position: fixed;
     top: 0;

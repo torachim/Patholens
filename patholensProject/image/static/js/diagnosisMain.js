@@ -77,7 +77,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     async function reload(){
         let numberLesions = await getNumberOfLesions(diagnosisID);
-        if(numberLesions != 0){
+        console.log(numberLesions)
+        if(numberLesions["activeLesionsNumber"] != 0){
             await loadImageAndEdited();
         } else {
             await loadImage();
@@ -102,7 +103,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function loadImageAndEdited() {
         const volumes = await loadImageWithDiagnosis(diagnosisID, selectedFormat, false);
-        lesionNumber = await getNumberOfLesions(diagnosisID) + 1;
+        let numbers = await getNumberOfLesions(diagnosisID);
+        lesionNumber = numbers["lesionNumber"] + 1
         penValue = volumes.length;
         nv.loadVolumes(volumes);
     } 
@@ -187,9 +189,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
      // Undo the drawing/
-     document.getElementById("undoTool").addEventListener("click", function (e) {
+     document.getElementById("undoTool").addEventListener("click", async function (e) {
         if(undoDelete){
-            toggleDeleteLesion(deletedLesionID, csrfToken);
+            await toggleDeleteLesion(deletedLesionID, csrfToken);
             undoDelete = false;
             deletedLesionID = 0;
             reload();
@@ -210,7 +212,7 @@ document.addEventListener('DOMContentLoaded', function() {
             save = false;
         }
         deactivateAllButtons(); //only changes style after being clicked
-        sendTime("Undo")
+        await sendTime("Undo")
     })
 
     //Removes the style applied when button is active
@@ -332,7 +334,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Save the image and send the time stamp
     async function saveImage(confidence){
-        await savedEditedLesion(nv, diagnosisID, lesionNumber, confidence, csrfToken);
+        const lesionName = `lesion-${lesionNumber}`
+        await savedEditedLesion(nv, diagnosisID, lesionName, confidence, csrfToken, false);
         sendTime("Saved Lesion");
         nv.createEmptyDrawing();
         reload();
@@ -479,15 +482,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 const lesionID = this.dataset.id;
                 undoDelete = true;
                 deletedLesionID = lesionID
-                toggleDeleteLesion(lesionID, csrfToken);
+                await toggleDeleteLesion(lesionID, csrfToken);
                 reload();
             });
         });
 
         document.querySelectorAll(".toggleVisibility").forEach(button => {
-            button.addEventListener("click", function() {
+            button.addEventListener("click", async function() {
                 const lesionID = this.dataset.id;
-                toggleShownLesion(lesionID, csrfToken);
+                await toggleShownLesion(lesionID, csrfToken);
                 reload();
             });
         });

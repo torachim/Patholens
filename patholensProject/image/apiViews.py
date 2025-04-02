@@ -318,6 +318,7 @@ class saveImageAPIView(APIView):
             diagnosisID = request.POST.get("diagnosisID")
             lesionName = request.POST.get("lesionName")
             confidence = request.POST.get("confidence")
+            isEdit = request.POST.get("isEdit")
             
             datasetName = getDatasetName(diagnosisID).lower()
 
@@ -341,11 +342,14 @@ class saveImageAPIView(APIView):
             
             fileURL = os.path.join(mediaURL, filename)
             
-            
+            test:bool = False
+
+            print(isEdit, test)
+
             savePicture(datasetName, subID, docID, filename, image_file, mediaURL)
             
             
-            createLesion(diagnosisID, confidence, lesionName, fileURL)
+            createLesion(diagnosisID, confidence, lesionName, fileURL, isEdit)
 
             return JsonResponse({"message": "Image saved successfully"})
         except Exception as e:
@@ -428,6 +432,7 @@ class GetNumberLesions(APIView):
                     }, status=status.HTTP_400_BAD_REQUEST)
             
             numberOfLesions = getNumberOfLesion(diagnosisID)
+
             
             return Response({
                     'status': 'success',

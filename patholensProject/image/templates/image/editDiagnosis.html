@@ -36,6 +36,9 @@
     <div>
         <button class="jumpRect" id="jumpRect">Jump To Rectangle</button>
     </div>
+    <div>
+        <button class="jumpRect" id="saveButton">Save Lesion</button>
+    </div>
 </div>
 
 <!--Container for image loading-->
@@ -51,10 +54,21 @@
         <button id="closeAlertWindow">OK</button>
 </div>
 
-<div class="alertMessageBox" id="alertMessageBox">
+<div class="alertMessageBox" id="saveFirstInfo">
     <h3>ERROR</h3>
         <p>Please Finish Your Cuboid First!</p>
-        <button id="closeAlertWindow">OK</button>
+        <button id="closeSaveInfo">OK</button>
+</div>
+
+<div class="alertMessageBox" id="logoutInfoBox">
+    <h3>WARNING</h3>
+        <p>You Have Unsaved Lesions!</p>
+        <p>If You Continue These Are Going To Be Deleted!</p>
+        <p>You Want To Proceed?</p>
+        <div class="alertWindowButtons">
+            <button id="continueLogoutButton">YES</button>
+            <button id="dontLogoutButton">NO</button>
+        </div>
 </div>
 
 <div class="saveLesionWindow" id="saveLesionWindow">
@@ -123,7 +137,7 @@
         <button class="popupClose" id="closePopup">&times;</button>
         <p>Please state your confidence</p>
         <div class="confidenceMeterContainer">
-            <input type="range" class="confidenceMeter" min="0" max="10" value="5" id="confidenceMeter">
+            <input type="range" class="confidenceMeter" min="0" max="10" value="5" id="confidenceMeter2">
             <div class="tooltip" id="tooltip">5</div>
         </div>
         <button class="popupConfirm" id="popupConfirm">Confirm</button>

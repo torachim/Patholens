@@ -584,17 +584,18 @@ export async function setContinueDiag(diagnosisID, website, csrfToken) {
  * Save the current diagnosis in the database
  * @param {Niivue} nv - Niivue instance
  * @param {string} diagnosisID - The ID of the current diagnosis
- * @param {Int} lesionNumber - The Number of the current lesion.
+ * @param {string} lesionName - The Name of the current lesion.
  * @param {Int} confidence - The confidence for the current lesion
  * @param {string} csrfToken - csrfToken for the API
+ * @param {bool} isEdit - If the picture got saved on the edit page
  * 
  */
-export async function savedEditedLesion(nv, diagnosisID, lesionNumber, confidence, csrfToken) {
+export async function savedEditedLesion(nv, diagnosisID, lesionName, confidence, csrfToken, isEdit) {
     try {
         // Wait for subID from fetchImageURL
         const subID = await fetchImageSub(diagnosisID);
         const docID = await fetchDoctorID();
-        const name = `lesion-${lesionNumber}`
+        const name = lesionName
 
         if (!subID) {
             console.error("Image subID could not be retrieved.");
@@ -616,6 +617,7 @@ export async function savedEditedLesion(nv, diagnosisID, lesionNumber, confidenc
         formData.append("diagnosisID", diagnosisID);
         formData.append("lesionName", name)
         formData.append("confidence", confidence)
+        formData.append("isEdit", isEdit)
         formData.append("imageFile", new Blob([imageBlob], { type: "application/octet-stream" }));
 
         // Send the data to the API
@@ -779,14 +781,19 @@ export async function loadOverlayDAI(formatMask, formatMri, diagnosisID) {
     })
     .then(data => {
         const urls = data.files;
+        const status = data.status;
+        const edited = data.edit
+        console.log(urls, status, edited);
         for (let i = urls.length -1; i >= 0; i--){
-            const diagUrl = `http://127.0.0.1:8000/${urls[i]}`;
-            const colour = colours[(i + 1)%10];
-            volumes.push({url: diagUrl,
-                          schema: "nifti",
-                          colorMap: colour[1],
-                          opacity: 0.85,
-            });
+            if(status[i] && !edited[i]){
+                const diagUrl = `http://127.0.0.1:8000/${urls[i]}`;
+                const colour = colours[(i + 1)%10];
+                volumes.push({url: diagUrl,
+                            schema: "nifti",
+                            colorMap: colour[1],
+                            opacity: 0.85,
+                });
+            }
         }
     })
     .catch(err => {
@@ -891,7 +898,6 @@ export async function getNumberOfLesions(diagnosisID){
                 lesionNumber = data.number;
             })
             .catch(error => console.error(error));
-
     return lesionNumber
 }
 
