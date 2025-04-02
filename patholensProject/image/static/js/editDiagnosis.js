@@ -1,5 +1,5 @@
 import { Niivue, DRAG_MODE } from "./index.js";
-import { niivueCanvas,drawRectangleNiivue,loadImageAPI, loadImageWithDiagnosis, loadImageWithMask, loadOverlayDAI, sendTimeStamp, sendConfidence, savedEditedLesion, deleteContinueDiagnosis, jumpRectangle, drawCubeNV, setContinueDiag, changePenValue, getNumberOfLesions} from "./pathoLens.js";
+import { niivueCanvas,drawRectangleNiivue,loadImageAPI, loadImageWithDiagnosis, loadImageWithMask, loadOverlayDAI, sendTimeStamp, sendConfidence, savedEditedLesion, deleteContinueDiagnosis, jumpRectangle, drawCubeNV, setContinueDiag, changePenValue, getNumberOfLesions, loadEditedDiagnosis} from "./pathoLens.js";
 
 document.addEventListener('DOMContentLoaded', function() {
     //Not working properly I have to change a few things 
@@ -167,7 +167,7 @@ document.addEventListener('DOMContentLoaded', function() {
             volumes = await loadImageWithMask(selectedFormatMask, selectedFormatMri, diagnosisID);
         }
         else if(selectedDisplay == "My Diagnosis"){
-            volumes = await loadImageWithDiagnosis(diagnosisID, selectedFormatMri, false);
+            volumes = await loadImageWithDiagnosis(diagnosisID, selectedFormatMri);
         }
         else if(selectedDisplay == "Show Overlay"){
             volumes = await loadOverlayDAI(selectedFormatMask, selectedFormatMri, diagnosisID);
@@ -184,7 +184,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     async function loadImageAndEdited(){
-        const volumes = await loadImageWithDiagnosis(diagnosisID, selectedFormatMri, true);
+        const volumes = await loadEditedDiagnosis(diagnosisID, selectedFormatMri);
         let numbers = await getNumberOfLesions(diagnosisID);
         lesionNumber = numbers["lesionNumber"] + 1
         penValue = volumes.length;

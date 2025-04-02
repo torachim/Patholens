@@ -9,7 +9,7 @@ import re
 from .diagnosisServices import getURL, ConfidenceType, setConfidence, getDatasetName
 from accounts.doctorServices import setContinueDiag, deleteContinueDiag
 from .timeServices import setUseTime
-from .lesionServices import createLesion, getLesions, getLesionsConfidence, getNumberOfLesion, toggleShowLesion, toggleDeleteLesion, hardDeleteLesions
+from .lesionServices import createLesion, getLesions, getLesionsConfidence, getNumberOfLesion, toggleShowLesion, toggleDeleteLesion, hardDeleteLesions, getEditedLesions
 from .mediaServices import getAIModels
 from .dataHandler import savePicture
 import os
@@ -255,7 +255,6 @@ class GetDiagnosis(APIView):
             lesions = getLesions(diagnosisID)
             urlLesions = []
             shown = []
-            edited = []
             for lesion in lesions:
                 url = lesion['url']
                 mediaUrl = os.path.join(
@@ -264,13 +263,61 @@ class GetDiagnosis(APIView):
                                 )
                 urlLesions.append(mediaUrl)
                 shown.append(lesion['shown'])
-                edited.append(lesion['edited'])
 
             return Response(
                     {"status": "success",
                      "files": urlLesions,
                      'status': shown,
-                     'edit': edited,
+                    },
+                    status=status.HTTP_200_OK
+            )
+        
+        except Exception as e:
+            return Response(
+                    {"error": str(e)},
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+        
+
+class GetEditedDiagnosis(APIView):
+    def get(self, request, diagnosisID):
+        """
+        Function to get the edited diagnosis Mask for a specific diagnosisID
+
+        Args:
+            diagnosisID (string): a diagnosisID 
+
+        Returns:
+            Path to the Diagnosis Image
+        """
+        try:
+            if not diagnosisID:
+                return Response({"error": "DiagnosisID required"},
+                                    status=status.HTTP_400_BAD_REQUEST
+                                )
+            
+            datasetName = getDatasetName(diagnosisID).lower()
+            if not datasetName:
+                return JsonResponse({"error": "Dataset name is required"}, status=400)
+
+            lesions = getEditedLesions(diagnosisID)
+            urlLesions = []
+            shown = []
+            for lesion in lesions:
+                url = lesion['url']
+                mediaUrl = os.path.join(
+                                'media',
+                                url
+                                )
+                urlLesions.append(mediaUrl)
+                shown.append(lesion['shown'])
+            
+            print(urlLesions, shown)
+
+            return Response(
+                    {"status": "success",
+                        "files": urlLesions,
+                        'status': shown,
                     },
                     status=status.HTTP_200_OK
             )

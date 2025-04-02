@@ -88,9 +88,28 @@ def getLesions(diagnosisID: str) -> list|bool:
     if not diagObj:
         return False
 
-    lesions: Lesions = Lesions.objects.filter(diagnosis = diagObj, deleted = False).order_by("lesionID")
+    lesions: Lesions = Lesions.objects.filter(diagnosis = diagObj, deleted = False, edited = False).order_by("lesionID")
 
-    return list(lesions.values("url", "shown", "edited"))
+    return list(lesions.values("url", "shown"))
+
+def getEditedLesions(diagnosisID):
+    """
+    Returns the urls of all the edited lesions for a current diagnosis that are not soft deleted.
+
+    Args:
+        diagnosisID (str): ID of the current diagnosis
+
+    Returns:
+        list: A list with dictionary for each lesion which contains its url.
+    """
+    diagObj: Diagnosis = Diagnosis.objects.get(diagID = diagnosisID)
+
+    if not diagObj:
+        return False
+    
+    lesions: Lesions = Lesions.objects.filter(diagnosis = diagObj, deleted = False, edited = True).order_by("lesionID")
+
+    return list(lesions.values("url", "shown"))
 
 
 def getNumberOfLesion(diagnosisID: str) -> int|bool:
@@ -132,7 +151,6 @@ def toggleShowLesion(lesionID) -> bool:
         return False
     
     lesion.shown = not lesion.shown
-    print(lesion.shown)
     lesion.save()
     return True
 

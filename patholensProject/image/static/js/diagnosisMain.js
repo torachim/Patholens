@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     async function loadImageAndEdited() {
-        const volumes = await loadImageWithDiagnosis(diagnosisID, selectedFormat, false);
+        const volumes = await loadImageWithDiagnosis(diagnosisID, selectedFormat);
         let numbers = await getNumberOfLesions(diagnosisID);
         lesionNumber = numbers["lesionNumber"] + 1
         penValue = volumes.length;

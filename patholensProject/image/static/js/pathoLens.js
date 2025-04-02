@@ -646,7 +646,7 @@ export async function savedEditedLesion(nv, diagnosisID, lesionName, confidence,
  * @param {bool} isEdit If the loading target is the edit page or not
  * @returns Array with the volumes
  */
-export async function loadImageWithDiagnosis(diagnosisID, formatMri, isEdit) {
+export async function loadImageWithDiagnosis(diagnosisID, formatMri) {
 
         const getDApiURL = `/image/api/getDiagnosis/${diagnosisID}/`;
 
@@ -665,31 +665,16 @@ export async function loadImageWithDiagnosis(diagnosisID, formatMri, isEdit) {
             .then(data => {
                 const urls = data.files;
                 const status = data.status;
-                const edited = data.edit
-                console.log(urls, status, edited);
-                if(!isEdit){
-                    for (let i = urls.length -1; i >= 0; i--){
-                        if(status[i] && !edited[i]){
-                            const diagUrl = `http://127.0.0.1:8000/${urls[i]}`;
-                            const colour = colours[(i + 1)%10];
-                            volumes.push({url: diagUrl,
-                                        schema: "nifti",
-                                        colorMap: colour[1],
-                                        opacity: 0.85,
-                            });
-                        }
-                    }
-                } else {
-                    for (let i = urls.length -1; i >= 0; i--){
-                        if(status[i] && edited[i]){
-                            const diagUrl = `http://127.0.0.1:8000/${urls[i]}`;
-                            const colour = colours[(i + 1)%10];
-                            volumes.push({url: diagUrl,
-                                        schema: "nifti",
-                                        colorMap: colour[1],
-                                        opacity: 0.85,
-                            });
-                        }
+                console.log(urls, status)
+                for (let i = urls.length -1; i >= 0; i--){
+                    if(status[i]){
+                        const diagUrl = `http://127.0.0.1:8000/${urls[i]}`;
+                        const colour = colours[(i + 1)%10];
+                        volumes.push({url: diagUrl,
+                                    schema: "nifti",
+                                    colorMap: colour[1],
+                                    opacity: 0.85,
+                        });
                     }
                 }
             })
@@ -699,6 +684,40 @@ export async function loadImageWithDiagnosis(diagnosisID, formatMri, isEdit) {
 
         return volumes;
     }
+
+export async function loadEditedDiagnosis(diagnosisID, formatMRI){
+
+    const getEUrl = `/image/api/getEditedDiagnosis/${diagnosisID}/`
+
+    let volumes = await loadImageAPI(formatMRI, diagnosisID)
+
+    await fetch(getEUrl)
+        .then(response => {
+            if(!response.ok){
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            const urls = data.files
+            const status = data.status
+            for(let i = urls.length - 1; i >= 0; i--){
+                if(status[i]){
+                    const diagUrl = `http://127.0.0.1:8000/${urls[i]}`;
+                    const colour = colours[(i + 1)%10];
+                    volumes.push({url: diagUrl,
+                                schema: "nifti",
+                                colorMap: colour[1],
+                                opacity: 0.85,
+                    });
+                }
+            }
+        })
+        .catch(err => {
+            console.error("Error loading Nifti files ", err)
+        })
+    return volumes
+}
 
 export function changePenValue(nv, mode, filled){
     const colour = colours[mode%10];
@@ -782,10 +801,9 @@ export async function loadOverlayDAI(formatMask, formatMri, diagnosisID) {
     .then(data => {
         const urls = data.files;
         const status = data.status;
-        const edited = data.edit
-        console.log(urls, status, edited);
+        console.log(urls, status);
         for (let i = urls.length -1; i >= 0; i--){
-            if(status[i] && !edited[i]){
+            if(status[i]){
                 const diagUrl = `http://127.0.0.1:8000/${urls[i]}`;
                 const colour = colours[(i + 1)%10];
                 volumes.push({url: diagUrl,
