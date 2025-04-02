@@ -17,6 +17,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const jumpRect = document.getElementById("jumpRect");
     const alertMessageBox = document.getElementById("alertMessageBox");
     const closeAlertWindow = document.getElementById("closeAlertWindow");
+    const saveLesionWindow = document.getElementById("saveLesionWindow");
+    const saveLesion = document.getElementById("submitLesion");
+    const controlLesion = document.getElementById("controlLesion");
+    const saveLesionButton = document.getElementById("saveButton");
     
     //function to drag a rectangle in the niivue 
     const onDragRelease = (data) => {
@@ -186,9 +190,6 @@ document.addEventListener('DOMContentLoaded', function() {
         await loadZoomImage();
         await loadMainImage();
     }
-
-
-
 
      // Add drawing state to history
      function saveDrawingState() {
@@ -421,6 +422,20 @@ document.addEventListener('DOMContentLoaded', function() {
         alertMessageBox.style.display = "flex"
         alertOverlay.style.display = "flex";
     }
+
+    // Shows the save window if necessary
+    function showSaveWindow(){
+        saveLesionWindow.style.display = "flex";
+        alertOverlay.style.display = "flex";
+        save = true; //save eq. true so the "save lesion" block appears
+    }
+
+    // If you want to close the save Lesion window
+    controlLesion.addEventListener("click", () => {
+        saveLesionWindow.style.display = "none";
+        alertOverlay.style.display = "none";
+        saveLesionButton.style.display = "flex";
+    })
 
     const logOut = document.getElementById("logoutButton");
     const homePage = document.getElementById("homePageButton");
