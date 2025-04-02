@@ -255,6 +255,7 @@ class GetDiagnosis(APIView):
             lesions = getLesions(diagnosisID)
             urlLesions = []
             shown = []
+            edited = []
             for lesion in lesions:
                 url = lesion['url']
                 mediaUrl = os.path.join(
@@ -263,11 +264,13 @@ class GetDiagnosis(APIView):
                                 )
                 urlLesions.append(mediaUrl)
                 shown.append(lesion['shown'])
+                edited.append(lesion['edited'])
 
             return Response(
                     {"status": "success",
                      "files": urlLesions,
                      'status': shown,
+                     'edit': edited,
                     },
                     status=status.HTTP_200_OK
             )

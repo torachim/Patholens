@@ -81,7 +81,7 @@ def getLesions(diagnosisID: str) -> list|bool:
 
     lesions: Lesions = Lesions.objects.filter(diagnosis = diagObj, deleted = False).order_by("lesionID")
 
-    return list(lesions.values("url", "shown"))
+    return list(lesions.values("url", "shown", "edited"))
 
 
 def getNumberOfLesion(diagnosisID: str) -> int|bool:

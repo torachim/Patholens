@@ -158,7 +158,7 @@ document.addEventListener('DOMContentLoaded', function() {
             volumes = await loadImageWithMask(selectedFormatMask, selectedFormatMri, diagnosisID);
         }
         else if(selectedDisplay == "My Diagnosis"){
-            volumes = await loadImageWithDiagnosis(diagnosisID, selectedFormatMri);
+            volumes = await loadImageWithDiagnosis(diagnosisID, selectedFormatMri, false);
         }
         else if(selectedDisplay == "Show Overlay"){
             volumes = await loadOverlayDAI(selectedFormatMask, selectedFormatMri, diagnosisID);

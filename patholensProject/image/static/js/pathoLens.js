@@ -641,9 +641,10 @@ export async function savedEditedLesion(nv, diagnosisID, lesionNumber, confidenc
  * Returns two volumes one with the main MRI image and the other one with the doctor's diagnosis for the current case
  * @param {string} diagnosisID The ID of the current diagnosis
  * @param {string} formatMri The requested Format for the MRI Picture (T1 or Flair)
+ * @param {bool} isEdit If the loading target is the edit page or not
  * @returns Array with the volumes
  */
-export async function loadImageWithDiagnosis(diagnosisID, formatMri) {
+export async function loadImageWithDiagnosis(diagnosisID, formatMri, isEdit) {
 
         const getDApiURL = `/image/api/getDiagnosis/${diagnosisID}/`;
 
@@ -662,16 +663,31 @@ export async function loadImageWithDiagnosis(diagnosisID, formatMri) {
             .then(data => {
                 const urls = data.files;
                 const status = data.status;
-                console.log(urls);
-                for (let i = urls.length -1; i >= 0; i--){
-                    if(status[i]){
-                        const diagUrl = `http://127.0.0.1:8000/${urls[i]}`;
-                        const colour = colours[(i + 1)%10];
-                        volumes.push({url: diagUrl,
-                                    schema: "nifti",
-                                    colorMap: colour[1],
-                                    opacity: 0.85,
-                        });
+                const edited = data.edit
+                console.log(urls, status, edited);
+                if(!isEdit){
+                    for (let i = urls.length -1; i >= 0; i--){
+                        if(status[i] && !edited[i]){
+                            const diagUrl = `http://127.0.0.1:8000/${urls[i]}`;
+                            const colour = colours[(i + 1)%10];
+                            volumes.push({url: diagUrl,
+                                        schema: "nifti",
+                                        colorMap: colour[1],
+                                        opacity: 0.85,
+                            });
+                        }
+                    }
+                } else {
+                    for (let i = urls.length -1; i >= 0; i--){
+                        if(status[i] && edited[i]){
+                            const diagUrl = `http://127.0.0.1:8000/${urls[i]}`;
+                            const colour = colours[(i + 1)%10];
+                            volumes.push({url: diagUrl,
+                                        schema: "nifti",
+                                        colorMap: colour[1],
+                                        opacity: 0.85,
+                            });
+                        }
                     }
                 }
             })
