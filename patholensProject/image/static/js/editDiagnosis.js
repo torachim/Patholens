@@ -388,8 +388,8 @@ document.addEventListener('DOMContentLoaded', function() {
     //confidence meter window 
 
     const confirmButton = document.querySelector('.popupConfirm');
-    const confidenceSliderDiagnosis = document.getElementById('confidenceMeter1');
-    const confidenceSliderLesion = document.getElementById('confidenceMeter2')
+    const confidenceSliderDiagnosis = document.getElementById('confidenceMeter2');
+    const confidenceSliderLesion = document.getElementById('confidenceMeter1')
 
     // Listener for the confirmation button
     confirmButton.addEventListener('click', () => {
@@ -398,7 +398,8 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     async function endDiagnosis(confidenceValue){
-        await sendConfidence(confidenceValue, diagnosisID, csrfToken);
+        let confidenceType = "edit"
+        await sendConfidence(confidenceValue, diagnosisID, confidenceType, csrfToken);
         await sendTime("Finished Diagnosis");
         await deleteContinueDiagnosis(diagnosisID, csrfToken);
         window.location.assign(`/image/editDiagnosis/${diagnosisID}/transitionPage/`)
@@ -561,13 +562,13 @@ document.addEventListener('DOMContentLoaded', function() {
         alertOverlay.style.display = "none";
     })
     
-    logOut.addEventListener("click", () => {
+    /*logOut.addEventListener("click", () => {
         setContinue();
     })
 
     homePage.addEventListener("click", () => {
         setContinue();
-    })
+    })*/
 
 });
 

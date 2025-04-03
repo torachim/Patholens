@@ -245,7 +245,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     async function endDiagnosis(confidenceValue){
-        let confidenceType = "all Lesions"
+        let confidenceType = "myDiagnosis"
         await sendConfidence(confidenceValue, diagnosisID, confidenceType, csrfToken);
         await sendTime("Confidence Confirmed");
         await hardDeleteLesions(diagnosisID, csrfToken);

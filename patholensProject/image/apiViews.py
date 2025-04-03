@@ -138,9 +138,16 @@ class SaveConfidenceAPIView(APIView):
             # TODO: Get the name for the lesions 
             # TODO: Know which confidence you want to save: First confidence, AI confidence, edited confidence
             """
+            if confidenceType == "myDiagnosis":
+                confidenceIndex = 0
+            elif confidenceType == "edit":
+                confidenceIndex = 2
+            else:
+                # TODO: save from the ai page
+                pass
             
-            keyValue = [{confidenceType: confidence}]
-            returnValue = setConfidence(diagID, ConfidenceType.FIRST_EDIT,keyValue)
+
+            returnValue = setConfidence(diagID, confidenceIndex, confidence)
     
             # Successfully
             if returnValue["status"]:
