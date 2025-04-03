@@ -124,13 +124,24 @@
     <canvas id="imageBrainZoom" width="100%" height="376%"></canvas>
         <img alt="zoom button" src="{% static 'icons\editPageZoomButton.png' %}" id="zoomButton">
     </div>
+
+    <div class="finishDiagnosisButton">
+        <!-- Add this near the bottom of the content block, before the finish button -->
+        <div class="editLesionsButton">
+            <button id="lesionListToggle">Saved Lesions</button>
+            <div id="lesionConfidenceBox">
+                <h3 style="color: white; font-family: Cabin; margin-top: 0; margin-bottom: 10px;">Saved Lesions</h3>
+                <ul id="lesionList"></ul>
+            </div>
+        </div>
+    
+        <button type="button" id="finishButton">Finish Diagnosis</button>
+    </div>
     
 
 </div>
 
-<div class="finishDiagnosisButton">
-    <button type="button" id="finishButton">Finish Diagnosis</button>
-</div>
+
 
 <div class="popupOverlay" id="popupOverlay">
     <div class="popupFrame" id="popupFrame">
