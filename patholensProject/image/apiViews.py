@@ -134,10 +134,6 @@ class SaveConfidenceAPIView(APIView):
             if confidence is None or not (0 <= int(confidence) <= 10):
                 return Response({'error': 'Invalid confidence value. It must be between 0 and 10.'}, status=status.HTTP_400_BAD_REQUEST)
 
-            """
-            # TODO: Get the name for the lesions 
-            # TODO: Know which confidence you want to save: First confidence, AI confidence, edited confidence
-            """
             if confidenceType == "myDiagnosis":
                 confidenceIndex = 0
             elif confidenceType == "edit":
@@ -457,8 +453,8 @@ class GetLesionConfidence(APIView):
                 status = status.HTTP_400_BAD_REQUEST
                 )
             
-            #confidences: dict = getConfidence(diagnosisID)
             lesion = getLesionsConfidence(diagnosisID)
+            print(lesion)
 
             return Response({
                 'status': 'success',

@@ -70,8 +70,8 @@ def getLesionsConfidence(diagnosisID: str) -> list:
     if not diagObj:
         return False
     
-    lesions: Lesions = Lesions.objects.filter(diagnosis = diagObj, deleted = False)
-    return list(lesions.values("lesionID", "name", "confidence", "shown"))
+    lesions: Lesions = Lesions.objects.filter(diagnosis = diagObj, deleted = False).order_by("name")
+    return list(lesions.values("lesionID", "name", "confidence", "shown", "edited"))
 
 def getLesions(diagnosisID: str) -> list|bool:
     """

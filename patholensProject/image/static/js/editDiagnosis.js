@@ -605,15 +605,19 @@ document.addEventListener('DOMContentLoaded', function() {
             listItem.innerHTML = `
                 <span class="lesionName" style="color: ${colorName}; font-weight: bold">${lesion.name}</span>
                 <span class="lesionConfidence" style="color: white;"><b>Confidence:</b> ${lesion.confidence}</span>
-                <button class="deleteLesion" data-id="${lesion.lesionID}">
-                    <i class="fas fa-times" style="color:white"></i>
-                </button>
-                <button class="toggleVisibility" data-id="${lesion.lesionID}">
-                    ${lesion.shown 
-                        ? '<i class="fas fa-eye" style="color:white"></i>' 
-                        : '<i class="fas fa-eye-slash" style="color:white"></i>'}
-                </button>
-            `;
+                ${lesion.edited
+                    ?   `<button class="deleteLesion" data-id="${lesion.lesionID}">
+                            <i class="fas fa-times" style="color:white"></i>
+                        </button>
+                        <button class="toggleVisibility" data-id="${lesion.lesionID}">
+                        ${lesion.shown 
+                            ? '<i class="fas fa-eye" style="color:white"></i>' 
+                            : '<i class="fas fa-eye-slash" style="color:white"></i>'}
+                        </button>`
+                    :   `<button class="transferLesion" data-id="${lesion.lesionID}">
+                           <i class="fas fa-arrow-up-right-from-square" style="color: #ffffff;"></i>
+                        </button>`}`;
+
 
             lesionList.appendChild(listItem);
         }
