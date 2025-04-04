@@ -9,7 +9,7 @@ import re
 from .diagnosisServices import getURL, ConfidenceType, setConfidence, getDatasetName
 from accounts.doctorServices import setContinueDiag, deleteContinueDiag
 from .timeServices import setUseTime
-from .lesionServices import createLesion, getLesions, getLesionsConfidence, getNumberOfLesion, toggleShowLesion, toggleDeleteLesion, hardDeleteLesions, getEditedLesions
+from .lesionServices import createLesion, getLesions, getLesionsConfidence, getNumberOfLesion, toggleShowLesion, toggleDeleteLesion, hardDeleteLesions, getEditedLesions, toggleEditedLesion
 from .mediaServices import getAIModels
 from .dataHandler import savePicture
 import os
@@ -369,6 +369,7 @@ class saveImageAPIView(APIView):
             lesionName = request.POST.get("lesionName")
             confidence = request.POST.get("confidence")
             isEdit = request.POST.get("isEdit")
+            page = request.POST.get("Page")
             
             datasetName = getDatasetName(diagnosisID).lower()
 
@@ -391,15 +392,18 @@ class saveImageAPIView(APIView):
             )
             
             fileURL = os.path.join(mediaURL, filename)
+
+            fromMain: bool
+
+            if page == "main":
+                fromMain = True
+            else:
+                fromMain = False    
             
-            test:bool = False
-
-            print(isEdit, test)
-
             savePicture(datasetName, subID, docID, filename, image_file, mediaURL)
             
             
-            createLesion(diagnosisID, confidence, lesionName, fileURL, isEdit)
+            createLesion(diagnosisID, confidence, lesionName, fileURL, isEdit, fromMain)
 
             return JsonResponse({"message": "Image saved successfully"})
         except Exception as e:
@@ -599,6 +603,39 @@ class HardDelete(APIView):
                 }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
 
+class ToggleEditedLesion(APIView):
+    """
+    API Class to toggle the edited status of the lesion
+    """
+    def post(self, request):
+
+        try:
+            data = request.data
+            lesionID = data.get("lesionID")
+
+            if not lesionID:
+                return Response({
+                        'status': 'Error',
+                        'message': 'LesionID is required',
+                    }, status=status.HTTP_400_BAD_REQUEST)
+            
+            if toggleEditedLesion(lesionID):
+                return Response({
+                    'status': 'success',
+                    'message': 'Lesion shown status changed successfully',
+                    }, status=status.HTTP_200_OK)
+            else:
+                return Response({
+                    'status': 'Error',
+                    'message': 'Error during changing status of the lesion'
+                    }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
+        except Exception as e:
+            return Response({
+                    'status': 'error',
+                    'message': f'An unexpected Error occured {e}'
+                }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
 
 class AIModelNamesAPIView(APIView):
     def get(self, request, diagID):

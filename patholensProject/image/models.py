@@ -38,7 +38,9 @@ class Lesions(models.Model):
     # if true the lesion is shown on the edited page
     shown = models.BooleanField(default=True)
     # if on edited
-    edited = models.BooleanField()
+    edited = models.BooleanField(default=False)
+    # from page main -> true, edit -> false
+    fromMain = models.BooleanField(default=True)
     # key for the diagnosis
     diagnosis = models.ForeignKey(
         Diagnosis,

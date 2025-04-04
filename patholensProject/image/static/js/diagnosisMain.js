@@ -335,7 +335,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Save the image and send the time stamp
     async function saveImage(confidence){
         const lesionName = `lesion-${lesionNumber}`
-        await savedEditedLesion(nv, diagnosisID, lesionName, confidence, csrfToken, false);
+        await savedEditedLesion(nv, diagnosisID, lesionName, confidence, csrfToken, false, "main");
         sendTime("Saved Lesion");
         nv.createEmptyDrawing();
         reload();

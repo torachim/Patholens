@@ -1,6 +1,6 @@
 from image.models import Lesions, Diagnosis
 
-def createLesion(diagonsisID: str, confidence: int, name: str, url: str, isEdit: bool) -> Lesions|bool:
+def createLesion(diagonsisID: str, confidence: int, name: str, url: str, isEdit: bool, page: bool) -> Lesions|bool:
     """Creates a new lesion for a specified diagnosis
 
     Args:
@@ -8,7 +8,8 @@ def createLesion(diagonsisID: str, confidence: int, name: str, url: str, isEdit:
         confidence (int): confidence of the lesion
         name (str): name of the lesion
         url (str): path to the picture of the lesion
-        isEdit (bool): was the image saved on the edit page
+        isEdit (bool): was the image saved and is used on the edit page
+        page (bool): Is the image part of the first diagnosis
 
     Returns:
         Lesions|bool: Lesion if save was successful, else false
@@ -24,7 +25,7 @@ def createLesion(diagonsisID: str, confidence: int, name: str, url: str, isEdit:
     else:
         isedited = True
 
-    lesion: Lesions = Lesions.objects.create(name=name, confidence = confidence, url = url, deleted = False, shown = True, edited = isedited, diagnosis = diagObj)
+    lesion: Lesions = Lesions.objects.create(name=name, confidence = confidence, url = url, deleted = False, shown = True, edited = isedited, fromMain = page, diagnosis = diagObj)
 
     return lesion
 
@@ -71,7 +72,7 @@ def getLesionsConfidence(diagnosisID: str) -> list:
         return False
     
     lesions: Lesions = Lesions.objects.filter(diagnosis = diagObj, deleted = False).order_by("name")
-    return list(lesions.values("lesionID", "name", "confidence", "shown", "edited"))
+    return list(lesions.values("lesionID", "name", "confidence", "shown", "edited", "fromMain"))
 
 def getLesions(diagnosisID: str) -> list|bool:
     """
@@ -88,7 +89,7 @@ def getLesions(diagnosisID: str) -> list|bool:
     if not diagObj:
         return False
 
-    lesions: Lesions = Lesions.objects.filter(diagnosis = diagObj, deleted = False, edited = False).order_by("lesionID")
+    lesions: Lesions = Lesions.objects.filter(diagnosis = diagObj, deleted = False, fromMain = True).order_by("lesionID")
 
     return list(lesions.values("url", "shown"))
 
@@ -151,6 +152,24 @@ def toggleShowLesion(lesionID) -> bool:
         return False
     
     lesion.shown = not lesion.shown
+    lesion.save()
+    return True
+
+def toggleEditedLesion(lesionID: int) -> bool:
+    """
+    Toggle the edited status of the lesion
+
+    Args:
+        lesionID (int): The ID of the lesion
+    Returns:
+        bool: If the toggle was successful
+    """
+    lesion: Lesions = Lesions.objects.get(lesionID = lesionID)
+
+    if not lesion:
+        return False
+    
+    lesion.edited = not lesion.edited
     lesion.save()
     return True
 

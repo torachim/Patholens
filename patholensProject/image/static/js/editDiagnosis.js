@@ -1,5 +1,5 @@
 import { Niivue, DRAG_MODE } from "./index.js";
-import { niivueCanvas,drawRectangleNiivue,loadImageAPI, loadImageWithDiagnosis, loadImageWithMask, loadOverlayDAI, sendTimeStamp, sendConfidence, savedEditedLesion, deleteContinueDiagnosis, jumpRectangle, drawCubeNV, setContinueDiag, changePenValue, getNumberOfLesions, loadEditedDiagnosis, getLesionConfidence} from "./pathoLens.js";
+import { niivueCanvas,drawRectangleNiivue,loadImageAPI, loadImageWithDiagnosis, loadImageWithMask, loadOverlayDAI, sendTimeStamp, sendConfidence, savedEditedLesion, deleteContinueDiagnosis, jumpRectangle, drawCubeNV, setContinueDiag, changePenValue, getNumberOfLesions, loadEditedDiagnosis, getLesionConfidence, toggleEditLesion, toggleDeleteLesion, toggleShownLesion} from "./pathoLens.js";
 
 document.addEventListener('DOMContentLoaded', function() {
     //Not working properly I have to change a few things 
@@ -452,7 +452,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function saveImage(confidence){
         const lesionName = `edited-lesion-${lesionNumber}`;
-        await savedEditedLesion(nv, diagnosisID, lesionName, confidence, csrfToken, true);
+        await savedEditedLesion(nv, diagnosisID, lesionName, confidence, csrfToken, true, "edit");
         sendTime("Edited Saved Lesion");
         nv.createEmptyDrawing();
         reload();
@@ -606,7 +606,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <span class="lesionName" style="color: ${colorName}; font-weight: bold">${lesion.name}</span>
                 <span class="lesionConfidence" style="color: white;"><b>Confidence:</b> ${lesion.confidence}</span>
                 ${lesion.edited
-                    ?   `<button class="deleteLesion" data-id="${lesion.lesionID}">
+                    ?   `<button class="deleteLesion", data-origin="${lesion.fromMain}", data-id="${lesion.lesionID}">
                             <i class="fas fa-times" style="color:white"></i>
                         </button>
                         <button class="toggleVisibility" data-id="${lesion.lesionID}">
@@ -618,6 +618,9 @@ document.addEventListener('DOMContentLoaded', function() {
                            <i class="fas fa-arrow-up-right-from-square" style="color: #ffffff;"></i>
                         </button>`}`;
 
+                        //TODO: Toggle right so the lesions got sorted perfectly
+                        //Diagnosis Lesion just toggle edit
+                        //Edit lesions toggle both
 
             lesionList.appendChild(listItem);
         }
@@ -625,11 +628,19 @@ document.addEventListener('DOMContentLoaded', function() {
         // Event listeners remain the same
         document.querySelectorAll(".deleteLesion").forEach(button => {
             button.addEventListener("click", async function() {
-                await sendTime("Deleted Lesion");
+                await sendTime("Edit Deleted Lesion");
                 const lesionID = this.dataset.id;
-                undoDelete = true;
-                deletedLesionID = lesionID
-                await toggleDeleteLesion(lesionID, csrfToken);
+                const origin = this.dataset.origin === "true"
+                console.log("oringin: ", typeof origin)
+                if(origin){
+                    console.log("hallo true")
+                    await toggleEditLesion(lesionID, csrfToken)
+                }else{
+                    console.log("hallo false")
+                    undoDelete = true;
+                    deletedLesionID = lesionID
+                    await toggleDeleteLesion(lesionID, csrfToken);
+                }
                 reload();
             });
         });
@@ -641,6 +652,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 reload();
             });
         });
+
+        document.querySelectorAll(".transferLesion").forEach(button => {
+            button.addEventListener("click", async function() {
+                await sendTime("Edit Transfered Lesion")
+                const lesionID = this.dataset.id;
+                await toggleEditLesion(lesionID, csrfToken) //This function still needs to be written
+                reload();
+            });
+        })
     }
     
     /*logOut.addEventListener("click", () => {

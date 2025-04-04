@@ -587,10 +587,11 @@ export async function setContinueDiag(diagnosisID, website, csrfToken) {
  * @param {string} lesionName - The Name of the current lesion.
  * @param {Int} confidence - The confidence for the current lesion
  * @param {string} csrfToken - csrfToken for the API
- * @param {bool} isEdit - If the picture got saved on the edit page
+ * @param {bool} isEdit - If the picture got saved and is later used on the edit page
+ * @param {string} page - Just the page from which the image is saved
  * 
  */
-export async function savedEditedLesion(nv, diagnosisID, lesionName, confidence, csrfToken, isEdit) {
+export async function savedEditedLesion(nv, diagnosisID, lesionName, confidence, csrfToken, isEdit, page) {
     try {
         // Wait for subID from fetchImageURL
         const subID = await fetchImageSub(diagnosisID);
@@ -618,6 +619,7 @@ export async function savedEditedLesion(nv, diagnosisID, lesionName, confidence,
         formData.append("lesionName", name)
         formData.append("confidence", confidence)
         formData.append("isEdit", isEdit)
+        formData.append("Page", page)
         formData.append("imageFile", new Blob([imageBlob], { type: "application/octet-stream" }));
 
         // Send the data to the API
@@ -958,6 +960,28 @@ export async function hardDeleteLesions(diagnosisID, csrfToken){
             return response.json()
         }else{
             throw new Error("Faled to delete Lesions")
+        }
+    })
+    .catch(error => console.error(error));
+}
+
+export async function toggleEditLesion(lesionID, csrfToken){
+    await fetch('/image/api/toggleEdit/', {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": csrfToken,
+        },
+        body: JSON.stringify({
+            lesionID: lesionID,
+        })
+    })
+    .then(response => {
+        if(response.ok){
+            console.log("Lesion Edited toggled")
+            return response.json()
+        }else{
+            throw new Error("Failed to toggle Edit")
         }
     })
     .catch(error => console.error(error));
