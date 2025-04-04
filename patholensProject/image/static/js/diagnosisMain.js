@@ -98,6 +98,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Call the appropriate function based on the mode
     sendTime("Open Diagnosis")
+    setContinue();
     reload();
 
 
@@ -359,9 +360,6 @@ document.addEventListener('DOMContentLoaded', function() {
             alertMessageBox.style.display = "flex"
             overlay.style.display = "flex";
         }
-        else{
-            setContinue(); //send continue and logout 
-        }
     })
 
     const homePage = document.getElementById("homePageButton");
@@ -379,9 +377,6 @@ document.addEventListener('DOMContentLoaded', function() {
             alertMessageBox.style.display = "flex"
             overlay.style.display = "flex";
         }
-        else{
-            setContinue();
-        }
     })
 
     // sets continue for the current diagnosis
@@ -391,7 +386,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // log out the user
     logOutWindowContinue.addEventListener("click", () => {
-        setContinue();
         if(homeOrLog){
             window.location.assign("/startingPage/");
         }

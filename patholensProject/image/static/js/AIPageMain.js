@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     initialize();
+    setContinueDiag(diagnosisID, "AIpage", csrfToken);
 
     // Model Handling
     async function getModels(diagnosisID) {
@@ -131,19 +132,6 @@ document.addEventListener('DOMContentLoaded', function () {
             await loadImages();
     }
     
-    const logOut = document.getElementById("logoutButton");
-    const homePage = document.getElementById("homePageButton");
-
-    logOut.addEventListener("click", async () => {
-        await setContinueDiag(diagnosisID, "AIpage", csrfToken);
-    })
-
-    homePage.addEventListener("click", async () => {
-        console.log("Back to homepage")
-        await setContinueDiag(diagnosisID, "AIpage", csrfToken);
-    })
-
-
     const editDiagnosisButton = document.getElementById("editDiagnosis");
 
     editDiagnosisButton.addEventListener("click", () => {

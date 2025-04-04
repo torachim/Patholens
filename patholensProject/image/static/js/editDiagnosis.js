@@ -81,6 +81,7 @@ document.addEventListener('DOMContentLoaded', function() {
    
 
     initialize();
+    setContinue();
 
     // Model Handling
     async function getModels(diagnosisID) {
@@ -519,9 +520,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 alertMessageBox.style.display = "flex"
                 alertOverlay.style.display = "flex";
             }
-            else{
-                setContinue(); //send continue and logout 
-            }
         })
 
     const homePage = document.getElementById("homePageButton");
@@ -539,9 +537,6 @@ document.addEventListener('DOMContentLoaded', function() {
             alertMessageBox.style.display = "flex"
             alertOverlay.style.display = "flex";
         }
-        else{
-            setContinue();
-        }
     })
     
     async function  setContinue() {
@@ -550,7 +545,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // log out the user
     logOutWindowContinue.addEventListener("click", () => {
-        setContinue();
         if(homeOrLog){
             window.location.assign("/startingPage/");
         }
