@@ -580,6 +580,9 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
+        let colorMain = 1
+        let colorEdit = 1
+
         for (let i = 0; i < lesions.length; i++) {
             const lesion = lesions[i];
             const listItem = document.createElement("li");
@@ -598,7 +601,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 0: [23, "#800080"]   // Violett als Hex-Code
             };
 
-            const colorIndex = (i + 1) % 10;
+            let colorIndex;
+
+            if(!lesion.edited){
+                colorIndex = colorMain
+                colorMain += 1
+            }else{
+                colorIndex = colorEdit
+                colorEdit += 1
+            }
+
             const colorInfo = colours[colorIndex];
             const colorName = colorInfo[1];
             
@@ -618,10 +630,6 @@ document.addEventListener('DOMContentLoaded', function() {
                            <i class="fas fa-arrow-up-right-from-square" style="color: #ffffff;"></i>
                         </button>`}`;
 
-                        //TODO: Toggle right so the lesions got sorted perfectly
-                        //Diagnosis Lesion just toggle edit
-                        //Edit lesions toggle both
-
             lesionList.appendChild(listItem);
         }
 
@@ -631,12 +639,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 await sendTime("Edit Deleted Lesion");
                 const lesionID = this.dataset.id;
                 const origin = this.dataset.origin === "true"
-                console.log("oringin: ", typeof origin)
                 if(origin){
-                    console.log("hallo true")
                     await toggleEditLesion(lesionID, csrfToken)
                 }else{
-                    console.log("hallo false")
                     undoDelete = true;
                     deletedLesionID = lesionID
                     await toggleDeleteLesion(lesionID, csrfToken);
