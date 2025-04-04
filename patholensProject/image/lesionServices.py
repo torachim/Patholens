@@ -71,7 +71,7 @@ def getLesionsConfidence(diagnosisID: str) -> list:
     if not diagObj:
         return False
     
-    lesions: Lesions = Lesions.objects.filter(diagnosis = diagObj, deleted = False).order_by("-edited", "name")
+    lesions: Lesions = Lesions.objects.filter(diagnosis = diagObj, deleted = False).order_by("name")
     return list(lesions.values("lesionID", "name", "confidence", "shown", "edited", "fromMain"))
 
 def getLesions(diagnosisID: str) -> list|bool:
@@ -89,7 +89,7 @@ def getLesions(diagnosisID: str) -> list|bool:
     if not diagObj:
         return False
 
-    lesions: Lesions = Lesions.objects.filter(diagnosis = diagObj, deleted = False, fromMain = True).order_by("lesionID")
+    lesions: Lesions = Lesions.objects.filter(diagnosis = diagObj, deleted = False, fromMain = True).order_by("-edited", "lesionID")
 
     return list(lesions.values("url", "shown"))
 
@@ -108,7 +108,7 @@ def getEditedLesions(diagnosisID):
     if not diagObj:
         return False
     
-    lesions: Lesions = Lesions.objects.filter(diagnosis = diagObj, deleted = False, edited = True).order_by("lesionID")
+    lesions: Lesions = Lesions.objects.filter(diagnosis = diagObj, deleted = False, edited = True).order_by("name")
 
     return list(lesions.values("url", "shown"))
 

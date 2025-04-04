@@ -289,19 +289,30 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
      // Undo the drawing/erasing Should be edited
-     document.getElementById("undoTool").addEventListener("click", function (e) {
-        nv.drawUndo();
-        if(drawCube){
-            drawCube = false;
-            jumpRect.style.display = "none";
+     document.getElementById("undoTool").addEventListener("click", async function (e) {
+        if(undoDelete){
+            await toggleDeleteLesion(deletedLesionID, csrfToken);
+            undoDelete = false;
+            deletedLesionID = 0;
+            reload();
+        } else {
+            nv.drawUndo();
+            // If drawCube drawCube is set false so it's no longer activated
+            if(drawCube){
+                drawCube = false;
+                jumpRect.style.display = "none";
+            }
+            // If drawUndoCube drawCube is set to true again so draw cube is enabled
+            else if(drawUndoCube){
+                drawCube = true;
+                drawUndoCube = false;
+                jumpRect.style.display = "flex";
+            }
+            saveLesionButton.style.display = "none";
+            save = false;
         }
-        else if(drawUndoCube){
-            drawCube = true;
-            drawUndoCube = false;
-            jumpRect.style.display = "flex";
-        }
-        sendTime("Undo Edit")
         deactivateAllButtons(); //only changes style after being clicked
+        await sendTime("Undo")
     })
 
     //Removes the style applied when button is active
@@ -612,8 +623,12 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             const colorInfo = colours[colorIndex];
-            const colorName = colorInfo[1];
+            let colorName = colorInfo[1];
             
+            if(lesion.edited && lesion.fromMain){
+                colorName = "white"
+            }
+
             listItem.innerHTML = `
                 <span class="lesionName" style="color: ${colorName}; font-weight: bold">${lesion.name}</span>
                 <span class="lesionConfidence" style="color: white;"><b>Confidence:</b> ${lesion.confidence}</span>
