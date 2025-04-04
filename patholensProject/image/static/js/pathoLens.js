@@ -965,6 +965,28 @@ export async function hardDeleteLesions(diagnosisID, csrfToken){
     .catch(error => console.error(error));
 }
 
+export async function hardEditedDelete(diagnosisID, csrfToken){
+    await fetch('/image/api/hardEditDelete/', {
+        method: 'DELETE',
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": csrfToken,
+        },
+        body: JSON.stringify({
+            diagnosisID: diagnosisID,
+        })
+    })
+    .then(response => {
+        if(response.ok){
+            console.log("Lesions hard deleted")
+            return response.json()
+        }else{
+            throw new Error("Failed to delete Lesions")
+        }
+    })
+    .catch(error => console.error(error));
+}
+
 export async function toggleEditLesion(lesionID, csrfToken){
     await fetch('/image/api/toggleEdit/', {
         method: 'POST',

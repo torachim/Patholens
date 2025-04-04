@@ -9,7 +9,7 @@ import re
 from .diagnosisServices import getURL, ConfidenceType, setConfidence, getDatasetName
 from accounts.doctorServices import setContinueDiag, deleteContinueDiag
 from .timeServices import setUseTime
-from .lesionServices import createLesion, getLesions, getLesionsConfidence, getNumberOfLesion, toggleShowLesion, toggleDeleteLesion, hardDeleteLesions, getEditedLesions, toggleEditedLesion
+from .lesionServices import createLesion, getLesions, getLesionsConfidence, getNumberOfLesion, toggleShowLesion, toggleDeleteLesion, hardDeleteLesions, getEditedLesions, toggleEditedLesion, hardEditedDelete
 from .mediaServices import getAIModels
 from .dataHandler import savePicture
 import os
@@ -603,6 +603,51 @@ class HardDelete(APIView):
                 }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
 
+class HardEditedDelete(APIView):
+    """
+    API class to delete all lesions that a neither soft deleted or not marked edited
+    """
+    def delete(self, request):
+    
+        data = request.data
+        diagnosisID = data.get('diagnosisID')
+        if not diagnosisID:
+            return Response({
+                    'status': 'Error',
+                    'message': 'DiagnosisID is required'
+                }, status=status.HTTP_400_BAD_REQUEST)
+        
+        urls, deletetCount = hardDeleteLesions(diagnosisID)
+        if deletetCount != 0:
+            for url in urls:
+                imagePath = os.path.join(settings.MEDIA_ROOT,
+                                        url,
+                                        )
+                print(imagePath)
+                if os.path.isfile:
+                    os.remove(imagePath)
+        
+        notEditedUrls, notEditedCount = hardEditedDelete(diagnosisID)
+        if notEditedCount != 0:
+            for url in notEditedUrls:
+                imagePath = os.path.join(settings.MEDIA_ROOT,
+                                            url,
+                                            )
+                if os.path.isfile:
+                    os.remove(imagePath)
+
+        return Response({
+                'status': 'success',
+                'message': 'Lesion shown status changed successfully',
+                }, status=status.HTTP_200_OK)
+        
+        #except Exception as e:
+         #   return Response({
+          #          'status': 'Error',
+           #         'message': f"An unexpected error occured {e}"
+            #    }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+
 class ToggleEditedLesion(APIView):
     """
     API Class to toggle the edited status of the lesion
@@ -635,7 +680,7 @@ class ToggleEditedLesion(APIView):
                     'status': 'error',
                     'message': f'An unexpected Error occured {e}'
                 }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        
+                
 
 class AIModelNamesAPIView(APIView):
     def get(self, request, diagID):

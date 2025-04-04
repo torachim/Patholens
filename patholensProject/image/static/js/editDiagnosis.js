@@ -1,5 +1,5 @@
 import { Niivue, DRAG_MODE } from "./index.js";
-import { niivueCanvas,drawRectangleNiivue,loadImageAPI, loadImageWithDiagnosis, loadImageWithMask, loadOverlayDAI, sendTimeStamp, sendConfidence, savedEditedLesion, deleteContinueDiagnosis, jumpRectangle, drawCubeNV, setContinueDiag, changePenValue, getNumberOfLesions, loadEditedDiagnosis, getLesionConfidence, toggleEditLesion, toggleDeleteLesion, toggleShownLesion} from "./pathoLens.js";
+import { niivueCanvas,drawRectangleNiivue,loadImageAPI, loadImageWithDiagnosis, loadImageWithMask, loadOverlayDAI, sendTimeStamp, sendConfidence, savedEditedLesion, deleteContinueDiagnosis, jumpRectangle, drawCubeNV, setContinueDiag, changePenValue, getNumberOfLesions, loadEditedDiagnosis, getLesionConfidence, toggleEditLesion, toggleDeleteLesion, toggleShownLesion, hardEditedDelete} from "./pathoLens.js";
 
 document.addEventListener('DOMContentLoaded', function() {
     //Not working properly I have to change a few things 
@@ -201,7 +201,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         await loadZoomImage();
-        await loadMainImage();
+        reload()
     }
 
     async function reload(){
@@ -412,6 +412,7 @@ document.addEventListener('DOMContentLoaded', function() {
         let confidenceType = "edit"
         await sendConfidence(confidenceValue, diagnosisID, confidenceType, csrfToken);
         await sendTime("Finished Diagnosis");
+        await hardEditedDelete(diagnosisID, csrfToken);
         await deleteContinueDiagnosis(diagnosisID, csrfToken);
         window.location.assign(`/image/editDiagnosis/${diagnosisID}/transitionPage/`)
     }
@@ -682,14 +683,5 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         })
     }
-    
-    /*logOut.addEventListener("click", () => {
-        setContinue();
-    })
-
-    homePage.addEventListener("click", () => {
-        setContinue();
-    })*/
-
 });
 

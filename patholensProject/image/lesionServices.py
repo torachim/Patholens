@@ -195,3 +195,25 @@ def hardDeleteLesions(diagnosisID: str) -> tuple[list,int]|bool:
     urls = list(lesions.values_list('url', flat = True))
     deletedCount, _ = lesions.delete()
     return urls, deletedCount
+
+def hardEditedDelete(diagnosisID: str) -> tuple[list,int]|bool:
+    """
+    Hard delete lesions after finishing a diagnosis -> removes it from the database not reversable
+
+    Args:
+        diagnosisID (str): The ID of the current diagnosis
+
+    Returns:
+        tuple[list,int]|bool: tuple contains a list which contains all the urls of the lesions
+                              where the the deleted status is true(so the lesions that are soft deleted) 
+                              and the number of hard deleted lesion
+                              False if there is no correct diagnosis ID   
+    """
+    diagObj: Diagnosis = Diagnosis.objects.get(diagID = diagnosisID)
+    if not diagObj:
+        return False
+    
+    lesions: Lesions = Lesions.objects.filter(diagnosis = diagObj, edited = False)
+    urls = list(lesions.values_list('url', flat = True))
+    deletedCount, _ = lesions.delete()
+    return urls, deletedCount
