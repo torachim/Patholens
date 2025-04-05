@@ -13,6 +13,7 @@ from .lesionServices import createLesion, getLesions, getLesionsConfidence, getN
 from .mediaServices import getAIModels
 from .dataHandler import savePicture
 import os
+import shutil
 
 
 class GetImageAPIView(APIView):
@@ -699,3 +700,47 @@ class AIModelNamesAPIView(APIView):
                 'status': 'success',
                 'models': aiModelNames
             }, status=status.HTTP_200_OK)
+
+
+class SaveAIMasks(APIView):
+    def post(self, request):
+        data = request.data
+        diagnosisID = data.get("diagnosisID")
+        AIMasks = data.get("AIMasks")
+        confidence = data.get("confidence")
+
+        datasetName = getDatasetName(diagnosisID).lower()
+        subID = getURL(diagnosisID)
+        docID = request.user.id
+
+        for mask in AIMasks:
+            aiData = f"sub-{subID}_space-orig_acq-{mask}_mask.nii.gz"
+            maskUrl = os.path.join(settings.MEDIA_ROOT,
+                                   datasetName,
+                                   "derivatives",
+                                   "ai",
+                                   f"sub-{subID}",
+                                   "pred",
+                                   aiData)
+            
+            if os.path.isfile(maskUrl):
+                destinationPath = os.path.join(settings.MEDIA_ROOT,
+                    datasetName,
+                    "derivatives",
+                    "diagnosis",
+                    f"sub-{subID}",
+                    f"doc-{docID}"
+                    ) 
+                os.makedirs(destinationPath, exist_ok=True) 
+                saveData = os.path.join(destinationPath,
+                                        f"sub-{subID}_space-orig_acq-{mask}_mask_{docID}.nii.gz")
+                
+                shutil.copy(maskUrl, saveData)        
+            
+            setConfidence(diagnosisID,1,confidence)
+            
+        return Response({
+            'status': 'success',
+            'message': 'AI Masks saved as diagnosis successful',
+            }, status=status.HTTP_200_OK)
+

@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .apiViews import SetUseTimeAPIView, GetImageAPIView, SaveConfidenceAPIView, GetImageAndMaskAPIView, GetDiagnosis, GetEditedDiagnosis, DeleteDiagnosisAPIView, saveImageAPIView, setContinueAPIView, GetLesionConfidence, GetNumberLesions, ToggleLesionShown, ToggleLesionDelete, HardDelete, HardEditedDelete, ToggleEditedLesion, AIModelNamesAPIView
+from .apiViews import SetUseTimeAPIView, GetImageAPIView, SaveConfidenceAPIView, GetImageAndMaskAPIView, GetDiagnosis, GetEditedDiagnosis, DeleteDiagnosisAPIView, saveImageAPIView, setContinueAPIView, GetLesionConfidence, GetNumberLesions, ToggleLesionShown, ToggleLesionDelete, HardDelete, HardEditedDelete, ToggleEditedLesion, AIModelNamesAPIView, SaveAIMasks
 from . import views
 
 urlpatterns = [
@@ -20,4 +20,5 @@ urlpatterns = [
     path('hardEditDelete/', HardEditedDelete.as_view(), name='hardEditDelete'),
     path('toggleEdit/', ToggleEditedLesion.as_view(), name='ToggleEdit'),
     path('getAiModels/<str:diagID>/', AIModelNamesAPIView.as_view(), name="getAiModel"),
+    path('saveAIMasks/', SaveAIMasks.as_view(), name="saveAIMask"),
 ]

@@ -1008,3 +1008,27 @@ export async function toggleEditLesion(lesionID, csrfToken){
     })
     .catch(error => console.error(error));
 }
+
+export async function saveAIDiagnosis(diagnosisID, AIMasks, confidence, csrfToken){
+    await fetch('/image/api/saveAIMasks/', {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": csrfToken,
+        },
+        body: JSON.stringify({
+            diagnosisID: diagnosisID,
+            AIMasks: AIMasks,
+            confidence: confidence,
+        })
+    })
+    .then(response => {
+        if(response.ok){
+            console.log("AI saved")
+            return response.json()
+        }else{
+            throw new Error("Failed to save AI")
+        }
+    })
+    .catch(error => console.error(error));
+}
