@@ -9,7 +9,7 @@ import re
 from .diagnosisServices import getURL, ConfidenceType, setConfidence, getDatasetName
 from accounts.doctorServices import setContinueDiag, deleteContinueDiag
 from .timeServices import setUseTime
-from .lesionServices import createLesion, getLesions, getLesionsConfidence, getNumberOfLesion, toggleShowLesion, toggleDeleteLesion, hardDeleteLesions, getEditedLesions, toggleEditedLesion, hardEditedDelete
+from .lesionServices import createLesion, getLesions, getLesionsConfidence, getNumberOfLesion, toggleShowLesion, toggleDeleteLesion, hardDeleteLesions, getEditedLesions, toggleEditedLesion, hardEditedDelete, hardDeleteAllLesions
 from .mediaServices import getAIModels
 from .dataHandler import savePicture
 import os
@@ -583,8 +583,8 @@ class HardDelete(APIView):
                         'message': 'DiagnosisID is required'
                     }, status=status.HTTP_400_BAD_REQUEST)
             
-            urls, deletetCount = hardDeleteLesions(diagnosisID)
-            if deletetCount != 0:
+            urls, deletedCount = hardDeleteLesions(diagnosisID)
+            if deletedCount != 0:
                 for url in urls:
                     imagePath = os.path.join(settings.MEDIA_ROOT,
                                             url,
@@ -618,8 +618,8 @@ class HardEditedDelete(APIView):
                     'message': 'DiagnosisID is required'
                 }, status=status.HTTP_400_BAD_REQUEST)
         
-        urls, deletetCount = hardDeleteLesions(diagnosisID)
-        if deletetCount != 0:
+        urls, deletedCount = hardDeleteLesions(diagnosisID)
+        if deletedCount != 0:
             for url in urls:
                 imagePath = os.path.join(settings.MEDIA_ROOT,
                                         url,
@@ -735,10 +735,21 @@ class SaveAIMasks(APIView):
                 saveData = os.path.join(destinationPath,
                                         f"sub-{subID}_space-orig_acq-{mask}_mask_{docID}.nii.gz")
                 
-                shutil.copy(maskUrl, saveData)        
-            
+                shutil.copy(maskUrl, saveData)
+
+            urls, deletedCount = hardDeleteAllLesions(diagnosisID)
+
+            if deletedCount != 0:
+                for url in urls:
+                    imagePath = os.path.join(settings.MEDIA_ROOT,
+                                            url,
+                                            )
+                    print(imagePath)
+                    if os.path.isfile(imagePath):
+                        os.remove(imagePath)
+
             setConfidence(diagnosisID,1,confidence)
-            
+
         return Response({
             'status': 'success',
             'message': 'AI Masks saved as diagnosis successful',
