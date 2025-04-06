@@ -70,6 +70,15 @@ class AIModelInline(admin.StackedInline):
     model = AIModel
     extra = 0  # Ensures no empty additional forms are shown
 
+class LesionInline(admin.StackedInline):
+    """
+    Inline admin class for managing Lesion objects related to a Diagnosis.
+    
+    Displays Lesion records as stacked inline forms within the Diagnosis admin interface.
+    """
+    model = Lesions
+    extra = 0  # Ensures no empty additional forms are shown
+
 
 class AIModelAdmin(admin.ModelAdmin):
     list_display = ('modelName', 'mediaEntry', 'aiModelID')
@@ -147,7 +156,7 @@ class DiagnosisAdmin(ExportMixin, admin.ModelAdmin):
     # adds a filter options
     list_filter = ('doctor', 'mediaFolder')
     # adds the information from useTime to the diagnosis
-    inlines = [UseTimeInline]
+    inlines = [UseTimeInline, LesionInline]
 
     def get_search_results(self, request, queryset, search_term):
         """
