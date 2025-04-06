@@ -3,14 +3,14 @@ from django.conf import settings
 
 
 class Doctors(models.Model):
-    # 1 to 1 relation between diagnosis and user
+    # 1 to 1 relation between doctor and user
     # when user is deleted the doctor is deleted as well
     doctorID = models.OneToOneField(
         settings.AUTH_USER_MODEL, primary_key=True, on_delete=models.CASCADE
     )
 
     # references to the diagnosis. When deleted it will be set to NULL
-    continueDiag = models.JSONField(null=True)
+    continueDiag = models.JSONField(null=True, blank=True)
   
     # datasets which the Doctor can edit
     datasets = models.ManyToManyField("image.Media", blank=True)
