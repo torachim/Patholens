@@ -77,7 +77,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     async function reload(){
         let numberLesions = await getNumberOfLesions(diagnosisID);
-        console.log(numberLesions)
         if(numberLesions["activeLesionsNumber"] != 0){
             await loadImageAndEdited();
         } else {
@@ -443,10 +442,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 4: [4, "yellow"],
                 5: [5, "cyan"],
                 6: [6, "magenta"],
-                7: [7, "orange"],  // Braun als Hex-Code
-                8: [8, "#40E0D0"],  // Türkis als Hex-Code
-                9: [19, "#C00000"],  // Jet (sehr dunkles Grau) als Hex-Code
-                0: [23, "#800080"]   // Violett als Hex-Code
+                7: [7, "orange"],  
+                8: [8, "#40E0D0"],  
+                9: [19, "#C00000"],  
+                0: [23, "#800080"]  
             };
 
             const colorIndex = (i + 1) % 10;

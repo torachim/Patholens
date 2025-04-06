@@ -2,7 +2,7 @@ import { Niivue, DRAG_MODE } from "./index.js";
 import { niivueCanvas,drawRectangleNiivue,loadImageAPI, loadImageWithDiagnosis, loadImageWithMask, loadOverlayDAI, sendTimeStamp, sendConfidence, savedEditedLesion, deleteContinueDiagnosis, jumpRectangle, drawCubeNV, setContinueDiag, changePenValue, getNumberOfLesions, loadEditedDiagnosis, getLesionConfidence, toggleEditLesion, toggleDeleteLesion, toggleShownLesion, hardEditedDelete} from "./pathoLens.js";
 
 document.addEventListener('DOMContentLoaded', function() {
-    //Not working properly I have to change a few things 
+
     let drawRectangle = false;
     let drawCube = false;
     let drawUndoCube = false;
@@ -164,7 +164,6 @@ document.addEventListener('DOMContentLoaded', function() {
     async function loadZoomImage(){
         let volumes;
         if(selectedDisplay == "AI Diagnosis"){
-            console.log(selectedFormatMask)
             volumes = await loadImageWithMask(selectedFormatMask, selectedFormatMri, diagnosisID);
         }
         else if(selectedDisplay == "My Diagnosis"){
@@ -207,7 +206,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function reload(){
         let numberLesions = await getNumberOfLesions(diagnosisID);
-        console.log(numberLesions)
         if(numberLesions["activeEdited"] != 0){
             await loadImageAndEdited();
         } else {
@@ -289,7 +287,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-     // Undo the drawing/erasing Should be edited
+     // Undo the drawing
      document.getElementById("undoTool").addEventListener("click", async function (e) {
         if(undoDelete){
             await toggleDeleteLesion(deletedLesionID, csrfToken);
@@ -378,7 +376,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     document.body.addEventListener("click", (e) =>{
         if(zoomed){
-            console.log(e.target);
             if (!comparisonContainer.contains(e.target) && e.target !== zoomButton) {
 
                 let clickedDropdown = false;
@@ -398,7 +395,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     //confidence meter window 
-
     const confirmButton = document.querySelector('.popupConfirm');
     const confidenceSliderDiagnosis = document.getElementById('confidenceMeter2');
     const confidenceSliderLesion = document.getElementById('confidenceMeter1')
@@ -409,6 +405,7 @@ document.addEventListener('DOMContentLoaded', function() {
         endDiagnosis(confidenceValue);
     });
 
+    //Finish the current diagnosis
     async function endDiagnosis(confidenceValue){
         let confidenceType = "edit"
         await sendConfidence(confidenceValue, diagnosisID, confidenceType, csrfToken);
@@ -418,6 +415,7 @@ document.addEventListener('DOMContentLoaded', function() {
         window.location.assign(`/image/editDiagnosis/${diagnosisID}/transitionPage/`)
     }
 
+    //Finish frame with confidencemeter
     const finishButton = document.getElementById("finishButton");
     const popupOverlay = document.getElementById("popupOverlay");
     const closePopup = document.getElementById("closePopup");
@@ -463,6 +461,7 @@ document.addEventListener('DOMContentLoaded', function() {
         save = false;
     });
 
+    // Saves the current lesion
     async function saveImage(confidence){
         const lesionName = `edited-lesion-${lesionNumber}`;
         await savedEditedLesion(nv, diagnosisID, lesionName, confidence, csrfToken, true, "edit");
@@ -478,7 +477,7 @@ document.addEventListener('DOMContentLoaded', function() {
         alertOverlay.style.display = "none";
     })
 
- 
+    // Shows the alert window if necessary
     function showAlertWindow(){
         alertMessageBox.style.display = "flex"
         alertOverlay.style.display = "flex";
@@ -539,6 +538,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     })
     
+    // Sets the continue to the current diagnosis and the edit page
     async function  setContinue() {
         await setContinueDiag(diagnosisID, "editDiagnosis", csrfToken);
     }
@@ -568,7 +568,6 @@ document.addEventListener('DOMContentLoaded', function() {
         alertOverlay.style.display = "none";
     })
 
-    // Add this event listener with the others
     lesionListToggle.addEventListener("click", () => {
         lesionConfidenceBox.classList.toggle("show");
         lesionListToggle.textContent = lesionConfidenceBox.classList.contains("show") 
@@ -576,7 +575,7 @@ document.addEventListener('DOMContentLoaded', function() {
             : "Saved Lesions";
     });
 
-    // Modify the updateLesionList function to ensure proper styling:
+    // Updates the lesion window
     async function updateLesionList() {
         const lesions = await getLesionConfidence(diagnosisID);
         lesionList.innerHTML = "";
@@ -601,10 +600,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 4: [4, "yellow"],
                 5: [5, "cyan"],
                 6: [6, "magenta"],
-                7: [7, "orange"],  // Braun als Hex-Code
-                8: [8, "#40E0D0"],  // Türkis als Hex-Code
-                9: [19, "#C00000"],  // Jet (sehr dunkles Grau) als Hex-Code
-                0: [23, "#800080"]   // Violett als Hex-Code
+                7: [7, "orange"],  
+                8: [8, "#40E0D0"],  
+                9: [19, "#C00000"],  
+                0: [23, "#800080"]   
             };
 
             let colorIndex;
@@ -643,7 +642,7 @@ document.addEventListener('DOMContentLoaded', function() {
             lesionList.appendChild(listItem);
         }
 
-        // Event listeners remain the same
+        // If a lesion should be soft deleted
         document.querySelectorAll(".deleteLesion").forEach(button => {
             button.addEventListener("click", async function() {
                 await sendTime("Edit Deleted Lesion");
@@ -660,6 +659,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
 
+        // Toggles the visibility of a lesion
         document.querySelectorAll(".toggleVisibility").forEach(button => {
             button.addEventListener("click", async function() {
                 const lesionID = this.dataset.id;
@@ -668,6 +668,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
 
+        // Transfers a lesion to the edit page
         document.querySelectorAll(".transferLesion").forEach(button => {
             button.addEventListener("click", async function() {
                 await sendTime("Edit Transfered Lesion")

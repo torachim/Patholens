@@ -239,3 +239,26 @@ def hardDeleteAllLesions(diagnosisID: str) -> tuple[list, int]|bool:
     urls = list(lesions.values_list('url', flat = True))
     deletedCount, _ = lesions.delete()
     return urls, deletedCount
+
+def setShownTrueAll(diagnosisID: str) -> bool:
+    """
+    Sets the shown value of all lesions of a diagnosis to true
+
+    Args:
+        diagnosisID (str): The ID of a diagnosis
+
+    Returns:
+        bool: True if success else False
+    """
+    diagObj: Diagnosis = Diagnosis.objects.get(diagID = diagnosisID)
+
+    if not diagObj:
+        return False
+    
+    lesions: Lesions = Lesions.objects.filter(diagnosis = diagObj)
+
+    for lesion in lesions:
+        lesion.shown = True
+        lesion.save()
+    
+    return True

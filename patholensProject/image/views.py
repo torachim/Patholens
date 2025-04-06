@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from accounts.doctorServices import *
 from .mediaServices import *
 from .diagnosisServices import *
+from .lesionServices import setShownTrueAll
 
 import os
 
@@ -20,6 +21,7 @@ def editDiagnosis(request, diagnosisID):
 
 @login_required
 def AIPage(request, diagnosisID):
+    setShownTrueAll(diagnosisID)
     return render(request, "image/AIPage.html", {"diagnosisID": diagnosisID})
 
 @login_required

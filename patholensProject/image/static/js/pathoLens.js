@@ -803,7 +803,6 @@ export async function loadOverlayDAI(formatMask, formatMri, diagnosisID) {
     .then(data => {
         const urls = data.files;
         const status = data.status;
-        console.log(urls, status);
         for (let i = urls.length -1; i >= 0; i--){
             if(status[i]){
                 const diagUrl = `http://127.0.0.1:8000/${urls[i]}`;
@@ -878,6 +877,11 @@ export async function getLesionConfidence(diagnosisID){
     return confidences;
 }
 
+/**
+ * Toggles the delete status of the lesion with the given ID
+ * @param {int} lesionID - The ID of the lesion
+ * @param {string} csrfToken - csrf token
+ */
 export async function toggleDeleteLesion(lesionID, csrfToken){
     await fetch("/image/api/toggleDeleteLesion/", {
         method: 'POST',
@@ -921,6 +925,11 @@ export async function getNumberOfLesions(diagnosisID){
     return lesionNumber
 }
 
+/**
+ * Toggles the shown status of the lesion with the given ID
+ * @param {int} lesionID - ID of the lesiom
+ * @param {string} csrfToken csrf token
+ */
 export async function toggleShownLesion(lesionID, csrfToken){
     await fetch('/image/api/toggleShownLesion/', {
         method: 'POST',
@@ -943,6 +952,11 @@ export async function toggleShownLesion(lesionID, csrfToken){
     .catch(error => console.error(error));
 }
 
+/**
+ * Deletes all lesion of a diagnosis, that are currently marked deleted
+ * @param {string} diagnosisID - ID of the current diagnosis
+ * @param {*} csrfToken - csrf token
+ */
 export async function hardDeleteLesions(diagnosisID, csrfToken){
     await fetch('/image/api/hardDeleteLesions/', {
         method: 'DELETE',
@@ -965,6 +979,11 @@ export async function hardDeleteLesions(diagnosisID, csrfToken){
     .catch(error => console.error(error));
 }
 
+/**
+ * Hard deletes all lesions of a diagnosis, that are not marked edited
+ * @param {string} diagnosisID - ID of the current diagnosis
+ * @param {string} csrfToken - csrf token
+ */
 export async function hardEditedDelete(diagnosisID, csrfToken){
     await fetch('/image/api/hardEditDelete/', {
         method: 'DELETE',
@@ -978,7 +997,6 @@ export async function hardEditedDelete(diagnosisID, csrfToken){
     })
     .then(response => {
         if(response.ok){
-            console.log("Lesions hard deleted")
             return response.json()
         }else{
             throw new Error("Failed to delete Lesions")
@@ -987,6 +1005,11 @@ export async function hardEditedDelete(diagnosisID, csrfToken){
     .catch(error => console.error(error));
 }
 
+/**
+ * Toggles the edit status of a lesion
+ * @param {int} lesionID - ID of the lesion
+ * @param {*} csrfToken - csrf token
+ */
 export async function toggleEditLesion(lesionID, csrfToken){
     await fetch('/image/api/toggleEdit/', {
         method: 'POST',
@@ -1000,7 +1023,6 @@ export async function toggleEditLesion(lesionID, csrfToken){
     })
     .then(response => {
         if(response.ok){
-            console.log("Lesion Edited toggled")
             return response.json()
         }else{
             throw new Error("Failed to toggle Edit")
@@ -1009,7 +1031,13 @@ export async function toggleEditLesion(lesionID, csrfToken){
     .catch(error => console.error(error));
 }
 
-export async function saveAIDiagnosis(diagnosisID, AIMasks, confidence, csrfToken){
+/**
+ * Saves the marked AI masks as the final diagnosis
+ * @param {string} diagnosisID - ID of the current diagnosis
+ * @param {Array[string]} AIMasks - List that contains the name of the AI masks that should be saved
+ * @param {string} csrfToken - csrf token
+ */
+export async function saveAIDiagnosis(diagnosisID, AIMasks, csrfToken){
     await fetch('/image/api/saveAIMasks/', {
         method: 'POST',
         headers: {
@@ -1019,12 +1047,10 @@ export async function saveAIDiagnosis(diagnosisID, AIMasks, confidence, csrfToke
         body: JSON.stringify({
             diagnosisID: diagnosisID,
             AIMasks: AIMasks,
-            confidence: confidence,
         })
     })
     .then(response => {
         if(response.ok){
-            console.log("AI saved")
             return response.json()
         }else{
             throw new Error("Failed to save AI")

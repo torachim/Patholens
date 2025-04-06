@@ -1,5 +1,5 @@
 import { Niivue } from "./index.js";
-import { niivueCanvas, loadImageWithDiagnosis, loadImageWithMask, loadOverlayDAI, sendTimeStamp, deleteContinueDiagnosis, setContinueDiag, saveAIDiagnosis, getLesionConfidence } from "./pathoLens.js";
+import { niivueCanvas, loadImageWithDiagnosis, loadImageWithMask, loadOverlayDAI, sendTimeStamp, deleteContinueDiagnosis, setContinueDiag, saveAIDiagnosis, getLesionConfidence, sendConfidence } from "./pathoLens.js";
 
 document.addEventListener('DOMContentLoaded', function () {
     
@@ -192,8 +192,8 @@ document.addEventListener('DOMContentLoaded', function () {
         const checked = Array.from(document.querySelectorAll('.selectContainer input[type="checkbox"]:checked'));
         const selectedKeys = checked.map(cb => cb.dataset.modelKey);
         const confidenceValue = confidenceMeter.value
-
-        await saveAIDiagnosis(diagnosisID, selectedKeys, confidenceValue, csrfToken)
+        await sendConfidence(confidenceValue, diagnosisID, "ai", csrfToken)
+        await saveAIDiagnosis(diagnosisID, selectedKeys, csrfToken)
         await sendTime("Finished Diagnosis");
         await deleteContinueDiagnosis(diagnosisID, csrfToken);
         window.location.assign(`/image/editDiagnosis/${diagnosisID}/transitionPage/`)
