@@ -7,7 +7,8 @@ RUN apt-get update && apt-get -y --no-install-recommends install \
     nodejs \
     npm \
     sqlite3 \
-    docker.io 
+    docker.io \
+    docker-compose 
 
 WORKDIR /tmp
 
@@ -15,8 +16,5 @@ COPY ./patholensProject/requirements.txt .
 
 RUN pip3 install --no-cache-dir -r requirements.txt
 
-COPY ./fcd-assistant/package.json .
-
-RUN npm install
 
 WORKDIR /app

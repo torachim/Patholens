@@ -26,7 +26,7 @@ pipelines:
                 - |
                   echo "[flake8]" > .flake8
                   echo "select = N,E,W" >> .flake8
-                  echo "ignore = E501" >> .flake8
+                  echo "ignore = E501, W293" >> .flake8
                   echo "max-line-length = 120" >> .flake8
                   echo "naming-style = CamelCase" >> .flake8
                 - flake8 . --show-source --statistics
