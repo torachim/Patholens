@@ -48,7 +48,6 @@ class Lesions(models.Model):
         return (self.lesionID)
 
 
-
 # useTime class for storing the timestamps of executed actions during diagnosis
 class UseTime(models.Model):
     """
