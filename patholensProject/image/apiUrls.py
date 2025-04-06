@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .apiViews import SetUseTimeAPIView, GetImageAPIView, SaveConfidenceAPIView, GetImageAndMaskAPIView, GetDiagnosis, DeleteDiagnosisAPIView, saveImageAPIView, setContinueAPIView, GetLesionConfidence, GetNumberLesions, ToggleLesionShown, ToggleLesionDelete, HardDelete, AIModelNamesAPIView
+from .apiViews import SetUseTimeAPIView, GetImageAPIView, SaveConfidenceAPIView, GetImageAndMaskAPIView, GetDiagnosis, GetEditedDiagnosis, DeleteDiagnosisAPIView, saveImageAPIView, setContinueAPIView, GetLesionConfidence, GetNumberLesions, ToggleLesionShown, ToggleLesionDelete, HardDelete, HardEditedDelete, ToggleEditedLesion, AIModelNamesAPIView, SaveAIMasks
 from . import views
 
 urlpatterns = [
@@ -8,6 +8,7 @@ urlpatterns = [
     path('setUseTime/', SetUseTimeAPIView.as_view(), name='setUseTime'),
     path("saveImage/", saveImageAPIView.as_view(), name='saveImage'),
     path('getDiagnosis/<str:diagnosisID>/', GetDiagnosis.as_view(), name='getDiagnosis'),
+    path('getEditedDiagnosis/<str:diagnosisID>/', GetEditedDiagnosis.as_view(), name='getEditedDiagnosis'),
     path('getImageAndMask/<str:diagnosisID>/', GetImageAndMaskAPIView.as_view(), name='getImageAndMask'),
     path('deleteDiagnosis/', DeleteDiagnosisAPIView.as_view(), name='deleteDiagnosis'),
     path('setContinue/', setContinueAPIView.as_view(), name='setContinue'),
@@ -16,5 +17,8 @@ urlpatterns = [
     path('toggleShownLesion/', ToggleLesionShown.as_view(), name='toggleShownLesion'),
     path('toggleDeleteLesion/', ToggleLesionDelete.as_view(), name='toggleDeleteLesion'),
     path('hardDeleteLesions/', HardDelete.as_view(), name='hardDelete'),
+    path('hardEditDelete/', HardEditedDelete.as_view(), name='hardEditDelete'),
+    path('toggleEdit/', ToggleEditedLesion.as_view(), name='ToggleEdit'),
     path('getAiModels/<str:diagID>/', AIModelNamesAPIView.as_view(), name="getAiModel"),
+    path('saveAIMasks/', SaveAIMasks.as_view(), name="saveAIMask"),
 ]

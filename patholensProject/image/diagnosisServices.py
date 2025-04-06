@@ -73,14 +73,14 @@ def getDiagnosisObject(diagID: str) -> Diagnosis | bool:
     diagnosis: Diagnosis = Diagnosis.objects.get(diagID=diagID)
     return diagnosis
 
-def setConfidence(diagID: str, confidenceType: ConfidenceType, keyValues: list[dict]) -> dict:
+def setConfidence(diagID: str, confidenceType: int, confidenceValue: int) -> dict:
     """
     Updates the confidence values for a specific diagnosis.
 
     Args:
         * diagID (str): The ID of the diagnosis to update.
-        * confidenceType (ConfidenceType): The type of confidence being updated (e.g., ai, first edit, second edit).
-        * keyValues (list[dict]): A list of key-value pairs representing the confidence values to add.
+        * confidenceType (int): The type of confidence being updated 0 -> My diagnosis, 1 -> AI Diagnosis, 2 -> Edited Diagnosis.
+        * confidenceValue (int): The confidence value
 
     Returns:
         * dict: A dictionary with the status of the update and a message indicating success or failure.
@@ -92,27 +92,17 @@ def setConfidence(diagID: str, confidenceType: ConfidenceType, keyValues: list[d
         returnValue.update({"status": False, "message": "Diagnosis not found."})
         return returnValue
     
-    if not isinstance(confidenceType, ConfidenceType):
-        returnValue.update({"status": False, "message": "Not confidence type"})
-        return returnValue 
-    
-    # One of the confidence attributes in Diagnosis
-    attribute: str = confidenceType.value
-    
-    # If the value of attribute is not an attribute in Diagnosis
-    if not hasattr(Diagnosis, attribute):
-        returnValue.update({"status": False, "message": "Confidence type was not found."})
-        return returnValue
-    
-    
-    alreadySavedConfidences: dict | None = getattr(diagObj, attribute, None)
-    alreadySavedConfidences: dict = alreadySavedConfidences if alreadySavedConfidences else {}
-    
-    for lesions in keyValues:
-        alreadySavedConfidences.update(lesions)
+
+    # get in which field the confidence value is saved
+    if(confidenceType == 0):
+        attribute = "confidenceMyDiagnosis"
+    elif(confidenceType == 1):
+        attribute = "confidenceOfAIdiag"
+    else:
+        attribute = "confidenceOfEditedDiag"
     
     # Dynamically set the attribute of diagObj to updated savedValues 
-    setattr(diagObj, attribute, alreadySavedConfidences)
+    setattr(diagObj, attribute, confidenceValue)
     diagObj.save()
 
     returnValue.update({"status": True, "message": "New Values where saved."})
@@ -138,3 +128,4 @@ def getDatasetName(diagnosisID: str) -> str | bool:
     datasetName = dataset.name
 
     return datasetName
+

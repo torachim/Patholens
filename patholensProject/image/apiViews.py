@@ -9,10 +9,11 @@ import re
 from .diagnosisServices import getURL, ConfidenceType, setConfidence, getDatasetName
 from accounts.doctorServices import setContinueDiag, deleteContinueDiag
 from .timeServices import setUseTime
-from .lesionServices import createLesion, getLesions, getLesionsConfidence, getNumberOfLesion, toggleShowLesion, toggleDeleteLesion, hardDeleteLesions
+from .lesionServices import createLesion, getLesions, getLesionsConfidence, getNumberOfLesion, toggleShowLesion, toggleDeleteLesion, hardDeleteLesions, getEditedLesions, toggleEditedLesion, hardEditedDelete, hardDeleteAllLesions
 from .mediaServices import getAIModels
 from .dataHandler import savePicture
 import os
+import shutil
 
 
 class GetImageAPIView(APIView):
@@ -134,13 +135,15 @@ class SaveConfidenceAPIView(APIView):
             if confidence is None or not (0 <= int(confidence) <= 10):
                 return Response({'error': 'Invalid confidence value. It must be between 0 and 10.'}, status=status.HTTP_400_BAD_REQUEST)
 
-            """
-            # TODO: Get the name for the lesions 
-            # TODO: Know which confidence you want to save: First confidence, AI confidence, edited confidence
-            """
+            if confidenceType == "myDiagnosis":
+                confidenceIndex = 0
+            elif confidenceType == "edit":
+                confidenceIndex = 2
+            else:
+               confidenceIndex = 1
             
-            keyValue = [{confidenceType: confidence}]
-            returnValue = setConfidence(diagID, ConfidenceType.FIRST_EDIT,keyValue)
+
+            returnValue = setConfidence(diagID, confidenceIndex, confidence)
     
             # Successfully
             if returnValue["status"]:
@@ -278,6 +281,54 @@ class GetDiagnosis(APIView):
                     status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
         
+
+class GetEditedDiagnosis(APIView):
+    def get(self, request, diagnosisID):
+        """
+        Function to get the edited diagnosis Mask for a specific diagnosisID
+
+        Args:
+            diagnosisID (string): a diagnosisID 
+
+        Returns:
+            Path to the Diagnosis Image
+        """
+        try:
+            if not diagnosisID:
+                return Response({"error": "DiagnosisID required"},
+                                    status=status.HTTP_400_BAD_REQUEST
+                                )
+            
+            datasetName = getDatasetName(diagnosisID).lower()
+            if not datasetName:
+                return JsonResponse({"error": "Dataset name is required"}, status=400)
+
+            lesions = getEditedLesions(diagnosisID)
+            urlLesions = []
+            shown = []
+            for lesion in lesions:
+                url = lesion['url']
+                mediaUrl = os.path.join(
+                                'media',
+                                url
+                                )
+                urlLesions.append(mediaUrl)
+                shown.append(lesion['shown'])
+            
+            return Response(
+                    {"status": "success",
+                        "files": urlLesions,
+                        'status': shown,
+                    },
+                    status=status.HTTP_200_OK
+            )
+        
+        except Exception as e:
+            return Response(
+                    {"error": str(e)},
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+        
 class setContinueAPIView(APIView):
     """
     API Class to set the continue status for an ongoing diagnosis
@@ -315,6 +366,8 @@ class saveImageAPIView(APIView):
             diagnosisID = request.POST.get("diagnosisID")
             lesionName = request.POST.get("lesionName")
             confidence = request.POST.get("confidence")
+            isEdit = request.POST.get("isEdit")
+            page = request.POST.get("Page")
             
             datasetName = getDatasetName(diagnosisID).lower()
 
@@ -337,12 +390,18 @@ class saveImageAPIView(APIView):
             )
             
             fileURL = os.path.join(mediaURL, filename)
-            
+
+            fromMain: bool
+
+            if page == "main":
+                fromMain = True
+            else:
+                fromMain = False    
             
             savePicture(datasetName, subID, docID, filename, image_file, mediaURL)
             
             
-            createLesion(diagnosisID, confidence, lesionName, fileURL)
+            createLesion(diagnosisID, confidence, lesionName, fileURL, isEdit, fromMain)
 
             return JsonResponse({"message": "Image saved successfully"})
         except Exception as e:
@@ -396,7 +455,6 @@ class GetLesionConfidence(APIView):
                 status = status.HTTP_400_BAD_REQUEST
                 )
             
-            #confidences: dict = getConfidence(diagnosisID)
             lesion = getLesionsConfidence(diagnosisID)
 
             return Response({
@@ -425,6 +483,7 @@ class GetNumberLesions(APIView):
                     }, status=status.HTTP_400_BAD_REQUEST)
             
             numberOfLesions = getNumberOfLesion(diagnosisID)
+
             
             return Response({
                     'status': 'success',
@@ -520,13 +579,13 @@ class HardDelete(APIView):
                         'message': 'DiagnosisID is required'
                     }, status=status.HTTP_400_BAD_REQUEST)
             
-            urls, deletetCount = hardDeleteLesions(diagnosisID)
-            if deletetCount != 0:
+            urls, deletedCount = hardDeleteLesions(diagnosisID)
+            if deletedCount != 0:
                 for url in urls:
                     imagePath = os.path.join(settings.MEDIA_ROOT,
                                             url,
                                             )
-                    if os.path.isfile:
+                    if os.path.isfile(imagePath):
                         os.remove(imagePath)
 
             return Response({
@@ -541,8 +600,88 @@ class HardDelete(APIView):
                 }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
 
+class HardEditedDelete(APIView):
+    """
+    API class to delete all lesions that a neither soft deleted or not marked edited
+    """
+    def delete(self, request):
+        try:
+            data = request.data
+            diagnosisID = data.get('diagnosisID')
+            if not diagnosisID:
+                return Response({
+                        'status': 'Error',
+                        'message': 'DiagnosisID is required'
+                    }, status=status.HTTP_400_BAD_REQUEST)
+            
+            urls, deletedCount = hardDeleteLesions(diagnosisID)
+            if deletedCount != 0:
+                for url in urls:
+                    imagePath = os.path.join(settings.MEDIA_ROOT,
+                                            url,
+                                            )
+                    if os.path.isfile(imagePath):
+                        os.remove(imagePath)
+            
+            notEditedUrls, notEditedCount = hardEditedDelete(diagnosisID)
+            if notEditedCount != 0:
+                for url in notEditedUrls:
+                    imagePath = os.path.join(settings.MEDIA_ROOT,
+                                                url,
+                                                )
+                    if os.path.isfile(imagePath):
+                        os.remove(imagePath)
+
+            return Response({
+                    'status': 'success',
+                    'message': 'Lesion shown status changed successfully',
+                    }, status=status.HTTP_200_OK)
+        
+        except Exception as e:
+            return Response({
+                    'status': 'Error',
+                    'message': f"An unexpected error occured {e}"
+               }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+
+class ToggleEditedLesion(APIView):
+    """
+    API Class to toggle the edited status of the lesion
+    """
+    def post(self, request):
+
+        try:
+            data = request.data
+            lesionID = data.get("lesionID")
+
+            if not lesionID:
+                return Response({
+                        'status': 'Error',
+                        'message': 'LesionID is required',
+                    }, status=status.HTTP_400_BAD_REQUEST)
+            
+            if toggleEditedLesion(lesionID):
+                return Response({
+                    'status': 'success',
+                    'message': 'Shown lesion status changed successfully',
+                    }, status=status.HTTP_200_OK)
+            else:
+                return Response({
+                    'status': 'Error',
+                    'message': 'Error during changing status of the lesion'
+                    }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
+        except Exception as e:
+            return Response({
+                    'status': 'error',
+                    'message': f'An unexpected Error occured {e}'
+                }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                
 
 class AIModelNamesAPIView(APIView):
+    """
+    API class to get the AI models
+    """
     def get(self, request, diagID):
         
         dataset = getDatasetName(diagID)        
@@ -559,3 +698,66 @@ class AIModelNamesAPIView(APIView):
                 'status': 'success',
                 'models': aiModelNames
             }, status=status.HTTP_200_OK)
+
+
+class SaveAIMasks(APIView):
+    """
+    API class to save AI masks as the final diagnosis
+    """
+    def post(self, request):
+        try:
+            data = request.data
+            diagnosisID = data.get("diagnosisID")
+            AIMasks = data.get("AIMasks")
+
+            # Get the dataset name
+            datasetName = getDatasetName(diagnosisID).lower()
+            subID = getURL(diagnosisID)
+            docID = request.user.id
+
+            for mask in AIMasks:
+                aiData = f"sub-{subID}_space-orig_acq-{mask}_mask.nii.gz"
+                maskUrl = os.path.join(settings.MEDIA_ROOT,
+                                    datasetName,
+                                    "derivatives",
+                                    "ai",
+                                    f"sub-{subID}",
+                                    "pred",
+                                    aiData)
+                
+                if os.path.isfile(maskUrl):
+                    destinationPath = os.path.join(settings.MEDIA_ROOT,
+                        datasetName,
+                        "derivatives",
+                        "diagnosis",
+                        f"sub-{subID}",
+                        f"doc-{docID}"
+                        ) 
+                    os.makedirs(destinationPath, exist_ok=True) 
+                    saveData = os.path.join(destinationPath,
+                                            f"sub-{subID}_space-orig_acq-{mask}_mask_{docID}.nii.gz")
+                    # copy the AI masks
+                    shutil.copy(maskUrl, saveData)
+
+                # Delete the remaining lesions
+                urls, deletedCount = hardDeleteAllLesions(diagnosisID)
+
+                if deletedCount != 0:
+                    for url in urls:
+                        imagePath = os.path.join(settings.MEDIA_ROOT,
+                                                url,
+                                                )
+                        if os.path.isfile(imagePath):
+                            os.remove(imagePath)
+
+            return Response({
+                'status': 'success',
+                'message': 'AI Masks saved as diagnosis successfully',
+                }, status=status.HTTP_200_OK)
+        
+        except Exception as e:
+            return Response({
+                'status': 'Error',
+                'message': f'Error during saving the AI mask {e}'
+            })
+

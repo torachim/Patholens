@@ -54,6 +54,64 @@
     <button type="button" id="editDiagnosis">Edit Diagnosis</button>
 </div>
 
+<!--Confidence Meter-->
+<div class="popupOverlay" id="popupOverlay">
+    <div class="popupFrame" id="popupFrame">
+        
+        <button class="popupClose" id="closePopup">&times;</button>
+        
+        <p>Please select the AI-Models you want to save and state your confidence</p>
+
+        <div class="selectContainer" id="selectContainer">
+        </div>
+
+        <div class="confidenceMeterContainer">
+            
+            <input type="range" class="confidenceMeter" min="0" max="10" value="5" id="confidenceMeter">
+  
+
+            <div class="tooltip" id="tooltip">5</div>
+        </div>
+
+        <button class="popupConfirm" id="popupConfirm">Confirm</button>
+    </div>
+</div>
+
+
+<script>
+    const confirmButton = document.getElementById('confirmButton');
+    const displayValue = document.getElementById('displayValue');
+
+    document.querySelectorAll(".confidenceMeter").forEach(slider => {
+
+        const tooltip = slider.nextElementSibling;
+
+        slider.addEventListener('input', function () {
+            const value = slider.value;
+            tooltip.textContent = value; 
+            tooltip.style.visibility = 'visible'; 
+
+            
+            const sliderRect = slider.getBoundingClientRect(); 
+            const thumbPosition = ((value - slider.min) / (slider.max - slider.min)) * sliderRect.width;
+
+            
+            tooltip.style.left = `${thumbPosition}px`;
+            tooltip.style.transform = `translateX(-50%)`;
+        });
+
+        
+        slider.addEventListener('mouseover', function () {
+            tooltip.style.visibility = 'visible';
+        });
+
+        
+        slider.addEventListener('mouseout', function () {
+            tooltip.style.visibility = 'hidden';
+        });
+    })
+</script>
+
 
 {%endblock%}
 

@@ -1,6 +1,6 @@
 from image.models import Lesions, Diagnosis
 
-def createLesion(diagonsisID: str, confidence: int, name: str, url: str) -> Lesions|bool:
+def createLesion(diagonsisID: str, confidence: int, name: str, url: str, isEdit: bool, page: bool) -> Lesions|bool:
     """Creates a new lesion for a specified diagnosis
 
     Args:
@@ -8,6 +8,8 @@ def createLesion(diagonsisID: str, confidence: int, name: str, url: str) -> Lesi
         confidence (int): confidence of the lesion
         name (str): name of the lesion
         url (str): path to the picture of the lesion
+        isEdit (bool): was the image saved and is used on the edit page
+        page (bool): Is the image part of the first diagnosis
 
     Returns:
         Lesions|bool: Lesion if save was successful, else false
@@ -18,7 +20,12 @@ def createLesion(diagonsisID: str, confidence: int, name: str, url: str) -> Lesi
     
     diagObj: Diagnosis = Diagnosis.objects.get(diagID = diagonsisID)
 
-    lesion: Lesions = Lesions.objects.create(name=name, confidence = confidence, url = url, deleted = False, shown = True, diagnosis = diagObj)
+    if isEdit == "false":
+        isedited = False
+    else:
+        isedited = True
+
+    lesion: Lesions = Lesions.objects.create(name=name, confidence = confidence, url = url, deleted = False, shown = True, edited = isedited, fromMain = page, diagnosis = diagObj)
 
     return lesion
 
@@ -40,7 +47,10 @@ def toggleDeleteLesion(lesionID: int) -> bool:
     if not lesion:
         return False
     
-    lesion.deleted = not lesion.deleted
+    newStatus = not lesion.deleted
+    
+    lesion.deleted = newStatus
+    lesion.shown = not newStatus
     lesion.save()
     return True
 
@@ -61,8 +71,8 @@ def getLesionsConfidence(diagnosisID: str) -> list:
     if not diagObj:
         return False
     
-    lesions: Lesions = Lesions.objects.filter(diagnosis = diagObj, deleted = False)
-    return list(lesions.values("lesionID", "name", "confidence", "shown"))
+    lesions: Lesions = Lesions.objects.filter(diagnosis = diagObj, deleted = False).order_by("-edited", "name")
+    return list(lesions.values("lesionID", "name", "confidence", "shown", "edited", "fromMain"))
 
 def getLesions(diagnosisID: str) -> list|bool:
     """
@@ -79,7 +89,26 @@ def getLesions(diagnosisID: str) -> list|bool:
     if not diagObj:
         return False
 
-    lesions: Lesions = Lesions.objects.filter(diagnosis = diagObj, deleted = False).order_by("lesionID")
+    lesions: Lesions = Lesions.objects.filter(diagnosis = diagObj, deleted = False, fromMain = True).order_by("-edited", "lesionID")
+
+    return list(lesions.values("url", "shown"))
+
+def getEditedLesions(diagnosisID):
+    """
+    Returns the urls of all the edited lesions for a current diagnosis that are not soft deleted.
+
+    Args:
+        diagnosisID (str): ID of the current diagnosis
+
+    Returns:
+        list: A list with dictionary for each lesion which contains its url.
+    """
+    diagObj: Diagnosis = Diagnosis.objects.get(diagID = diagnosisID)
+
+    if not diagObj:
+        return False
+    
+    lesions: Lesions = Lesions.objects.filter(diagnosis = diagObj, deleted = False, edited = True).order_by("name")
 
     return list(lesions.values("url", "shown"))
 
@@ -100,8 +129,12 @@ def getNumberOfLesion(diagnosisID: str) -> int|bool:
         return False
 
     lesionsNumber = Lesions.objects.filter(diagnosis = diagObj).count()
-
-    return lesionsNumber
+    activeLesionNumber = Lesions.objects.filter(diagnosis = diagObj, shown = True).count()
+    activeEditedNumber = Lesions.objects.filter(diagnosis = diagObj, shown = True, edited = True).count()
+    
+    return {"lesionNumber": lesionsNumber,
+            "activeLesionsNumber": activeLesionNumber,
+            "activeEdited": activeEditedNumber}
 
 def toggleShowLesion(lesionID) -> bool:
     """
@@ -119,7 +152,24 @@ def toggleShowLesion(lesionID) -> bool:
         return False
     
     lesion.shown = not lesion.shown
-    print(lesion.shown)
+    lesion.save()
+    return True
+
+def toggleEditedLesion(lesionID: int) -> bool:
+    """
+    Toggle the edited status of the lesion
+
+    Args:
+        lesionID (int): The ID of the lesion
+    Returns:
+        bool: If the toggle was successful
+    """
+    lesion: Lesions = Lesions.objects.get(lesionID = lesionID)
+
+    if not lesion:
+        return False
+    
+    lesion.edited = not lesion.edited
     lesion.save()
     return True
 
@@ -145,3 +195,70 @@ def hardDeleteLesions(diagnosisID: str) -> tuple[list,int]|bool:
     urls = list(lesions.values_list('url', flat = True))
     deletedCount, _ = lesions.delete()
     return urls, deletedCount
+
+def hardEditedDelete(diagnosisID: str) -> tuple[list,int]|bool:
+    """
+    Hard delete lesions after finishing a diagnosis -> removes it from the database not reversable
+
+    Args:
+        diagnosisID (str): The ID of the current diagnosis
+
+    Returns:
+        tuple[list,int]|bool: tuple contains a list which contains all the urls of the lesions
+                              where the the deleted status is true(so the lesions that are soft deleted) 
+                              and the number of hard deleted lesion
+                              False if there is no correct diagnosis ID   
+    """
+    diagObj: Diagnosis = Diagnosis.objects.get(diagID = diagnosisID)
+    if not diagObj:
+        return False
+    
+    lesions: Lesions = Lesions.objects.filter(diagnosis = diagObj, edited = False)
+    urls = list(lesions.values_list('url', flat = True))
+    deletedCount, _ = lesions.delete()
+    return urls, deletedCount
+
+def hardDeleteAllLesions(diagnosisID: str) -> tuple[list, int]|bool:
+    """
+    Hard delete all Lesions of a diagnosis -> removes it from the database not reversable
+
+    Args:
+        diagnosisID (str): The ID of the current diagnosis
+
+    Returns:
+        tuple[list,int]|bool: tuple contains a list which contains all the urls of the lesions
+                              where the the deleted status is true(so the lesions that are soft deleted) 
+                              and the number of hard deleted lesion
+    """
+    diagObj: Diagnosis = Diagnosis.objects.get(diagID = diagnosisID)
+
+    if not diagObj:
+        return False
+    
+    lesions: Lesions = Lesions.objects.filter(diagnosis = diagObj)
+    urls = list(lesions.values_list('url', flat = True))
+    deletedCount, _ = lesions.delete()
+    return urls, deletedCount
+
+def setShownTrueAll(diagnosisID: str) -> bool:
+    """
+    Sets the shown value of all lesions of a diagnosis to true
+
+    Args:
+        diagnosisID (str): The ID of a diagnosis
+
+    Returns:
+        bool: True if success else False
+    """
+    diagObj: Diagnosis = Diagnosis.objects.get(diagID = diagnosisID)
+
+    if not diagObj:
+        return False
+    
+    lesions: Lesions = Lesions.objects.filter(diagnosis = diagObj)
+
+    for lesion in lesions:
+        lesion.shown = True
+        lesion.save()
+    
+    return True

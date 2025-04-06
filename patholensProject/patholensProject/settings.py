@@ -57,8 +57,8 @@ REST_FRAMEWORK = {
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Patholens API',
-    'DESCRIPTION': 'API to access the brainscan data and save diagnosis both in .nii.gz format',
-    'VERSION': '1.0.0',
+    'DESCRIPTION': 'API to work with Patholens data.',
+    'VERSION': '1.1.1',
     'SERVE_INCLUDE_SCHEMA': False,
 }
 

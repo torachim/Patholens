@@ -584,17 +584,19 @@ export async function setContinueDiag(diagnosisID, website, csrfToken) {
  * Save the current diagnosis in the database
  * @param {Niivue} nv - Niivue instance
  * @param {string} diagnosisID - The ID of the current diagnosis
- * @param {Int} lesionNumber - The Number of the current lesion.
+ * @param {string} lesionName - The Name of the current lesion.
  * @param {Int} confidence - The confidence for the current lesion
  * @param {string} csrfToken - csrfToken for the API
+ * @param {bool} isEdit - If the picture got saved and is later used on the edit page
+ * @param {string} page - Just the page from which the image is saved
  * 
  */
-export async function savedEditedLesion(nv, diagnosisID, lesionNumber, confidence, csrfToken) {
+export async function savedEditedLesion(nv, diagnosisID, lesionName, confidence, csrfToken, isEdit, page) {
     try {
         // Wait for subID from fetchImageURL
         const subID = await fetchImageSub(diagnosisID);
         const docID = await fetchDoctorID();
-        const name = `lesion-${lesionNumber}`
+        const name = lesionName
 
         if (!subID) {
             console.error("Image subID could not be retrieved.");
@@ -616,6 +618,8 @@ export async function savedEditedLesion(nv, diagnosisID, lesionNumber, confidenc
         formData.append("diagnosisID", diagnosisID);
         formData.append("lesionName", name)
         formData.append("confidence", confidence)
+        formData.append("isEdit", isEdit)
+        formData.append("Page", page)
         formData.append("imageFile", new Blob([imageBlob], { type: "application/octet-stream" }));
 
         // Send the data to the API
@@ -641,6 +645,7 @@ export async function savedEditedLesion(nv, diagnosisID, lesionNumber, confidenc
  * Returns two volumes one with the main MRI image and the other one with the doctor's diagnosis for the current case
  * @param {string} diagnosisID The ID of the current diagnosis
  * @param {string} formatMri The requested Format for the MRI Picture (T1 or Flair)
+ * @param {bool} isEdit If the loading target is the edit page or not
  * @returns Array with the volumes
  */
 export async function loadImageWithDiagnosis(diagnosisID, formatMri) {
@@ -662,7 +667,7 @@ export async function loadImageWithDiagnosis(diagnosisID, formatMri) {
             .then(data => {
                 const urls = data.files;
                 const status = data.status;
-                console.log(urls);
+                console.log(urls, status)
                 for (let i = urls.length -1; i >= 0; i--){
                     if(status[i]){
                         const diagUrl = `http://127.0.0.1:8000/${urls[i]}`;
@@ -681,6 +686,40 @@ export async function loadImageWithDiagnosis(diagnosisID, formatMri) {
 
         return volumes;
     }
+
+export async function loadEditedDiagnosis(diagnosisID, formatMRI){
+
+    const getEUrl = `/image/api/getEditedDiagnosis/${diagnosisID}/`
+
+    let volumes = await loadImageAPI(formatMRI, diagnosisID)
+
+    await fetch(getEUrl)
+        .then(response => {
+            if(!response.ok){
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            const urls = data.files
+            const status = data.status
+            for(let i = urls.length - 1; i >= 0; i--){
+                if(status[i]){
+                    const diagUrl = `http://127.0.0.1:8000/${urls[i]}`;
+                    const colour = colours[(i + 1)%10];
+                    volumes.push({url: diagUrl,
+                                schema: "nifti",
+                                colorMap: colour[1],
+                                opacity: 0.85,
+                    });
+                }
+            }
+        })
+        .catch(err => {
+            console.error("Error loading Nifti files ", err)
+        })
+    return volumes
+}
 
 export function changePenValue(nv, mode, filled){
     const colour = colours[mode%10];
@@ -763,14 +802,17 @@ export async function loadOverlayDAI(formatMask, formatMri, diagnosisID) {
     })
     .then(data => {
         const urls = data.files;
+        const status = data.status;
         for (let i = urls.length -1; i >= 0; i--){
-            const diagUrl = `http://127.0.0.1:8000/${urls[i]}`;
-            const colour = colours[(i + 1)%10];
-            volumes.push({url: diagUrl,
-                          schema: "nifti",
-                          colorMap: colour[1],
-                          opacity: 0.85,
-            });
+            if(status[i]){
+                const diagUrl = `http://127.0.0.1:8000/${urls[i]}`;
+                const colour = colours[(i + 1)%10];
+                volumes.push({url: diagUrl,
+                            schema: "nifti",
+                            colorMap: colour[1],
+                            opacity: 0.85,
+                });
+            }
         }
     })
     .catch(err => {
@@ -835,6 +877,11 @@ export async function getLesionConfidence(diagnosisID){
     return confidences;
 }
 
+/**
+ * Toggles the delete status of the lesion with the given ID
+ * @param {int} lesionID - The ID of the lesion
+ * @param {string} csrfToken - csrf token
+ */
 export async function toggleDeleteLesion(lesionID, csrfToken){
     await fetch("/image/api/toggleDeleteLesion/", {
         method: 'POST',
@@ -875,10 +922,14 @@ export async function getNumberOfLesions(diagnosisID){
                 lesionNumber = data.number;
             })
             .catch(error => console.error(error));
-
     return lesionNumber
 }
 
+/**
+ * Toggles the shown status of the lesion with the given ID
+ * @param {int} lesionID - ID of the lesiom
+ * @param {string} csrfToken csrf token
+ */
 export async function toggleShownLesion(lesionID, csrfToken){
     await fetch('/image/api/toggleShownLesion/', {
         method: 'POST',
@@ -901,6 +952,11 @@ export async function toggleShownLesion(lesionID, csrfToken){
     .catch(error => console.error(error));
 }
 
+/**
+ * Deletes all lesion of a diagnosis, that are currently marked deleted
+ * @param {string} diagnosisID - ID of the current diagnosis
+ * @param {*} csrfToken - csrf token
+ */
 export async function hardDeleteLesions(diagnosisID, csrfToken){
     await fetch('/image/api/hardDeleteLesions/', {
         method: 'DELETE',
@@ -918,6 +974,86 @@ export async function hardDeleteLesions(diagnosisID, csrfToken){
             return response.json()
         }else{
             throw new Error("Faled to delete Lesions")
+        }
+    })
+    .catch(error => console.error(error));
+}
+
+/**
+ * Hard deletes all lesions of a diagnosis, that are not marked edited
+ * @param {string} diagnosisID - ID of the current diagnosis
+ * @param {string} csrfToken - csrf token
+ */
+export async function hardEditedDelete(diagnosisID, csrfToken){
+    await fetch('/image/api/hardEditDelete/', {
+        method: 'DELETE',
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": csrfToken,
+        },
+        body: JSON.stringify({
+            diagnosisID: diagnosisID,
+        })
+    })
+    .then(response => {
+        if(response.ok){
+            return response.json()
+        }else{
+            throw new Error("Failed to delete Lesions")
+        }
+    })
+    .catch(error => console.error(error));
+}
+
+/**
+ * Toggles the edit status of a lesion
+ * @param {int} lesionID - ID of the lesion
+ * @param {*} csrfToken - csrf token
+ */
+export async function toggleEditLesion(lesionID, csrfToken){
+    await fetch('/image/api/toggleEdit/', {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": csrfToken,
+        },
+        body: JSON.stringify({
+            lesionID: lesionID,
+        })
+    })
+    .then(response => {
+        if(response.ok){
+            return response.json()
+        }else{
+            throw new Error("Failed to toggle Edit")
+        }
+    })
+    .catch(error => console.error(error));
+}
+
+/**
+ * Saves the marked AI masks as the final diagnosis
+ * @param {string} diagnosisID - ID of the current diagnosis
+ * @param {Array[string]} AIMasks - List that contains the name of the AI masks that should be saved
+ * @param {string} csrfToken - csrf token
+ */
+export async function saveAIDiagnosis(diagnosisID, AIMasks, csrfToken){
+    await fetch('/image/api/saveAIMasks/', {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": csrfToken,
+        },
+        body: JSON.stringify({
+            diagnosisID: diagnosisID,
+            AIMasks: AIMasks,
+        })
+    })
+    .then(response => {
+        if(response.ok){
+            return response.json()
+        }else{
+            throw new Error("Failed to save AI")
         }
     })
     .catch(error => console.error(error));

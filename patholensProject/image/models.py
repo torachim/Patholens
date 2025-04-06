@@ -15,9 +15,9 @@ class Diagnosis(models.Model):
     # unique int for subject identification
     imageURL = models.CharField(null=False, max_length=20, default="Unknown", verbose_name="Url to the picture")
     
-    confidence = models.JSONField(null=True, verbose_name="Confidence for the marked lesions")
-    confidenceOfEditedDiag = models.JSONField(null=True, verbose_name="Confidence for the lessions after seeing AI Diagnosis")
-    confidenceOfAIdiag = models.JSONField(null=True, verbose_name="Confidence to take the AI Diagnosis")
+    confidenceMyDiagnosis = models.IntegerField(null=True, verbose_name="Confidence for the first diagnosis")
+    confidenceOfEditedDiag = models.IntegerField(null=True, verbose_name="Confidence for the Edited diagnosis")
+    confidenceOfAIdiag = models.IntegerField(null=True, verbose_name="Confidence to take the AI Diagnosis")
     
     def __str__(self):
         return str(self.diagID)
@@ -37,6 +37,10 @@ class Lesions(models.Model):
     deleted = models.BooleanField(default=False)
     # if true the lesion is shown on the edited page
     shown = models.BooleanField(default=True)
+    # if on edited
+    edited = models.BooleanField(default=False)
+    # from page main -> true, edit -> false
+    fromMain = models.BooleanField(default=True)
     # key for the diagnosis
     diagnosis = models.ForeignKey(
         Diagnosis,

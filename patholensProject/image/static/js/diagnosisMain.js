@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     async function reload(){
         let numberLesions = await getNumberOfLesions(diagnosisID);
-        if(numberLesions != 0){
+        if(numberLesions["activeLesionsNumber"] != 0){
             await loadImageAndEdited();
         } else {
             await loadImage();
@@ -97,12 +97,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Call the appropriate function based on the mode
     sendTime("Open Diagnosis")
+    setContinue();
     reload();
 
 
     async function loadImageAndEdited() {
         const volumes = await loadImageWithDiagnosis(diagnosisID, selectedFormat);
-        lesionNumber = await getNumberOfLesions(diagnosisID) + 1;
+        let numbers = await getNumberOfLesions(diagnosisID);
+        lesionNumber = numbers["lesionNumber"] + 1
         penValue = volumes.length;
         nv.loadVolumes(volumes);
     } 
@@ -187,9 +189,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
      // Undo the drawing/
-     document.getElementById("undoTool").addEventListener("click", function (e) {
+     document.getElementById("undoTool").addEventListener("click", async function (e) {
         if(undoDelete){
-            toggleDeleteLesion(deletedLesionID, csrfToken);
+            await toggleDeleteLesion(deletedLesionID, csrfToken);
             undoDelete = false;
             deletedLesionID = 0;
             reload();
@@ -210,7 +212,7 @@ document.addEventListener('DOMContentLoaded', function() {
             save = false;
         }
         deactivateAllButtons(); //only changes style after being clicked
-        sendTime("Undo")
+        await sendTime("Undo")
     })
 
     //Removes the style applied when button is active
@@ -243,7 +245,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     async function endDiagnosis(confidenceValue){
-        let confidenceType = "all Lesions"
+        let confidenceType = "myDiagnosis"
         await sendConfidence(confidenceValue, diagnosisID, confidenceType, csrfToken);
         await sendTime("Confidence Confirmed");
         await hardDeleteLesions(diagnosisID, csrfToken);
@@ -332,7 +334,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Save the image and send the time stamp
     async function saveImage(confidence){
-        await savedEditedLesion(nv, diagnosisID, lesionNumber, confidence, csrfToken);
+        const lesionName = `lesion-${lesionNumber}`
+        await savedEditedLesion(nv, diagnosisID, lesionName, confidence, csrfToken, false, "main");
         sendTime("Saved Lesion");
         nv.createEmptyDrawing();
         reload();
@@ -356,9 +359,6 @@ document.addEventListener('DOMContentLoaded', function() {
             alertMessageBox.style.display = "flex"
             overlay.style.display = "flex";
         }
-        else{
-            setContinue(); //send continue and logout 
-        }
     })
 
     const homePage = document.getElementById("homePageButton");
@@ -376,9 +376,6 @@ document.addEventListener('DOMContentLoaded', function() {
             alertMessageBox.style.display = "flex"
             overlay.style.display = "flex";
         }
-        else{
-            setContinue();
-        }
     })
 
     // sets continue for the current diagnosis
@@ -388,7 +385,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // log out the user
     logOutWindowContinue.addEventListener("click", () => {
-        setContinue();
         if(homeOrLog){
             window.location.assign("/startingPage/");
         }
@@ -446,10 +442,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 4: [4, "yellow"],
                 5: [5, "cyan"],
                 6: [6, "magenta"],
-                7: [7, "orange"],  // Braun als Hex-Code
-                8: [8, "#40E0D0"],  // Türkis als Hex-Code
-                9: [19, "#C00000"],  // Jet (sehr dunkles Grau) als Hex-Code
-                0: [23, "#800080"]   // Violett als Hex-Code
+                7: [7, "orange"],  
+                8: [8, "#40E0D0"],  
+                9: [19, "#C00000"],  
+                0: [23, "#800080"]  
             };
 
             const colorIndex = (i + 1) % 10;
@@ -479,15 +475,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 const lesionID = this.dataset.id;
                 undoDelete = true;
                 deletedLesionID = lesionID
-                toggleDeleteLesion(lesionID, csrfToken);
+                await toggleDeleteLesion(lesionID, csrfToken);
                 reload();
             });
         });
 
         document.querySelectorAll(".toggleVisibility").forEach(button => {
-            button.addEventListener("click", function() {
+            button.addEventListener("click", async function() {
                 const lesionID = this.dataset.id;
-                toggleShownLesion(lesionID, csrfToken);
+                await toggleShownLesion(lesionID, csrfToken);
                 reload();
             });
         });

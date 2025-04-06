@@ -1,5 +1,5 @@
 import { Niivue } from "./index.js";
-import { niivueCanvas, loadImageWithDiagnosis, loadImageWithMask, loadOverlayDAI, sendTimeStamp, deleteContinueDiagnosis, setContinueDiag } from "./pathoLens.js";
+import { niivueCanvas, loadImageWithDiagnosis, loadImageWithMask, loadOverlayDAI, sendTimeStamp, deleteContinueDiagnosis, setContinueDiag, saveAIDiagnosis, getLesionConfidence, sendConfidence } from "./pathoLens.js";
 
 document.addEventListener('DOMContentLoaded', function () {
     
@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     initialize();
+    setContinueDiag(diagnosisID, "AIpage", csrfToken);
 
     // Model Handling
     async function getModels(diagnosisID) {
@@ -58,6 +59,31 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    function createPopup(models){
+        const popUP = document.getElementById("popupFrame")
+        const selectContainer = popUP.querySelector('.selectContainer')
+        selectContainer.innerHTML = '';
+
+        models.forEach(model => {
+            const checkbox = document.createElement('input')
+            checkbox.type = 'checkbox'
+            checkbox.id = model.displayName;
+            checkbox.textContent = model.displayNeme
+            checkbox.dataset.modelKey = model.key
+
+            const checkboxLabel = document.createElement('lanel')
+            checkboxLabel.htmlFor = model.displayName;
+            checkboxLabel.textContent = model.displayName
+            checkboxLabel.style.color = "white"
+
+            const wrapper = document.createElement('div');
+            wrapper.appendChild(checkboxLabel);
+            wrapper.appendChild(checkbox);
+ 
+            selectContainer.appendChild(wrapper);
+        })
+    }
+
     // Event Handling for dropdown
     function handleDropdownClick(event) {
         const dropdown = event.currentTarget;
@@ -92,7 +118,7 @@ document.addEventListener('DOMContentLoaded', function () {
      
     async function sendTime(action){
         let utcTime = Date.now();
-        sendTimeStamp(action, utcTime, diagnosisID, csrfToken);
+        await sendTimeStamp(action, utcTime, diagnosisID, csrfToken);
     }
     
     // function to load the images in the correct overlay
@@ -122,6 +148,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 selectedFormatMask = null; 
             }
             createDropdownOptions(models);
+            createPopup(models);
             
             document.querySelectorAll('.dropdown').forEach(dropdown => {
                 dropdown.addEventListener('click', handleDropdownClick);
@@ -131,19 +158,6 @@ document.addEventListener('DOMContentLoaded', function () {
             await loadImages();
     }
     
-    const logOut = document.getElementById("logoutButton");
-    const homePage = document.getElementById("homePageButton");
-
-    logOut.addEventListener("click", async () => {
-        await setContinueDiag(diagnosisID, "AIpage", csrfToken);
-    })
-
-    homePage.addEventListener("click", async () => {
-        console.log("Back to homepage")
-        await setContinueDiag(diagnosisID, "AIpage", csrfToken);
-    })
-
-
     const editDiagnosisButton = document.getElementById("editDiagnosis");
 
     editDiagnosisButton.addEventListener("click", () => {
@@ -153,17 +167,40 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     const TakeMyDiagnosisButton = document.getElementById("TakeMyDiagnosis");
-    TakeMyDiagnosisButton.addEventListener("click", () => {
-        sendTime("Finished Diagnosis");
-        deleteContinueDiagnosis(diagnosisID, csrfToken);
+    TakeMyDiagnosisButton.addEventListener("click", async () => {
+        await sendTime("Finished Diagnosis");
+        await deleteContinueDiagnosis(diagnosisID, csrfToken);
         window.location.assign(`/image/editDiagnosis/${diagnosisID}/transitionPage/`)
     });
+
+
+    const popupOverlay = document.getElementById("popupOverlay")
+    const closePopup = document.getElementById("closePopup");
+    const popupFrame = document.getElementById("popupFrame");
+    const popupConfirm = document.getElementById("popupConfirm")
+    const confidenceMeter = document.getElementById("confidenceMeter");
+
 
 
     const TakeAIDiagnosisButton = document.getElementById("TakeAIDiagnosis");
     TakeAIDiagnosisButton.addEventListener("click", () => {
-        sendTime("Finished Diagnosis");
-        deleteContinueDiagnosis(diagnosisID, csrfToken);
-        window.location.assign(`/image/editDiagnosis/${diagnosisID}/transitionPage/`)
+        popupOverlay.style.display = "flex"
+        popupFrame.style.display = "block"
     });
+
+    popupConfirm.addEventListener("click", async () => {
+        const checked = Array.from(document.querySelectorAll('.selectContainer input[type="checkbox"]:checked'));
+        const selectedKeys = checked.map(cb => cb.dataset.modelKey);
+        const confidenceValue = confidenceMeter.value
+        await sendConfidence(confidenceValue, diagnosisID, "ai", csrfToken)
+        await saveAIDiagnosis(diagnosisID, selectedKeys, csrfToken)
+        await sendTime("Finished Diagnosis");
+        await deleteContinueDiagnosis(diagnosisID, csrfToken);
+        window.location.assign(`/image/editDiagnosis/${diagnosisID}/transitionPage/`)
+    })
+
+    closePopup.addEventListener("click", () => {
+        popupOverlay.style.display = "none"
+        popupFrame.style.display = "none"
+    })
 });

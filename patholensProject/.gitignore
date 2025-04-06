@@ -59,6 +59,8 @@ media/
 
 schema.yml
 
+schemaAPI.yaml
+
 website_data
 
 .vscode/
