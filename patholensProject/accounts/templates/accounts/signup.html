@@ -21,6 +21,9 @@
 
             <form method="POST" action="{% url 'patholensSignUp' %}">
                 {% csrf_token %}
+
+
+                
                 <div class="inputContainer">
                     <div class="inputContainer2">
                         <div class="inputBoxFirstname">
@@ -46,6 +49,8 @@
                                 <i class="eye-icon" id="eyeIcon2"></i>
                             </span>
                         </div>
+
+                        <input type="hidden" name="is_new_signup" value="true">
                         
                         <script>
                             

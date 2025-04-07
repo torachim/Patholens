@@ -6,6 +6,8 @@ from django.core.exceptions import ValidationError
 from django.shortcuts import redirect
 from django.http import JsonResponse
 from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
 
 from image.mediaServices import syncData
 from image.diagnosisServices import getURL
@@ -19,7 +21,6 @@ def customLogin(request, user):
     syncData() # Detects new folders in the media directory and adds them to the database or updates existing entries with missing URLs
 
 def signupView(request):
-
     information = {
         "availableUser": True,
         "equalPasswords": True,
@@ -37,6 +38,7 @@ def signupView(request):
         email = request.POST.get("email")
         password = request.POST.get("password")
         confirmPassword = request.POST.get("confirmPassword")
+        is_new_signup = request.POST.get("is_new_signup") == "true"  # Check if this is a new signup
 
         # strip checks if one element is empty or None
         webParameters = [
@@ -101,13 +103,26 @@ def signupView(request):
         # login of user
         customLogin(request, user)
         
+        # Redirect to tutorial if this is a new signup
+        if is_new_signup:
+            request.session['show_tutorial'] = True
+            return redirect('first_time_tutorial')  
+        
         return redirect("StartingPage")
 
     return render(request, "accounts/signup.html", {"information": information})
 
+
 def termination(request, information):
     logout(request)
     return render(request, "accounts/signup.html", {"information": information})
+
+@login_required
+def first_time_tutorial(request):
+    if request.session.get('show_tutorial', False):
+        request.session['show_tutorial'] = False  
+        return render(request, 'tutorial.html')
+    return redirect('StartingPage')
 
 def loginView(request):
 
