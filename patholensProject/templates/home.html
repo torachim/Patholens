@@ -12,6 +12,12 @@
 
 {% block content %}
 
+{% if request.session.show_tutorial %}
+<script>
+    window.location.href = "{% url 'first_time_tutorial' %}";
+</script>
+{% endif %}
+
 
 <!-- Close Effect--->
 <body onclick="window.open( {% url 'homeWindow' %},'windowFrame')">

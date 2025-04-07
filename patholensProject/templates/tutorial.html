@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PathoLens Tutorial</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cabin&display=swap" rel="stylesheet">
+
+    <style>
+       body {
+    font-family: 'Cabin', sans-serif; /* Schrift geändert */
+    line-height: 1.6;
+    color: #333;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f5f7fa;
+}
+.tutorial-container {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    padding: 30px;
+    position: relative;
+}
+h1 {
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 30px;
+}
+h2 {
+    color: #3498db;
+    margin-top: 0;
+}
+.tutorial-step {
+    display: none;
+    animation: fadeIn 0.5s ease-in-out;
+}
+.tutorial-step.active {
+    display: block;
+}
+.step-image {
+    max-width: 80%;
+    height: auto;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin: 15px auto;
+    display: block;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+.nav-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    padding-top: 10px; /* Weniger Padding */
+    border-top: 1px solid #eee;
+    font-family: 'Cabin', sans-serif;
+}
+button {
+    padding: 8px 16px; /* Etwas kleiner */
+    border: none;
+    border-radius: 12px; /* Mehr Rundung */
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    font-family: 'Cabin', sans-serif;
+}
+.prev-btn {
+    background-color: #95a5a6;
+    color: white;
+}
+.prev-btn:hover {
+    background-color: #7f8c8d;
+}
+.next-btn {
+    background-color: #3498db;
+    color: white;
+}
+.next-btn:hover {
+    background-color: #2980b9;
+}
+.step-indicator {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #7f8c8d;
+    font-weight: 500;
+}
+.step-content {
+    margin-bottom: 20px;
+}
+.highlight {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-left: 4px solid #3498db;
+    margin: 15px 0;
+    border-radius: 0 4px 4px 0;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+    </style>
+</head>
+<body>
+    <div class="tutorial-container">
+        <h1>PathoLens Platform Tutorial</h1>
+        
+        <div class="step-indicator">
+            Step <span id="current-step">1</span> of <span id="total-steps">18</span>
+        </div>
+        
+        <!-- Step 1: Login -->
+        <div class="tutorial-step active" data-step="1">
+            <h2>1. Login to PathoLens</h2>
+            <div class="step-content">
+                <p>Begin by accessing the PathoLens login page. Enter your email and password to access your account.</p>
+                <div class="highlight">
+                    <p><strong>Note:</strong> If you don't have an account yet, click "Create your account" to register first.</p>
+                </div>
+                <img src="/static/images/step1-login.jpg" alt="PathoLens login screen" class="step-image">
+            </div>
+        </div>
+        
+        <!-- Step 2: Sign Up -->
+        <div class="tutorial-step" data-step="2">
+            <h2>2. Creating an Account</h2>
+            <div class="step-content">
+                <p>To create a new account, fill in your:</p>
+                <ul>
+                    <li>First and Last Name</li>
+                    <li>Email address</li>
+                    <li>Password (enter it twice to confirm)</li>
+                </ul>
+                <img src="/static/images/step2-signup.jpg" alt="PathoLens sign up screen" class="step-image">
+            </div>
+        </div>
+        
+        <!-- Step 3: Homepage -->
+        <div class="tutorial-step" data-step="3">
+            <h2>3. Homepage Overview</h2>
+            <div class="step-content">
+                <p>After logging in, you'll see your dashboard with these options:</p>
+                <ul>
+                    <li><strong>Continue Diagnosis:</strong> Resume an unfinished diagnosis</li>
+                    <li><strong>New Diagnosis:</strong> Start a new case</li>
+                </ul>
+                <img src="/static/images/step3-homepage.jpg" alt="PathoLens homepage" class="step-image">
+            </div>
+        </div>
+        
+        <!-- Step 4: Help Guide -->
+        <div class="tutorial-step" data-step="4">
+            <h2>4. Accessing the Help Guide</h2>
+            <div class="step-content">
+                <p>The Help Guide provides answers and instructions for using PathoLens. You can access it from the navigation menu.</p>
+                <img src="/static/images/step4-help.jpg" alt="PathoLens help guide" class="step-image">
+            </div>
+        </div>
+        
+        <!-- Step 5: Starting a Diagnosis -->
+        <div class="tutorial-step" data-step="5">
+            <h2>5. Starting a New Diagnosis</h2>
+            <div class="step-content">
+                <p>Click "New Diagnosis" to begin. You'll need to select one of the available datasets:</p>
+                <ul>
+                    <li>Each dataset contains different subjects</li>
+                    <li>The system will randomly select a subject from your chosen dataset</li>
+                </ul>
+                <img src="/static/images/step5-new-diagnosis.jpg" alt="Selecting a dataset" class="step-image">
+            </div>
+        </div>
+        
+        <!-- Step 6: Diagnosis Page -->
+        <div class="tutorial-step" data-step="6">
+            <h2>6. Diagnosis Page Interface</h2>
+            <div class="step-content">
+                <p>The diagnosis page shows three views of a 3D MRI/CT scan from different angles.</p>
+                <div class="highlight">
+                    <p><strong>Navigation Tip:</strong> Left-click and drag on one image to scroll through layers in all three views simultaneously.</p>
+                </div>
+                <img src="/static/images/step6-diagnosis.png" alt="Diagnosis page interface" class="step-image">
+            </div>
+        </div>
+        
+        <!-- Step 7: Picture Formats -->
+        <div class="tutorial-step" data-step="7">
+            <h2>7. Switching Between Image Formats</h2>
+            <div class="step-content">
+                <p>You can toggle between different image types:</p>
+                <ul>
+                    <li><strong>FLAIR:</strong> Fluid-attenuated inversion recovery</li>
+                    <li><strong>T1:</strong> T1-weighted imaging</li>
+                </ul>
+                <p>Use the buttons at the bottom of the screen to switch views.</p>
+                <img src="/static/images/step7-formats.png" alt="Image format selection" class="step-image">
+            </div>
+        </div>
+        
+        <!-- Step 8: Drawing Tools -->
+        <div class="tutorial-step" data-step="8">
+            <h2>8. Drawing a 3D Rectangle</h2>
+            <div class="step-content">
+                <p>To mark lesions:</p>
+                <ol>
+                    <li>Draw the first 2D rectangle</li>
+                    <li>Click "Jump Rectangle"</li>
+                    <li>Draw the second rectangle in another view</li>
+                </ol>
+                <img src="/static/images/step8-drawing.jpg" alt="Drawing tools interface" class="step-image">
+            </div>
+        </div>
+        
+        <!-- Step 9: Confidence Selection -->
+        <div class="tutorial-step" data-step="9">
+            <h2>9. Setting Confidence Levels</h2>
+            <div class="step-content">
+                <p>After drawing each lesion, you'll be prompted to:</p>
+                <ul>
+                    <li>Save the lesion</li>
+                    <li>Select your confidence level (1-10)</li>
+                </ul>
+                <img src="/static/images/step9-confidence.jpg" alt="Confidence level selection" class="step-image">
+            </div>
+        </div>
+        
+        <!-- Step 10: Managing Lesions -->
+        <div class="tutorial-step" data-step="10">
+            <h2>10. Managing Drawn Lesions</h2>
+            <div class="step-content">
+                <p>You can review and remove lesions:</p>
+                <ul>
+                    <li>Use the "Show Lesions" overlay to view all marked lesions</li>
+                    <li>Click "X" to remove unwanted lesions</li>
+                </ul>
+                <img src="/static/images/step10-manage-lesions.jpg" alt="Lesion management interface" class="step-image">
+            </div>
+        </div>
+        
+        <!-- Step 11: Final Confidence -->
+        <div class="tutorial-step" data-step="11">
+            <h2>11. Submitting Final Confidence</h2>
+            <div class="step-content">
+                <p>When finished with all lesions:</p>
+                <ol>
+                    <li>Provide your overall confidence level</li>
+                    <li>Click "Confirm" to submit</li>
+                </ol>
+                <img src="/static/images/step11-final-confidence.jpg" alt="Final confidence selection" class="step-image">
+            </div>
+        </div>
+        
+        <!-- Step 12: AI Comparison -->
+        <div class="tutorial-step" data-step="12">
+            <h2>12. AI Analysis Comparison</h2>
+            <div class="step-content">
+                <p>The AI page shows:</p>
+                <ul>
+                    <li>Your diagnosis</li>
+                    <li>AI's analysis (from multiple models)</li>
+                    <li>Option to show overlay comparisons</li>
+                </ul>
+                <img src="/static/images/step12-ai.png" alt="AI comparison page" class="step-image">
+            </div>
+        </div>
+        
+        <!-- Step 13: Final Diagnosis -->
+        <div class="tutorial-step" data-step="13">
+            <h2>13. Selecting Final Diagnosis</h2>
+            <div class="step-content">
+                <p>Choose between:</p>
+                <ul>
+                    <li>Your original diagnosis</li>
+                    <li>The AI's diagnosis</li>
+                    <li>Or edit your diagnosis further</li>
+                </ul>
+                <img src="/static/images/step13-final-selection.png" alt="Final diagnosis selection" class="step-image">
+            </div>
+        </div>
+        
+        <!-- Step 14: Edit Page -->
+        <div class="tutorial-step" data-step="14">
+            <h2>14. Editing Your Diagnosis</h2>
+            <div class="step-content">
+                <p>The edit page allows you to:</p>
+                <ul>
+                    <li>Modify your previous diagnosis</li>
+                    <li>View AI and your diagnoses side-by-side</li>
+                    <li>Use zoom features for detailed comparison</li>
+                </ul>
+                <img src="/static/images/step14-edit.png" alt="Diagnosis editing interface" class="step-image">
+            </div>
+        </div>
+
+        <div class="tutorial-step" data-step="15">
+            <h2>15. Zoom Feature</h2>
+            <div class="step-content">
+                <p>Use the zoom feature to:</p>
+                <ul>
+                    <li>View your previous diagnosis in detail</li>
+                    <li>Compare it with the AI's diagnosis</li>
+                </ul>
+                <img src="/static/images/step15-zoom.png" alt="Zoom feature comparison view" class="step-image">
+            </div>
+        </div>
+
+        
+        <!-- Step 15: Lesion Overlay -->
+        <div class="tutorial-step" data-step="15">
+            <h2>16. Lesion Overlay View</h2>
+            <div class="step-content">
+                <p>This view shows:</p>
+                <ul>
+                    <li>All edited lesions</li>
+                    <li>Options to restore original lesions</li>
+                    <li>Confidence levels for each lesion</li>
+                </ul>
+                <img src="/static/images/step16-overlay.jpg" alt="Lesion overlay view" class="step-image">
+            </div>
+        </div>
+        
+        <!-- Step 16: Transition Page -->
+        <div class="tutorial-step" data-step="16">
+            <h2>17. After Diagnosis Completion</h2>
+            <div class="step-content">
+                <p>After finishing, you can:</p>
+                <ul>
+                    <li>Start a new diagnosis immediately</li>
+                    <li>Return to the homepage</li>
+                </ul>
+                <img src="/static/images/step17-transition.jpg" alt="Post-diagnosis options" class="step-image">
+            </div>
+        </div>
+        
+        <!-- Step 17: Continue Diagnosis -->
+        <div class="tutorial-step" data-step="17">
+            <h2>18. Continuing Unfinished Work</h2>
+            <div class="step-content">
+                <p>If you have an unfinished diagnosis:</p>
+                <ul>
+                    <li>The system will remind you when you log back in</li>
+                    <li>Click "Continue Diagnosis" to resume where you left off</li>
+                    <li>You must complete current diagnosis before starting new ones</li>
+                </ul>
+                <img src="/static/images/step18-continue.jpg" alt="Continue diagnosis prompt" class="step-image">
+            </div>
+        </div>
+        
+        <!-- Step 18: Completion -->
+        <div class="tutorial-step" data-step="18">
+            <h2>19. Tutorial Complete!</h2>
+            <div class="step-content">
+                <p>You've now learned all the essential features of PathoLens.</p>
+                <div class="highlight">
+                    <p><strong>Remember:</strong> You can always access the Help Guide from the navigation menu if you need to review any features.</p>
+                </div>
+                
+                <p>Happy diagnosing!</p>
+            </div>
+        </div>
+        
+        <div class="nav-buttons">
+            <button class="prev-btn" onclick="prevStep()">Previous</button>
+            <button class="next-btn" onclick="nextStep()">Next</button>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        const totalSteps = 18;
+        
+        // Initialize the tutorial
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('total-steps').textContent = totalSteps;
+            updateButtons();
+        });
+        
+        function nextStep() {
+            if (currentStep < totalSteps) {
+                document.querySelector(`.tutorial-step[data-step="${currentStep}"]`).classList.remove('active');
+                currentStep++;
+                document.querySelector(`.tutorial-step[data-step="${currentStep}"]`).classList.add('active');
+                document.getElementById('current-step').textContent = currentStep;
+                updateButtons();
+                window.scrollTo(0, 0);
+            }
+        }
+        
+        function prevStep() {
+            if (currentStep > 1) {
+                document.querySelector(`.tutorial-step[data-step="${currentStep}"]`).classList.remove('active');
+                currentStep--;
+                document.querySelector(`.tutorial-step[data-step="${currentStep}"]`).classList.add('active');
+                document.getElementById('current-step').textContent = currentStep;
+                updateButtons();
+                window.scrollTo(0, 0);
+            }
+        }
+        
+        function updateButtons() {
+            const prevBtn = document.querySelector('.prev-btn');
+            const nextBtn = document.querySelector('.next-btn');
+            
+            prevBtn.disabled = currentStep === 1;
+            nextBtn.textContent = currentStep === totalSteps ? 'Finish' : 'Next';
+            
+            if (currentStep === totalSteps) {
+                nextBtn.onclick = function() {
+                    alert('Tutorial completed! You can now use PathoLens with confidence.');
+                    // Optional: Redirect to login page or other location
+                    // window.location.href = 'login.html';
+                };
+            } else {
+                nextBtn.onclick = nextStep;
+            }
+        }
+        
+        // Optional: Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight') {
+                nextStep();
+            } else if (e.key === 'ArrowLeft') {
+                prevStep();
+            }
+        });
+    </script>
+</body>
+</html>
