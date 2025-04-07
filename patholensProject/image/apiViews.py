@@ -47,7 +47,7 @@ class GetImageAPIView(APIView):
             if imageFormat not in settings.SUPPORTED_IMAGE_FORMATS:
                 return JsonResponse({"error": "Invalid format"}, status=400)
             
-            datasetName = getDatasetName(diagnosisID).lower()
+            datasetName = getDatasetName(diagnosisID)
             if not datasetName:
                 return JsonResponse({"error": "Dataset name is required"}, status=400)
 
@@ -184,7 +184,7 @@ class GetImageAndMaskAPIView(APIView):
             if imageFormatMask not in settings.SUPPORTED_IMAGE_FORMATS or imageFormatMri not in settings.SUPPORTED_IMAGE_FORMATS:
                 return JsonResponse({"error": "Invalid format"}, status=400)
             
-            datasetName = getDatasetName(diagnosisID).lower()
+            datasetName = getDatasetName(diagnosisID)
             if not datasetName:
                 return JsonResponse({"error": "Dataset name is required"}, status=400)
 
@@ -251,7 +251,7 @@ class GetDiagnosis(APIView):
                                  status=status.HTTP_400_BAD_REQUEST
                                 )
             
-            datasetName = getDatasetName(diagnosisID).lower()
+            datasetName = getDatasetName(diagnosisID)
             if not datasetName:
                 return JsonResponse({"error": "Dataset name is required"}, status=400)
 
@@ -299,7 +299,7 @@ class GetEditedDiagnosis(APIView):
                                     status=status.HTTP_400_BAD_REQUEST
                                 )
             
-            datasetName = getDatasetName(diagnosisID).lower()
+            datasetName = getDatasetName(diagnosisID)
             if not datasetName:
                 return JsonResponse({"error": "Dataset name is required"}, status=400)
 
@@ -369,7 +369,7 @@ class saveImageAPIView(APIView):
             isEdit = request.POST.get("isEdit")
             page = request.POST.get("Page")
             
-            datasetName = getDatasetName(diagnosisID).lower()
+            datasetName = getDatasetName(diagnosisID)
 
             if not datasetName:
                 return JsonResponse({"error": "Dataset name is required"}, status=400)  # get the subID from the request
@@ -711,7 +711,7 @@ class SaveAIMasks(APIView):
             AIMasks = data.get("AIMasks")
 
             # Get the dataset name
-            datasetName = getDatasetName(diagnosisID).lower()
+            datasetName = getDatasetName(diagnosisID)
             subID = getURL(diagnosisID)
             docID = request.user.id
 
