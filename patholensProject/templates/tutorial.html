@@ -406,9 +406,8 @@ button {
             
             if (currentStep === totalSteps) {
                 nextBtn.onclick = function() {
-                    alert('Tutorial completed! You can now use PathoLens with confidence.');
-                    // Optional: Redirect to login page or other location
-                    // window.location.href = 'login.html';
+                    
+                    window.location.href = '/startingPage/';
                 };
             } else {
                 nextBtn.onclick = nextStep;
@@ -423,6 +422,9 @@ button {
                 prevStep();
             }
         });
+
+      
+
     </script>
 </body>
 </html>
